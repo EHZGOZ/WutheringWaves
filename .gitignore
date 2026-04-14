@@ -1,0 +1,76 @@
+# ===================== 系统通用忽略（全局） =====================
+# Mac系统文件
+.DS_Store
+# Windows系统核心缓存
+Thumbs.db
+$RECYCLE.BIN/
+# 系统临时文件
+*.tmp
+*.temp
+*.swp
+
+# ===================== Visual Studio + Unity 专属配置（全局） =====================
+# VS解决方案级缓存（必忽略）
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.cache
+# VS项目级缓存（Unity自动生成，无需提交）
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+# VS调试/编译缓存
+*.pdb
+*.pidb
+*.pdb.meta
+# VS代码分析缓存
+*.ruleset
+# Unity与VS集成的临时配置
+Library/EditorInstance.json
+# Unity自动生成的VS解决方案缓存（部分）
+Assembly-CSharp.csproj.meta
+Assembly-CSharp-Editor.csproj.meta
+Assembly-CSharp-firstpass.csproj.meta
+
+# ===================== 通用IDE忽略（兼容VSCode/Rider，全局） =====================
+# VSCode（若偶尔混用）
+.vscode/
+*.code-workspace
+# Rider（若混用）
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ===================== Unity核心编译/缓存目录（全局，所有项目通用） =====================
+# Unity核心缓存（必忽略，体积大且自动生成）
+Library/
+Temp/
+Obj/
+Logs/
+GI/
+ShaderCache/
+BurstCache/
+AddressablesBuildCache/
+PerformanceProfileCache/
+# Unity本地构建缓存
+LocalBuilds/
+# Unity XR相关缓存
+XR/
+# Unity日志文件
+*.log
+Player.log
+Editor.log
+
+# ===================== 临时/备份文件（全局） =====================
+*.bak
+*.backup
+*.zip
+*.7z
+*.rar
+# 编辑器自动保存文件
+*.autosave
+# ===================== 自定义忽略） =====================
+# 永久忽略 GameAssets 文件夹（本地保留，云端不跟踪）
+Assets/GameAssets/
