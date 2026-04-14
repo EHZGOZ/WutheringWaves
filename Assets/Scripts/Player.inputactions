@@ -78,7 +78,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ResonanceSkill",
+                    "name": "ResonanceESkillInput",
                     "type": "Button",
                     "id": "bbc722ab-305b-490a-82e0-b0725c66b413",
                     "expectedControlType": "",
@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ResonanceOutbreak",
+                    "name": "ResonanceQBurstInput",
                     "type": "Button",
                     "id": "9291845d-8fa0-4701-a579-ac84c007a5c5",
                     "expectedControlType": "",
@@ -302,7 +302,7 @@
                     "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "ResonanceSkill",
+                    "action": "ResonanceESkillInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -313,7 +313,7 @@
                     "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "ResonanceOutbreak",
+                    "action": "ResonanceQBurstInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

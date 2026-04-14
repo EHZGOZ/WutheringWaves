@@ -17,6 +17,7 @@ namespace WutheringWaves
         [Header("=== 玩家生成 ===")]
         [SerializeField] private PlayerSpawnConfigSO playerSpawnConfig; // 玩家生成配置文件（ScriptableObject）
         [SerializeField] private Transform playerParent; // 玩家生成后的父物体，用于场景层级管理
+
         [Header("是否跨场景保留玩家对象")]
         [SerializeField] private bool keepSpawnedPlayerAcrossScenes = false; // 是否跨场景保留玩家对象
 

@@ -1,0 +1,209 @@
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace WutheringWaves
+{
+    public class PlayerInputReader : MonoBehaviour
+    {
+        #region 核心引用
+        [Header("=== 输入系统引用 ===")]
+        [Tooltip("玩家根节点上的PlayerInput组件")]
+        [SerializeField] private PlayerInput playerInput;
+        [Tooltip("当前受控角色的输入缓冲")]
+        [SerializeField] private InputBuffer inputBuffer;
+        #endregion
+
+        #region 运行时缓存
+        private InputActionMap playerActionMap; // 玩家动作映射
+        private bool isInitialized; // 是否已完成初始化
+        #endregion
+
+        #region 对外只读输入状态
+        public Vector2 ZoomInput { get; private set; } // 镜头缩放输入
+        public Vector2 LookInput { get; private set; } // 视角输入
+        public Vector2 MoveInput { get; private set; } // 移动输入
+
+        public bool RunInput { get; private set; } // 奔跑输入
+        public bool JumpInput { get; private set; } // 跳跃输入
+        public bool DodgeInput { get; private set; } // 闪避输入
+
+        public bool AttackInput { get; private set; } // 普攻输入
+        public bool LockInput { get; private set; } // 锁定输入
+        public bool ESkillInput { get; private set; } // 共鸣技能输入
+        public bool QBurstInput { get; private set; } // 共鸣解放输入
+        #endregion
+
+       
+
+        #region 初始化
+        // 输入读取器初始化：获取输入组件，缓存动作映射，并重置输入状态
+        public void Initialize()
+        {
+            //1.获取玩家输入组件
+            ResolvePlayerInput();
+
+            //2.缓存玩家动作映射
+            ResolvePlayerActionMap();
+
+            //3.重置所有输入状态
+            ResetInputStates();
+
+            //4.标记初始化完成
+            isInitialized = true;
+        }
+
+        //1.获取玩家输入组件
+        private void ResolvePlayerInput()
+        {
+            if (playerInput == null)
+            {
+                playerInput = GetComponent<PlayerInput>();
+            }
+        }
+
+        //2.获取玩家动作映射
+        private void ResolvePlayerActionMap()
+        {
+            if (playerInput != null)
+            {
+                playerActionMap = playerInput.actions.FindActionMap("Player");
+            }
+        }
+
+        //3.重置输入状态：防止切角色或初始化时残留旧输入
+        public void ResetInputStates()
+        {
+            MoveInput = Vector2.zero;
+            LookInput = Vector2.zero;
+            ZoomInput = Vector2.zero;
+
+            JumpInput = false;
+            RunInput = false;
+            LockInput = false;
+            DodgeInput = false;
+            AttackInput = false;
+            ESkillInput = false;
+            QBurstInput = false;
+        }
+
+        // 绑定当前受控角色输入缓冲：保证玩家输入写入正确角色
+        public void BindInputBuffer(InputBuffer buffer)
+        {
+            inputBuffer = buffer;
+        }
+        #endregion
+
+        #region 输入回调
+        // 缩放输入回调
+        public void OnZoom(InputValue value)
+        {
+            EnsureInitialized();
+            ZoomInput = value.Get<Vector2>();
+        }
+
+        // 移动输入回调
+        public void OnMove(InputValue value)
+        {
+            EnsureInitialized();
+            MoveInput = value.Get<Vector2>();
+        }
+
+        // 视角输入回调
+        public void OnLook(InputValue value)
+        {
+            EnsureInitialized();
+            LookInput = value.Get<Vector2>();
+        }
+
+        // 跳跃输入回调：按下时写入跳跃缓冲
+        public void OnJump(InputValue value)
+        {
+            EnsureInitialized();
+            JumpInput = value.isPressed;
+            if (value.isPressed)
+            {
+                inputBuffer?.BufferJump();
+            }
+        }
+
+        // 奔跑输入回调：同步状态并写入奔跑缓冲
+        public void OnRun(InputValue value)
+        {
+            EnsureInitialized();
+            RunInput = value.isPressed;
+            inputBuffer?.BufferRun(value.isPressed);
+        }
+
+        // 锁定输入回调
+        public void OnLock(InputValue value)
+        {
+            EnsureInitialized();
+            LockInput = value.isPressed;
+        }
+
+        // 闪避输入回调
+        public void OnDodge(InputValue value)
+        {
+            EnsureInitialized();
+            DodgeInput = value.isPressed;
+        }
+
+        // 普攻输入回调：同步状态并写入攻击缓冲
+        public void OnAttack(InputValue value)
+        {
+            EnsureInitialized();
+            AttackInput = value.isPressed;
+            inputBuffer?.BufferAttack(value.isPressed);
+        }
+
+        // 共鸣技能输入回调：按下时写入技能缓冲
+        public void OnResonanceESkillInput(InputValue value)
+        {
+            EnsureInitialized();
+            QBurstInput = value.isPressed;
+            if (value.isPressed)
+            {
+                inputBuffer?.BufferESkill();
+            }
+        }
+
+        // 共鸣解放输入回调：按下时写入大招缓冲
+        public void OnResonanceQBurstInput(InputValue value)
+        {
+            EnsureInitialized();
+            QBurstInput = value.isPressed;
+            if (value.isPressed)
+            {
+                inputBuffer?.BufferQBurst();
+            }
+        }
+        #endregion
+
+        #region 输入开关
+        // 禁用玩家输入：用于切角色、过场或UI接管输入
+        public void DisablePlayerInput()
+        {
+            EnsureInitialized();
+            playerActionMap?.Disable();
+        }
+
+        // 启用玩家输入：恢复玩家动作映射
+        public void EnablePlayerInput()
+        {
+            EnsureInitialized();
+            playerActionMap?.Enable();
+        }
+        #endregion
+
+        #region 内部工具
+        // 确保输入读取器已初始化：避免外部漏调初始化导致空引用
+        private void EnsureInitialized()
+        {
+            if (!isInitialized)
+            {
+                Initialize();
+            }
+        }
+        #endregion
+    }
+}
