@@ -1,0 +1,106 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Unity\\UnityProject\\SoulLike\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\soullike\\assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\SoulLike\\assets\\scripts\\3.systems\\1.save\\saveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.systems\\1.save\\saveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\SoulLike\\assets\\scripts\\3.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\SoulLike\\assets\\scripts\\2.characters\\1.shared\\1.data\\playerspawnconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B74B661-7E83-BD6A-EC7E-0DD0453F3F75}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.characters\\1.shared\\1.data\\playerspawnconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\CharaterManifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\CharaterManifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameBootstrap.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAF8AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T09:28:39.782Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CharaterManifestation.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\CharaterManifestation.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\CharaterManifestation.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\CharaterManifestation.cs",
+              "RelativeToolTip": "Assets\\Scripts\\CharaterManifestation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T11:17:10.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PlayerSpawnConfigSO.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\2.Characters\\1.Shared\\1.Data\\PlayerSpawnConfigSO.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Characters\\1.Shared\\1.Data\\PlayerSpawnConfigSO.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\2.Characters\\1.Shared\\1.Data\\PlayerSpawnConfigSO.cs",
+              "RelativeToolTip": "Assets\\Scripts\\2.Characters\\1.Shared\\1.Data\\PlayerSpawnConfigSO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T11:08:19.224Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AudioService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\3.Systems\\2.Audio\\AudioService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Systems\\2.Audio\\AudioService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\3.Systems\\2.Audio\\AudioService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Systems\\2.Audio\\AudioService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T10:37:54.088Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SaveService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\3.Systems\\1.Save\\SaveService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Systems\\1.Save\\SaveService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\SoulLike\\Assets\\Scripts\\3.Systems\\1.Save\\SaveService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Systems\\1.Save\\SaveService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T10:37:51.08Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

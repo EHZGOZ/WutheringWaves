@@ -1,0 +1,121 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Unity\\UnityProject\\WutheringWaves\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.systems\\3.effects\\effectconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.systems\\3.effects\\effectconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.systems\\3.effects\\effectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.systems\\3.effects\\effectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.systems\\3.effects\\effectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\scripts\\3.systems\\3.effects\\effectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EffectConfigSO.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectConfigSO.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectConfigSO.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectConfigSO.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectConfigSO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T14:55:34.478Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EffectService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAM4AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T14:42:01.745Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EffectManager.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectManager.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Systems\\3.Effects\\EffectManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Systems\\3.Effects\\EffectManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T14:37:23.12Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CharacterFacade.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
+              "RelativeToolTip": "Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T14:22:25.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CharacterContext.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
+              "RelativeToolTip": "Assets\\Scripts\\2.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T14:22:22.866Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GameBootstrap.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.RuntimeCore\\1.Bootstrap\\GameBootstrap.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAABTwBYAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-13T13:24:38.796Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

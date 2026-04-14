@@ -1,0 +1,23 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+# ==================== 核心规则：先忽略所有，只留Scripts和.cursorignore ====================
+# 1. 先忽略项目根目录下的所有内容
+/*
+
+# 2. 但保留 .cursorignore 文件本身，让规则生效
+!.cursorignore
+
+# 3. 但保留Assets文件夹（因为Scripts在里面）
+!/Assets/
+
+# 4. 忽略Assets文件夹下的所有内容
+/Assets/*
+
+# 5. 只放行你手写代码的Scripts文件夹！
+!/Assets/Scripts/
+
+# ==================== 补充：忽略所有Unity自动生成的.meta文件 ====================
+*.meta
+
+# ==================== 补充：忽略系统垃圾文件 ====================
+.DS_Store
+Thumbs.db
