@@ -184,7 +184,6 @@ GameObject:
   - component: {fileID: 7204937119498083337}
   - component: {fileID: 2299549549930669084}
   - component: {fileID: 3300267513092516600}
-  - component: {fileID: 3298800657074935451}
   m_Layer: 6
   m_Name: "\u4ECA\u6C50"
   m_TagString: Player
@@ -986,25 +985,6 @@ MonoBehaviour:
   SkillAttackSteps3DragonLocalOffset: {x: 0, y: 0, z: 2}
   SkillAttackSteps4DragonLocalOffset: {x: 0, y: 0, z: 2}
   dragonanimator: {fileID: 3969840708823868075}
---- !u!114 &3298800657074935451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2358975735509947904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c809defac89f8e545b1608057c4d74ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxStamina: 100
-  runDrainPerSecond: 2.5
-  sprintCost: 15
-  floatDashCost: 15
-  regenPerSecond: 10
-  regenDelay: 1
-  fullStaminaFadeDelay: 1
 --- !u!1 &2986776744030203746
 GameObject:
   m_ObjectHideFlags: 0

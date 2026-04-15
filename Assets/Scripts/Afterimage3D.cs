@@ -102,17 +102,10 @@ namespace WutheringWaves
             }
 
         }
-        // 开始函数：在Awake后、第一帧更新前执行，主要做初始化检查
+        // 开始函数：当前阶段不再依赖声音系统，保留生命周期空壳以便后续拓展
         private void Start()
         {
-            // 1. 检查单例是否存在（防御性编程）
-            if (SoundManager.Instance == null)
-            {
-                // 打印错误日志：提示SoundManager单例未初始化（便于调试定位问题）
-                Debug.LogError("❌ SoundManager 单例未初始化！请确保场景中存在激活的 SoundManager 对象。");
-                // 终止后续逻辑（避免空引用错误）
-                return;
-            }
+            // 当前残影逻辑与声音播放解耦，这里暂不执行任何音频相关处理。
         }
 
         // 更新函数：每帧执行，核心逻辑是倒计时并销毁残影

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace WutheringWaves
 {
@@ -17,10 +17,10 @@ namespace WutheringWaves
         public static event Action<CharacterAttack> OnSkillUIStateChanged;
 
         // source, current, max, normalized
-        public static event Action<CharacterStamina, float, float, float> OnStaminaChanged;
+        public static event Action<PlayerStamina, float, float, float> OnStaminaChanged;
 
         // source, visible
-        public static event Action<CharacterStamina, bool> OnStaminaVisibilityChanged;
+        public static event Action<PlayerStamina, bool> OnStaminaVisibilityChanged;
 
         public static void RaiseCharacterStateChanged(CharacterStateMachine source, CharacterState oldState, CharacterState newState)
         {
@@ -37,12 +37,12 @@ namespace WutheringWaves
             OnSkillUIStateChanged?.Invoke(source);
         }
 
-        public static void RaiseStaminaChanged(CharacterStamina source, float current, float max, float normalized)
+        public static void RaiseStaminaChanged(PlayerStamina source, float current, float max, float normalized)
         {
             OnStaminaChanged?.Invoke(source, current, max, normalized);
         }
 
-        public static void RaiseStaminaVisibilityChanged(CharacterStamina source, bool visible)
+        public static void RaiseStaminaVisibilityChanged(PlayerStamina source, bool visible)
         {
             OnStaminaVisibilityChanged?.Invoke(source, visible);
         }

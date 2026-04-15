@@ -601,6 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3437534615924219062}
   - component: {fileID: 1340475845489494420}
+  - component: {fileID: 1326456390}
   - component: {fileID: 7954124293238654617}
   - component: {fileID: 2831552433143056880}
   - component: {fileID: 6792406287382518285}
@@ -643,7 +644,27 @@ MonoBehaviour:
   playerCamera: {fileID: 7954124293238654617}
   cameraTarget: {fileID: 2491663281683714530}
   playerInputReader: {fileID: 6792406287382518285}
+  playerStamina: {fileID: 1326456390}
   defaultCharacterFacade: {fileID: 6678416774427194191}
+--- !u!114 &1326456390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501062304824126646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed19e83318610fb4aa6cdf165664295e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  runDrainPerSecond: 2.5
+  sprintCost: 15
+  floatDashCost: 15
+  regenPerSecond: 10
+  regenDelay: 1
+  fullStaminaFadeDelay: 1
 --- !u!114 &7954124293238654617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,9 +677,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a252b02b00d313a4984ec28133a9fe81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraPivot: {fileID: 0}
   VirtualCamera: {fileID: 411632300924108717}
   virtualCamera2: {fileID: 2906224697728824327}
-  CameraTarget: {fileID: 0}
   TopClamp: 70
   BottomClamp: -30
   SensitivityX: 1
@@ -667,7 +688,6 @@ MonoBehaviour:
   MaxZoomDistance: 5
   ZoomSpeed: 2
   DefaultZoomDistance: 5
-  _currentZoomDistance: 0
 --- !u!114 &2831552433143056880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7749,13 +7769,11 @@ GameObject:
   - component: {fileID: 2770961545755517461}
   - component: {fileID: 877110758720459468}
   - component: {fileID: 6678416774427194191}
-  - component: {fileID: 836773133151814070}
   - component: {fileID: 3988799700281616114}
   - component: {fileID: 6069195916561297269}
   - component: {fileID: 6563759076784293311}
   - component: {fileID: 2786499201119074661}
   - component: {fileID: 7721711505839055827}
-  - component: {fileID: 8671514304969482671}
   m_Layer: 6
   m_Name: "\u4ECA\u6C50"
   m_TagString: Player
@@ -7833,42 +7851,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c406cb267ca934d85b902be64d3cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  context: {fileID: 0}
-  legacyCore: {fileID: 0}
   playerInputReader: {fileID: 0}
   inputBuffer: {fileID: 0}
+  context: {fileID: 0}
+  rootMotion: {fileID: 0}
   movementController: {fileID: 0}
   attackController: {fileID: 0}
   staminaController: {fileID: 0}
-  rootMotionDriver: {fileID: 0}
-  initializeOnAwake: 1
   disablePlayerInputOnStart: 0
---- !u!114 &836773133151814070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2841070955660495284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473786b43c5671b418e1f0da67862ad8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  characterData: {fileID: 11400000, guid: 645c38300a4f4ea49bcef965bf99f668, type: 2}
-  rootMotion: {fileID: 0}
-  manifestationLogic: {fileID: 0}
-  playerInputReader: {fileID: 0}
-  inputBuffer: {fileID: 0}
-  playerCamera: {fileID: 0}
-  stateMachine: {fileID: 0}
-  movementLogic: {fileID: 0}
-  staminaLogic: {fileID: 0}
-  attackLogic: {fileID: 0}
-  facade: {fileID: 0}
-  context: {fileID: 0}
-  initializeOnAwake: 1
 --- !u!114 &3988799700281616114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7882,23 +7872,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   facade: {fileID: 0}
-  legacyCore: {fileID: 0}
   playerInputReader: {fileID: 0}
   inputBuffer: {fileID: 0}
   animator: {fileID: 0}
   characterController: {fileID: 0}
-  characterData: {fileID: 0}
-  playerCamera: {fileID: 0}
+  characterData: {fileID: 11400000, guid: 645c38300a4f4ea49bcef965bf99f668, type: 2}
+  runtimeData:
+    currentHealth: 0
+  playerStamina: {fileID: 1326456390}
+  playerCamera: {fileID: 7954124293238654617}
   stateMachine: {fileID: 0}
+  playerController: {fileID: 0}
   movementLogic: {fileID: 0}
   staminaLogic: {fileID: 0}
   attackLogic: {fileID: 0}
   rootMotion: {fileID: 0}
-  manifestation: {fileID: 0}
   movementController: {fileID: 0}
   attackController: {fileID: 0}
   staminaController: {fileID: 0}
-  rootMotionDriver: {fileID: 0}
+  manifestation: {fileID: 0}
 --- !u!114 &6069195916561297269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7911,8 +7903,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e0c522d9a309c42ab4e7a1e113a692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _core: {fileID: 0}
+  context: {fileID: 0}
   characterData: {fileID: 0}
+  runtimeData:
+    currentHealth: 0
   Animator: {fileID: 0}
   PlayerInputReader: {fileID: 0}
   InputBuffer: {fileID: 0}
@@ -7979,7 +7973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9f538b5fead4254ebcba2cdab3d425c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Core: {fileID: 0}
+  context: {fileID: 0}
   RotationSmoothTime: 0.05
   speedSmoothSpeed: 10
   moveThreshold: 0.1
@@ -8539,25 +8533,6 @@ MonoBehaviour:
   SkillAttackSteps3DragonLocalOffset: {x: 0, y: 0, z: 2}
   SkillAttackSteps4DragonLocalOffset: {x: 0, y: 0, z: 2}
   dragonanimator: {fileID: 7648138142951635422}
---- !u!114 &8671514304969482671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2841070955660495284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c809defac89f8e545b1608057c4d74ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxStamina: 100
-  runDrainPerSecond: 2.5
-  sprintCost: 15
-  floatDashCost: 15
-  regenPerSecond: 10
-  regenDelay: 1
-  fullStaminaFadeDelay: 1
 --- !u!1 &2891859174515980028
 GameObject:
   m_ObjectHideFlags: 0

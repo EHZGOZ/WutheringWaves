@@ -3763,7 +3763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1039838752
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4287,8 +4287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe3f717c6ce4ee45976a5cd7738d01a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  legacySoundManager: {fileID: 0}
-  playBackgroundOnInitialize: 0
+  verboseLog: 0
 --- !u!114 &1107106149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5227,7 +5226,6 @@ MonoBehaviour:
   audioService: {fileID: 1107106148}
   effectService: {fileID: 1107106151}
   gameTimeService: {fileID: 1248533551}
-  playerSpawnConfig: {fileID: 11400000, guid: ae970d008b0af414694e13a9f9e35742, type: 2}
   playerParent: {fileID: 995321601}
   keepSpawnedPlayerAcrossScenes: 0
   loadSaveOnStart: 0
@@ -7785,7 +7783,6 @@ MonoBehaviour:
   characterHUDController: {fileID: 0}
   miniMapController: {fileID: 0}
   characterFacade: {fileID: 0}
-  legacyCore: {fileID: 0}
   playerController: {fileID: 0}
   autoCreateMiniMap: 0
   gameTimeService: {fileID: 0}
@@ -7837,10 +7834,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFacade: {fileID: 0}
-  legacyTargetCore: {fileID: 0}
   autoBindFromUIRoot: 1
   autoFindCharacterFacade: 1
-  autoFindCharacterCore: 1
   avatarIcon: {fileID: 465685828}
   skillButtonFrame: {fileID: 443107655}
   skillKeyText: {fileID: 1085922760}
@@ -8729,6 +8724,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3988799700281616114, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 4068280082628118598}
+    - target: {fileID: 5218595150155548925, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: Damping.y
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5218595150155548925, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
       value: 5
@@ -8737,6 +8740,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 6678416774427194191, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: characterDataSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 1cf7949201f7e1145911bc2a8a3e009d, type: 2}
     - target: {fileID: 7954124293238654617, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraTarget
       value: 
@@ -8757,6 +8764,11 @@ PrefabInstance:
 --- !u!4 &4068280082628118588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4036860844043559410, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+  m_PrefabInstance: {fileID: 1772380264038060468}
+  m_PrefabAsset: {fileID: 0}
+--- !u!143 &4068280082628118598 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 2770961545755517461, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
   m_PrefabInstance: {fileID: 1772380264038060468}
   m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

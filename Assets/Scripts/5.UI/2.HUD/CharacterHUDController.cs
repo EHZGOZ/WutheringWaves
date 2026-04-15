@@ -67,17 +67,6 @@ namespace WutheringWaves
             InjectDependencies();
         }
 
-        // 兼容旧链路：允许外部仍按旧接口传入CharacterCore
-        public void SetCharacterCore(CharacterCore injectedCore)
-        {
-            if (injectedCore == null)
-            {
-                return;
-            }
-
-            SetCharacterFacade(injectedCore.Facade != null ? injectedCore.Facade : injectedCore.GetComponent<CharacterFacade>());
-        }
-
         private void Awake()
         {
             CacheSkillUIs();

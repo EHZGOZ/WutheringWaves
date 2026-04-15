@@ -33,9 +33,14 @@ namespace WutheringWaves
         public bool QBurstInput { get; private set; } // 共鸣解放输入
         #endregion
 
-       
+
 
         #region 初始化
+        // 绑定当前受控角色输入缓冲：保证玩家输入写入正确角色
+        public void BindInputBuffer(InputBuffer buffer)
+        {
+            inputBuffer = buffer;
+        }
         // 输入读取器初始化：获取输入组件，缓存动作映射，并重置输入状态
         public void Initialize()
         {
@@ -86,11 +91,7 @@ namespace WutheringWaves
             QBurstInput = false;
         }
 
-        // 绑定当前受控角色输入缓冲：保证玩家输入写入正确角色
-        public void BindInputBuffer(InputBuffer buffer)
-        {
-            inputBuffer = buffer;
-        }
+        
         #endregion
 
         #region 输入回调

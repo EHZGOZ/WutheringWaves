@@ -1,29 +1,29 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace WutheringWaves
 {
     [DisallowMultipleComponent]
-    // 小地图控制器：负责镜头跟随、朝向箭头和世界标记点刷新
+    // 小地图控制器：负责相机跟随、箭头朝向和世界标记刷新
     public class MiniMapController : MonoBehaviour
     {
         [Header("UI References")]
         [SerializeField] private RectTransform backplate; // 小地图底板
         [SerializeField] private RectTransform circleMask; // 圆形遮罩
-        [SerializeField] private RawImage mapRawImage; // 地图图像
-        [SerializeField] private RectTransform markerRoot; // 标记点父节点
+        [SerializeField] private RawImage mapRawImage; // 地图底图
+        [SerializeField] private RectTransform markerRoot; // 标记点根节点
         [SerializeField] private RectTransform border; // 边框
-        [SerializeField] private RectTransform facingArrowRoot; // 箭头根节点
+        [SerializeField] private RectTransform facingArrowRoot; // 朝向箭头父节点
         [SerializeField] private RectTransform viewArrow; // 视角箭头
         [SerializeField] private RectTransform facingArrow; // 角色朝向箭头
 
         [Header("World References")]
-        [SerializeField] private Transform miniMapCameraTransform; // 小地图相机Transform
-        [SerializeField] private Transform followTarget; // 跟随目标
-        [Tooltip("绑定代表主相机朝向的世界坐标Transform，而不是UI箭头本身")]
+        [SerializeField] private Transform miniMapCameraTransform; // 小地图相机 Transform
+        [SerializeField] private Transform followTarget; // 相机跟随目标
+        [Tooltip("绑定代表主相机朝向的世界坐标 Transform，而不是 UI 箭头本身")]
         [SerializeField] private Transform viewTarget;
-        [Tooltip("绑定代表玩家朝向的世界坐标Transform，而不是UI箭头本身")]
+        [Tooltip("绑定代表玩家朝向的世界坐标 Transform，而不是 UI 箭头本身")]
         [SerializeField] private Transform facingTarget;
 
         [Header("Camera Follow")]
@@ -35,16 +35,14 @@ namespace WutheringWaves
         [SerializeField] [Range(0.1f, 1f)] private float markerClampPadding = 0.92f;
         [SerializeField] private bool hideMarkersWhenControllerHidden = true;
 
-        private readonly Dictionary<MiniMapMarker, MarkerWidget> markerWidgets = new Dictionary<MiniMapMarker, MarkerWidget>(); // 世界标记点到UI节点的映射
-
-        private Camera miniMapCamera; // 小地图相机组件缓存
+        private readonly Dictionary<MiniMapMarker, MarkerWidget> markerWidgets = new Dictionary<MiniMapMarker, MarkerWidget>(); // 标记对象到 UI 节点的映射
+        private Camera miniMapCamera; // 小地图相机缓存
         private bool initialized; // 是否已完成初始化
-        private bool isVisible = true; // 控制器当前是否可见
-        private Vector3 cameraVelocity; // SmoothDamp速度缓存
+        private bool isVisible = true; // 当前是否显示
+        private Vector3 cameraVelocity; // SmoothDamp 速度缓存
         private Sprite defaultMarkerSprite; // 默认标记图标
-        private Texture2D fallbackMarkerTexture; // 默认图标的运行时纹理
+        private Texture2D fallbackMarkerTexture; // 默认图标运行时纹理
         private CharacterFacade boundFacade; // 当前绑定的角色门面
-        private CharacterCore legacyBoundCore; // 兼容旧链路保留的角色核心
 
         public RectTransform Backplate => backplate;
         public RectTransform CircleMask => circleMask;
@@ -121,24 +119,10 @@ namespace WutheringWaves
             RefreshMarkers();
         }
 
-        // 兼容旧链路：允许外部仍按旧接口传入CharacterCore
-        public void Initialize(CharacterCore core)
-        {
-            legacyBoundCore = core;
-            Initialize(core != null ? (core.Facade != null ? core.Facade : core.GetComponent<CharacterFacade>()) : null);
-        }
-
         public void InjectDependencies(CharacterFacade facade)
         {
             // 允许外部在角色生成后补充注入依赖
             BindCharacterFacade(facade);
-        }
-
-        // 兼容旧链路：允许外部仍按旧接口传入CharacterCore
-        public void InjectDependencies(CharacterCore core)
-        {
-            legacyBoundCore = core;
-            InjectDependencies(core != null ? (core.Facade != null ? core.Facade : core.GetComponent<CharacterFacade>()) : null);
         }
 
         public void SetVisible(bool visible)
@@ -169,23 +153,13 @@ namespace WutheringWaves
 
         private void BindCharacterFacade(CharacterFacade facade)
         {
-            // 角色门面为空时不覆盖现有引用，避免把已绑定目标清空
+            // 传入为空时不覆盖现有绑定，避免把当前目标清空
             if (facade == null)
             {
-                if (legacyBoundCore == null)
-                {
-                    return;
-                }
-
-                facade = legacyBoundCore.Facade != null ? legacyBoundCore.Facade : legacyBoundCore.GetComponent<CharacterFacade>();
-                if (facade == null)
-                {
-                    return;
-                }
+                return;
             }
 
             boundFacade = facade;
-            legacyBoundCore = facade.LegacyCore;
 
             if (followTarget == null)
             {
@@ -198,21 +172,21 @@ namespace WutheringWaves
             }
 
             CharacterContext context = boundFacade.Context;
-            if (viewTarget == null && context != null && context.PlayerCamera != null && context.PlayerCamera.cameraPivot != null)
-            {
-                viewTarget = context.PlayerCamera.cameraPivot;
-            }
+            //if (viewTarget == null && context != null && context.PlayerCamera != null && context.PlayerCamera.cameraPivot != null)
+            //{
+            //    viewTarget = context.PlayerCamera.cameraPivot;
+            //}
         }
 
         private void CacheCamera()
         {
-            // 小地图相机只从显式配置的Transform上获取，避免误抓场景主相机
+            // 小地图相机只从显式配置的 Transform 上获取，避免误抓场景主相机
             miniMapCamera = miniMapCameraTransform != null ? miniMapCameraTransform.GetComponent<Camera>() : null;
         }
 
         private void RefreshVisibility()
         {
-            // 控制器整体显隐时，同步处理地图底图、箭头和标记点显示状态
+            // 控制器整体显隐时，同步处理底图、箭头和标记点显示状态
             bool shouldShow = isVisible && isActiveAndEnabled;
 
             if (mapRawImage != null)
@@ -260,7 +234,7 @@ namespace WutheringWaves
 
         private void UpdateCameraFollow()
         {
-            // 没有相机或跟随目标时不执行相机跟随
+            // 缺少相机或跟随目标时不执行跟随
             if (miniMapCameraTransform == null || followTarget == null)
             {
                 return;
@@ -282,7 +256,7 @@ namespace WutheringWaves
 
         private void UpdateArrowRotation(RectTransform arrow, Transform target)
         {
-            // 箭头和目标任一为空时，直接跳过旋转更新
+            // 箭头或目标为空时，直接跳过旋转更新
             if (arrow == null || target == null)
             {
                 return;
@@ -300,7 +274,7 @@ namespace WutheringWaves
 
         private void EnsureDefaultMarkerSprite()
         {
-            // 当外部未提供图标时，运行时生成一个最小白色精灵作为默认占位
+            // 外部未提供图标时，运行时创建一个最小白色精灵作为默认占位
             if (defaultMarkerSprite != null)
             {
                 return;
@@ -322,7 +296,7 @@ namespace WutheringWaves
 
         private void RefreshMarkers()
         {
-            // 小地图隐藏或缺少根节点时，不刷新标记点
+            // 小地图隐藏或缺少根节点时，不刷新标记
             if (markerRoot == null || followTarget == null || !isVisible)
             {
                 return;
@@ -373,7 +347,7 @@ namespace WutheringWaves
 
         private MarkerWidget GetOrCreateMarkerWidget(MiniMapMarker marker)
         {
-            // 复用已存在的UI节点，减少运行时反复创建对象的开销
+            // 复用已存在的 UI 节点，减少运行时反复创建对象的开销
             if (markerWidgets.TryGetValue(marker, out MarkerWidget widget) && widget.Root != null)
             {
                 return widget;
@@ -396,7 +370,7 @@ namespace WutheringWaves
 
         private void UpdateMarkerWidget(MiniMapMarker marker, MarkerWidget widget)
         {
-            // 优先使用MarkerRoot作为计算坐标基准，缺失时回退到圆形遮罩
+            // 优先使用 MarkerRoot 作为坐标计算基准，缺失时回退到圆形遮罩
             RectTransform rootRect = markerRoot.rect.size.sqrMagnitude > 0f ? markerRoot : circleMask;
             if (rootRect == null)
             {
@@ -447,7 +421,7 @@ namespace WutheringWaves
 
         private Vector2 WorldDeltaToAnchoredPosition(Vector3 worldDelta, Vector2 mapSize, float worldRadius)
         {
-            // 使用小地图相机的前方向和右方向，把世界位移映射到UI局部坐标
+            // 使用小地图相机的前向和右向，把世界位移映射到 UI 局部坐标
             Vector3 mapForward = miniMapCameraTransform != null ? miniMapCameraTransform.forward : Vector3.forward;
             Vector3 mapRight = miniMapCameraTransform != null ? miniMapCameraTransform.right : Vector3.right;
             mapForward = Vector3.ProjectOnPlane(mapForward, Vector3.up).normalized;
@@ -529,7 +503,7 @@ namespace WutheringWaves
 
         private void ClearMarkerWidgets()
         {
-            // 销毁所有运行时生成的标记点UI，避免场景切换后残留
+            // 销毁所有运行时生成的标记点 UI，避免场景切换后残留
             foreach (KeyValuePair<MiniMapMarker, MarkerWidget> pair in markerWidgets)
             {
                 if (pair.Value.Root != null)

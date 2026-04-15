@@ -156,9 +156,10 @@ namespace WutheringWaves
     public class CharacterAttack : MonoBehaviour
     {
         // 核心依赖组件
-        private CharacterCore core;                  // 角色核心脚本（总控制器）
+        private CharacterContext context;            // 角色共享上下文
         private Animator animator;                  // 角色动画控制器
-        private CharacterData characterData;        // 角色数据（攻击力、耐力等属性）
+        private CharacterDataSO characterData;      // 角色静态数据（攻击力等基础属性）
+        private CombatConfigSO combatConfig;        // 角色战斗配置（攻击段等）
 
         #region 攻击配置（Inspector面板可编辑参数）
         [Header("===连击窗口持续时间（秒）===")]
@@ -179,26 +180,63 @@ namespace WutheringWaves
         private GameObject sword;
         [Header("=== 今汐专用御空御剑 ===")]
         public JinxiSpecialAirSwordConfig jinxiSpecialAirSword = new JinxiSpecialAirSwordConfig();
-        
-        [Header("=== 所有攻击段配置===")]
-        public List<AttackStep> attackSteps; //存储轻攻击攻击段的核心列表 
-        public List<AttackStep> fallAttackSteps; //存储下落攻击段的核心列表 
-        public List<AttackStep> SkillAirAttackSteps; //御空攻击段的核心列表（空中） 
-        public List<AttackStep> SkillAttackSteps; //御空攻击段的核心列表（近地） 
-        public List<AttackStep> ESkillAttackSteps; //存储技能攻击段的核心列表 
-        public List<AttackStep> QBurstAttackSteps; //存储爆发攻击段的核心列表 
+
+        [Header("=== 旧配置兼容（迁移完成后可删除） ===")]
+        [Tooltip("旧轻攻击攻击段列表：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacyAttackSteps = new List<AttackStep>();
+        [Tooltip("旧下落攻击段列表：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacyFallAttackSteps = new List<AttackStep>();
+        [Tooltip("旧御空攻击段列表（空中）：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacySkillAirAttackSteps = new List<AttackStep>();
+        [Tooltip("旧御空攻击段列表（近地）：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacySkillAttackSteps = new List<AttackStep>();
+        [Tooltip("旧技能攻击段列表：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacyESkillAttackSteps = new List<AttackStep>();
+        [Tooltip("旧爆发攻击段列表：仅在 CombatConfigSO 未配置时兜底使用")]
+        [SerializeField] private List<AttackStep> legacyQBurstAttackSteps = new List<AttackStep>();
+        #endregion
+
+        #region 攻击段配置访问器
+        // 轻攻击攻击段：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> attackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.attackSteps : null, legacyAttackSteps);
+        // 下落攻击段：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> fallAttackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.fallAttackSteps : null, legacyFallAttackSteps);
+        // 御空攻击段（空中）：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> SkillAirAttackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.skillAirAttackSteps : null, legacySkillAirAttackSteps);
+        // 御空攻击段（近地）：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> SkillAttackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.skillAttackSteps : null, legacySkillAttackSteps);
+        // 技能攻击段：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> ESkillAttackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.eSkillAttackSteps : null, legacyESkillAttackSteps);
+        // 爆发攻击段：优先读取 CombatConfigSO，未配置时回退到旧 Inspector 数据
+        public List<AttackStep> QBurstAttackSteps => ResolveAttackSteps(combatConfig != null ? combatConfig.qBurstAttackSteps : null, legacyQBurstAttackSteps);
         #endregion
 
         #region 初始化
-        // 组件初始化：由CharacterCore调用，绑定核心依赖
-        public void Initialize(CharacterCore core)
+        // 组件初始化：由CharacterFacade调用，绑定共享依赖
+        public void Initialize(CharacterContext context)
         {
-            //1.初始化Core
-            this.core = core;
+            //1.初始化Context
+            this.context = context;
             //2.获取子物体的动画控制器
-            this.animator = core.GetComponentInChildren<Animator>();
+            this.animator = context != null ? context.Animator : null;
             //3.获取角色属性数据
-            this.characterData = core.GetCharacterData();
+            this.characterData = context != null ? context.CharacterDataSO : null;
+            //4.获取角色战斗配置
+            this.combatConfig = characterData != null ? characterData.combatConfig : null;
+        }
+
+        #endregion
+
+        #region 配置解析
+        // 攻击段配置解析：优先使用 CombatConfigSO，未配置时回退到旧 Inspector 列表
+        private List<AttackStep> ResolveAttackSteps(List<AttackStep> combatConfigSteps, List<AttackStep> legacySteps)
+        {
+            if (combatConfigSteps != null && combatConfigSteps.Count > 0)
+            {
+                return combatConfigSteps;
+            }
+
+            return legacySteps;
         }
         #endregion
 
@@ -453,9 +491,9 @@ namespace WutheringWaves
         public bool IsAttackable()
         {
             //条件1：是否为可打断状态（非受击/非死亡，基础状态判断）
-            bool isCanInterrupt = core.stateMachine.IsInterruptible();
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             //条件2：在地面上
-            bool isGrounded = core.movementLogic.CustomCheckGrounded();
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
             //条件3：处于非御空状态
             bool isFloating = _isFloating;
             // 满足所有条件 → 可以攻击
@@ -532,9 +570,9 @@ namespace WutheringWaves
         public bool IsFallAttackable()
         {
             //条件1：是否为可打断状态（非受击/非死亡，基础状态判断）
-            bool isCanInterrupt = core.stateMachine.IsInterruptible();
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             //条件2：是否在地面
-            bool isInTheAir = !core.movementLogic.CustomCheckGrounded();
+            bool isInTheAir = context != null && context.MovementLogic != null && !context.MovementLogic.CustomCheckGrounded();
             //条件3：是否为御空状态
             bool IsFloating = _isFloating;
 
@@ -552,7 +590,7 @@ namespace WutheringWaves
         public bool IsAirAttackable()
         {
             //条件1：是否为可打断状态（非受击/非死亡闪避爆发状态判断）
-            bool isCanInterrupt = core.stateMachine.IsInterruptible();
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             //条件2：处于御空状态
             bool isFloating = _isFloating;
             return isCanInterrupt && isFloating;
@@ -628,7 +666,7 @@ namespace WutheringWaves
             //条件1：是否在CD
             bool isCD = _skill1CDTimer <= 0f;
             //条件2：在地面上
-            bool isGrounded = core.movementLogic.CustomCheckGrounded();
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
             return isCD&& isGrounded;
         }
         
@@ -639,7 +677,7 @@ namespace WutheringWaves
         public bool IsESkillable()
         {
             //条件1：是否为可打断状态（非受击/非死亡，基础状态判断）
-            bool isCanInterrupt = core.stateMachine.IsInterruptible();
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             //条件2： Skill1  Skill2  Skill3  Skill4是否可用
             bool CanEskill = CanUseSkill1 ()|| CanUseSkill2 || CanUseSkill3 || CanUseSkill4;
             return isCanInterrupt&& CanEskill;
@@ -717,7 +755,7 @@ namespace WutheringWaves
         public bool IsQBurstable()
         {
             //条件1：是否为可打断状态（非受击/非死亡，基础状态判断）
-            bool isCanInterrupt = core.stateMachine.IsInterruptible();
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             //条件2：是否存在爆发攻击段配置
             bool hasQBurstStep = HasQBurstConfigured;
             //条件3：是否不在CD

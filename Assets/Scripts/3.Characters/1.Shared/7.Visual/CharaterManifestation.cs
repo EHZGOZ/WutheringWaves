@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 // 类魂游戏核心命名空间
@@ -10,7 +10,7 @@ namespace WutheringWaves
     /// </summary>
     public class CharacterManifestation : MonoBehaviour
     {
-        private CharacterCore core;
+        private CharacterContext context;
         private bool _subscribedGameEvents;
 
         #region 装饰剑与龙角配置
@@ -28,33 +28,27 @@ namespace WutheringWaves
         #endregion
 
         #region 私有渲染组件
-        // 龙角渲染组件
         private SkinnedMeshRenderer _dragonHornRenderer;
-        // 龙角专属实例材质（避免修改全局材质）
         private Material _dragonHornMaterial;
-        // 淡入淡出协程引用（防止重复启动）
         private Coroutine _dragonHornFadeCoroutine;
 
-        // 装饰剑渲染组件
         private MeshRenderer _decorationSwordRenderer;
-        // 装饰剑专属实例材质
         private Material _decorationSwordMaterial;
-        // 装饰剑淡入淡出协程
         private Coroutine _decorationSwordFadeCoroutine;
 
-        // URP Unlit 材质颜色属性名（固定写法，不要改）
         private readonly string _unlitColorProperty = "_BaseColor";
         #endregion
 
         #region 初始化
-        public void Initialize(CharacterCore core)
+        public void Initialize(CharacterContext context)
         {
-            this.core = core;
+            this.context = context;
             SubscribeGameEvents();
             RefreshDragonHorn();
             RendererInitialize();
         }
 
+        // 兼容旧链路：允许CharacterCore继续转发到新初始化入口
         private void OnDestroy()
         {
             UnsubscribeGameEvents();
@@ -70,7 +64,6 @@ namespace WutheringWaves
                 {
                     _dragonHornMaterial = new Material(_dragonHornRenderer.material);
                     _dragonHornRenderer.material = _dragonHornMaterial;
-                    //SetDragonHornAlpha(0);
                 }
             }
 
@@ -98,21 +91,16 @@ namespace WutheringWaves
             _decorationSwordMaterial.SetColor(_unlitColorProperty, currentColor);
         }
 
-        // 渐变显示装饰剑（淡入）
         public void ShowDecorationSwordFade()
         {
             ShowDecorationSwordInstantly();
-
         }
 
-        // 渐变隐藏装饰剑（淡出）
         public void HideDecorationSwordFade()
         {
             HideDecorationSwordInstantly();
-
         }
 
-        // 装饰剑渐变协程
         private IEnumerator DecorationSwordFadeCoroutine(float startAlpha, float targetAlpha)
         {
             float currentAlpha = startAlpha;
@@ -127,12 +115,11 @@ namespace WutheringWaves
             _decorationSwordFadeCoroutine = null;
         }
 
-        // 装饰剑【立即显现】
         public void ShowDecorationSwordInstantly()
         {
             DecorationSword.SetActive(true);
         }
-        // 装饰剑【立即消失】
+
         public void HideDecorationSwordInstantly()
         {
             DecorationSword.SetActive(false);
@@ -153,7 +140,6 @@ namespace WutheringWaves
             _dragonHornMaterial.SetColor(_unlitColorProperty, currentColor);
         }
 
-        // 渐变显示龙角（淡入）
         public void ShowDragonHornFade()
         {
             if (_dragonHornRenderer == null || _dragonHornMaterial == null)
@@ -166,7 +152,7 @@ namespace WutheringWaves
             Color currentColor = _dragonHornMaterial.GetColor(_unlitColorProperty);
             _dragonHornFadeCoroutine = StartCoroutine(DragonHornFadeCoroutine(currentColor.a, 1));
         }
-        // 渐变隐藏龙角（淡出）
+
         public void HideDragonHornFade()
         {
             if (_dragonHornRenderer == null || _dragonHornMaterial == null) return;
@@ -176,7 +162,6 @@ namespace WutheringWaves
             _dragonHornFadeCoroutine = StartCoroutine(DragonHornFadeCoroutine(currentColor.a, 0));
         }
 
-        // 龙角渐变协程核心
         private IEnumerator DragonHornFadeCoroutine(float startAlpha, float targetAlpha)
         {
             float currentAlpha = startAlpha;
@@ -193,7 +178,10 @@ namespace WutheringWaves
 
         private void RefreshDragonHorn()
         {
-            if (core.attackLogic.IsFloating || core.stateMachine.CurrentStateType == CharacterState.QBurst)
+            bool isFloating = context != null && context.AttackLogic != null && context.AttackLogic.IsFloating;
+            bool isQBurst = context != null && context.StateMachine != null && context.StateMachine.CurrentStateType == CharacterState.QBurst;
+
+            if (isFloating || isQBurst)
                 ShowDragonHornFade();
             else
                 HideDragonHornFade();
@@ -219,13 +207,13 @@ namespace WutheringWaves
 
         private void HandleCharacterStateChanged(CharacterStateMachine source, CharacterState oldState, CharacterState newState)
         {
-            if (core == null || source != core.stateMachine) return;
+            if (context == null || source != context.StateMachine) return;
             RefreshDragonHorn();
         }
 
         private void HandleFloatingChanged(CharacterAttack source, bool isFloating)
         {
-            if (core == null || source != core.attackLogic) return;
+            if (context == null || source != context.AttackLogic) return;
             RefreshDragonHorn();
         }
     }
