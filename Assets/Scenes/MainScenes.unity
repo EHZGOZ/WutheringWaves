@@ -8729,10 +8729,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4068280082628118598}
     - target: {fileID: 5218595150155548925, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
-      propertyPath: Damping.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5218595150155548925, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
       value: 5
       objectReference: {fileID: 0}
@@ -8744,10 +8740,6 @@ PrefabInstance:
       propertyPath: characterDataSO
       value: 
       objectReference: {fileID: 11400000, guid: 1cf7949201f7e1145911bc2a8a3e009d, type: 2}
-    - target: {fileID: 7954124293238654617, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
-      propertyPath: CameraTarget
-      value: 
-      objectReference: {fileID: 961739749}
     - target: {fileID: 7954124293238654617, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: SensitivityX
       value: 0.1

@@ -178,7 +178,7 @@ namespace WutheringWaves
 
         private void RefreshDragonHorn()
         {
-            bool isFloating = context != null && context.AttackLogic != null && context.AttackLogic.IsFloating;
+            bool isFloating = context != null && context.StateMachine != null && context.StateMachine.IsFloating();
             bool isQBurst = context != null && context.StateMachine != null && context.StateMachine.CurrentStateType == CharacterState.QBurst;
 
             if (isFloating || isQBurst)

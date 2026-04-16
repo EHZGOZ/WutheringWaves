@@ -38,12 +38,14 @@ namespace WutheringWaves
         [SerializeField] private CharacterRootMotion rootMotion; // 角色根运动逻辑
         [Header("角色表现逻辑")]
         [SerializeField] private CharacterManifestation manifestation; //角色表现逻辑
-
-        [Header("=== 旧架构逻辑引用 ===")]
-        [Header("旧移动逻辑")]
-        [SerializeField] private CharacterMovement movementLogic; // 旧移动逻辑
-        [Header("旧战斗逻辑")]
-        [SerializeField] private CharacterAttack attackLogic; // 旧战斗逻辑
+        [Header("武器控制器")]
+        [SerializeField] private WeaponController weaponController; // 武器控制器
+        [Header("特效控制器")]
+        [SerializeField] private EffectController effectController; // 特效控制器
+        [Header("移动逻辑")]
+        [SerializeField] private CharacterMovement movementLogic; // 移动逻辑
+        [Header("战斗逻辑")]
+        [SerializeField] private CharacterAttack attackLogic; // 战斗逻辑
         
         
 
@@ -61,6 +63,8 @@ namespace WutheringWaves
         public CharacterStateMachine StateMachine => stateMachine;
         public CharacterRootMotion RootMotion => rootMotion;
         public CharacterManifestation Manifestation => manifestation;
+        public WeaponController WeaponController => weaponController;
+        public EffectController EffectController => effectController;
 
         public CharacterMovement MovementLogic => movementLogic;
         public CharacterAttack AttackLogic => attackLogic;
@@ -146,10 +150,15 @@ namespace WutheringWaves
             ResolveRootMotion();
             //12.解析外观
             Resolvemanifestation();
+            //13.解析武器控制器
+            ResolveWeaponController();
+            //14.解析特效控制器
+            ResolveEffectController();
 
-            //13.解析旧架构逻辑
-            ResolveLegacyLogics();
-
+            //15.解析移动逻辑
+            ResolvemovementLogic();
+            //16.解析攻击逻辑
+            ResolveattackLogic();
         }
 
         //1.解析角色门面
@@ -273,13 +282,47 @@ namespace WutheringWaves
                 manifestation = GetComponent<CharacterManifestation>();
             }
         }
-        //13.解析旧架构逻辑
-        private void ResolveLegacyLogics()
+        //13.解析武器控制器
+        private void ResolveWeaponController()
+        {
+            if (weaponController == null)
+            {
+                weaponController = GetComponent<WeaponController>();
+            }
+
+            // 武器控制器是新拆出来的通用系统，当前角色缺失时运行时自动补齐
+            if (weaponController == null)
+            {
+                weaponController = gameObject.AddComponent<WeaponController>();
+            }
+        }
+        //14.解析特效控制器
+        private void ResolveEffectController()
+        {
+            if (effectController == null)
+            {
+                effectController = GetComponent<EffectController>();
+            }
+
+            // 特效控制器与武器/御龙同层管理，当前角色缺失时运行时自动补齐
+            if (effectController == null)
+            {
+                effectController = gameObject.AddComponent<EffectController>();
+            }
+        }
+        //15.解析移动逻辑
+        private void ResolvemovementLogic()
         {
             if (movementLogic == null)
             {
                 movementLogic = GetComponent<CharacterMovement>();
             }
+
+        }
+        //16.解析攻击逻辑
+        private void ResolveattackLogic()
+        {
+
 
             if (attackLogic == null)
             {

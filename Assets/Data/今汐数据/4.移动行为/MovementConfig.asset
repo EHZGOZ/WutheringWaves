@@ -9,16 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e894965ebbe764e4ab21a1ac72684fe5, type: 3}
-  m_Name: "\u4ECA\u6C50SO"
+  m_Script: {fileID: 11500000, guid: 302e796fc334d43458012b7155d4fceb, type: 3}
+  m_Name: MovementConfig
   m_EditorClassIdentifier: 
-  characterName: 0
-  baseAttack: 10
-  maxHealth: 100
-  maxStaminaData: 100
-  staminaCostInRun: 2
-  staminaRecovery: 20
-  staminaRecoveryDelay: 0.5
   rotationSmoothTime: 0.1
   speedSmoothSpeed: 5
   moveThreshold: 0.1
@@ -34,18 +27,3 @@ MonoBehaviour:
   airDashUpDistance: 2
   airDashCostTime: 0.3
   floatDashCostTime: 1.9
-  gravity: -30
-  fallCheckDelay: 0.3
-  groundCheckRadius: 0.2
-  groundCheckOriginOffset: 0.2
-  groundCheckDistance: 0.2
-  moveStoppingDistance: 0.7
-  moveStoppingTime: 1
-  runStoppingDistance: 1
-  runStoppingTime: 1
-  dashStoppingDistance: 1
-  dashStoppingTime: 0.66
-  resonanceESkillCD: 5
-  resonanceESkillMagnification: 2
-  resonanceQBurstCD: 10
-  resonanceQBurstMagnification: 5

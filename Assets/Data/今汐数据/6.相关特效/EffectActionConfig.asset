@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a5c9c4d9c349b3b4a7d2e1c8f64510, type: 3}
+  m_Name: EffectActionConfig
+  m_EditorClassIdentifier: 
+  characterName: 0
+  effectActions:
+  - attackId: 1
+    effectSpawns:
+    - effectPrefab: {fileID: 0}
+      delayTime: 0
+      followCharacter: 0
+      localPositionOffset: {x: 0, y: 0, z: 0}
+      localRotationOffset: {x: 0, y: 0, z: 0}
+      destroyOnStop: 0

@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+using System.Linq;
+using UnityEngine;
 
 namespace WutheringWaves
 {
     public class CharacterFacade : MonoBehaviour
     {
-        #region 核心引用    
+        #region 核心引用
         [Header("=== 外层核心组件（优先自动获取，可手动补全） ===")]
         [Header("玩家控制器：位于 Player 层")]
         [SerializeField] private PlayerController playerController; // 玩家控制器
@@ -19,7 +20,8 @@ namespace WutheringWaves
         [Header("角色共享上下文：集中管理角色运行时共享依赖")]
         [SerializeField] private CharacterContext context;
 
-
+        [Header("=== 角色独属（自动获取，可手动补全） ===")]
+        [SerializeField] private JinxiFeatureRoot jinxiFeatureRoot;
         #endregion
 
         #region 对外只读属性
@@ -27,15 +29,12 @@ namespace WutheringWaves
         public PlayerInputReader PlayerInputReader => playerInputReader; // 玩家输入读取器
         public PlayerStamina PlayerStamina => playerStamina; // 玩家共享体力
         public CharacterDataSO CharacterDataSO => characterDataSO; // 玩家共享体力
-
         public CharacterContext Context => context; // 角色共享上下文
-        
         public bool IsInitialized { get; private set; } // 是否完成初始化
         #endregion
 
-
         #region 初始化
-        // 角色门面初始化总入口：统一接管上下文、输入、旧逻辑组件与新控制器的启动顺序
+        // 角色门面初始化总入口：统一接管上下文、输入、共享模块与角色专属模块的启动顺序
         public void Initialize()
         {
             // 1. 防止重复初始化
@@ -50,13 +49,17 @@ namespace WutheringWaves
             // 3. 初始化角色共享上下文
             InitializeContext();
 
-            // 4. 按 CharacterContext 中的依赖顺序，初始化角色运行模块
+            // 4. 初始化角色专属模块，并把专属驱动能力注入共享状态机
+            InitializeCharacterExclusiveModules();
+
+            // 5. 按 CharacterContext 的依赖顺序，初始化角色运行模块
             InitializeCharacterRuntimeModules();
 
-            //5 . 标记初始化完成
+            // 6. 标记初始化完成
             IsInitialized = true;
         }
-        //2.自动补齐角色根节点上的核心组件引用
+
+        // 自动补齐角色根节点上的核心组件引用
         private void AutoGetComponents()
         {
             //玩家控制
@@ -64,16 +67,19 @@ namespace WutheringWaves
             {
                 playerController = GetComponentInParent<PlayerController>();
             }
+
             //玩家输入
             if (playerInputReader == null)
             {
                 playerInputReader = GetComponentInParent<PlayerInputReader>();
             }
+
             //玩家体力
             if (playerStamina == null)
             {
                 playerStamina = GetComponentInParent<PlayerStamina>();
             }
+
             //角色数据
             if (characterDataSO == null)
             {
@@ -85,10 +91,9 @@ namespace WutheringWaves
             {
                 context = GetComponent<CharacterContext>();
             }
-           
         }
 
-        //3.先初始化共享上下文，保证后续所有模块有统一依赖来源
+        // 先初始化共享上下文，保证后续所有模块有统一依赖来源
         private void InitializeContext()
         {
             context?.SetPlayerControllerReader(playerController);
@@ -97,8 +102,42 @@ namespace WutheringWaves
             context?.SetCharacterDataSO(characterDataSO);
             context?.Initialize(this);
         }
-        
-        //4.按 CharacterContext 的依赖顺序初始化角色运行模块：
+
+        // 初始化角色专属模块：根据角色数据决定拉起哪些专属模块，并把状态机所需的专属能力注入进去
+        private void InitializeCharacterExclusiveModules()
+        {
+            if (characterDataSO == null)
+            {
+                return;
+            }
+
+            switch (characterDataSO.characterName)
+            {
+                case CharacterName.今汐:
+                    InitializeJinxiExclusiveModules();
+                    break;
+            }
+        }
+
+        // 初始化今汐专属模块，并把今汐专属状态机驱动 / 龙表现控制器接入共享状态机
+        private void InitializeJinxiExclusiveModules()
+        {
+            if (jinxiFeatureRoot == null)
+            {
+                jinxiFeatureRoot = GetComponent<JinxiFeatureRoot>();
+            }
+
+            jinxiFeatureRoot?.Initialize(context);
+
+            ICharacterStateMachineDriver stateMachineDriver = GetComponents<MonoBehaviour>()
+                .OfType<ICharacterStateMachineDriver>()
+                .FirstOrDefault();
+
+            context?.StateMachine?.SetStateMachineDriver(stateMachineDriver);
+            context?.StateMachine?.SetJinxiDragonController(jinxiFeatureRoot != null ? jinxiFeatureRoot.DragonController : null);
+        }
+
+        // 按 CharacterContext 的依赖顺序初始化角色运行模块
         private void InitializeCharacterRuntimeModules()
         {
             // 1.先初始化玩家共享体力，保证后续体力判定读取到的是当前角色配置
@@ -111,12 +150,15 @@ namespace WutheringWaves
             context?.RootMotion?.Initialize(context);
             // 5.初始化角色表现逻辑，保证外观表现订阅与材质缓存已准备好
             context?.Manifestation?.Initialize(context);
-            // 6.初始化旧移动逻辑，保证旧链路阶段的移动判定可正常工作
+            // 6.初始化武器控制器，保证攻击表现触发前武器系统已准备好
+            context?.WeaponController?.Initialize(context);
+            // 7.初始化特效控制器，保证攻击表现触发前特效系统已准备好
+            context?.EffectController?.Initialize(context);
+            // 8.初始化移动逻辑，保证移动判定可正常工作
             context?.MovementLogic?.Initialize(context);
-            // 7.初始化旧战斗逻辑，保证旧链路阶段的攻击逻辑可正常工作
+            // 9.初始化战斗逻辑，保证攻击逻辑可正常工作
             context?.AttackLogic?.Initialize(context);
         }
-
         #endregion
     }
 }

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e894965ebbe764e4ab21a1ac72684fe5, type: 3}
+  m_Name: "\u4ECA\u6C50SO"
+  m_EditorClassIdentifier: 
+  characterName: 0
+  baseAttack: 10
+  maxHealth: 100
+  animationConfigSO: {fileID: 11400000, guid: 8016c7b2e228841469cb160d0e507179, type: 2}
+  combatConfig: {fileID: 11400000, guid: ca6c8ddaaaa41d5418eb38909d976deb, type: 2}
+  movementConfigSO: {fileID: 11400000, guid: 9b1a4ac4c97c4f2ead7a9bb7a5f9a0b1, type: 2}
+  weaponConfigSO: {fileID: 11400000, guid: 31701b11094f46c3b579678f1e3d3af8, type: 2}
+  effectActionConfigSO: {fileID: 11400000, guid: 5e2d9e6323ade2844ba3c152ae3645e9, type: 2}
+  maxStaminaData: 100
+  staminaCostInRun: 2
+  staminaRecovery: 20
+  staminaRecoveryDelay: 0.5
+  moveStoppingDistance: 0.7
+  moveStoppingTime: 1
+  runStoppingDistance: 1
+  runStoppingTime: 1
+  dashStoppingDistance: 1
+  dashStoppingTime: 0.66
+  gravity: -30
+  fallCheckDelay: 0.3
+  groundCheckRadius: 0.2
+  groundCheckOriginOffset: 0.2
+  groundCheckDistance: 0.2

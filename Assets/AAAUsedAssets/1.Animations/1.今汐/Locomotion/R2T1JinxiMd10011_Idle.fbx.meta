@@ -39,7 +39,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Stand1
+      name: Idle
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0

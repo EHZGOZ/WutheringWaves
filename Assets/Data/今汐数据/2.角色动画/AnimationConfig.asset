@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7c9c14a1df4cc1b88f32e5a7f96e31, type: 3}
+  m_Name: AnimationConfig
+  m_EditorClassIdentifier: 
+  characterName: 0
+  locomotionAnimations:
+  - animationId: 1
+    clip: {fileID: 1827226128182048838, guid: 1838cef87fc2b254f9704b4e01a18085, type: 3}
+  - animationId: 2
+    clip: {fileID: 1827226128182048838, guid: 1ea5e2578dd3eaf4cbb753621a6a2e13, type: 3}
+  - animationId: 3
+    clip: {fileID: 1827226128182048838, guid: 80167d9b25d8cfa47bfe8997d34fba04, type: 3}
+  - animationId: 5
+    clip: {fileID: 1827226128182048838, guid: 378c374b7db5e934491f0c51a3ea2e4c, type: 3}
+  - animationId: 6
+    clip: {fileID: 1827226128182048838, guid: ff7b63a674e52a94aa0e47744ce07b0f, type: 3}
+  - animationId: 7
+    clip: {fileID: 1827226128182048838, guid: 2fd1e4d129f1bf146928034af5818177, type: 3}
+  - animationId: 8
+    clip: {fileID: 1827226128182048838, guid: c247b7db445c6fb4dadafe6148520843, type: 3}
+  - animationId: 9
+    clip: {fileID: 1827226128182048838, guid: 9430cce23606a764cb39a04c94b5fe79, type: 3}
+  - animationId: 10
+    clip: {fileID: 1827226128182048838, guid: 88f62382d822714469341be59d45f9e7, type: 3}
+  - animationId: 11
+    clip: {fileID: 1827226128182048838, guid: 78fcf485517ba2d4fb34986f667b4eb8, type: 3}
+  - animationId: 12
+    clip: {fileID: 1827226128182048838, guid: 15046c15ee173584999652204bbbead0, type: 3}
+  - animationId: 13
+    clip: {fileID: 1827226128182048838, guid: fd494830021306a4089a328d89d971f8, type: 3}
+  - animationId: 14
+    clip: {fileID: 1827226128182048838, guid: 3b62d872c1490274582d9b1db76777ed, type: 3}
+  - animationId: 4
+    clip: {fileID: 1827226128182048838, guid: 262e60ab576f52a4fb30c15481159dad, type: 3}
+  combatAnimations:
+  - attackId: 1
+    clip: {fileID: 1827226128182048838, guid: 4c0486def14e7af498e6ceeaa6a53c75, type: 3}
+  - attackId: 2
+    clip: {fileID: 1827226128182048838, guid: b06f13f26c274664d9ced58d2e012a58, type: 3}
+  - attackId: 3
+    clip: {fileID: 1827226128182048838, guid: 67b537cf4da0b8a41833724de3a7de40, type: 3}
+  - attackId: 4
+    clip: {fileID: 1827226128182048838, guid: 19b017174342ce6438ecb134b8926a6b, type: 3}
+  - attackId: 5
+    clip: {fileID: 1827226128182048838, guid: 55bd5fd6784fa404d845c9aa74673a75, type: 3}
+  - attackId: 6
+    clip: {fileID: 1827226128182048838, guid: aa7d193fadda2b24287756d16eb372e6, type: 3}
+  - attackId: 7
+    clip: {fileID: 1827226128182048838, guid: 55d77ce18775715458ad0135362a6e1d, type: 3}
+  - attackId: 8
+    clip: {fileID: 1827226128182048838, guid: 265d564c89666b3488e84148f1d87aac, type: 3}
+  - attackId: 9
+    clip: {fileID: 1827226128182048838, guid: fb67878a4f7f1e4499078a6be5ebb67b, type: 3}
+  - attackId: 10
+    clip: {fileID: 1827226128182048838, guid: 92f727054a2ec774e9f490e62d231479, type: 3}
+  - attackId: 11
+    clip: {fileID: 1827226128182048838, guid: 3041a890d9b1d6c488fe6944868675ca, type: 3}
+  - attackId: 12
+    clip: {fileID: 1827226128182048838, guid: a9b969f8f58f435469c9ac702f289294, type: 3}
+  - attackId: 13
+    clip: {fileID: 1827226128182048838, guid: 4f7e465fb0779a74babe0972055f680a, type: 3}
+  - attackId: 14
+    clip: {fileID: 1827226128182048838, guid: cf1e96efaa7a5534d804c564928f169a, type: 3}
+  - attackId: 15
+    clip: {fileID: 1827226128182048838, guid: 107b39a16309fd347867c3d1e34d9157, type: 3}
+  - attackId: 16
+    clip: {fileID: 1827226128182048838, guid: a4d26f28eba1e074486fa16e9b28fa65, type: 3}
+  - attackId: 17
+    clip: {fileID: 1827226128182048838, guid: 7369df13c8ec56f43b33d6ef980a9463, type: 3}
+  - attackId: 18
+    clip: {fileID: 1827226128182048838, guid: 471c8a0abab2c394d86057f6b6d8dc3b, type: 3}
+  - attackId: 19
+    clip: {fileID: 1827226128182048838, guid: 24eb7462a0a2364449f6a227a513f345, type: 3}
+  - attackId: 20
+    clip: {fileID: 1827226128182048838, guid: 0284d1f2f41b735469866470a774e09f, type: 3}

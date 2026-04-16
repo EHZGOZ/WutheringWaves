@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Unity.VisualScripting;
@@ -49,199 +50,6 @@ namespace WutheringWaves
     }
     #endregion
 
-    #region 状态抽象基类（定义所有状态的核心生命周期规范）
-    // 所有角色状态的抽象基类
-    public abstract class CharacterBaseState
-    {
-        #region 核心依赖（所有状态可访问的上下文）
-        protected CharacterStateMachine stateMachine; // 状态机核心（上下文，存储所有共享数据/组件）
-        protected CharacterStateFactory Factory; // 状态工厂（用于状态切换时获取目标状态实例）
-        #endregion
-
-        #region 构造函数（注入依赖，所有子类必须实现）
-        protected CharacterBaseState(CharacterStateMachine currentContext, CharacterStateFactory characterStateFactory)
-        {
-            stateMachine = currentContext;
-            Factory = characterStateFactory;
-        }
-        #endregion
-
-        #region 状态生命周期（抽象方法，子类必须实现具体逻辑）
-        /// <summary>进入状态时执行（仅调用一次，初始化状态数据/动画/参数）</summary>
-        public abstract void EnterState();
-        /// <summary>状态帧更新逻辑（每帧调用，处理状态核心业务）</summary>
-        public abstract void UpdateState();
-        /// /// <summary>退出状态时执行（仅调用一次，清理状态数据）</summary>
-        public abstract void ExitState();
-        #endregion
-
-        #region 状态切换辅助方法（子类通过此方法切换状态，统一入口）
-        /// <summary>切换到目标状态（子类内部调用，自动触发生命周期）</summary>
-        /// <param name="targetState">目标状态枚举</param>
-        protected void SwitchState(CharacterState targetState)
-        {
-            stateMachine.SwitchState(Factory.GetState(targetState));
-        }
-        #endregion
-
-        #region 通用判断方法（所有状态可复用的基础判断，封装在基类）
-        //// 判断是否为可打断状态（非闪避/非受击/非死亡可被大部分状态打断）
-        //protected bool IsInterruptible()
-        //{
-        //    return stateMachine.CurrentStateType != CharacterState.Dodging&&stateMachine.CurrentStateType != CharacterState.Hit && stateMachine.CurrentStateType != CharacterState.Dead;
-        //}
-        //// 判断地面冲刺是否可用
-        //protected bool IsDashAvailable()
-        //{
-        //    // 条件1：是否为可打断状态（非受击/非死亡，基础状态判断）
-        //    bool isCanInterrupt = IsInterruptible();
-        //    // 条件2：必须在地面
-        //    bool isGrounded =!stateMachine.CheckFallTransition();
-        //    // 条件3：全局CD是否结束（两次连续冲刺后，必须等全局CD才能重新开始冲刺）
-        //    bool isGlobalCDOver = stateMachine.DashGlobalCDTimer <= 0;
-        //    // 条件4：当前冲刺次数是否未达上限（最多连续2次，次数0/1时满足，2次则触发全局CD并重置）
-        //    bool isUnderMaxCount = stateMachine.DashCount < 2;
-        //    // 条件5：内置CD是否结束（两次连续冲刺之间的0.3s冷却，仅非首次冲刺需要判断）
-        //    bool isInternalCDOver = stateMachine.DashInternalCDTimer <= 0;
-
-        //    return isCanInterrupt &&isGrounded&& isGlobalCDOver && isUnderMaxCount && (stateMachine.DashCount == 0 || isInternalCDOver);
-        //}
-        ////判断空中冲刺是否可用
-        //protected bool IsAirDashAvailable()
-        //{
-        //    // 条件1：是否为可打断状态（非闪避/非受击/非死亡，基础状态判断）
-        //    bool isCanInterrupt = IsInterruptible();
-        //    // 条件2：必须在空中
-        //    bool isInAir = !stateMachine.CharacterController.isGrounded;
-        //    // 条件3：本次坠落还未被使用
-        //    bool hasNotUsed = !stateMachine.HasAirDashed;
-            
-        //    return isCanInterrupt && isInAir && hasNotUsed ;
-        //}
-        //// 判断跳跃是否可用
-        //protected bool IsJumpAvailable()
-        //{
-        //    // 条件1：是否为可打断状态
-        //    bool isCanInterrupt = IsInterruptible();
-        //    return isCanInterrupt;
-        //}
-        #endregion
-    }
-    #endregion
-
-    #region 状态工厂类（管理所有状态实例，单例化创建，避免重复实例化）
-    // 负责创建并缓存所有具体状态实例，提供统一的状态获取接口
-    public class CharacterStateFactory
-    {
-        #region 状态实例缓存（私有，仅工厂内部管理）
-        private CharacterIdleState _idleState;// 待机
-        private CharacterMovingState _movingState;// 移动
-        private CharacterJumpingState _jumpingState; // 跳跃
-
-        private CharacterFallingState _fallingState;// 空中下落/滞空阶段
-
-        private CharacterAttackingState _attackingState;// 攻击
-        private CharacterHeavyAttackingState _heavyAttackingState;//重击
-        private CharacterFallAttackingState _fallAttackingState;//下落攻击
-        private CharacterAirAttackingState _airAttackingState; //空中攻击
-
-        private CharacterDashingState _dashingState;// 冲刺
-        private CharacterAirDashingState _airDashingState;// 空中冲刺
-        private CharacterFloatDashingState _floatDashingState;//御空冲刺
-
-        private CharacterDodgingState _dodgingState; //闪避
-        private CharacterFloatDodgingState _floatDodgingState;//御空闪避
-
-        private CharacterESkillState _eSkillState;//战技
-        private CharacterQBurstState _qBurstState;//爆发
-
-        private CharacterHitState _hitState;// 受击
-        private CharacterDeadState _deadState;// 死亡
-        private CharacterTransitionState _transitionState; // 过渡动画状态
-        #endregion
-
-        #region 工厂上下文（状态机核心，传递给所有状态）
-        private readonly CharacterStateMachine _context;
-        #endregion
-
-        #region 构造函数（初始化所有状态实例，仅执行一次）
-        public CharacterStateFactory(CharacterStateMachine stateMachine)
-        {
-            _context = stateMachine;
-            // 初始化所有状态实例，注入上下文和工厂自身
-            _idleState = new CharacterIdleState(_context, this);// 待机
-            _movingState = new CharacterMovingState(_context, this);// 移动
-            _jumpingState = new CharacterJumpingState(_context, this);// 跳跃
-
-            _fallingState = new CharacterFallingState(_context, this);// 空中下落/滞空阶段
-
-            _attackingState = new CharacterAttackingState(_context, this);// 攻击
-            _heavyAttackingState = new CharacterHeavyAttackingState(_context, this);//重击
-            _fallAttackingState = new CharacterFallAttackingState(_context, this);//下落攻击
-            _airAttackingState = new CharacterAirAttackingState(_context, this);//御空冲刺
-
-            _dashingState = new CharacterDashingState(_context, this);// 冲刺
-            _airDashingState = new CharacterAirDashingState(_context, this);// 空中冲刺
-            _floatDashingState = new CharacterFloatDashingState(_context, this);//御空冲刺
-
-            _dodgingState = new CharacterDodgingState(_context, this);//闪避
-            _floatDodgingState = new CharacterFloatDodgingState(_context, this);//御空闪避
-
-            _eSkillState = new CharacterESkillState(_context, this);//战技
-            _qBurstState = new CharacterQBurstState(_context, this);//爆发
-
-            _hitState = new CharacterHitState(_context, this);// 受击
-            _deadState = new CharacterDeadState(_context, this);// 死亡
-            _transitionState = new CharacterTransitionState(_context, this);// 过渡动画状态
-
-        }
-        #endregion
-
-        #region 统一状态获取接口（外部仅通过此方法获取状态实例）
-        /// <summary>根据状态枚举获取对应的状态实例</summary>
-        /// <param name="stateType">目标状态枚举</param>
-        /// <returns>对应的状态实例</returns>
-        /// <exception cref="ArgumentOutOfRangeException">未定义的状态枚举</exception>
-        public CharacterBaseState GetState(CharacterState stateType)
-        {
-            return stateType switch
-            {
-                CharacterState.Idle => _idleState,// 待机
-                CharacterState.Moving => _movingState,// 移动
-                CharacterState.Jumping => _jumpingState,// 跳跃
-
-                CharacterState.Falling => _fallingState,// 空中下落/滞空阶段
-
-                CharacterState.Attacking => _attackingState,// 攻击
-                CharacterState.HeavyAttacking => _heavyAttackingState,//重击
-                CharacterState.FallAttacking => _fallAttackingState,//下落攻击
-                CharacterState.AirAttacking => _airAttackingState,//空中攻击
-
-                CharacterState.Dashing => _dashingState,// 冲刺
-                CharacterState.AirDashing => _airDashingState,// 空中冲刺
-                CharacterState.FloatDashing => _floatDashingState,//御空冲刺
-
-                CharacterState.Dodging => _dodgingState,//闪避
-                CharacterState.FloatDodging => _floatDodgingState,//御空闪避
-
-                CharacterState.ESkill => _eSkillState,//战技
-                CharacterState.QBurst => _qBurstState,//爆发
-
-                CharacterState.Hit => _hitState,// 受击
-                CharacterState.Dead => _deadState,// 死亡
-                CharacterState.Transition => _transitionState,// 过渡动画状态
-                _ => throw new ArgumentOutOfRangeException(nameof(stateType), stateType, "未定义的角色状态枚举")
-            };
-        }
-        #endregion
-
-        #region 快捷获取默认状态（初始化时使用）
-        /// <summary>获取角色默认初始状态（闲置）</summary>
-        public CharacterBaseState GetDefaultState() => _idleState;
-        #endregion
-    }
-    #endregion
-
     #region 状态机核心类（FSM总调度，上下文管理，状态切换核心）
     /// 角色状态机核心
     /// 负责：1.管理所有共享数据/组件依赖 2.调度状态生命周期 3.提供状态切换核心方法 4.对外暴露状态信息
@@ -269,6 +77,9 @@ namespace WutheringWaves
         public CharacterAttack attackLogic;
         [Tooltip("效果表现处理器")]
         public CharacterManifestation manifestation;
+
+        private ICharacterStateMachineDriver stateMachineDriver;
+        private JinxiDragonController jinxiDragonController;
         #endregion
 
         #region 2. FSM核心组件
@@ -289,6 +100,10 @@ namespace WutheringWaves
         public bool IsStateLocked { get; set; } = false;
         // 血量快照（用于边沿检测受击）
         private float _lastObservedHealth;
+
+        public ICharacterStateMachineDriver StateMachineDriver => stateMachineDriver;
+        public JinxiSpecialSkillLinker JinxiSpecialSkillLinker => stateMachineDriver as JinxiSpecialSkillLinker;
+        public JinxiDragonController JinxiDragonController => jinxiDragonController;
         #endregion
 
         #region 4. 初始化（由CharacterFacade调用，保证初始化顺序）
@@ -306,8 +121,9 @@ namespace WutheringWaves
             InputBuffer = context != null ? context.InputBuffer : null;
             attackLogic = context != null ? context.AttackLogic : null;
             manifestation = context != null ? context.Manifestation : null;
-            // 创建状态工厂 → 获取默认状态 → 进入初始状态
+            // 创建状态工厂 → 注册角色特殊状态 → 获取默认状态 → 进入初始状态
             StateFactory = new CharacterStateFactory(this);
+            stateMachineDriver?.RegisterSpecialStates(StateFactory, this);
             //初始化上一状态为Idle
             PreviousStateType = CharacterState.Idle;
             PreviousPreviousStateType = CharacterState.Idle;
@@ -316,6 +132,24 @@ namespace WutheringWaves
         }
 
         #endregion
+
+        // 由外部组合入口注入角色专属状态机驱动，状态机自身不直接查找角色专属模块
+        public void SetStateMachineDriver(ICharacterStateMachineDriver driver)
+        {
+            stateMachineDriver = driver;
+        }
+
+        // 由外部组合入口注入今汐专属龙表现控制器，后续可继续抽象成更通用的表现驱动接口
+        public void SetJinxiDragonController(JinxiDragonController controller)
+        {
+            jinxiDragonController = controller;
+        }
+
+        // 判断当前角色是否注册了目标状态：供后续状态转换判断做安全拦截
+        public bool HasState(CharacterState stateType)
+        {
+            return StateFactory != null && StateFactory.HasState(stateType);
+        }
 
         #region 5. FSM核心方法：状态切换（唯一入口，自动执行生命周期）
         /// <summary>
@@ -415,6 +249,113 @@ namespace WutheringWaves
 
         // 对外暴露当前生命值：统一从运行时数据读取，避免状态脚本继续访问旧静态数据
         public float CurrentHealth => runtimeData != null ? runtimeData.currentHealth : 0f;
+
+        public bool IsAttackable()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsAttackable();
+        }
+
+        public bool IsFallAttackable()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsFallAttackable();
+        }
+
+        public bool IsAirAttackable()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsAirAttackable();
+        }
+
+        public bool IsESkillable()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsESkillable();
+        }
+
+        public bool IsQBurstable()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsQBurstable();
+        }
+
+        public bool IsFloating()
+        {
+            return stateMachineDriver != null && stateMachineDriver.IsFloating;
+        }
+
+        public List<AttackStep> AttackSteps => stateMachineDriver != null ? stateMachineDriver.AttackSteps : null;
+        public List<AttackStep> FallAttackSteps => stateMachineDriver != null ? stateMachineDriver.FallAttackSteps : null;
+        public List<AttackStep> SkillAirAttackSteps => stateMachineDriver != null ? stateMachineDriver.SkillAirAttackSteps : null;
+        public List<AttackStep> SkillAttackSteps => stateMachineDriver != null ? stateMachineDriver.SkillAttackSteps : null;
+        public List<AttackStep> ESkillAttackSteps => stateMachineDriver != null ? stateMachineDriver.ESkillAttackSteps : null;
+        public List<AttackStep> QBurstAttackSteps => stateMachineDriver != null ? stateMachineDriver.QBurstAttackSteps : null;
+
+        public AttackStep InitializeNormalAttackStep()
+        {
+            return stateMachineDriver != null ? stateMachineDriver.InitializeNormalAttackStep() : null;
+        }
+
+        public AttackStep InitializeAirAttackStep(List<AttackStep> steps)
+        {
+            return stateMachineDriver != null ? stateMachineDriver.InitializeAirAttackStep(steps) : null;
+        }
+
+        public AttackStep InitializeESkillStep()
+        {
+            return stateMachineDriver != null ? stateMachineDriver.InitializeESkillStep() : null;
+        }
+
+        public void StartNormalComboWindow()
+        {
+            stateMachineDriver?.StartNormalComboWindow();
+        }
+
+        public void StartAirComboWindow()
+        {
+            stateMachineDriver?.StartAirComboWindow();
+        }
+
+        public void ResetNormalCombo()
+        {
+            stateMachineDriver?.ResetNormalCombo();
+        }
+
+        public void ResetAirCombo()
+        {
+            stateMachineDriver?.ResetAirCombo();
+        }
+
+        public void OnSkill1Used()
+        {
+            stateMachineDriver?.OnSkill1Used();
+        }
+
+        public void OnSkill2Used()
+        {
+            stateMachineDriver?.OnSkill2Used();
+        }
+
+        public void OnSkill3Used()
+        {
+            stateMachineDriver?.OnSkill3Used();
+        }
+
+        public void OnSkill4Used()
+        {
+            stateMachineDriver?.OnSkill4Used();
+        }
+
+        public void OnQBurstUsed()
+        {
+            stateMachineDriver?.OnQBurstUsed();
+        }
+
+        public void PlayJinxiDragonAction(AttackStep step)
+        {
+            JinxiDragonController?.PlayDragonAction(step);
+        }
+
+        public void HideJinxiDragonInstantly()
+        {
+            JinxiDragonController?.HideDragonInstantly();
+        }
 
         // 兼容旧状态实现的输入读取代理：后续状态迁移时统一从StateMachine访问
         public Vector2 MoveInput => PlayerInputReader != null ? PlayerInputReader.MoveInput : Vector2.zero;
@@ -586,7 +527,7 @@ namespace WutheringWaves
             CheckMoveToIdle();
 
             //4.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法
@@ -703,7 +644,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -716,7 +657,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -740,13 +681,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -775,23 +716,15 @@ namespace WutheringWaves
             // 2.初始化待机状态
             InitializeIdleState();
             // 3.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子状态
         //1. 进入待机状态动画
         private void IdleEnterAnimation()
         {
-            //1.待机状态动画
-            if (stateMachine.PreviousStateType == CharacterState.QBurst)
-            {
-                stateMachine.Animator.SetTrigger("Stand2");
-            }
-            else
-            {
-                stateMachine.Animator.SetTrigger("Idle");
-            }
-            //stateMachine.Animator.SetTrigger("Idle");
+             stateMachine.Animator.SetTrigger("Idle");
+            // Idle / Move / Run 继续交给 Blend Tree 参数驱动
             //2.展示背负装饰剑
             stateMachine.manifestation.ShowDecorationSwordFade();
         }
@@ -843,8 +776,7 @@ namespace WutheringWaves
         // 1. 退出待机状态动画
         private void IdleExitAnimation()
         {
-            //1.清除动画残留
-            stateMachine.Animator.ResetTrigger("Idle");
+            // CrossFade 直切动画后无需再清理 Trigger
         }
         //2. 配置待机动作过渡参数并切换状态
         private void PrepareToTransition()
@@ -880,7 +812,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -893,7 +825,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -917,13 +849,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -959,7 +891,7 @@ namespace WutheringWaves
             //2. 进入移动状态动画
             MovingEnterAnimation();
             //3.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法
@@ -971,7 +903,7 @@ namespace WutheringWaves
         //2.进入移动状态动画
         private void MovingEnterAnimation()
         {
-            //1.清除动画残留
+            // Idle / Move / Run 继续交给 Blend Tree 参数驱动
             stateMachine.Animator.SetTrigger("Move");
         }
         #endregion
@@ -1018,8 +950,7 @@ namespace WutheringWaves
         // 1. 退出移动状态动画
         private void MovingExitAnimation()
         {
-            //1.清除移动动画残存
-            stateMachine.Animator.ResetTrigger("Move");
+            // CrossFade 直切动画后无需再清理 Trigger
         }
         //2. 配置缓冲过渡参数并切换状态
         private void PrepareToTransition()
@@ -1062,7 +993,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -1075,7 +1006,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -1099,13 +1030,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -1137,14 +1068,17 @@ namespace WutheringWaves
             //2.初始化跳跃状态
             InitializeJumpingState();
             //3.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子状态
         // 1. 进入跳跃状态动画
         private void JumpingEnterAnimation()
         {
-            stateMachine.Animator.SetTrigger("Jump");
+            LocomotionAnimationId jumpAnimationId = stateMachine.IsHoldingRun
+                ? LocomotionAnimationId.Jump_Run
+                : LocomotionAnimationId.Jump_Walk;
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(jumpAnimationId), 0f, 0, 0);
         }
         //2.初始化跳跃状态
         private void InitializeJumpingState()
@@ -1189,7 +1123,7 @@ namespace WutheringWaves
         // 1. 退出跳跃状态动画
         private void JumpingExitAnimation()
         {
-            stateMachine.Animator.ResetTrigger("Jump");
+            // CrossFade 直切动画后无需再清理 Trigger
         }
         #endregion
 
@@ -1203,7 +1137,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -1222,13 +1156,13 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
@@ -1257,7 +1191,7 @@ namespace WutheringWaves
             //2.重置下坠时间
             InitializeFallingState();
             //3.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子状态
@@ -1267,11 +1201,11 @@ namespace WutheringWaves
             //stateMachine.Animator.SetTrigger("Fall");
             if(stateMachine.PreviousStateType==CharacterState.AirDashing|| stateMachine.PreviousStateType == CharacterState.FloatDashing|| stateMachine.PreviousStateType == CharacterState.Jumping)
             {
-                stateMachine.Animator.CrossFadeInFixedTime("Fall_Loop", 0.2f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0.2f, 0, 0);
             }
             else
             {
-                stateMachine.Animator.CrossFadeInFixedTime("Fall_Loop", 0, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0, 0, 0);
             }
 
         }
@@ -1320,8 +1254,8 @@ namespace WutheringWaves
         {
             stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
             {
-                AnimationTrigger = "Land", // 你的落地动画 Trigger 名称
-                Duration = 1.03f, // 假设落地动画时长0.3秒，根据实际Clip修改
+                AnimationTrigger = stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Land),
+                Duration = stateMachine.attackLogic.GetLocomotionAnimationLength(LocomotionAnimationId.Land),
                 DefaultNextState = CharacterState.Idle // 无打断时默认切 Idle
             };
         }
@@ -1337,7 +1271,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -1350,7 +1284,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -1368,13 +1302,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsFallAttackable())
             {
                 SwitchState(CharacterState.FallAttacking);
                 return;
@@ -1423,7 +1357,7 @@ namespace WutheringWaves
         private void InitializeAttackData()
         {
             //1.获取攻击段数
-            _attackStep = stateMachine.attackLogic.InitializeSteps(stateMachine.attackLogic.attackSteps);
+            _attackStep = stateMachine.InitializeNormalAttackStep();
             //2.同步攻击阶段信息
             stateMachine.currentStep = _attackStep;
         }
@@ -1447,15 +1381,15 @@ namespace WutheringWaves
             //装饰剑隐藏
             stateMachine.manifestation.HideDecorationSwordFade();
             //龙隐藏
-            stateMachine.attackLogic.HidedragonInstantly();
+            stateMachine.HideJinxiDragonInstantly();
             //攻击动画
-            stateMachine.Animator.SetTrigger(_attackStep.attackAnimation.attackAnimationName);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_attackStep), 0f, 0, 0);
             //御剑动画
-            stateMachine.attackLogic.StartFlyingSword(_attackStep);
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_attackStep);
             //龙动画
-            stateMachine.attackLogic.CheckDragonAnimation(_attackStep);
+            stateMachine.PlayJinxiDragonAction(_attackStep);
             //特效动画
-            stateMachine.attackLogic.CheckEffect(_attackStep);
+            stateMachine.context?.EffectController?.PlayEffectAction(_attackStep);
         }
         #endregion
 
@@ -1474,11 +1408,11 @@ namespace WutheringWaves
         private void UpdateStateTimeAndChangePhase()
         {
             _stateTime += Time.deltaTime;
-            if (_stateTime > _attackStep.attackAnimation.executionAttackCostTime)
+            if (_stateTime > stateMachine.attackLogic.GetExecutionDuration(_attackStep))
             {
                 if(_phase ==AttackPhase.Execution)
                 {
-                    stateMachine.attackLogic.StartComboWindow();
+                    stateMachine.StartNormalComboWindow();
                     
                     stateMachine.IsStateLocked = false;
                 }
@@ -1491,7 +1425,7 @@ namespace WutheringWaves
         {
             //防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-            if (_stateTime * 1.5f > _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator)&&!hasUpataAttackingUpdateAnimation)
+            if (_stateTime * 1.5f > stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep)&&!hasUpataAttackingUpdateAnimation)
             {
                 hasUpataAttackingUpdateAnimation = true;
                 stateMachine.manifestation.ShowDecorationSwordFade();
@@ -1511,14 +1445,13 @@ namespace WutheringWaves
         // 1. 退出攻击状态动画
         private void AttackingExitAnimation()
         {
-            //防止动画残留
-            stateMachine.Animator.ResetTrigger(_attackStep.attackAnimation.attackAnimationName);
+            // CrossFade 直切动画后无需再清理 Trigger
             //剑隐藏
-            stateMachine.attackLogic.EndFlyingSword();
+            stateMachine.context?.WeaponController?.EndWeaponAction();
             //龙隐藏
-            stateMachine.attackLogic.HidedragonInstantly();
+            stateMachine.HideJinxiDragonInstantly();
             //隐藏特效
-            EffectService.DestroyAll();
+            stateMachine.context?.EffectController?.EndEffectAction();
         }
         #endregion
 
@@ -1531,7 +1464,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -1544,7 +1477,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -1563,7 +1496,7 @@ namespace WutheringWaves
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -1576,7 +1509,7 @@ namespace WutheringWaves
                 return;
             }
             // 待机状态
-            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
             {
                 SwitchState(CharacterState.Idle);
                 return;
@@ -1691,7 +1624,7 @@ namespace WutheringWaves
                 return;
             }
             // 普通攻击（重击恢复阶段可衔接普攻）
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -1749,7 +1682,7 @@ namespace WutheringWaves
             //3.进入下落攻击状态动画
             FallAttackingEnterAnimation();
             //4.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子状态
@@ -1757,11 +1690,11 @@ namespace WutheringWaves
         private void InitliazeFallAttackingData()
         {
             // 1. 动画数据赋值（确保 fallAttackSteps 有至少3个元素）
-            if (stateMachine.attackLogic.fallAttackSteps.Count >= 3)
+            if (stateMachine.FallAttackSteps.Count >= 3)
             {
-                _fallattackStepStart = stateMachine.attackLogic.fallAttackSteps[0];
-                _fallattackStepLoop = stateMachine.attackLogic.fallAttackSteps[1];
-                _fallattackStepEnd = stateMachine.attackLogic.fallAttackSteps[2];
+                _fallattackStepStart = stateMachine.FallAttackSteps[0];
+                _fallattackStepLoop = stateMachine.FallAttackSteps[1];
+                _fallattackStepEnd = stateMachine.FallAttackSteps[2];
             }
             else
             {
@@ -1787,11 +1720,11 @@ namespace WutheringWaves
         private void FallAttackingEnterAnimation()
         {
             //下落攻击开始动画
-            stateMachine.Animator.SetTrigger("FallAttackingStart");
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepStart), 0f, 0, 0);
             //装饰剑隐藏
             stateMachine.manifestation.HideDecorationSwordFade();
             //御剑
-            stateMachine.attackLogic.StartFlyingSword(_fallattackStepStart);
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_fallattackStepStart);
         }
         #endregion
 
@@ -1814,18 +1747,17 @@ namespace WutheringWaves
             //1.状态时长递增
             _stateTime += Time.deltaTime;
             // 1. 强制守门：Start 动画没播完，什么都不做
-            if (_stateTime <= _fallattackStepStart.attackAnimation.GetAnimationLength(stateMachine.Animator))
+            if (_stateTime <= stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepStart))
                 return;
             // 2. 状态：start -> loop
             if (_phase == FallAttackPhase.start)
             {
                 stateMachine.IsStateLocked = false;
-                stateMachine.Animator.ResetTrigger("FallAttackingStart");
-                stateMachine.Animator.SetTrigger("FallAttackingLoop");
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepLoop), 0f, 0, 0);
                 //同步攻击阶段信息
                 stateMachine.currentStep = _fallattackStepLoop;
                 //御剑
-                stateMachine.attackLogic.StartFlyingSword(_fallattackStepLoop);
+                stateMachine.context?.WeaponController?.PlayWeaponAction(_fallattackStepLoop);
                 _phase = FallAttackPhase.loop;
             }  // 3. 状态：loop -> end (着地)
             else if (_phase == FallAttackPhase.loop)
@@ -1834,10 +1766,9 @@ namespace WutheringWaves
                 if (stateMachine.movementLogic.CustomCheckGrounded())
                 {
                     //落地特效
-                    stateMachine.attackLogic.CheckEffect(_fallattackStepEnd);
+                    stateMachine.context?.EffectController?.PlayEffectAction(_fallattackStepEnd);
                     _endStateTime = 0f;
-                    stateMachine.Animator.ResetTrigger("FallAttackingLoop");
-                    stateMachine.Animator.SetTrigger("FallAttackingEnd");
+                    stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepEnd), 0f, 0, 0);
                     //同步攻击阶段信息
                     stateMachine.currentStep = _fallattackStepEnd;
                     _phase = FallAttackPhase.end;
@@ -1846,7 +1777,7 @@ namespace WutheringWaves
             else if (_phase == FallAttackPhase.end)
             {
                 _endStateTime += Time.deltaTime;
-                if (_endStateTime > _fallattackStepEnd.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (_endStateTime > stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepEnd))
                 {
                     _phase = FallAttackPhase.over;
                 }
@@ -1876,7 +1807,7 @@ namespace WutheringWaves
         // 3. 更新下落攻击状态动画
         private void FallAttackingUpdateAnimation()
         {
-            if (_stateTime * 1.5f > _fallattackStepEnd.attackAnimation.GetAnimationLength(stateMachine.Animator)&&!hasUpdateFallAttackingAnimation)
+            if (_stateTime * 1.5f > stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepEnd)&&!hasUpdateFallAttackingAnimation)
             {
                 hasUpdateFallAttackingAnimation = true;
                 //显示装饰剑
@@ -1897,12 +1828,9 @@ namespace WutheringWaves
         // 1. 退出下落攻击状态动画
         private void FallAttackingExitAnimation()
         {
-            // 清理所有动画 Trigger
-            stateMachine.Animator.ResetTrigger("FallAttackingStart");
-            stateMachine.Animator.ResetTrigger("FallAttackingLoop");
-            stateMachine.Animator.ResetTrigger("FallAttackingEnd");
+            // CrossFade 直切动画后无需再清理 Trigger
             //隐藏特效
-            EffectService.DestroyAll();
+            stateMachine.context?.EffectController?.EndEffectAction();
         }
         #endregion
 
@@ -1915,7 +1843,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -1928,7 +1856,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -1953,7 +1881,7 @@ namespace WutheringWaves
                 return;
             }
             //攻击状态
-            if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -2014,13 +1942,13 @@ namespace WutheringWaves
             if(stateMachine.movementLogic.CustomCheckGrounded())
             {
                 //御空攻击(地面模组)
-                _attackStep = stateMachine.attackLogic.InitializeAirSteps(stateMachine.attackLogic.SkillAttackSteps);
+                _attackStep = stateMachine.InitializeAirAttackStep(stateMachine.SkillAttackSteps);
                 _isGrouded = isGrouded.T;
             }
             else
             {
                 //御空攻击(空中模组)
-                _attackStep = stateMachine.attackLogic.InitializeAirSteps(stateMachine.attackLogic.SkillAirAttackSteps);
+                _attackStep = stateMachine.InitializeAirAttackStep(stateMachine.SkillAirAttackSteps);
                 _isGrouded = isGrouded.F;
             }
             
@@ -2044,11 +1972,11 @@ namespace WutheringWaves
             // 装饰剑隐藏
             stateMachine.manifestation.HideDecorationSwordFade();
             // 播放攻击动画
-            stateMachine.Animator.SetTrigger(_attackStep.attackAnimation.attackAnimationName);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_attackStep), 0f, 0, 0);
             // 御剑/龙/特效表现
-            stateMachine.attackLogic.StartFlyingSword(_attackStep);
-            stateMachine.attackLogic.CheckDragonAnimation(_attackStep);
-            stateMachine.attackLogic.CheckEffect(_attackStep);
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_attackStep);
+            stateMachine.PlayJinxiDragonAction(_attackStep);
+            stateMachine.context?.EffectController?.PlayEffectAction(_attackStep);
         }
         #endregion
 
@@ -2068,10 +1996,10 @@ namespace WutheringWaves
         private void UpdateStateTimeAndChangePhase()
         {
             _stateTime += Time.deltaTime;
-            if (_phase == AirAttackPhase.Execution && _stateTime > _attackStep.attackAnimation.executionAttackCostTime)
+            if (_phase == AirAttackPhase.Execution && _stateTime > stateMachine.attackLogic.GetExecutionDuration(_attackStep))
             {
                 // 进入恢复阶段，开启连击窗口
-                stateMachine.attackLogic.StartAirComboWindow();
+                stateMachine.StartAirComboWindow();
                 stateMachine.IsStateLocked = false;
                 _phase = AirAttackPhase.Recovery;
             }
@@ -2082,7 +2010,7 @@ namespace WutheringWaves
             // 防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
             // 动画快结束时显示装饰剑
-            if (_stateTime * 1.2f > _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator) && !_hasUpdatedExitAnimation)
+            if (_stateTime * 1.2f > stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep) && !_hasUpdatedExitAnimation)
             {
                 _hasUpdatedExitAnimation = true;
                 stateMachine.manifestation.ShowDecorationSwordFade();
@@ -2102,14 +2030,13 @@ namespace WutheringWaves
         //1.退出动画相关
         private void AirAttackingExitAnimation()
         {
-            //清理动画触发器
-            stateMachine.Animator.ResetTrigger(_attackStep.attackAnimation.attackAnimationName);
+            // CrossFade 直切动画后无需再清理 Trigger
             //结束御剑表现
-            stateMachine.attackLogic.EndFlyingSword();
+            stateMachine.context?.WeaponController?.EndWeaponAction();
             //隐藏龙
-            stateMachine.attackLogic.HidedragonInstantly();
+            stateMachine.HideJinxiDragonInstantly();
             //隐藏特效
-            EffectService.DestroyAll();
+            stateMachine.context?.EffectController?.EndEffectAction();
 
         }
         #endregion
@@ -2127,7 +2054,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -2141,7 +2068,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _phase == AirAttackPhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _phase == AirAttackPhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -2160,13 +2087,13 @@ namespace WutheringWaves
                     return;
                 }
                 //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
                 }
                 // 攻击
-                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable() && _phase == AirAttackPhase.Recovery)
+                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable() && _phase == AirAttackPhase.Recovery)
                 {
                     SwitchState(CharacterState.Attacking);
                     return;
@@ -2178,7 +2105,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -2195,7 +2122,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -2209,7 +2136,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _phase == AirAttackPhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _phase == AirAttackPhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -2222,13 +2149,13 @@ namespace WutheringWaves
                     return;
                 }
                 //下落状态
-                if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
                 {
                     SwitchState(CharacterState.Falling);
                     return;
                 }
                 //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
@@ -2240,7 +2167,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _attackStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -2284,7 +2211,7 @@ namespace WutheringWaves
             //5.进入冲刺状态动画
             DashingEnterAnimation();
             //6.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法  
@@ -2306,9 +2233,9 @@ namespace WutheringWaves
         private void DashingEnterAnimation()
         {
             if (_dashDirection)
-                stateMachine.Animator.SetTrigger("DashF");
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashForward), 0f, 0, 0);
             else
-                stateMachine.Animator.SetTrigger("DashB");
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashBackward), 0f, 0, 0);
         }
         #endregion
 
@@ -2355,8 +2282,7 @@ namespace WutheringWaves
         //1.退出冲刺状态动画
         private void DashingExitAnimation()
         {
-            stateMachine.Animator.ResetTrigger("DashF");
-            stateMachine.Animator.ResetTrigger("DashB");
+            // CrossFade 直切动画后无需再清理 Trigger
         }
         #endregion
 
@@ -2369,7 +2295,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -2382,7 +2308,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -2400,13 +2326,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -2446,7 +2372,7 @@ namespace WutheringWaves
             //3.进入空中冲刺状态动画
             AirDashingEnterAnimation();
             //4.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法
@@ -2474,12 +2400,12 @@ namespace WutheringWaves
             if (_airDashDirection)
             {
                 //stateMachine.Animator.SetTrigger("AirDashF");
-                stateMachine.Animator.CrossFadeInFixedTime("Jump_Second_F", 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.AirDashForward), 0f, 0, 0);
             }
             else
             {
                 //stateMachine.Animator.SetTrigger("AirDashB");
-                stateMachine.Animator.CrossFadeInFixedTime("Jump_Second_B", 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.AirDashBackward), 0f, 0, 0);
             }
         }
         #endregion
@@ -2531,26 +2457,26 @@ namespace WutheringWaves
         private void CheckStateTransitions()
         {
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsFallAttackable())
             {
                 SwitchState(CharacterState.FallAttacking);
                 return;
@@ -2589,7 +2515,7 @@ namespace WutheringWaves
             //4.进入御空冲刺状态动画
             FloatDashingEnterAnimation();
             //5.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法
@@ -2616,11 +2542,11 @@ namespace WutheringWaves
         {
             if (_floatDashDirection)
             {
-                stateMachine.Animator.CrossFadeInFixedTime("SkillMove_F", 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingForward), 0f, 0, 0);
             }
             else
             {
-                stateMachine.Animator.CrossFadeInFixedTime("SkillMove_B", 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingBackward), 0f, 0, 0);
             }
         }
         #endregion
@@ -2677,7 +2603,7 @@ namespace WutheringWaves
                 return;
             }
             //爆发状态
-            if (stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            if (stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.QBurst);
@@ -2691,7 +2617,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -2704,13 +2630,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //下落状态
-            if (!stateMachine.attackLogic.IsFloating|| _stateTime >= 1.9f)
+            if (!stateMachine.IsFloating()|| _stateTime >= 1.9f)
             {
                 SwitchState(CharacterState.Falling);
                 return;
@@ -2730,7 +2656,7 @@ namespace WutheringWaves
             // 初始化：锁死状态+标记闪避+开启无敌+播放闪避动画+停止冲刺
             stateMachine.IsStateLocked = true;
 
-            stateMachine.Animator.SetTrigger("Dodge"); // 需在Animator创建Dodge Trigger
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Dodge), 0f, 0, 0);
 
         }
 
@@ -2748,7 +2674,7 @@ namespace WutheringWaves
             // 清理：解锁状态+清除标记+关闭无敌+重置触发器
             stateMachine.IsStateLocked = false;
 
-            stateMachine.Animator.ResetTrigger("Dodge");
+            // CrossFade 直切动画后无需再清理 Trigger
         }
 
         private void CheckStateTransitions()
@@ -2822,33 +2748,28 @@ namespace WutheringWaves
         private void InitializeESkillData()
         {
             //初始化攻击阶段
-            _currentSkillStep = stateMachine.attackLogic.InitializeESkillSteps();
+            _currentSkillStep = stateMachine.InitializeESkillStep();
             // 初始化执行阶段时长
-            _executionDuration = _currentSkillStep.attackAnimation.executionAttackCostTime;
+            _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_currentSkillStep);
             //初始化战技类型
-            if (_currentSkillStep== stateMachine.attackLogic.ESkillAttackSteps[3])
+            switch (_currentSkillStep.attackId)
             {
-                _eSkillType = ESkillType.ESkill4;
-                stateMachine.attackLogic.OnSkill4Used();
-                return;
-            }
-            if (_currentSkillStep == stateMachine.attackLogic.ESkillAttackSteps[2])
-            {
-                _eSkillType = ESkillType.ESkill3;
-                stateMachine.attackLogic.OnSkill3Used();
-                return;
-            }
-            if (_currentSkillStep == stateMachine.attackLogic.ESkillAttackSteps[1])
-            {
-                _eSkillType = ESkillType.ESkill2;
-                stateMachine.attackLogic.OnSkill2Used();
-                return;
-            }
-            if (_currentSkillStep == stateMachine.attackLogic.ESkillAttackSteps[0])
-            {
-                _eSkillType = ESkillType.ESkill1;
-                stateMachine.attackLogic.OnSkill1Used();
-                return;
+                case AttackId.ESkill04:
+                    _eSkillType = ESkillType.ESkill4;
+                    stateMachine.OnSkill4Used();
+                    return;
+                case AttackId.ESkill03:
+                    _eSkillType = ESkillType.ESkill3;
+                    stateMachine.OnSkill3Used();
+                    return;
+                case AttackId.ESkill02:
+                    _eSkillType = ESkillType.ESkill2;
+                    stateMachine.OnSkill2Used();
+                    return;
+                default:
+                    _eSkillType = ESkillType.ESkill1;
+                    stateMachine.OnSkill1Used();
+                    return;
             }
         }
         //2.初始化战技状态
@@ -2866,11 +2787,11 @@ namespace WutheringWaves
         private void ESkillEnterAnimation()
         {
             // 播放角色动画
-            stateMachine.Animator.SetTrigger(_currentSkillStep.attackAnimation.attackAnimationName);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_currentSkillStep), 0f, 0, 0);
             // 御剑/龙/特效表现
-            stateMachine.attackLogic.StartFlyingSword(_currentSkillStep);
-            stateMachine.attackLogic.CheckDragonAnimation(_currentSkillStep);
-            stateMachine.attackLogic.CheckEffect(_currentSkillStep);
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_currentSkillStep);
+            stateMachine.PlayJinxiDragonAction(_currentSkillStep);
+            stateMachine.context?.EffectController?.PlayEffectAction(_currentSkillStep);
             // 隐藏装饰剑
             stateMachine.manifestation.HideDecorationSwordFade();
         }
@@ -2918,7 +2839,7 @@ namespace WutheringWaves
             //1. 退出技能动画
             ESkillExitAnimation();
             ////2.重置御空状态
-            //if (_currentSkillStep == stateMachine.attackLogic.ESkillAttackSteps[3])
+            //if (_currentSkillStep == stateMachine.ESkillAttackSteps[3])
             //stateMachine.attackLogic.SetFloating(false);
             //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
@@ -2929,14 +2850,13 @@ namespace WutheringWaves
         //1. 退出技能动画
         private void ESkillExitAnimation()
         {
-            // 清理动画触发器
-            stateMachine.Animator.ResetTrigger(_currentSkillStep.attackAnimation.attackAnimationName);
+            // CrossFade 直切动画后无需再清理 Trigger
             // 结束御剑表现
-            stateMachine.attackLogic.EndFlyingSword();
+            stateMachine.context?.WeaponController?.EndWeaponAction();
             // 结束龙
-            stateMachine.attackLogic.HidedragonInstantly();
+            stateMachine.HideJinxiDragonInstantly();
             //隐藏特效
-            EffectService.DestroyAll();
+            stateMachine.context?.EffectController?.EndEffectAction();
         }
         #endregion
 
@@ -2953,7 +2873,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -2967,7 +2887,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -2979,13 +2899,13 @@ namespace WutheringWaves
                     return;
                 }
                  //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
                 }
                 // 攻击状态
-                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.Attacking);
                 }
@@ -3002,7 +2922,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _currentSkillStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -3019,7 +2939,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -3033,7 +2953,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -3045,13 +2965,13 @@ namespace WutheringWaves
                     return;
                 }
                 //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
                 }
                 // 攻击状态
-                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.Attacking);
                     return;
@@ -3063,7 +2983,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _currentSkillStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -3080,7 +3000,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -3094,7 +3014,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -3106,13 +3026,13 @@ namespace WutheringWaves
                     return;
                 }
                 //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
                 }
                 // 攻击
-                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.Attacking);
                     return;
@@ -3124,7 +3044,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _currentSkillStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -3141,7 +3061,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 爆发状态
-                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.attackLogic.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+                if (_statePhase == ESkillStatePhase.Recovery && stateMachine.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
                 {
                     stateMachine.IsStateLocked = false;
                     SwitchState(CharacterState.QBurst);
@@ -3155,7 +3075,7 @@ namespace WutheringWaves
                     return;
                 }
                 //战技状态
-                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.ESkill);
                     return;
@@ -3179,13 +3099,13 @@ namespace WutheringWaves
                     return;
                 }
                 //御空攻击状态
-                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+                if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
                 {
                     SwitchState(CharacterState.AirAttacking);
                     return;
                 }
                 // 攻击
-                if (stateMachine.CheckAndConsumeAttackRequest() &&stateMachine.attackLogic.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                if (stateMachine.CheckAndConsumeAttackRequest() &&stateMachine.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.Attacking);
                     return;
@@ -3197,7 +3117,7 @@ namespace WutheringWaves
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _currentSkillStep.attackAnimation.GetAnimationLength(stateMachine.Animator))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
                 {
                     SwitchState(CharacterState.Idle);
                     return;
@@ -3225,16 +3145,16 @@ namespace WutheringWaves
             //3.进入爆发状态动画
             QBurstEnterAnimation();
             //4.重置连招
-            stateMachine.attackLogic.ResetCombo();
+            stateMachine.ResetNormalCombo();
         }
 
         #region EnterState子方法
         //1.初始化爆发数据
         private void InitializeQBurstData()
         {
-            _step = stateMachine.attackLogic.QBurstAttackSteps[0];
+            _step = stateMachine.QBurstAttackSteps[0];
             stateMachine.currentStep = _step;
-            stateMachine.attackLogic.OnQBurstUsed();
+            stateMachine.OnQBurstUsed();
         }
         //2.初始化爆发状态
         private void InitialazeQBurstState()
@@ -3250,13 +3170,13 @@ namespace WutheringWaves
         private void QBurstEnterAnimation()
         {
             //动画
-            stateMachine.Animator.SetTrigger("QBurst");
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_step), 0f, 0, 0);
             //龙动画
-            stateMachine.attackLogic.CheckDragonAnimation(stateMachine.attackLogic.QBurstAttackSteps[0]);
+            stateMachine.PlayJinxiDragonAction(_step);
             //隐藏剑
             stateMachine.manifestation.HideDecorationSwordFade();
             //特效
-            stateMachine.attackLogic.CheckEffect(_step);
+            stateMachine.context?.EffectController?.PlayEffectAction(_step);
         }
         #endregion
 
@@ -3307,12 +3227,11 @@ namespace WutheringWaves
         //1.退出爆发状态动画
         private void QBurstExitAnimation()
         {
-            //动画
-            stateMachine.Animator.ResetTrigger("QBurst");
+            // CrossFade 直切动画后无需再清理 Trigger
             //龙隐藏
-            stateMachine.attackLogic.HidedragonInstantly();
+            stateMachine.HideJinxiDragonInstantly();
             //隐藏特效
-            EffectService.DestroyAll();
+            stateMachine.context?.EffectController?.EndEffectAction();
         }
         #endregion
 
@@ -3331,7 +3250,7 @@ namespace WutheringWaves
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.attackLogic.IsESkillable())
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.IsESkillable())
             {
                 SwitchState(CharacterState.ESkill);
                 return;
@@ -3363,13 +3282,13 @@ namespace WutheringWaves
                 return;
             }
             //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.attackLogic.IsAirAttackable())
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.IsAirAttackable())
             {
                 SwitchState(CharacterState.AirAttacking);
                 return;
             }
             //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.attackLogic.IsAttackable())
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.IsAttackable())
             {
                 SwitchState(CharacterState.Attacking);
                 return;
@@ -3465,6 +3384,7 @@ namespace WutheringWaves
 
     #endregion
 }
+
 
 
 

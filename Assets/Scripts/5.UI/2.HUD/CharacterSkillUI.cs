@@ -23,6 +23,7 @@ namespace WutheringWaves
 
         private UIRoot _uiRoot; // UIRoot 引用
         private CharacterAttack _attackLogic; // 技能逻辑引用
+        private JinxiSpecialSkillLinker _jinxiSpecialSkillLinker; // 今汐专属技能逻辑引用
         private PlayerStamina _playerStamina; // 玩家共享体力逻辑引用
         private bool _hasSubscribedAttackEvent; // 标记是否已经订阅技能 UI 事件，避免重复订阅
         private bool _hasSubscribedStaminaEvent; // 标记是否已经订阅体力事件，避免重复订阅
@@ -183,6 +184,7 @@ namespace WutheringWaves
             CharacterFacade nextFacade = ResolveTargetFacade();
             CharacterContext context = nextFacade != null ? nextFacade.Context : null;
             CharacterAttack nextAttack = context != null ? context.AttackLogic : null;
+            JinxiSpecialSkillLinker nextJinxiLinker = context != null && context.StateMachine != null ? context.StateMachine.JinxiSpecialSkillLinker : null;
             PlayerStamina nextStamina = context != null ? context.PlayerStamina : null;
 
             // 没有可用的门面或上下文时，绑定失败
@@ -195,7 +197,7 @@ namespace WutheringWaves
             targetFacade = nextFacade;
 
             // 角色逻辑未变化时，只补充订阅
-            if (_attackLogic == nextAttack && _playerStamina == nextStamina)
+            if (_attackLogic == nextAttack && _jinxiSpecialSkillLinker == nextJinxiLinker && _playerStamina == nextStamina)
             {
                 SubscribeAttackEvent();
                 SubscribeStaminaEvent();
@@ -206,6 +208,7 @@ namespace WutheringWaves
             UnsubscribeAttackEvent();
             UnsubscribeStaminaEvent();
             _attackLogic = nextAttack;
+            _jinxiSpecialSkillLinker = nextJinxiLinker;
             _playerStamina = nextStamina;
             SubscribeAttackEvent();
             SubscribeStaminaEvent();
@@ -460,11 +463,17 @@ namespace WutheringWaves
 
         private void RefreshSkillUI()
         {
-            int currentSkillIndex = _attackLogic.CurrentESkillUIIndex;
+            if (_jinxiSpecialSkillLinker == null)
+            {
+                RefreshUnboundUI();
+                return;
+            }
+
+            int currentSkillIndex = _jinxiSpecialSkillLinker.CurrentESkillUIIndex;
             Image currentSkillIcon = GetCurrentSkillIcon(currentSkillIndex);
-            bool isPrimarySkillCooldown = currentSkillIndex == 1 && _attackLogic.Skill1CDTimer > 0f;
-            float remainingTime = isPrimarySkillCooldown ? _attackLogic.Skill1CDTimer : 0f;
-            float totalTime = isPrimarySkillCooldown ? _attackLogic.skill1CD : 0f;
+            bool isPrimarySkillCooldown = currentSkillIndex == 1 && _jinxiSpecialSkillLinker.Skill1CDTimer > 0f;
+            float remainingTime = isPrimarySkillCooldown ? _jinxiSpecialSkillLinker.Skill1CDTimer : 0f;
+            float totalTime = isPrimarySkillCooldown ? _jinxiSpecialSkillLinker.Skill1CD : 0f;
             Color targetColor = isPrimarySkillCooldown ? disableColor : normalColor;
 
             SetActiveSkillIcon(currentSkillIndex);
@@ -477,26 +486,38 @@ namespace WutheringWaves
 
         private void RefreshQBurstUI()
         {
-            bool isQBurstAvailable = _attackLogic.IsQBurstable();
-            bool hasQBurstConfigured = _attackLogic.HasQBurstConfigured;
+            if (_jinxiSpecialSkillLinker == null)
+            {
+                SetImageActive(qBurstAvailableIcon, false);
+                SetImageActive(qBurstLockedIcon, true);
+                ApplyCooldownMask(qBurstCooldownMask, 0f, 1f);
+                SetCooldownText(qBurstCooldownText, 0f);
+                SetGraphicColor(qBurstButtonFrame, disableColor);
+                SetGraphicColor(qBurstKeyText, disableColor);
+                SetSkillIconVisual(qBurstLockedIcon, disableColor, 0f, 1f);
+                return;
+            }
+
+            bool isQBurstAvailable = _jinxiSpecialSkillLinker.IsQBurstable();
+            bool hasQBurstConfigured = _jinxiSpecialSkillLinker.HasQBurstConfigured;
             bool showAvailableIcon = isQBurstAvailable && hasQBurstConfigured;
-            float remainingTime = _attackLogic.QBurstCDTimer;
+            float remainingTime = _jinxiSpecialSkillLinker.QBurstCDTimer;
             Color targetColor = showAvailableIcon ? normalColor : disableColor;
 
             SetImageActive(qBurstAvailableIcon, showAvailableIcon);
             SetImageActive(qBurstLockedIcon, !showAvailableIcon);
-            ApplyCooldownMask(qBurstCooldownMask, remainingTime, _attackLogic.qBurstCD);
+            ApplyCooldownMask(qBurstCooldownMask, remainingTime, _jinxiSpecialSkillLinker.QBurstCD);
             SetCooldownText(qBurstCooldownText, remainingTime);
             SetGraphicColor(qBurstButtonFrame, targetColor);
             SetGraphicColor(qBurstKeyText, targetColor);
 
             if (showAvailableIcon)
             {
-                SetSkillIconVisual(qBurstAvailableIcon, normalColor, remainingTime, _attackLogic.qBurstCD);
+                SetSkillIconVisual(qBurstAvailableIcon, normalColor, remainingTime, _jinxiSpecialSkillLinker.QBurstCD);
             }
             else
             {
-                SetSkillIconVisual(qBurstLockedIcon, disableColor, remainingTime, _attackLogic.qBurstCD);
+                SetSkillIconVisual(qBurstLockedIcon, disableColor, remainingTime, _jinxiSpecialSkillLinker.QBurstCD);
             }
         }
         #endregion

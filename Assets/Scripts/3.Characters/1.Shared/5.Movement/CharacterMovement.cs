@@ -13,15 +13,15 @@ namespace WutheringWaves
 
         [Header("=== 平滑配置 ===")]
         [Tooltip("角色旋转平滑")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float RotationSmoothTime = 0.1f;
         [Tooltip("速度平滑过渡的速度")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float speedSmoothSpeed = 5f;
 
         [Header("=== 阈值配置 ===")]
         [Tooltip("移动输入阈值")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float moveThreshold = 0.1f;
         #endregion
 
@@ -45,7 +45,7 @@ namespace WutheringWaves
             mainCamera = ResolveMainCamera();//主相机
             controller = context != null ? context.CharacterController : null;//角色控制器
             animator = context != null ? context.Animator : null;// 动画控制器
-            ApplyMovementConfigFromCharacterDataSO(); // 从角色基础数据同步移动配置
+            ApplyMovementConfig(); // 从角色配置资源同步移动配置
         }
 
         // 解析主相机：兼容新架构下相机由 PlayerController 延后初始化的情况
@@ -112,8 +112,8 @@ namespace WutheringWaves
 
         }
 
-        // 从 CharacterDataSO 同步移动配置：让角色移动参数优先由角色基础数据驱动
-        private void ApplyMovementConfigFromCharacterDataSO()
+        // 从配置资源同步移动配置：位移参数走 MovementConfigSO，其他旧参数暂时继续走 CharacterDataSO
+        private void ApplyMovementConfig()
         {
             CharacterDataSO characterDataSO = context != null ? context.CharacterDataSO : null;
             if (characterDataSO == null)
@@ -121,30 +121,32 @@ namespace WutheringWaves
                 return;
             }
 
-            // 1.基础移动与输入判定参数
-            RotationSmoothTime = characterDataSO.rotationSmoothTime;
-            speedSmoothSpeed = characterDataSO.speedSmoothSpeed;
-            moveThreshold = characterDataSO.moveThreshold;
-            moveSpeed = characterDataSO.moveSpeed;
-            runSpeed = characterDataSO.runSpeed;
+            MovementConfigSO movementConfigSO = characterDataSO.movementConfigSO;
 
-            // 2.空中移动参数
-            JumpairControlMultiplier = characterDataSO.jumpAirControlMultiplier;
-            FallingairControlMultiplier = characterDataSO.fallingAirControlMultiplier;
+            // 1.位移相关参数已拆分到独立的 MovementConfigSO 中
+            if (movementConfigSO != null)
+            {
+                RotationSmoothTime = movementConfigSO.rotationSmoothTime;
+                speedSmoothSpeed = movementConfigSO.speedSmoothSpeed;
+                moveThreshold = movementConfigSO.moveThreshold;
+                moveSpeed = movementConfigSO.moveSpeed;
+                runSpeed = movementConfigSO.runSpeed;
 
-            // 3.地面冲刺参数
-            dashCostTime = characterDataSO.dashCostTime;
-            dashInternalCD = characterDataSO.dashInternalCD;
-            dashGlobalCDThreshold = characterDataSO.dashGlobalCDThreshold;
-            dashGlobalCDPenalty = characterDataSO.dashGlobalCDPenalty;
+                JumpairControlMultiplier = movementConfigSO.jumpAirControlMultiplier;
+                FallingairControlMultiplier = movementConfigSO.fallingAirControlMultiplier;
 
-            // 4.空中冲刺与御空冲刺参数
-            airDashDistance = characterDataSO.airDashDistance;
-            airDashUpDistance = characterDataSO.airDashUpDistance;
-            airDashCostTime = characterDataSO.airDashCostTime;
-            floatDashCostTime = characterDataSO.floatDashCostTime;
+                dashCostTime = movementConfigSO.dashCostTime;
+                dashInternalCD = movementConfigSO.dashInternalCD;
+                dashGlobalCDThreshold = movementConfigSO.dashGlobalCDThreshold;
+                dashGlobalCDPenalty = movementConfigSO.dashGlobalCDPenalty;
 
-            // 5.急停缓冲参数
+                airDashDistance = movementConfigSO.airDashDistance;
+                airDashUpDistance = movementConfigSO.airDashUpDistance;
+                airDashCostTime = movementConfigSO.airDashCostTime;
+                floatDashCostTime = movementConfigSO.floatDashCostTime;
+            }
+
+            // 2.急停缓冲参数暂时仍由 CharacterDataSO 持有
             moveStoppingDistance = characterDataSO.moveStoppingDistance;
             moveStoppingTime = characterDataSO.moveStoppingTime;
             runStoppingDistance = characterDataSO.runStoppingDistance;
@@ -152,7 +154,7 @@ namespace WutheringWaves
             dashStoppingDistance = characterDataSO.dashStoppingDistance;
             dashStoppingTime = characterDataSO.dashStoppingTime;
 
-            // 6.重力与地面检测参数
+            // 3.重力与地面检测参数暂时仍由 CharacterDataSO 持有
             gravity = characterDataSO.gravity;
             fallCheckDelay = characterDataSO.fallCheckDelay;
             groundCheckRadius = characterDataSO.groundCheckRadius;
@@ -190,10 +192,10 @@ namespace WutheringWaves
         #region 移动逻辑
         [Header("=== 基础移动速度配置 ===")]
         [Tooltip("移动速度")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float moveSpeed = 1f;
         [Tooltip("奔跑速度")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float runSpeed = 3f;
 
         // 基础移动状态
@@ -271,7 +273,7 @@ namespace WutheringWaves
         #region 跳跃逻辑
         [Header("=== 跳跃配置 ===")]
         [Tooltip("空中移动速度系数（1为和地面一样快）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float JumpairControlMultiplier = 1f;
         //判断跳跃是否可用
         public bool IsJumpAvailable()
@@ -323,7 +325,7 @@ namespace WutheringWaves
         #region 下坠逻辑
         [Header("=== 下坠配置 ===")]
         [Tooltip("下坠中移动速度系数（1为和地面一样快）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float FallingairControlMultiplier = 1f;
         //实现下坠
         public void HandleFallingMovement(Vector2 move)
@@ -366,16 +368,16 @@ namespace WutheringWaves
         #region 冲刺逻辑
         [Header("=== 冲刺配置===")]
         [Header("冲刺耗时（不可打断）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashCostTime = 0.33f;
         [Header("连续两次冲刺的内置CD（秒")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashInternalCD = 0.2f;
         [Header("全局CD阈值：两次冲刺间隔小于此值判定为'快速连冲'（秒）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashGlobalCDThreshold = 1.5f;
         [Header("全局CD惩罚时长：快速连冲触发的冷却时间（秒）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashGlobalCDPenalty = 1.3f;
 
         #region Dashing
@@ -461,13 +463,13 @@ namespace WutheringWaves
         #region 空中冲刺
         [Header("=== 空中冲刺配置 ===")]
         [Tooltip("空中冲刺距离（米）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float airDashDistance = 5f;
         [Tooltip("空中冲刺向上距离（米）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float airDashUpDistance = 2f;
         [Tooltip("空中冲刺耗时（秒）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float airDashCostTime = 0.3f;
 
         public bool HasAirDashed { get; set; } = false;  // 空中冲刺是否已使用（落地重置）
@@ -569,7 +571,7 @@ namespace WutheringWaves
         #region 御空冲刺
         [Header("=== 御空冲刺配置===")]
         [Header("御空冲刺耗时（不可打断）")]
-        [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
+        [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float floatDashCostTime = 1.9f;
         // 判断御空冲刺是否可用
         public bool IsFloatDashAvailable()
@@ -580,7 +582,7 @@ namespace WutheringWaves
             // 条件2：不在地面（未触发坠落）
             bool isGrounded = CustomCheckGrounded();
             // 条件3：处于御空状态
-            bool isFloating = context != null && context.AttackLogic != null && context.AttackLogic.IsFloating;
+            bool isFloating = context != null && context.StateMachine != null && context.StateMachine.IsFloating();
             // 条件4：是否有足够体力
             bool hasEnoughStamina = playerStamina == null || playerStamina.CanFloatDash();
             return isCanInterrupt && !isGrounded && isFloating && hasEnoughStamina;
@@ -840,7 +842,7 @@ namespace WutheringWaves
             }
 
             if (controller.isGrounded
-                || (context != null && context.AttackLogic != null && context.AttackLogic.IsFloating)
+                || (context != null && context.StateMachine != null && context.StateMachine.IsFloating())
                 || (context != null && context.StateMachine != null && context.StateMachine.CurrentStateType == CharacterState.QBurst))
             {
                 _verticalVelocity = -5f;

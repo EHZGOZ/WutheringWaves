@@ -682,8 +682,8 @@ MonoBehaviour:
   virtualCamera2: {fileID: 2906224697728824327}
   TopClamp: 70
   BottomClamp: -30
-  SensitivityX: 1
-  SensitivityY: 1
+  SensitivityX: 0.1
+  SensitivityY: 0.1
   MinZoomDistance: 1
   MaxZoomDistance: 5
   ZoomSpeed: 2
@@ -3736,7 +3736,7 @@ MonoBehaviour:
   ShoulderOffset: {x: 0, y: -0.3, z: 0}
   VerticalArmLength: 0.4
   CameraSide: 0.5
-  CameraDistance: 2.5
+  CameraDistance: 5
   CameraCollisionFilter:
     serializedVersion: 2
     m_Bits: 1
@@ -7774,6 +7774,9 @@ GameObject:
   - component: {fileID: 6563759076784293311}
   - component: {fileID: 2786499201119074661}
   - component: {fileID: 7721711505839055827}
+  - component: {fileID: 2098079019401121057}
+  - component: {fileID: 1518798854118683322}
+  - component: {fileID: 4220883877166741107}
   m_Layer: 6
   m_Name: "\u4ECA\u6C50"
   m_TagString: Player
@@ -7851,14 +7854,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c406cb267ca934d85b902be64d3cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   playerInputReader: {fileID: 0}
-  inputBuffer: {fileID: 0}
+  playerStamina: {fileID: 0}
+  characterDataSO: {fileID: 11400000, guid: 1cf7949201f7e1145911bc2a8a3e009d, type: 2}
   context: {fileID: 0}
-  rootMotion: {fileID: 0}
-  movementController: {fileID: 0}
-  attackController: {fileID: 0}
-  staminaController: {fileID: 0}
-  disablePlayerInputOnStart: 0
 --- !u!114 &3988799700281616114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7872,25 +7872,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   facade: {fileID: 0}
+  playerController: {fileID: 0}
   playerInputReader: {fileID: 0}
-  inputBuffer: {fileID: 0}
+  playerStamina: {fileID: 1326456390}
+  characterDataSO: {fileID: 0}
   animator: {fileID: 0}
-  characterController: {fileID: 0}
-  characterData: {fileID: 11400000, guid: 645c38300a4f4ea49bcef965bf99f668, type: 2}
+  characterController: {fileID: 2770961545755517461}
   runtimeData:
     currentHealth: 0
-  playerStamina: {fileID: 1326456390}
-  playerCamera: {fileID: 7954124293238654617}
+  inputBuffer: {fileID: 0}
   stateMachine: {fileID: 0}
-  playerController: {fileID: 0}
-  movementLogic: {fileID: 0}
-  staminaLogic: {fileID: 0}
-  attackLogic: {fileID: 0}
   rootMotion: {fileID: 0}
-  movementController: {fileID: 0}
-  attackController: {fileID: 0}
-  staminaController: {fileID: 0}
   manifestation: {fileID: 0}
+  weaponController: {fileID: 0}
+  effectController: {fileID: 0}
+  movementLogic: {fileID: 0}
+  attackLogic: {fileID: 0}
 --- !u!114 &6069195916561297269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7915,23 +7912,16 @@ MonoBehaviour:
   attackLogic: {fileID: 0}
   manifestation: {fileID: 0}
   currentStep:
-    attackAnimation:
-      attackAnimationName: 
-      executionAttackCostTime: 0
-    attackData:
-      damageMultiplier: 0
+    attackId: 0
+    hitConfig:
+      damageMultiplier: 1
       staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 1
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
   showAllGizmos: 1
   currentStateGizmo:
     show: 1
@@ -8002,9 +7992,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  groundCheckRadius: 0.18
-  groundCheckOriginOffset: 0.2
-  groundCheckDistance: 0.1
   drawGizmos: 1
 --- !u!114 &2786499201119074661
 MonoBehaviour:
@@ -8038,501 +8025,56 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
-  floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
-  swordLength: 1
-  swordPositionOffset: {x: 0, y: 0, z: 0}
-  swordRotationOffset: {x: 0, y: 0, z: 0}
-  jinxiSpecialAirSword:
-    enable: 1
-    anchorOffset: {x: 0, y: 0, z: 2}
-    layerAHeight: -2
-    layerBHeight: 1
-    layerCHeight: 4
-    nearRowDistance: -1
-    middleRowDistance: 2
-    farRowDistance: 5
-    horizontalOffset: 3
-    firstStageExtraHeight: 1
-    firstStage:
-      swordPrefab: {fileID: 4428387476252333486, guid: b2709e4c1660f6e44bd3328cee3a5455, type: 3}
-      startDelay: 0
-      flightDuration: 0.2
-      destroyDelay: 0.1
-      scaleMultiplier: {x: 2, y: 2, z: 2}
-      rotationOffsetEuler: {x: 180, y: 90, z: 0}
-    secondStage:
-      swordPrefab: {fileID: 4428387476252333486, guid: b2709e4c1660f6e44bd3328cee3a5455, type: 3}
-      startDelay: 0
-      flightDuration: 0.25
-      destroyDelay: 0.1
-      scaleMultiplier: {x: 2, y: 2, z: 2}
-      rotationOffsetEuler: {x: 180, y: 90, z: 0}
-    thirdStage:
-      swordPrefab: {fileID: 2897500282316276736, guid: 4c41de80ec685d6478ccf5848bda4b08, type: 3}
-      startDelay: 0.2
-      flightDuration: 0.3
-      destroyDelay: 0.2
-      scaleMultiplier: {x: 1, y: 1, z: 1}
-      rotationOffsetEuler: {x: 180, y: 90, z: 0}
-  attackSteps:
-  - attackAnimation:
-      attackAnimationName: Attack01
-      executionAttackCostTime: 0.6
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 1
-      attackAngle: 120
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 0.2
-      hasSwordAnimation: 1
-      floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
-      initSwordHandlePos: {x: 1, y: 1.1, z: -0.5}
-      initSwordRotationEuler: {x: 180, y: -150, z: 0}
-      swordTrajectory:
-      - targeSwordHandlelPos: {x: 1, y: 1.1, z: 0.5}
-        targetSwordRotationEuler: {x: 180, y: -210, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 1.1, z: 1}
-        targetSwordRotationEuler: {x: 180, y: -270, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: -1, y: 1.1, z: 0.5}
-        targetSwordRotationEuler: {x: 180, y: -330, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: -1, y: 1.1, z: -0.5}
-        targetSwordRotationEuler: {x: 180, y: -390, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 1.1, z: -1}
-        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: 0.4, y: 1.1, z: -1}
-        targetSwordRotationEuler: {x: 180, y: 0, z: 0}
-        timeWeight: 3
-  - attackAnimation:
-      attackAnimationName: Attack02
-      executionAttackCostTime: 0.5
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 0.5
-      DelayTime: 0.2
-      hasSwordAnimation: 1
-      floatingSword: {fileID: 4428387476252333486, guid: 7311435c34bffb74dae22223944bc70d, type: 3}
-      initSwordHandlePos: {x: 0.5, y: 1.1, z: -0.5}
-      initSwordRotationEuler: {x: 180, y: -30, z: 0}
-      swordTrajectory:
-      - targeSwordHandlelPos: {x: 1, y: 1.1, z: 0.5}
-        targetSwordRotationEuler: {x: 180, y: -90, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 1.5}
-        targetSwordRotationEuler: {x: 180, y: -150, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 2}
-        targetSwordRotationEuler: {x: 180, y: -210, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 1.1, z: 3}
-        targetSwordRotationEuler: {x: 180, y: -270, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
-        targetSwordRotationEuler: {x: 180, y: -360, z: 0}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 4}
-        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 4}
-        targetSwordRotationEuler: {x: 180, y: -480, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 3.5}
-        targetSwordRotationEuler: {x: 180, y: -540, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 3}
-        targetSwordRotationEuler: {x: 180, y: -600, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 3}
-        targetSwordRotationEuler: {x: 180, y: -660, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
-        targetSwordRotationEuler: {x: 180, y: -720, z: 0}
-        timeWeight: 1.5
-      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 4}
-        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 4}
-        targetSwordRotationEuler: {x: 180, y: -480, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 3.5}
-        targetSwordRotationEuler: {x: 180, y: -540, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 3}
-        targetSwordRotationEuler: {x: 180, y: -600, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 3}
-        targetSwordRotationEuler: {x: 180, y: -660, z: 0}
-        timeWeight: 2
-      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
-        targetSwordRotationEuler: {x: 180, y: -720, z: 0}
-        timeWeight: 2
-  - attackAnimation:
-      attackAnimationName: Attack03
-      executionAttackCostTime: 1
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 1
-      hasSwordAnimation: 1
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 1, y: 1.1, z: 1}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Attack04
-      executionAttackCostTime: 0.5
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 1
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  fallAttackSteps:
-  - attackAnimation:
-      attackAnimationName: AirAttack_Start
-      executionAttackCostTime: 0
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 0
-      hasSwordAnimation: 1
-      floatingSword: {fileID: 4428387476252333486, guid: 7311435c34bffb74dae22223944bc70d, type: 3}
-      initSwordHandlePos: {x: 0, y: -0.25, z: -1}
-      initSwordRotationEuler: {x: 90, y: 90, z: 0}
-      swordTrajectory:
-      - targeSwordHandlelPos: {x: 0, y: 1, z: -1.5}
-        targetSwordRotationEuler: {x: 45, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 2, z: -0.5}
-        targetSwordRotationEuler: {x: -45, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 2, z: 1}
-        targetSwordRotationEuler: {x: -90, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 1.5, z: 1}
-        targetSwordRotationEuler: {x: -135, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 0.75, z: 1.5}
-        targetSwordRotationEuler: {x: -180, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: 0, z: 1.5}
-        targetSwordRotationEuler: {x: -225, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: -0.5, z: 1.5}
-        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: -1, z: 1.5}
-        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
-        timeWeight: 1
-      - targeSwordHandlelPos: {x: 0, y: -1.5, z: 1.5}
-        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
-        timeWeight: 1
-  - attackAnimation:
-      attackAnimationName: AirAttack_Loop
-      executionAttackCostTime: 0
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 0.5
-      hasSwordAnimation: 1
-      floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
-      initSwordHandlePos: {x: 0, y: 1.1, z: 1}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: AirAttack_End
-      executionAttackCostTime: 0
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    swordAnimation:
-      swordAnimationCostTime: 1
-      DelayTime: 1
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  SkillAirAttackSteps:
-  - attackAnimation:
-      attackAnimationName: Skill_AirAttack01
-      executionAttackCostTime: 0.66
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_AirAttack02
-      executionAttackCostTime: 0.66
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_AirAttack03
-      executionAttackCostTime: 1
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_AirAttack04
-      executionAttackCostTime: 1.33
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  SkillAttackSteps:
-  - attackAnimation:
-      attackAnimationName: Skill_Attack01
-      executionAttackCostTime: 0.66
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_Attack02
-      executionAttackCostTime: 0.66
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_Attack03
-      executionAttackCostTime: 1
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill_Attack04
-      executionAttackCostTime: 1.33
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  ESkillAttackSteps:
-  - attackAnimation:
-      attackAnimationName: Skill01
-      executionAttackCostTime: 1
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill02
-      executionAttackCostTime: 1.5
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill03
-      executionAttackCostTime: 1.5
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  - attackAnimation:
-      attackAnimationName: Skill04
-      executionAttackCostTime: 3.5
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  QBurstAttackSteps:
-  - attackAnimation:
-      attackAnimationName: QBurst
-      executionAttackCostTime: 0
-    attackData:
-      damageMultiplier: 0
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
-    swordAnimation:
-      swordAnimationCostTime: 0
-      DelayTime: 0
-      hasSwordAnimation: 0
-      floatingSword: {fileID: 0}
-      initSwordHandlePos: {x: 0, y: 0, z: 0}
-      initSwordRotationEuler: {x: 0, y: 0, z: 0}
-      swordTrajectory: []
-  selectedListType: 2
-  selectedAttackStepIndex: 0
-  useGizmosAttackRange: 1
-  useGizmosSwordTrajectory: 1
-  editorSwordRefreshInterval: 0.02
   skill1CD: 5
+  qBurstCD: 15
+--- !u!114 &2098079019401121057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2841070955660495284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829236cf570c4dfcadc25d469ab6d6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialSkillLinker: {fileID: 0}
+  dragonController: {fileID: 0}
+--- !u!114 &1518798854118683322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2841070955660495284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c708e6d3294de0b564e09672dfe3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   skill2WindowCD: 5
   skill3WindowCD: 5
   skill4WindowCD: 5
-  FloatingDuration: 30
-  qBurstCD: 15
-  dragon: {fileID: 5095843351425459360}
+  floatingDuration: 10
+--- !u!114 &4220883877166741107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2841070955660495284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a9dd9137f9a45ad98c701d210799e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragon: {fileID: 0}
+  dragonAnimator: {fileID: 0}
   defaultDragonLocalOffset: {x: 0, y: 0, z: 0}
-  eSkillStep3DragonLocalOffset: {x: 0, y: 0, z: 5}
-  SkillAttackSteps3DragonLocalOffset: {x: 0, y: 0, z: 2}
-  SkillAttackSteps4DragonLocalOffset: {x: 0, y: 0, z: 2}
-  dragonanimator: {fileID: 7648138142951635422}
+  eSkillStep3DragonLocalOffset: {x: 0, y: 0, z: 0}
+  skillAttackSteps3DragonLocalOffset: {x: 0, y: 0, z: 3}
+  skillAttackSteps4DragonLocalOffset: {x: 0, y: 0, z: 3}
 --- !u!1 &2891859174515980028
 GameObject:
   m_ObjectHideFlags: 0
@@ -11164,7 +10706,7 @@ Transform:
   m_GameObject: {fileID: 3277742212799436769}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: -2.5}
+  m_LocalPosition: {x: 0, y: 1.2, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
