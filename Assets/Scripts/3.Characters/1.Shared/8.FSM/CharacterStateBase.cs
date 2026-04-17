@@ -42,7 +42,7 @@
                 //// 判断是否为可打断状态（非闪避/非受击/非死亡可被大部分状态打断）
                 //protected bool IsInterruptible()
                 //{
-                //    return stateMachine.CurrentStateType != CharacterState.Dodging&&stateMachine.CurrentStateType != CharacterState.Hit && stateMachine.CurrentStateType != CharacterState.Dead;
+                //    return stateMachine.CurrentStateType != CharacterState.JinxiDodge&&stateMachine.CurrentStateType != CharacterState.JinxiHit && stateMachine.CurrentStateType != CharacterState.JinxiDead;
                 //}
                 //// 判断地面冲刺是否可用
                 //protected bool IsDashAvailable()
@@ -84,6 +84,7 @@
             #endregion
 
     }
+
 
 
 

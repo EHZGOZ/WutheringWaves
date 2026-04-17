@@ -13,7 +13,6 @@ namespace WutheringWaves
         public CharacterStateFactory(CharacterStateMachine stateMachine)
         {
             context = stateMachine;
-            RegisterBaseStates();
         }
 
         #region 注册接口
@@ -40,37 +39,7 @@ namespace WutheringWaves
             return registeredStates.TryGetValue(stateType, out CharacterBaseState state) ? state : null;
         }
         #endregion
-
-        #region 基础状态注册
-        // 注册所有角色默认都会具备的基础状态
-        private void RegisterBaseStates()
-        {
-            RegisterState(CharacterState.Idle, new CharacterIdleState(context, this));
-            RegisterState(CharacterState.Moving, new CharacterMovingState(context, this));
-            RegisterState(CharacterState.Jumping, new CharacterJumpingState(context, this));
-            RegisterState(CharacterState.Falling, new CharacterFallingState(context, this));
-            RegisterState(CharacterState.Dashing, new CharacterDashingState(context, this));
-            RegisterState(CharacterState.AirDashing, new CharacterAirDashingState(context, this));
-            RegisterState(CharacterState.Dodging, new CharacterDodgingState(context, this));
-            RegisterState(CharacterState.Hit, new CharacterHitState(context, this));
-            RegisterState(CharacterState.Dead, new CharacterDeadState(context, this));
-            RegisterState(CharacterState.Transition, new CharacterTransitionState(context, this));
-        }
-        #endregion
-
-        #region 默认状态
-        /// <summary>获取角色默认初始状态（待机）</summary>
-        public CharacterBaseState GetDefaultState()
-        {
-            CharacterBaseState defaultState = GetState(CharacterState.Idle);
-            if (defaultState == null)
-            {
-                throw new ArgumentException("状态工厂未注册 Idle 状态，无法获取默认状态。");
-            }
-
-            return defaultState;
-        }
-        #endregion
     }
     #endregion
 }
+

@@ -1,50 +1,66 @@
-﻿using System;
+using System;
 
 namespace WutheringWaves
 {
-    /// <summary>
-    /// Global event bus for cross-module communication.
-    /// </summary>
+    // 全局事件总线：用于模块间低耦合通信，避免系统之间直接硬引用
     public static class GameEvents
     {
-        // source, oldState, newState
+        #region 事件定义
+        // 角色状态变化事件：参数为状态机、旧状态、新状态
         public static event Action<CharacterStateMachine, CharacterState, CharacterState> OnCharacterStateChanged;
 
-        // source, isFloating
+        // 御空状态变化事件：参数为攻击逻辑、是否处于御空
         public static event Action<CharacterAttack, bool> OnFloatingChanged;
 
-        // source
+        // 技能 UI 刷新事件：参数为当前角色攻击逻辑
         public static event Action<CharacterAttack> OnSkillUIStateChanged;
 
-        // source, current, max, normalized
+        // 体力变化事件：参数为体力组件、当前值、最大值、归一化值
         public static event Action<PlayerStamina, float, float, float> OnStaminaChanged;
 
-        // source, visible
+        // 体力条显隐事件：参数为体力组件、是否显示
         public static event Action<PlayerStamina, bool> OnStaminaVisibilityChanged;
 
+        // 切人事件：参数为切出角色、切入角色
+        public static event Action<CharacterFacade, CharacterFacade> OnCharacterSwitched;
+        #endregion
+
+        #region 事件派发
+        // 派发角色状态变化事件
         public static void RaiseCharacterStateChanged(CharacterStateMachine source, CharacterState oldState, CharacterState newState)
         {
             OnCharacterStateChanged?.Invoke(source, oldState, newState);
         }
 
+        // 派发御空状态变化事件
         public static void RaiseFloatingChanged(CharacterAttack source, bool isFloating)
         {
             OnFloatingChanged?.Invoke(source, isFloating);
         }
 
+        // 派发技能 UI 刷新事件
         public static void RaiseSkillUIStateChanged(CharacterAttack source)
         {
             OnSkillUIStateChanged?.Invoke(source);
         }
 
+        // 派发体力变化事件
         public static void RaiseStaminaChanged(PlayerStamina source, float current, float max, float normalized)
         {
             OnStaminaChanged?.Invoke(source, current, max, normalized);
         }
 
+        // 派发体力条显隐事件
         public static void RaiseStaminaVisibilityChanged(PlayerStamina source, bool visible)
         {
             OnStaminaVisibilityChanged?.Invoke(source, visible);
         }
+
+        // 派发切人事件：通知 UI、特效、小地图等外围系统同步当前角色
+        public static void RaiseCharacterSwitched(CharacterFacade previous, CharacterFacade current)
+        {
+            OnCharacterSwitched?.Invoke(previous, current);
+        }
+        #endregion
     }
 }

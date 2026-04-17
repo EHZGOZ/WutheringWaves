@@ -84,6 +84,40 @@ namespace WutheringWaves
             return context != null ? context.PlayerStamina : null;
         }
 
+        // 统一读取当前角色是否处于御空状态，避免共享移动层只写死到单个角色专属驱动
+        private bool IsCharacterFloating()
+        {
+            if (context == null || context.StateMachine == null)
+            {
+                return false;
+            }
+
+            if (context.StateMachine.JinxiSpecialSkillLinker != null)
+            {
+                return context.StateMachine.JinxiSpecialSkillLinker.IsFloating;
+            }
+
+            if (context.StateMachine.KatixiyaSpecialSkillLinker != null)
+            {
+                return context.StateMachine.KatixiyaSpecialSkillLinker.IsFloating;
+            }
+
+            return false;
+        }
+
+        // 统一读取当前角色是否处于大招状态，避免共享层继续写死到今汐状态枚举
+        private bool IsBursting()
+        {
+            if (context == null || context.StateMachine == null)
+            {
+                return false;
+            }
+
+            CharacterState currentState = context.StateMachine.CurrentStateType;
+            return currentState == CharacterState.JinxiQBurst
+                || currentState == CharacterState.KatixiyaQBurst;
+        }
+
         // 判断角色控制器当前是否可用：用于拦截失活控制器上的 Move 调用
         private bool CanUseCharacterController()
         {
@@ -380,7 +414,7 @@ namespace WutheringWaves
         [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashGlobalCDPenalty = 1.3f;
 
-        #region Dashing
+        #region JinxiDash
         // 冲刺相关（CD计时器）
         public int DashCount { get; set; } = 0;//剩余可冲刺数
         public float DashInternalCDTimer { get; set; } = 0f; // 内置CD计时器
@@ -582,7 +616,7 @@ namespace WutheringWaves
             // 条件2：不在地面（未触发坠落）
             bool isGrounded = CustomCheckGrounded();
             // 条件3：处于御空状态
-            bool isFloating = context != null && context.StateMachine != null && context.StateMachine.IsFloating();
+            bool isFloating = IsCharacterFloating();
             // 条件4：是否有足够体力
             bool hasEnoughStamina = playerStamina == null || playerStamina.CanFloatDash();
             return isCanInterrupt && !isGrounded && isFloating && hasEnoughStamina;
@@ -842,8 +876,8 @@ namespace WutheringWaves
             }
 
             if (controller.isGrounded
-                || (context != null && context.StateMachine != null && context.StateMachine.IsFloating())
-                || (context != null && context.StateMachine != null && context.StateMachine.CurrentStateType == CharacterState.QBurst))
+                || IsCharacterFloating()
+                || IsBursting())
             {
                 _verticalVelocity = -5f;
             }
@@ -941,4 +975,5 @@ namespace WutheringWaves
 
     }
 }
+
 

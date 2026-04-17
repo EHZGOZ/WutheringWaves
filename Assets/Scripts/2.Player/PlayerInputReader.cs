@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace WutheringWaves
@@ -31,9 +32,11 @@ namespace WutheringWaves
         public bool LockInput { get; private set; } // 锁定输入
         public bool ESkillInput { get; private set; } // 共鸣技能输入
         public bool QBurstInput { get; private set; } // 共鸣解放输入
+        public int LastSwitchCharacterSlot { get; private set; } // 最近一次切人请求槽位
+
+        // 切人请求事件：参数为目标槽位（1/2/3）
+        public event Action<int> OnSwitchCharacterRequested;
         #endregion
-
-
 
         #region 初始化
         // 绑定当前受控角色输入缓冲：保证玩家输入写入正确角色
@@ -89,9 +92,8 @@ namespace WutheringWaves
             AttackInput = false;
             ESkillInput = false;
             QBurstInput = false;
+            LastSwitchCharacterSlot = 0;
         }
-
-        
         #endregion
 
         #region 输入回调
@@ -161,7 +163,7 @@ namespace WutheringWaves
         public void OnResonanceESkillInput(InputValue value)
         {
             EnsureInitialized();
-            QBurstInput = value.isPressed;
+            ESkillInput = value.isPressed;
             if (value.isPressed)
             {
                 inputBuffer?.BufferESkill();
@@ -177,6 +179,27 @@ namespace WutheringWaves
             {
                 inputBuffer?.BufferQBurst();
             }
+        }
+
+        // 1号位切人输入回调
+        public void OnKey1(InputValue value)
+        {
+            EnsureInitialized();
+            HandleSwitchCharacterInput(1, value);
+        }
+
+        // 2号位切人输入回调
+        public void OnKey2(InputValue value)
+        {
+            EnsureInitialized();
+            HandleSwitchCharacterInput(2, value);
+        }
+
+        // 3号位切人输入回调
+        public void OnKey3(InputValue value)
+        {
+            EnsureInitialized();
+            HandleSwitchCharacterInput(3, value);
         }
         #endregion
 
@@ -204,6 +227,19 @@ namespace WutheringWaves
             {
                 Initialize();
             }
+        }
+
+        // 统一处理切人按键：仅在按下瞬间抛出切人请求，避免长按重复触发
+        private void HandleSwitchCharacterInput(int targetSlot, InputValue value)
+        {
+            if (!value.isPressed)
+            {
+                return;
+            }
+
+            // 记录最近一次切人目标，方便外部轮询或调试查看
+            LastSwitchCharacterSlot = targetSlot;
+            OnSwitchCharacterRequested?.Invoke(targetSlot);
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,9 +20,8 @@ namespace WutheringWaves
         private CharacterContext context;     // 角色共享上下文
         private CharacterAttack attackLogic;  // 共享攻击基础层（仅用于查询通用战斗数据）
         private CombatConfigSO combatConfig;  // 今汐战斗配置
-        #endregion
+        private JinxiDragonController jinxiDragonController; // 今汐龙表现控制器
 
-        #region Inspector配置
         [Header("=== 今汐特殊机制配置 ===")]
         [Header("流光夕影冷却时间")]
         [SerializeField] private float skill1CD = 5f;
@@ -40,7 +40,6 @@ namespace WutheringWaves
 
         [Header("御空状态持续时间")]
         [SerializeField] private float floatingDuration = 10f;
-        #endregion
 
         #region 运行时状态
         private AttackStep currentStep; // 当前由今汐驱动层选中的攻击段
@@ -109,26 +108,9 @@ namespace WutheringWaves
             }
         }
         #endregion
+        #endregion
 
         #region 初始化
-        // 向状态工厂补注册今汐专属 / 今汐强化版状态
-        public void RegisterSpecialStates(CharacterStateFactory factory, CharacterStateMachine machine)
-        {
-            if (factory == null || machine == null)
-            {
-                return;
-            }
-
-            factory.RegisterState(CharacterState.Attacking, new CharacterAttackingState(machine, factory));
-            factory.RegisterState(CharacterState.HeavyAttacking, new CharacterHeavyAttackingState(machine, factory));
-            factory.RegisterState(CharacterState.FallAttacking, new CharacterFallAttackingState(machine, factory));
-            factory.RegisterState(CharacterState.AirAttacking, new CharacterAirAttackingState(machine, factory));
-            factory.RegisterState(CharacterState.FloatDashing, new CharacterFloatDashingState(machine, factory));
-            factory.RegisterState(CharacterState.FloatDodging, new CharacterFloatDodgingState(machine, factory));
-            factory.RegisterState(CharacterState.ESkill, new CharacterESkillState(machine, factory));
-            factory.RegisterState(CharacterState.QBurst, new CharacterQBurstState(machine, factory));
-        }
-
         // 今汐专属状态机驱动初始化：由 JinxiFeatureRoot 统一拉起
         public void Initialize(CharacterContext context)
         {
@@ -143,9 +125,47 @@ namespace WutheringWaves
 
             ResetAllRuntimeState();
         }
+        // 向状态工厂补注册今汐专属 / 今汐强化版状态
+        public void RegisterSpecialStates(CharacterStateFactory factory, CharacterStateMachine machine)
+        {
+            if (factory == null || machine == null)
+            {
+                return;
+            }
+
+            // 注册今汐完整状态集合：当前 JinxiStates 中的状态都由今汐层显式接管
+            factory.RegisterState(CharacterState.JinxiIdle, new JinxiIdleState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiMove, new JinxiMoveState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiJump, new JinxiJumpState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiFall, new JinxiFallState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiAttack, new JinxiAttackState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiHeavyAttack, new JinxiHeavyAttackState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiFallAttack, new JinxiFallAttackState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiAirAttack, new JinxiAirAttackState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiDash, new JinxiDashState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiAirDash, new JinxiAirDashState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiFloatDash, new JinxiFloatDashState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiDodge, new JinxiDodgeState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiFloatDodge, new JinxiFloatDodgeState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiESkill, new JinxiESkillState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiQBurst, new JinxiQBurstState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiHit, new JinxiHitState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiDead, new JinxiDeadState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiTransition, new JinxiTransitionState(machine, factory));
+        }
+
+        // 由外部装配入口注入今汐龙表现控制器，后续统一由今汐驱动层编排龙表现
+        public void SetDragonController(JinxiDragonController controller)
+        {
+            jinxiDragonController = controller;
+        }
         #endregion
 
         #region 运行时更新
+        private void Update()
+        {
+            UpdateRuntime();
+        }
         // 更新今汐专属的连击窗口、技能冷却、派生窗口与御空持续时间
         public bool UpdateRuntime()
         {
@@ -245,56 +265,14 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 可用性判断
+        #region 普通攻击
         // 地面普通攻击可用性判断
         public bool IsAttackable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isGrounded && !IsFloating;
+            return isCanInterrupt && isGrounded && !isFloating;
         }
-
-        // 下落攻击可用性判断
-        public bool IsFallAttackable()
-        {
-            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool isInTheAir = context != null && context.MovementLogic != null && !context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isInTheAir && !IsFloating;
-        }
-
-        // 御空攻击可用性判断
-        public bool IsAirAttackable()
-        {
-            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            return isCanInterrupt && IsFloating;
-        }
-
-        // 地面一段 E 技可用性判断
-        public bool CanUseSkill1()
-        {
-            bool isCDOver = skill1CDTimer <= 0f;
-            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCDOver && isGrounded;
-        }
-
-        // 战技可用性判断：任一派生阶段可用即可进入 ESkill 状态
-        public bool IsESkillable()
-        {
-            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool canUseESkill = CanUseSkill1() || CanUseSkill2 || CanUseSkill3 || CanUseSkill4;
-            return isCanInterrupt && canUseESkill;
-        }
-
-        // 爆发可用性判断
-        public bool IsQBurstable()
-        {
-            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool isCDOver = qBurstCDTimer <= 0f;
-            return isCanInterrupt && HasQBurstConfigured && isCDOver;
-        }
-        #endregion
-
-        #region 攻击段选择
         // 初始化地面普攻段：根据连击窗口状态决定当前应打哪一段
         public AttackStep InitializeNormalAttackStep()
         {
@@ -303,7 +281,45 @@ namespace WutheringWaves
             attackLogic?.SetCurrentStep(step);
             return step;
         }
+        // 开启地面普攻连击窗口；地面第四段普攻会顺带开启 Skill2 派生窗口
+        public void StartNormalComboWindow()
+        {
+            isComboWindowOpen = true;
+            comboWindowTimer = attackLogic != null ? attackLogic.GetComboWindowDuration(currentStep) : 0f;
 
+            if (!isFloating && currentComboCount == 3)
+            {
+                OpenSkill2Window();
+            }
+        }
+
+        // 重置地面普攻连段
+        public void ResetNormalCombo()
+        {
+            currentComboCount = 0;
+            isComboWindowOpen = false;
+            comboWindowTimer = 0f;
+        }
+        #endregion
+
+        #region 下落攻击
+        // 下落攻击可用性判断
+        public bool IsFallAttackable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            bool isInTheAir = context != null && context.MovementLogic != null && !context.MovementLogic.CustomCheckGrounded();
+            return isCanInterrupt && isInTheAir && !isFloating;
+        }
+       
+        #endregion
+
+        #region 御空攻击
+        // 御空攻击可用性判断
+        public bool IsAirAttackable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            return isCanInterrupt && isFloating;
+        }
         // 初始化御空攻击段：根据御空连击窗口决定当前应打哪一段
         public AttackStep InitializeAirAttackStep(List<AttackStep> stepList)
         {
@@ -312,7 +328,42 @@ namespace WutheringWaves
             attackLogic?.SetCurrentStep(step);
             return step;
         }
+        // 开启御空攻击连击窗口；御空第四段攻击会顺带开启 Skill4 派生窗口
+        public void StartAirComboWindow()
+        {
+            isAirComboWindowOpen = true;
+            airComboWindowTimer = attackLogic != null ? attackLogic.GetComboWindowDuration(currentStep) : 0f;
 
+            if (currentAirComboCount == 3)
+            {
+                OpenSkill4Window();
+            }
+        }
+
+        // 重置御空攻击连段
+        public void ResetAirCombo()
+        {
+            currentAirComboCount = 0;
+            isAirComboWindowOpen = false;
+            airComboWindowTimer = 0f;
+        }
+        #endregion
+
+        #region 战技
+        // 战技可用性判断：任一派生阶段可用即可进入 JinxiESkill 状态
+        public bool IsESkillable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            bool canUseESkill = CanUseSkill1() || CanUseSkill2 || CanUseSkill3 || CanUseSkill4;
+            return isCanInterrupt && canUseESkill;
+        }
+        // 地面一段 E 技可用性判断
+        public bool CanUseSkill1()
+        {
+            bool isCDOver = skill1CDTimer <= 0f;
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
+            return isCDOver && isGrounded;
+        }
         // 初始化战技攻击段：根据当前派生窗口决定 Skill1 / 2 / 3 / 4 的对应攻击段
         public AttackStep InitializeESkillStep()
         {
@@ -344,46 +395,18 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 连击窗口
-        // 开启地面普攻连击窗口；地面第四段普攻会顺带开启 Skill2 派生窗口
-        public void StartNormalComboWindow()
+        #region 爆发
+        // 爆发可用性判断
+        public bool IsQBurstable()
         {
-            isComboWindowOpen = true;
-            comboWindowTimer = attackLogic != null ? attackLogic.GetComboWindowDuration(currentStep) : 0f;
-
-            if (!IsFloating && currentComboCount == 3)
-            {
-                OpenSkill2Window();
-            }
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            bool isCDOver = qBurstCDTimer <= 0f;
+            return isCanInterrupt && HasQBurstConfigured && isCDOver;
         }
+        #endregion
 
-        // 重置地面普攻连段
-        public void ResetNormalCombo()
-        {
-            currentComboCount = 0;
-            isComboWindowOpen = false;
-            comboWindowTimer = 0f;
-        }
+        #region 变奏
 
-        // 开启御空攻击连击窗口；御空第四段攻击会顺带开启 Skill4 派生窗口
-        public void StartAirComboWindow()
-        {
-            isAirComboWindowOpen = true;
-            airComboWindowTimer = attackLogic != null ? attackLogic.GetComboWindowDuration(currentStep) : 0f;
-
-            if (currentAirComboCount == 3)
-            {
-                OpenSkill4Window();
-            }
-        }
-
-        // 重置御空攻击连段
-        public void ResetAirCombo()
-        {
-            currentAirComboCount = 0;
-            isAirComboWindowOpen = false;
-            airComboWindowTimer = 0f;
-        }
         #endregion
 
         #region 技能使用回调
@@ -432,40 +455,6 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 技能UI显示
-        // 获取当前 E 技能 UI 应展示阶段的总时长
-        public float GetCurrentESkillDisplayDuration()
-        {
-            switch (CurrentESkillUIIndex)
-            {
-                case 4:
-                    return skill4WindowCD;
-                case 3:
-                    return skill3WindowCD;
-                case 2:
-                    return skill2WindowCD;
-                default:
-                    return skill1CD;
-            }
-        }
-
-        // 获取当前 E 技能 UI 应展示阶段的剩余时长
-        public float GetCurrentESkillDisplayTimer()
-        {
-            switch (CurrentESkillUIIndex)
-            {
-                case 4:
-                    return Skill4WindowTimer;
-                case 3:
-                    return Skill3WindowTimer;
-                case 2:
-                    return Skill2WindowTimer;
-                default:
-                    return Skill1CDTimer;
-            }
-        }
-        #endregion
-
         #region 技能窗口与御空控制
         // 开启 Skill2 派生窗口（由地面普攻第四段触发）
         public void OpenSkill2Window()
@@ -500,6 +489,54 @@ namespace WutheringWaves
             if (attackLogic != null)
             {
                 GameEvents.RaiseFloatingChanged(attackLogic, isFloating);
+            }
+        }
+        #endregion
+
+        #region 龙表现转发
+        // 今汐状态只通过今汐驱动层调用龙表现，避免状态类直接耦合龙控制器
+        public void PlayDragonAction(AttackStep step)
+        {
+            jinxiDragonController?.PlayDragonAction(step);
+        }
+
+        // 今汐状态退出时通过驱动层统一关闭龙表现
+        public void HideDragonInstantly()
+        {
+            jinxiDragonController?.HideDragonInstantly();
+        }
+        #endregion
+
+        #region 技能UI显示
+        // 获取当前 E 技能 UI 应展示阶段的总时长
+        public float GetCurrentESkillDisplayDuration()
+        {
+            switch (CurrentESkillUIIndex)
+            {
+                case 4:
+                    return skill4WindowCD;
+                case 3:
+                    return skill3WindowCD;
+                case 2:
+                    return skill2WindowCD;
+                default:
+                    return skill1CD;
+            }
+        }
+
+        // 获取当前 E 技能 UI 应展示阶段的剩余时长
+        public float GetCurrentESkillDisplayTimer()
+        {
+            switch (CurrentESkillUIIndex)
+            {
+                case 4:
+                    return Skill4WindowTimer;
+                case 3:
+                    return Skill3WindowTimer;
+                case 2:
+                    return Skill2WindowTimer;
+                default:
+                    return Skill1CDTimer;
             }
         }
         #endregion
@@ -581,6 +618,9 @@ namespace WutheringWaves
                 GameEvents.RaiseSkillUIStateChanged(attackLogic);
             }
         }
+
+
         #endregion
     }
 }
+

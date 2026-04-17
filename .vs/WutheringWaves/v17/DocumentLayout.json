@@ -3,84 +3,88 @@
   "WorkspaceRootPath": "D:\\Unity\\UnityProject\\WutheringWaves\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\characterstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characterstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\states\\jinxistates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\states\\jinxistates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\5.movement\\charactermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\5.movement\\charactermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\katixiya\\states\\katixiyastates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\katixiya\\states\\katixiyastates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxispecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxispecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.runtimecore\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.runtimecore\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\characterdataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\characterdataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatefactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatefactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\icharacterstatemachinedriver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\icharacterstatemachinedriver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxifeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxifeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\6.combat\\weaponcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\6.combat\\weaponcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\effectactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\effectactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\6.combat\\characterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\6.combat\\characterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\weaponconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\weaponconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\animationconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\animationconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\combatconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\combatconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\movementconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\movementconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.player\\playerinputreader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.player\\playerinputreader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\3.core\\characterfacade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\6.combat\\characterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\6.combat\\characterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatefactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatefactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\animationconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\animationconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxispecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxispecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\6.combat\\weaponcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\6.combat\\weaponcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\8.fsm\\characterstatebase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.systems\\3.effects\\effectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.systems\\3.effects\\effectservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\5.movement\\charactermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\5.movement\\charactermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxifeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxifeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\characterdataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\characterdataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.runtimecore\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\1.shared\\6.combat\\effectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\scripts\\3.characters\\1.shared\\6.combat\\effectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -90,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 17,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Document",
@@ -107,55 +111,94 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 5,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerController.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
               "RelativeToolTip": "Assets\\Scripts\\2.Player\\PlayerController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAxwIUAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-14T12:40:15.529Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "CharacterFacade.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterFacade.cs",
-              "ViewState": "AgIAAHoAAAAAAAAAAAAYwIgAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-14T11:45:48.448Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "CharacterContext.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAAAQAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAACIAAAAAAAAAAAAWwCsAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-14T13:09:26.112Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 18,
               "Title": "CharacterDataSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-15T14:03:41.554Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CharacterStateMachine.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
+              "ViewState": "AgIAACIBAAAAAAAAAAAQwGkBAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T04:49:54.488Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CharacterStateBase.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T12:48:02.632Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CharacterStateFactory.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T14:18:48.25Z",
               "IsPinned": true
             },
             {
@@ -164,186 +207,161 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ICharacterStateMachineDriver.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\ICharacterStateMachineDriver.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\ICharacterStateMachineDriver.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\ICharacterStateMachineDriver.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\ICharacterStateMachineDriver.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T14:50:31.359Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "JinxiDragonController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T12:49:15.706Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "JinxiFeatureRoot.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAADwvykAAABJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T12:48:33.316Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "WeaponController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAgwBcAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T11:14:34.38Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "CharacterMovement.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAiAAAAAAAAAA==",
+              "Title": "KatixiyaStates.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ8CAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T08:24:53.525Z",
+              "WhenOpened": "2026-04-17T13:52:57.44Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "MovementConfigSO.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\MovementConfigSO.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\MovementConfigSO.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\MovementConfigSO.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\MovementConfigSO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "GameEvents.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.RuntimeCore\\3.Common\\GameEvents.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.RuntimeCore\\3.Common\\GameEvents.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.RuntimeCore\\3.Common\\GameEvents.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.RuntimeCore\\3.Common\\GameEvents.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T08:20:30.467Z"
+              "WhenOpened": "2026-04-17T13:24:40.454Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "CharacterAttack.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAApAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "PlayerInputReader.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
+              "RelativeToolTip": "Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
+              "ViewState": "AgIAAMEAAAAAAAAAAAAAwBQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T14:37:24.215Z"
+              "WhenOpened": "2026-04-17T12:58:28.955Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "CombatConfigSO.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAABcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T14:46:42.598Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 9,
               "Title": "AnimationConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAgwEAAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAUAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T07:31:52.692Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "WeaponConfigSO.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCgAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T04:56:02.163Z"
+              "WhenOpened": "2026-04-17T08:52:17.7Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
-              "Title": "EffectActionConfigSO.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\EffectActionConfigSO.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\EffectActionConfigSO.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\EffectActionConfigSO.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\EffectActionConfigSO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADYAAAB2AAAAAAAAAA==",
+              "Title": "WeaponController.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAKgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T06:49:03.231Z"
+              "WhenOpened": "2026-04-17T08:18:29.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "EffectController.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\EffectController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\EffectController.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\EffectController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\EffectController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwA8AAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T07:58:25.178Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "EffectService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.Systems\\3.Effects\\EffectService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\4.Systems\\3.Effects\\EffectService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.Systems\\3.Effects\\EffectService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\4.Systems\\3.Effects\\EffectService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T07:57:37.492Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CharacterStateMachine.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\CharacterStateMachine.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\CharacterStateMachine.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\CharacterStateMachine.cs",
-              "RelativeToolTip": "Assets\\Scripts\\CharacterStateMachine.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAGAAAAA4AAAAAAAAAA==",
+              "Title": "JinxiStates.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowCgAAACrAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T09:22:54.364Z",
+              "WhenOpened": "2026-04-17T06:38:02.856Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CharacterStateBase.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA==",
+              "DocumentIndex": 17,
+              "Title": "JinxiFeatureRoot.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwA8AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T12:48:02.632Z"
+              "WhenOpened": "2026-04-16T12:48:33.316Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CharacterStateFactory.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAowCsAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T14:18:48.25Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "JinxiSpecialSkillLinker.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAkBAAAAAAAAAAAuwCgBAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T12:49:06.58Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-16T12:49:06.58Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "JinxiDragonController.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T06:33:32.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CharacterMovement.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
+              "ViewState": "AgIAADwDAAAAAAAAAAAAwFgDAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T08:24:53.525Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CharacterAttack.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAiwFIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-15T14:37:24.215Z"
             }
           ]
         }

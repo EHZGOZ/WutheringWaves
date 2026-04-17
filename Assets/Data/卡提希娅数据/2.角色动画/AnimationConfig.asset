@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7c9c14a1df4cc1b88f32e5a7f96e31, type: 3}
+  m_Name: AnimationConfig
+  m_EditorClassIdentifier: 
+  characterName: 1
+  locomotionAnimations:
+  - animationId: 1
+    clip: {fileID: -623603649343465320, guid: 80c239e4b42499c45aec72b56e0e2695, type: 3}
+  - animationId: 2
+    clip: {fileID: -623603649343465320, guid: 85d7535ceb9b080419b2c0b7b21c3eae, type: 3}
+  - animationId: 2
+    clip: {fileID: -623603649343465320, guid: 8c40b20560322b04d866b9f9977ca3fb, type: 3}
+  combatAnimations: []

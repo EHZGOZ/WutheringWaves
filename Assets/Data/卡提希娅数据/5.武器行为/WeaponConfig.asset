@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e53d1a462244be4bf3c6892804ad1b4, type: 3}
+  m_Name: WeaponConfig
+  m_EditorClassIdentifier: 
+  characterName: 1
+  floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
+  swordLength: 1
+  swordPositionOffset: {x: 0, y: 0, z: 0}
+  swordRotationOffset: {x: 0, y: 0, z: 0}
+  weaponActions:
+  - attackId: 1
+    swordAnimation:
+      swordAnimationCostTime: 1
+      DelayTime: 0.2
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
+      initSwordHandlePos: {x: 1, y: 1.1, z: -0.5}
+      initSwordRotationEuler: {x: 180, y: -150, z: 0}
+      swordTrajectory:
+      - targeSwordHandlelPos: {x: 1, y: 1.1, z: 0.5}
+        targetSwordRotationEuler: {x: 180, y: -210, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 1.1, z: 1}
+        targetSwordRotationEuler: {x: 180, y: -270, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: -1, y: 1.1, z: 0.5}
+        targetSwordRotationEuler: {x: 180, y: -330, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: -1, y: 1.1, z: -0.5}
+        targetSwordRotationEuler: {x: 180, y: -390, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 1.1, z: -1}
+        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: 0.4, y: 1.1, z: -1}
+        targetSwordRotationEuler: {x: 180, y: 0, z: 0}
+        timeWeight: 3
+  - attackId: 2
+    swordAnimation:
+      swordAnimationCostTime: 0.5
+      DelayTime: 0.2
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 4428387476252333486, guid: 7311435c34bffb74dae22223944bc70d, type: 3}
+      initSwordHandlePos: {x: 0.5, y: 1.1, z: -0.5}
+      initSwordRotationEuler: {x: 180, y: -30, z: 0}
+      swordTrajectory:
+      - targeSwordHandlelPos: {x: 1, y: 1.1, z: 0.5}
+        targetSwordRotationEuler: {x: 180, y: -90, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 1.5}
+        targetSwordRotationEuler: {x: 180, y: -150, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 2}
+        targetSwordRotationEuler: {x: 180, y: -210, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 1.1, z: 3}
+        targetSwordRotationEuler: {x: 180, y: -270, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
+        targetSwordRotationEuler: {x: 180, y: -360, z: 0}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 4}
+        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 4}
+        targetSwordRotationEuler: {x: 180, y: -480, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 3.5}
+        targetSwordRotationEuler: {x: 180, y: -540, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 3}
+        targetSwordRotationEuler: {x: 180, y: -600, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 3}
+        targetSwordRotationEuler: {x: 180, y: -660, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
+        targetSwordRotationEuler: {x: 180, y: -720, z: 0}
+        timeWeight: 1.5
+      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 4}
+        targetSwordRotationEuler: {x: 180, y: -420, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 4}
+        targetSwordRotationEuler: {x: 180, y: -480, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: -0.5, y: 1.1, z: 3.5}
+        targetSwordRotationEuler: {x: 180, y: -540, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: -0.3, y: 1.1, z: 3}
+        targetSwordRotationEuler: {x: 180, y: -600, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: 0.3, y: 1.1, z: 3}
+        targetSwordRotationEuler: {x: 180, y: -660, z: 0}
+        timeWeight: 2
+      - targeSwordHandlelPos: {x: 0.5, y: 1.1, z: 3.5}
+        targetSwordRotationEuler: {x: 180, y: -720, z: 0}
+        timeWeight: 2
+  - attackId: 3
+    swordAnimation:
+      swordAnimationCostTime: 1
+      DelayTime: 1
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 0}
+      initSwordHandlePos: {x: 1, y: 1.1, z: 1}
+      initSwordRotationEuler: {x: 0, y: 0, z: 0}
+      swordTrajectory: []
+  - attackId: 5
+    swordAnimation:
+      swordAnimationCostTime: 1
+      DelayTime: 0
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 4428387476252333486, guid: 7311435c34bffb74dae22223944bc70d, type: 3}
+      initSwordHandlePos: {x: 0, y: -0.25, z: -1}
+      initSwordRotationEuler: {x: 90, y: 90, z: 0}
+      swordTrajectory:
+      - targeSwordHandlelPos: {x: 0, y: 1, z: -1.5}
+        targetSwordRotationEuler: {x: 45, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 2, z: -0.5}
+        targetSwordRotationEuler: {x: -45, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 2, z: 1}
+        targetSwordRotationEuler: {x: -90, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 1.5, z: 1}
+        targetSwordRotationEuler: {x: -135, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 0.75, z: 1.5}
+        targetSwordRotationEuler: {x: -180, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: 0, z: 1.5}
+        targetSwordRotationEuler: {x: -225, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: -0.5, z: 1.5}
+        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: -1, z: 1.5}
+        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
+        timeWeight: 1
+      - targeSwordHandlelPos: {x: 0, y: -1.5, z: 1.5}
+        targetSwordRotationEuler: {x: -270, y: 180, z: 90}
+        timeWeight: 1
+  - attackId: 6
+    swordAnimation:
+      swordAnimationCostTime: 1
+      DelayTime: 0.5
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
+      initSwordHandlePos: {x: 0, y: 1.1, z: 1}
+      initSwordRotationEuler: {x: 0, y: 0, z: 0}
+      swordTrajectory: []

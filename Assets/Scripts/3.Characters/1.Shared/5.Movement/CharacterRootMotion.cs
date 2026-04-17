@@ -22,8 +22,8 @@ namespace WutheringWaves
         {
             CharacterStateMachine stateMachine = context != null ? context.StateMachine : null;
             if (stateMachine != null
-                && (stateMachine.CurrentStateType == CharacterState.Moving
-                || stateMachine.CurrentStateType == CharacterState.Idle))
+                && (stateMachine.CurrentStateType == CharacterState.JinxiMove
+                || stateMachine.CurrentStateType == CharacterState.JinxiIdle))
             {
                 return;
             }
@@ -44,3 +44,4 @@ namespace WutheringWaves
         }
     }
 }
+

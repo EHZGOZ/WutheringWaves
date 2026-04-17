@@ -22,7 +22,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
   - attackId: 2
     hitConfig:
@@ -32,7 +32,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
   - attackId: 3
     hitConfig:
@@ -42,7 +42,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 1
       comboWindowDuration: 1.5
   - attackId: 4
     hitConfig:
@@ -52,7 +52,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
   fallAttackSteps:
   - attackId: 5
@@ -217,7 +217,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 3
       comboWindowDuration: 1.5
   resonanceESkillCD: 5
   resonanceESkillMagnification: 2

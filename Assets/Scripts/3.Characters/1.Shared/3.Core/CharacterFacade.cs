@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace WutheringWaves
@@ -15,6 +15,8 @@ namespace WutheringWaves
         [SerializeField] private PlayerStamina playerStamina;
         [Header("角色基础数据：手动填入")]
         [SerializeField] private CharacterDataSO characterDataSO;
+        [Header("角色Look Root：手动填入")]
+        [SerializeField] private Transform cameraTarget;
 
         [Header("=== 核心组件（优先自动获取，可手动补全） ===")]
         [Header("角色共享上下文：集中管理角色运行时共享依赖")]
@@ -22,6 +24,7 @@ namespace WutheringWaves
 
         [Header("=== 角色独属（自动获取，可手动补全） ===")]
         [SerializeField] private JinxiFeatureRoot jinxiFeatureRoot;
+        [SerializeField] private KatixiyaFeatureRoot katixiyaFeatureRoot;
         #endregion
 
         #region 对外只读属性
@@ -30,6 +33,8 @@ namespace WutheringWaves
         public PlayerStamina PlayerStamina => playerStamina; // 玩家共享体力
         public CharacterDataSO CharacterDataSO => characterDataSO; // 玩家共享体力
         public CharacterContext Context => context; // 角色共享上下文
+        public Transform CameraTarget => cameraTarget != null ? cameraTarget : transform; // 当前角色相机观察点
+        public bool IsPlayerControlled { get; private set; } // 当前角色是否由玩家直接控制
         public bool IsInitialized { get; private set; } // 是否完成初始化
         #endregion
 
@@ -116,6 +121,9 @@ namespace WutheringWaves
                 case CharacterName.今汐:
                     InitializeJinxiExclusiveModules();
                     break;
+                case CharacterName.卡提希娅:
+                    InitializeKatixiyaExclusiveModules();
+                    break;
             }
         }
 
@@ -129,12 +137,37 @@ namespace WutheringWaves
 
             jinxiFeatureRoot?.Initialize(context);
 
-            ICharacterStateMachineDriver stateMachineDriver = GetComponents<MonoBehaviour>()
-                .OfType<ICharacterStateMachineDriver>()
-                .FirstOrDefault();
+            JinxiSpecialSkillLinker jinxiSpecialSkillLinker = jinxiFeatureRoot != null
+                ? jinxiFeatureRoot.SpecialSkillLinker
+                : GetComponent<JinxiSpecialSkillLinker>();
 
-            context?.StateMachine?.SetStateMachineDriver(stateMachineDriver);
-            context?.StateMachine?.SetJinxiDragonController(jinxiFeatureRoot != null ? jinxiFeatureRoot.DragonController : null);
+            JinxiDragonController jinxiDragonController = jinxiFeatureRoot != null
+                ? jinxiFeatureRoot.DragonController
+                : GetComponent<JinxiDragonController>();
+
+            // 今汐龙表现由今汐驱动层统一编排，避免继续由状态机直接持有今汐表现细节
+            jinxiSpecialSkillLinker?.SetDragonController(jinxiDragonController);
+
+            context?.StateMachine?.SetStateMachineDriver(jinxiSpecialSkillLinker);
+            context?.StateMachine?.SetJinxiSpecialSkillLinker(jinxiSpecialSkillLinker);
+        }
+
+        // 初始化卡提希娅专属模块，并把卡提希娅专属状态机驱动接入共享状态机
+        private void InitializeKatixiyaExclusiveModules()
+        {
+            if (katixiyaFeatureRoot == null)
+            {
+                katixiyaFeatureRoot = GetComponent<KatixiyaFeatureRoot>();
+            }
+
+            katixiyaFeatureRoot?.Initialize(context);
+
+            KatixiyaSpecialSkillLinker katixiyaSpecialSkillLinker = katixiyaFeatureRoot != null
+                ? katixiyaFeatureRoot.SpecialSkillLinker
+                : GetComponent<KatixiyaSpecialSkillLinker>();
+
+            context?.StateMachine?.SetStateMachineDriver(katixiyaSpecialSkillLinker);
+            context?.StateMachine?.SetKatixiyaSpecialSkillLinker(katixiyaSpecialSkillLinker);
         }
 
         // 按 CharacterContext 的依赖顺序初始化角色运行模块
@@ -158,6 +191,26 @@ namespace WutheringWaves
             context?.MovementLogic?.Initialize(context);
             // 9.初始化战斗逻辑，保证攻击逻辑可正常工作
             context?.AttackLogic?.Initialize(context);
+        }
+        #endregion
+
+        #region 切人控制
+        // 切换玩家控制权：当前阶段先记录控制权状态，后续其他模块按需读取
+        public void SetPlayerControlled(bool isControlled)
+        {
+            IsPlayerControlled = isControlled;
+        }
+
+        // 切出角色：清理残留输入，避免旧角色继续消费输入请求
+        public void OnSwitchOut()
+        {
+            context?.StateMachine?.ResetInputState();
+        }
+
+        // 切入角色：重置输入状态，避免新角色吃到切人前的残留输入
+        public void OnSwitchIn()
+        {
+            context?.StateMachine?.ResetInputState();
         }
         #endregion
     }

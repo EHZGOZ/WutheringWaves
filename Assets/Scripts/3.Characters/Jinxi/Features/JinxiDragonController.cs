@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace WutheringWaves
 {
-    [DisallowMultipleComponent]
     public class JinxiDragonController : MonoBehaviour
     {
         [Header("=== 龙表现配置 ===")]
@@ -282,3 +281,4 @@ namespace WutheringWaves
         }
     }
 }
+

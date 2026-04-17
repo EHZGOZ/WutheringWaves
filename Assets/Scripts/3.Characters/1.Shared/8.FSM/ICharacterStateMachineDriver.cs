@@ -1,39 +1,14 @@
-using System.Collections.Generic;
-
-namespace WutheringWaves
+﻿namespace WutheringWaves
 {
+    /// <summary>
+    /// 角色状态机驱动接口。
+    /// 这里只保留状态注册职责，角色专属玩法逻辑继续留在各自角色脚本中。
+    /// </summary>
     public interface ICharacterStateMachineDriver
     {
+        /// <summary>
+        /// 向状态工厂注册当前角色拥有的状态。
+        /// </summary>
         void RegisterSpecialStates(CharacterStateFactory factory, CharacterStateMachine machine);
-
-        bool IsAttackable();
-        bool IsAirAttackable();
-        bool IsFallAttackable();
-        bool IsESkillable();
-        bool IsQBurstable();
-
-        bool IsFloating { get; }
-
-        List<AttackStep> AttackSteps { get; }
-        List<AttackStep> FallAttackSteps { get; }
-        List<AttackStep> SkillAttackSteps { get; }
-        List<AttackStep> SkillAirAttackSteps { get; }
-        List<AttackStep> ESkillAttackSteps { get; }
-        List<AttackStep> QBurstAttackSteps { get; }
-
-        AttackStep InitializeNormalAttackStep();
-        AttackStep InitializeAirAttackStep(List<AttackStep> steps);
-        AttackStep InitializeESkillStep();
-
-        void StartNormalComboWindow();
-        void StartAirComboWindow();
-        void ResetNormalCombo();
-        void ResetAirCombo();
-
-        void OnSkill1Used();
-        void OnSkill2Used();
-        void OnSkill3Used();
-        void OnSkill4Used();
-        void OnQBurstUsed();
     }
 }

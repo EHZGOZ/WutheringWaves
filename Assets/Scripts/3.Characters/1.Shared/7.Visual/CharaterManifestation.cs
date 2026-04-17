@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 // 类魂游戏核心命名空间
@@ -37,6 +37,42 @@ namespace WutheringWaves
         private Coroutine _decorationSwordFadeCoroutine;
 
         private readonly string _unlitColorProperty = "_BaseColor";
+        #endregion
+
+        #region 角色特殊状态读取
+        // 统一读取当前角色是否处于御空状态，避免表现层只绑定到今汐专属驱动
+        private bool IsCharacterFloating()
+        {
+            if (context == null || context.StateMachine == null)
+            {
+                return false;
+            }
+
+            if (context.StateMachine.JinxiSpecialSkillLinker != null)
+            {
+                return context.StateMachine.JinxiSpecialSkillLinker.IsFloating;
+            }
+
+            if (context.StateMachine.KatixiyaSpecialSkillLinker != null)
+            {
+                return context.StateMachine.KatixiyaSpecialSkillLinker.IsFloating;
+            }
+
+            return false;
+        }
+
+        // 统一读取当前角色是否处于爆发状态，避免表现层继续写死到单个角色状态枚举
+        private bool IsBursting()
+        {
+            if (context == null || context.StateMachine == null)
+            {
+                return false;
+            }
+
+            CharacterState currentState = context.StateMachine.CurrentStateType;
+            return currentState == CharacterState.JinxiQBurst
+                || currentState == CharacterState.KatixiyaQBurst;
+        }
         #endregion
 
         #region 初始化
@@ -178,8 +214,8 @@ namespace WutheringWaves
 
         private void RefreshDragonHorn()
         {
-            bool isFloating = context != null && context.StateMachine != null && context.StateMachine.IsFloating();
-            bool isQBurst = context != null && context.StateMachine != null && context.StateMachine.CurrentStateType == CharacterState.QBurst;
+            bool isFloating = IsCharacterFloating();
+            bool isQBurst = IsBursting();
 
             if (isFloating || isQBurst)
                 ShowDragonHornFade();

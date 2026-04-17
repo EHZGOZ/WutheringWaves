@@ -41,7 +41,7 @@ MonoBehaviour:
   - animationId: 14
     clip: {fileID: 1827226128182048838, guid: 3b62d872c1490274582d9b1db76777ed, type: 3}
   - animationId: 4
-    clip: {fileID: 1827226128182048838, guid: 262e60ab576f52a4fb30c15481159dad, type: 3}
+    clip: {fileID: 1827226128182048838, guid: 17c4be7cb5a5a8044b7dbfee367b10c9, type: 3}
   combatAnimations:
   - attackId: 1
     clip: {fileID: 1827226128182048838, guid: 4c0486def14e7af498e6ceeaa6a53c75, type: 3}

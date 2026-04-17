@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad3b5fd905b2886448136bd040e12a7a, type: 3}
+  m_Name: CombatConfig
+  m_EditorClassIdentifier: 
+  characterName: 1
+  attackSteps:
+  - attackId: 1
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0.5
+      comboWindowDuration: 1.5
+  - attackId: 2
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0.5
+      comboWindowDuration: 1.5
+  - attackId: 3
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 1
+      comboWindowDuration: 1.5
+  - attackId: 4
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0.5
+      comboWindowDuration: 1.5
+  fallAttackSteps:
+  - attackId: 5
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 6
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 7
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  skillAirAttackSteps:
+  - attackId: 12
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 13
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 14
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 15
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  skillAttackSteps:
+  - attackId: 8
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 9
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 10
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 11
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  eSkillAttackSteps:
+  - attackId: 16
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 17
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 18
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  - attackId: 19
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 0
+      comboWindowDuration: 1.5
+  qBurstAttackSteps:
+  - attackId: 20
+    hitConfig:
+      damageMultiplier: 1
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 1, z: 0.5}
+    timingConfig:
+      executionAttackCostTime: 3
+      comboWindowDuration: 1.5
+  resonanceESkillCD: 5
+  resonanceESkillMagnification: 2
+  resonanceQBurstCD: 10
+  resonanceQBurstMagnification: 5

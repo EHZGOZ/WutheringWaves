@@ -71,11 +71,6 @@ namespace WutheringWaves
             }
         }
 
-        //对外提供武器长度，方便后续调试或判定扩展
-        public float GetSwordLength()
-        {
-            return weaponConfig != null ? weaponConfig.swordLength : 0f;
-        }
 
         //播放单次武器表现：按配置生成武器并沿轨迹推进
         private IEnumerator PlayWeaponActionCoroutine(SwordAnimation swordAnimation)

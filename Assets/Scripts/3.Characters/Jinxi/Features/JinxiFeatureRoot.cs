@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace WutheringWaves
 {
@@ -42,15 +42,6 @@ namespace WutheringWaves
                 dragonController = GetComponent<JinxiDragonController>();
             }
 
-            if (specialSkillLinker == null)
-            {
-                specialSkillLinker = gameObject.AddComponent<JinxiSpecialSkillLinker>();
-            }
-
-            if (dragonController == null)
-            {
-                dragonController = gameObject.AddComponent<JinxiDragonController>();
-            }
         }
     }
 }
