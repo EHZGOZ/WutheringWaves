@@ -1,29 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace WutheringWaves
 {
     public class PlayerController : MonoBehaviour
     {
-        #region 核心引用
-        [Header("=== 相机引用 ===")]
+
+        [Header(" 玩家数据")]
+        [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
+
+        [Header("相机引用 ")]
         [SerializeField] private PlayerCamera playerCamera; // 全局相机控制器（所有角色共用）
-        [Header("=== 相机观察点 ===")]
+        [Header("相机观察点")]
         [SerializeField] private Transform cameraTarget; // 全局相机绑定的观察点/旋转锚点（所有角色共用）
-        [Header("=== 输入引用 ===")]
+        [Header(" 输入引用 ")]
         [SerializeField] private PlayerInputReader playerInputReader;
-        [Header("=== 玩家体力 ===")]
+        [Header("玩家体力")]
         [SerializeField] private PlayerStamina playerStamina;
-        [Header("=== 角色引用 ===")]
-        [SerializeField] private CharacterFacade defaultCharacterFacade;// 编辑器手动指定的默认角色门面（优先级最高）
-        [Header("=== 队伍角色列表 ===")]
+        [Header("队伍角色列表")]
         [SerializeField] private CharacterFacade[] teamCharacters; // 队伍内可切换角色，1/2/3按顺序对应数组索引
         [Header("默认受控角色槽位")]
         [SerializeField] private int defaultCharacterIndex = 0; // 默认操控角色索引
-        //运行时缓存
-        private CharacterFacade _currentCharacterFacade; // 当前受控角色的门面脚本
-        private CharacterContext _currentCharacterContext; // 当前受控角色的共享上下文
+        [Header("当前受控角色的门面脚本(不可修改)")]
+        [SerializeField] private CharacterFacade _currentCharacterFacade; // 当前受控角色的门面脚本
+        [Header("当前受控角色的共享上下文(不可修改)")]
+        [SerializeField] private CharacterContext _currentCharacterContext; // 当前受控角色的共享上下文
         private int _currentCharacterIndex = -1; // 当前受控角色索引
-        #endregion
+
 
         #region 对外只读属性
         // 外部脚本只读访问当前角色相机
@@ -32,24 +35,21 @@ namespace WutheringWaves
         public Transform CurrentCameraTarget => cameraTarget;
         // 外部脚本只读访问当前输入读取器
         public PlayerInputReader CurrentPlayerInputReader => playerInputReader;
+        // 外部脚本只读访问玩家共享体力组件
+        public PlayerStamina PlayerStamina => playerStamina;
+        // 外部脚本只读访问队伍角色列表
+        public CharacterFacade[] TeamCharacters => teamCharacters;
+        // 外部脚本只读访问当前受控角色索引
+        public int CurrentCharacterIndex => _currentCharacterIndex;
         // 外部脚本只读访问当前受控角色门面
         public CharacterFacade CurrentCharacterFacade => _currentCharacterFacade;
         // 外部脚本只读访问当前角色共享上下文
         public CharacterContext CurrentCharacterContext => _currentCharacterContext;
-        // 外部脚本只读访问玩家共享体力组件
-        public PlayerStamina PlayerStamina => playerStamina;
-        // 外部脚本只读访问当前受控角色索引
-        public int CurrentCharacterIndex => _currentCharacterIndex;
-        
-        // 控制器是否完成初始化
-        public bool IsInitialized { get; private set; }
+
         #endregion
 
-        private void Awake()
-        {
-            //1.自动初始化
-            Initialize();
-        }
+
+        #region 生命周期
 
         private void OnDestroy()
         {
@@ -63,46 +63,70 @@ namespace WutheringWaves
             UpdateCurrentPlayerCamera();
 
         }
+        private void OnDisable()
+        {
+
+        }
+        private void OnApplicationQuit()
+        {
+
+        }
+        #endregion
 
 
-        #region 初始化
+        #region 初始化组件
+        public void Injected(PlayerRuntimeData playerRuntimeData)
+        {
+            this.playerRuntimeData = playerRuntimeData;
+        }
+
         // 玩家控制器初始化总入口：绑定默认角色，完成相机配置
         public void Initialize()
         {
-            //1.防止重复初始化
-            if (IsInitialized)
-            {
-                return;
-            }
-            //2.获取玩家相机
-            ResolveplayerCamerar();
-            //3.获取玩家输入
+            //1.订阅输入事件
+            SubscribeInputEvents();
+            //2.获取玩家输入
             ResolvePlayerInputReader();
-            //4.初始化共享运行时数据
+            //3.获取玩家共享体力
             ResolvePlayerStamina();
+
+            //1.获取玩家相机
+            ResolveplayerCamerar();
             //5.解析队伍角色列表
             ResolveTeamCharacters();
-            //6.订阅输入事件
-            SubscribeInputEvents();
-            //7.确定默认受控角色
-            ResolveDefaultCharacter();
+            
+
             //8.初始化队伍激活状态
             SetupInitialTeamState();
             //9.绑定角色组件
-            BindCurrentCharacter(defaultCharacterFacade);
-            //10.标记初始化完成
-            IsInitialized = true;
+            BindCurrentCharacter(teamCharacters[_currentCharacterIndex]);
+
         }
-        //2.获取玩家相机
-        private void ResolveplayerCamerar()
+     
+        #endregion
+
+        #region 事件订阅
+        //1.订阅输入层切人事件：由玩家输入统一驱动角色切换
+        private void SubscribeInputEvents()
         {
-            if (playerCamera == null)
+            if (playerInputReader != null)
             {
-                playerCamera = GetComponent<PlayerCamera>();
+                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+                playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
             }
         }
+        // 解绑输入层切人事件：防止对象销毁后残留订阅
+        private void UnsubscribeInputEvents()
+        {
+            if (playerInputReader != null)
+            {
+                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+            }
+        }
+        #endregion
 
-        //3.获取玩家输入
+        #region 获取玩家输入
+        //获取玩家输入
         private void ResolvePlayerInputReader()
         {
             if (playerInputReader == null)
@@ -110,89 +134,15 @@ namespace WutheringWaves
                 playerInputReader = GetComponent<PlayerInputReader>();
             }
         }
+        #endregion
 
-        //4.1 解析队伍角色列表：优先使用编辑器配置，缺失时自动从子节点收集
-        private void ResolveTeamCharacters()
-        {
-            if (teamCharacters != null && teamCharacters.Length > 0)
-            {
-                return;
-            }
-
-            teamCharacters = GetComponentsInChildren<CharacterFacade>(true);
-        }
-
-        //4.解析玩家共享体力组件
+        #region 获取玩家共享体力
+        //获取玩家共享体力
         private void ResolvePlayerStamina()
         {
             if (playerStamina == null)
             {
                 playerStamina = GetComponent<PlayerStamina>();
-            }
-        }
-
-        //5.确定默认受控角色
-        private void ResolveDefaultCharacter()
-        {
-            if (teamCharacters != null && teamCharacters.Length > 0)
-            {
-                defaultCharacterIndex = Mathf.Clamp(defaultCharacterIndex, 0, teamCharacters.Length - 1);
-                if (defaultCharacterFacade == null)
-                {
-                    defaultCharacterFacade = teamCharacters[defaultCharacterIndex];
-                }
-
-                if (defaultCharacterFacade != null)
-                {
-                    return;
-                }
-            }
-
-            // 编辑器已指定，直接返回
-            if (defaultCharacterFacade != null)
-            {
-                return;
-            }
-
-            // 获取所有子节点的角色门面（包含未激活对象）
-            CharacterFacade[] facades = GetComponentsInChildren<CharacterFacade>(true);
-            for (int i = 0; i < facades.Length; i++)
-            {
-                CharacterFacade facade = facades[i];
-                // 找到第一个激活状态的角色
-                if (facade != null && facade.gameObject.activeInHierarchy)
-                {
-                    defaultCharacterFacade = facade;
-                    return;
-                }
-            }
-
-            // 兜底：没有激活角色时，取第一个角色门面
-            if (facades.Length > 0)
-            {
-                defaultCharacterFacade = facades[0];
-            }
-        }
-
-        // 初始化队伍激活状态：默认角色激活，其他角色隐藏并标记为非受控
-        private void SetupInitialTeamState()
-        {
-            if (teamCharacters == null || teamCharacters.Length == 0)
-            {
-                return;
-            }
-
-            for (int i = 0; i < teamCharacters.Length; i++)
-            {
-                CharacterFacade facade = teamCharacters[i];
-                if (facade == null)
-                {
-                    continue;
-                }
-
-                bool isDefaultCharacter = facade == defaultCharacterFacade;
-                facade.gameObject.SetActive(isDefaultCharacter);
-                facade.SetPlayerControlled(false);
             }
         }
         #endregion
@@ -203,8 +153,8 @@ namespace WutheringWaves
         {
             //1.空值校验
             if (facade == null)
-             return;
- 
+                return;
+
 
             //2.初始化角色门面
             facade.Initialize();
@@ -343,24 +293,9 @@ namespace WutheringWaves
             playerCamera.UpdateCameraZoom(playerInputReader.ZoomInput);
         }
 
-        // 订阅输入层切人事件：由玩家输入统一驱动角色切换
-        private void SubscribeInputEvents()
-        {
-            if (playerInputReader != null)
-            {
-                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-                playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
-            }
-        }
 
-        // 解绑输入层切人事件：防止对象销毁后残留订阅
-        private void UnsubscribeInputEvents()
-        {
-            if (playerInputReader != null)
-            {
-                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-            }
-        }
+
+
 
         // 处理输入层发出的切人请求：输入槽位为 1/2/3，这里统一换算成数组索引
         private void HandleSwitchCharacterRequest(int slot)
@@ -411,6 +346,56 @@ namespace WutheringWaves
         }
 
         #endregion
+
+        //2.获取玩家相机
+        private void ResolveplayerCamerar()
+        {
+            if (playerCamera == null)
+            {
+                playerCamera = GetComponent<PlayerCamera>();
+            }
+        }
+
+        
+
+        //4.1 解析队伍角色列表：优先使用编辑器配置，缺失时自动从子节点收集
+        private void ResolveTeamCharacters()
+        {
+            if (teamCharacters != null && teamCharacters.Length > 0)
+            {
+                return;
+            }
+
+            teamCharacters = GetComponentsInChildren<CharacterFacade>(true);
+        }
+
+        
+
+
+
+        // 初始化队伍激活状态：默认角色激活，其他角色隐藏并标记为非受控
+        private void SetupInitialTeamState()
+        {
+            //if (teamCharacters == null || teamCharacters.Length == 0)
+            //{
+            //    return;
+            //}
+
+            //for (int i = 0; i < teamCharacters.Length; i++)
+            //{
+            //    CharacterFacade facade = teamCharacters[i];
+            //    if (facade == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    bool isDefaultCharacter = facade == defaultCharacterFacade;
+            //    facade.gameObject.SetActive(isDefaultCharacter);
+            //    facade.SetPlayerControlled(false);
+            //}
+        }
+
+
 
     }
 }

@@ -6,7 +6,6 @@ namespace WutheringWaves
 
     public class GameTimeService : MonoBehaviour
     {
-
         public static GameTimeService Instance { get; private set; }
         [SerializeField] private float defaultTimeScale = 1f; // 默认时间缩放系数，1为正常游戏速度   
         private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏

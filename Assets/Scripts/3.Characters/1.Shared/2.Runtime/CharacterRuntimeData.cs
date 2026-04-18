@@ -7,7 +7,11 @@ namespace WutheringWaves
     {
         [Header("=== 角色运行时数据 ===")]
         [Tooltip("当前生命值")]
-        [SerializeField] internal float currentHealth; // 当前生命值
+        [SerializeField] public CharacterName characterName; // 角色名称
+        [SerializeField] public float currentHealth; // 当前生命值
+        [SerializeField] public float maxHealth; // 当前生命值
+        [SerializeField] public Vector3 Position=Vector3.zero; // 当前位置
+        [SerializeField] public Vector3 EulerAngles= Vector3.zero; // 当前旋转角
 
         public bool IsInitialized { get; private set; } // 是否完成初始化
 
@@ -24,9 +28,43 @@ namespace WutheringWaves
 
             //2.初始化当前生命值
             currentHealth = characterDataSO.maxHealth;
-
+            maxHealth = characterDataSO.maxHealth;
+            characterName = characterDataSO.characterName;
             //3.标记初始化完成
             IsInitialized = true;
         }
+
+        // 将外部运行时数据复制到当前对象：读档时保留原对象引用，只回填字段
+        public void CopyFrom(CharacterRuntimeData source)
+        {
+            //1.空值校验
+            if (source == null)
+            {
+                return;
+            }
+
+            //2.逐字段复制运行时数据
+            characterName = source.characterName;
+            currentHealth = source.currentHealth;
+            maxHealth = source.maxHealth;
+            Position = source.Position;
+            EulerAngles = source.EulerAngles;
+            //3.标记数据已准备完成，避免后续再次被默认值覆盖
+            IsInitialized = true;
+        }
+
+        // 克隆一份独立运行时数据：用于存档快照和调试镜像，避免共享引用
+        public CharacterRuntimeData Clone()
+        {
+            return new CharacterRuntimeData
+            {
+                characterName = characterName,
+                currentHealth = currentHealth,
+                maxHealth = maxHealth,
+                Position = Position,
+                EulerAngles = EulerAngles,
+            };
+        }
+
     }
 }

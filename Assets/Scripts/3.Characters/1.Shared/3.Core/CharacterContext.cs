@@ -28,7 +28,7 @@ namespace WutheringWaves
 
         
         [Header("===角色运行时数据===")]
-        [SerializeField] private CharacterRuntimeData runtimeData = new CharacterRuntimeData(); // 角色运行时数据
+        [SerializeField] public CharacterRuntimeData runtimeData = new CharacterRuntimeData(); // 角色运行时数据
 
         [Header("角色输入缓冲器")]
         [SerializeField] private InputBuffer inputBuffer; // 角色输入缓冲器
