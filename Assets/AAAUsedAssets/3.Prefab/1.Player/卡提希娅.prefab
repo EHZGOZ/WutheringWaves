@@ -7478,13 +7478,14 @@ GameObject:
   m_Component:
   - component: {fileID: 9182592570133383280}
   - component: {fileID: 6243481311500502578}
-  - component: {fileID: 7523068889197416398}
   - component: {fileID: 2546084832966390445}
-  - component: {fileID: 2753870281321432217}
   - component: {fileID: 2834003447178871222}
   - component: {fileID: 3198913168935514223}
-  - component: {fileID: 443377447569797793}
   - component: {fileID: 8479081542651384431}
+  - component: {fileID: 3461717338754010341}
+  - component: {fileID: -2729251584722102226}
+  - component: {fileID: 443377447569797793}
+  - component: {fileID: 7523068889197416398}
   - component: {fileID: 7408138358391806747}
   - component: {fileID: 5083271839963793496}
   m_Layer: 6
@@ -7537,20 +7538,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.7, z: -0.05}
---- !u!114 &7523068889197416398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7690567687467272026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3c5dc94490ca6d41a8fd0d4e9cc357b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputBufferTime: 0.3
-  longPressThreshold: 0.15
 --- !u!114 &2546084832966390445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7563,47 +7550,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c406cb267ca934d85b902be64d3cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  playerInputReader: {fileID: 0}
-  playerStamina: {fileID: 0}
   characterDataSO: {fileID: 11400000, guid: cc24f3e0ef7e047458c51dc2238f3511, type: 2}
   cameraTarget: {fileID: 5373334628332721591}
-  context: {fileID: 0}
-  jinxiFeatureRoot: {fileID: 0}
-  katixiyaFeatureRoot: {fileID: 0}
---- !u!114 &2753870281321432217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7690567687467272026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2440ce5b1aa0ebf499f9d103d900472d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  facade: {fileID: 0}
+  runtimeData:
+    characterName: 0
+    maxHealth: 0
+    currentHealth: 0
   playerController: {fileID: 0}
   playerInputReader: {fileID: 0}
   playerStamina: {fileID: 0}
-  characterDataSO: {fileID: 0}
   animator: {fileID: 0}
   characterController: {fileID: 0}
-  runtimeData:
-    characterName: 0
-    currentHealth: 0
-    maxHealth: 0
-    Position: {x: 0, y: 0, z: 0}
-    EulerAngles: {x: 0, y: 0, z: 0}
-  inputBuffer: {fileID: 0}
   stateMachine: {fileID: 0}
+  inputBuffer: {fileID: 0}
+  movementLogic: {fileID: 0}
+  attackLogic: {fileID: 0}
   rootMotion: {fileID: 0}
   manifestation: {fileID: 0}
   weaponController: {fileID: 0}
   effectController: {fileID: 0}
-  movementLogic: {fileID: 0}
-  attackLogic: {fileID: 0}
+  jinxiFeatureRoot: {fileID: 0}
+  katixiyaFeatureRoot: {fileID: 0}
 --- !u!114 &2834003447178871222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7620,10 +7587,8 @@ MonoBehaviour:
   characterData: {fileID: 0}
   runtimeData:
     characterName: 0
-    currentHealth: 0
     maxHealth: 0
-    Position: {x: 0, y: 0, z: 0}
-    EulerAngles: {x: 0, y: 0, z: 0}
+    currentHealth: 0
   Animator: {fileID: 0}
   PlayerInputReader: {fileID: 0}
   InputBuffer: {fileID: 0}
@@ -7714,22 +7679,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   drawGizmos: 1
---- !u!114 &443377447569797793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7690567687467272026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b275a99d75e40bb4b8342cf851e9fd4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecorationSword: {fileID: 0}
-  decorationSwordFadeSpeed: 1
-  DragonHorn: {fileID: 0}
-  dragonHornFadeSpeed: 1
 --- !u!114 &8479081542651384431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7746,6 +7695,60 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &3461717338754010341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690567687467272026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 464ceff097cf4e3da0cc77cf64ce3d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2729251584722102226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690567687467272026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2d6b7a1e9f4a3fb2d58c6e4a7b9d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &443377447569797793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690567687467272026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b275a99d75e40bb4b8342cf851e9fd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DecorationSword: {fileID: 0}
+  decorationSwordFadeSpeed: 1
+  DragonHorn: {fileID: 0}
+  dragonHornFadeSpeed: 1
+--- !u!114 &7523068889197416398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690567687467272026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3c5dc94490ca6d41a8fd0d4e9cc357b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputBufferTime: 0.3
+  longPressThreshold: 0.15
 --- !u!114 &7408138358391806747
 MonoBehaviour:
   m_ObjectHideFlags: 0

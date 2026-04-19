@@ -42,7 +42,7 @@ namespace WutheringWaves
         private Vector3 cameraVelocity; // SmoothDamp 速度缓存
         private Sprite defaultMarkerSprite; // 默认标记图标
         private Texture2D fallbackMarkerTexture; // 默认图标运行时纹理
-        private CharacterFacade boundFacade; // 当前绑定的角色门面
+        private CharacterContext boundContext; // 当前绑定的角色上下文
 
         public RectTransform Backplate => backplate;
         public RectTransform CircleMask => circleMask;
@@ -107,11 +107,11 @@ namespace WutheringWaves
             }
         }
 
-        public void Initialize(CharacterFacade facade = null)
+        public void Initialize(CharacterContext context = null)
         {
             // 初始化时统一补齐相机、角色依赖和默认标记资源
             CacheCamera();
-            BindCharacterFacade(facade);
+            BindCharacterContext(context);
             EnsureDefaultMarkerSprite();
             initialized = true;
             cameraVelocity = Vector3.zero;
@@ -119,10 +119,10 @@ namespace WutheringWaves
             RefreshMarkers();
         }
 
-        public void InjectDependencies(CharacterFacade facade)
+        public void InjectDependencies(CharacterContext context)
         {
             // 允许外部在角色生成后补充注入依赖
-            BindCharacterFacade(facade);
+            BindCharacterContext(context);
         }
 
         public void SetVisible(bool visible)
@@ -151,27 +151,26 @@ namespace WutheringWaves
             facingTarget = target;
         }
 
-        private void BindCharacterFacade(CharacterFacade facade)
+        private void BindCharacterContext(CharacterContext context)
         {
             // 传入为空时不覆盖现有绑定，避免把当前目标清空
-            if (facade == null)
+            if (context == null)
             {
                 return;
             }
 
-            boundFacade = facade;
+            boundContext = context;
 
             if (followTarget == null)
             {
-                followTarget = boundFacade.transform;
+                followTarget = boundContext.transform;
             }
 
             if (facingTarget == null)
             {
-                facingTarget = boundFacade.transform;
+                facingTarget = boundContext.transform;
             }
 
-            CharacterContext context = boundFacade.Context;
             //if (viewTarget == null && context != null && context.PlayerCamera != null && context.PlayerCamera.cameraPivot != null)
             //{
             //    viewTarget = context.PlayerCamera.cameraPivot;

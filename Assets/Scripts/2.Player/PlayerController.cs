@@ -8,46 +8,42 @@ namespace WutheringWaves
 
         [Header(" 玩家数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
-
+        [Header(" 输入引用 ")]
+        [SerializeField] private PlayerInputReader playerInputReader;//玩家输入
+        [Header("玩家体力")]
+        [SerializeField] private PlayerStamina playerStamina;//玩家共享体力
         [Header("相机引用 ")]
         [SerializeField] private PlayerCamera playerCamera; // 全局相机控制器（所有角色共用）
         [Header("相机观察点")]
         [SerializeField] private Transform cameraTarget; // 全局相机绑定的观察点/旋转锚点（所有角色共用）
-        [Header(" 输入引用 ")]
-        [SerializeField] private PlayerInputReader playerInputReader;
-        [Header("玩家体力")]
-        [SerializeField] private PlayerStamina playerStamina;
+        
         [Header("队伍角色列表")]
-        [SerializeField] private CharacterFacade[] teamCharacters; // 队伍内可切换角色，1/2/3按顺序对应数组索引
+        [SerializeField] private CharacterContext[] teamCharacters; // 队伍内可切换角色，1/2/3按顺序对应数组索引
         [Header("默认受控角色槽位")]
         [SerializeField] private int defaultCharacterIndex = 0; // 默认操控角色索引
-        [Header("当前受控角色的门面脚本(不可修改)")]
-        [SerializeField] private CharacterFacade _currentCharacterFacade; // 当前受控角色的门面脚本
+
         [Header("当前受控角色的共享上下文(不可修改)")]
         [SerializeField] private CharacterContext _currentCharacterContext; // 当前受控角色的共享上下文
-        private int _currentCharacterIndex = -1; // 当前受控角色索引
 
 
         #region 对外只读属性
         // 外部脚本只读访问当前角色相机
-        public PlayerCamera CurrentPlayerCamera => playerCamera;
-        // 外部脚本只读访问相机观察点
-        public Transform CurrentCameraTarget => cameraTarget;
+        public PlayerRuntimeData PlayerRuntimeData => playerRuntimeData;
         // 外部脚本只读访问当前输入读取器
         public PlayerInputReader CurrentPlayerInputReader => playerInputReader;
         // 外部脚本只读访问玩家共享体力组件
         public PlayerStamina PlayerStamina => playerStamina;
+        // 外部脚本只读访问当前角色相机
+        public PlayerCamera CurrentPlayerCamera => playerCamera;
+        // 外部脚本只读访问相机观察点
+        public Transform CurrentCameraTarget => cameraTarget;
+        
         // 外部脚本只读访问队伍角色列表
-        public CharacterFacade[] TeamCharacters => teamCharacters;
-        // 外部脚本只读访问当前受控角色索引
-        public int CurrentCharacterIndex => _currentCharacterIndex;
-        // 外部脚本只读访问当前受控角色门面
-        public CharacterFacade CurrentCharacterFacade => _currentCharacterFacade;
+        public CharacterContext[] TeamCharacters => teamCharacters;
         // 外部脚本只读访问当前角色共享上下文
         public CharacterContext CurrentCharacterContext => _currentCharacterContext;
 
         #endregion
-
 
         #region 生命周期
 
@@ -73,7 +69,6 @@ namespace WutheringWaves
         }
         #endregion
 
-
         #region 初始化组件
         public void Injected(PlayerRuntimeData playerRuntimeData)
         {
@@ -83,46 +78,26 @@ namespace WutheringWaves
         // 玩家控制器初始化总入口：绑定默认角色，完成相机配置
         public void Initialize()
         {
-            //1.订阅输入事件
-            SubscribeInputEvents();
-            //2.获取玩家输入
+            //1.获取玩家输入
             ResolvePlayerInputReader();
+            //2.订阅输入事件
+            SubscribeInputEvents();
             //3.获取玩家共享体力
             ResolvePlayerStamina();
-
-            //1.获取玩家相机
+            //4.获取玩家相机
             ResolveplayerCamerar();
-            //5.解析队伍角色列表
-            ResolveTeamCharacters();
-            
+            //5.同步运行数据
+            ResolvePlayerRuntimeData();  
+            //6.根据玩家运行时数据生成队伍角色
+            SpawnCharacter();
+            //7.绑定受控角色：同步缓存角色所有核心组件
+            BindCurrentCharacter();
+            //8.解析当前角色观察点
+            SetupCurrentPlayerCamera();
 
-            //8.初始化队伍激活状态
-            SetupInitialTeamState();
-            //9.绑定角色组件
-            BindCurrentCharacter(teamCharacters[_currentCharacterIndex]);
 
         }
-     
-        #endregion
 
-        #region 事件订阅
-        //1.订阅输入层切人事件：由玩家输入统一驱动角色切换
-        private void SubscribeInputEvents()
-        {
-            if (playerInputReader != null)
-            {
-                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-                playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
-            }
-        }
-        // 解绑输入层切人事件：防止对象销毁后残留订阅
-        private void UnsubscribeInputEvents()
-        {
-            if (playerInputReader != null)
-            {
-                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-            }
-        }
         #endregion
 
         #region 获取玩家输入
@@ -133,6 +108,27 @@ namespace WutheringWaves
             {
                 playerInputReader = GetComponent<PlayerInputReader>();
             }
+            playerInputReader.Initialize();
+        }
+        #endregion
+
+        #region 事件订阅
+        //1.订阅输入层切人事件：由玩家输入统一驱动角色切换
+        private void SubscribeInputEvents()
+        {
+            //if (playerInputReader != null)
+            //{
+            //    playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+            //    playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
+            //}
+        }
+        // 解绑输入层切人事件：防止对象销毁后残留订阅
+        private void UnsubscribeInputEvents()
+        {
+            //if (playerInputReader != null)
+            //{
+            //    playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+            //}
         }
         #endregion
 
@@ -144,106 +140,200 @@ namespace WutheringWaves
             {
                 playerStamina = GetComponent<PlayerStamina>();
             }
+            playerStamina.Initialize();
         }
         #endregion
 
-        #region 角色管理
-        //5.绑定受控角色：同步缓存角色所有核心组件
-        public void BindCurrentCharacter(CharacterFacade facade)
+        #region 获取玩家相机
+        //获取玩家相机
+        private void ResolveplayerCamerar()
+        {
+            if (playerCamera == null)
+            {
+                playerCamera = GetComponent<PlayerCamera>();
+            }
+            
+        }
+
+        #endregion
+
+        #region 同步运行数据
+        //同步运行数据
+        private void ResolvePlayerRuntimeData()
+        {
+            if (playerRuntimeData == null)
+            {
+                playerRuntimeData = GetComponent<PlayerRuntimeData>();
+            }
+
+            if (playerRuntimeData == null || SaveService.Instance == null)
+            {
+                return;
+            }
+
+            playerRuntimeData.SyncRuntimeDataFromSaveData(SaveService.Instance.Load());
+        }
+        #endregion
+
+        #region 生成玩家所操控的角色
+        private void SpawnCharacter()
         {
             //1.空值校验
-            if (facade == null)
-                return;
-
-
-            //2.初始化角色门面
-            facade.Initialize();
-
-            // 3.同步缓存所有核心组件
-            _currentCharacterFacade = facade;
-            _currentCharacterContext = facade.Context;
-            _currentCharacterIndex = ResolveCharacterIndex(facade);
-            facade.SetPlayerControlled(true);
-
-            // 角色绑定完成后，同步玩家层共享体力配置。
-            playerStamina?.Initialize(_currentCharacterContext);
-
-            // 切换角色时重新绑定当前角色的输入缓冲，保证玩家输入只写入当前受控角色
-            playerInputReader?.BindInputBuffer(facade.Context != null ? facade.Context.InputBuffer : null);
-            playerInputReader?.Initialize();
-
-            // 配置当前角色的相机参数
-            SetupCurrentPlayerCamera();
-
-            // 角色绑定完成后，主动把最新依赖同步给 UI 层
-            if (UIRoot.Instance != null)
+            if (playerRuntimeData == null || playerRuntimeData.teamSlots == null|| playerRuntimeData.teamSlots.Count == 0|| GameBootstrap.Instance == null)
             {
-                UIRoot.Instance.InjectPlayerController(this);
+                Debug.LogError("[PlayerController] 无法生成队伍角色。", this);
+                return;
             }
+
+            // 已存在队伍角色时不重复生成，避免重复初始化时刷出多套角色
+            CharacterContext[] existingCharacters = GetComponentsInChildren<CharacterContext>(true);
+            if (existingCharacters != null && existingCharacters.Length > 0)
+            {
+                teamCharacters = existingCharacters;
+                return;
+            }
+
+            //2.清理旧队伍缓存，后续重新收集生成出来的角色
+            teamCharacters = null;
+
+            //3.根据运行时数据中的队伍槽位逐个生成角色
+            List<CharacterContext> spawnedCharacters = new List<CharacterContext>();
+            for (int i = 0; i < playerRuntimeData.teamSlots.Count; i++)
+            {
+                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
+                if (slotData == null)
+                {
+                    continue;
+                }
+
+                GameObject character = GameBootstrap.Instance.SpawnCharacter(
+                    slotData.characterName,
+                    playerRuntimeData.playerPosition,
+                    Quaternion.Euler(playerRuntimeData.playerEulerAngles),
+                    transform
+                );
+
+                if (character == null)
+                {
+                    continue;
+                }
+
+                //4.生成后收集角色上下文，保证teamCharacters顺序和teamSlots槽位顺序一致
+                CharacterContext context = character.GetComponent<CharacterContext>();
+                if (context == null)
+                {
+                    Debug.LogError($"[PlayerController] 角色 {slotData.characterName} 缺少CharacterContext组件。", character);
+                    continue;
+                }
+
+                context.gameObject.SetActive(false);
+                spawnedCharacters.Add(context);
+            }
+
+            //5.写回队伍角色列表，后续切人时按相同索引访问
+            teamCharacters = spawnedCharacters.ToArray();
         }
-        // 切换受控角色：禁用旧角色，激活新角色并绑定
-        public void SwitchCharacter(CharacterFacade nextFacade)
+        #endregion
+
+        #region 绑定受控角色：同步缓存角色所有核心组件
+        private void BindCurrentCharacter()
         {
-            // 空值/重复切换校验
-            if (nextFacade == null || nextFacade == _currentCharacterFacade)
-            {
-                return;
-            }
-
-            // 当前状态不可打断时，不允许切人，避免战斗状态被错误截断
-            if (!CanSwitchCharacter())
-            {
-                return;
-            }
-
-            CharacterFacade previousFacade = _currentCharacterFacade;
-
-            // 切人前让新角色先同步到旧角色位置，保证切人落点一致
-            SyncNextCharacterTransform(nextFacade);
-
-            // 旧角色切出时先做输入清理，再关闭对象
-            previousFacade?.OnSwitchOut();
-
-            // 禁用当前正在操控的角色
-            if (previousFacade != null)
-            {
-                previousFacade.SetPlayerControlled(false);
-                previousFacade.gameObject.SetActive(false);
-            }
-
-            // 激活新角色并绑定
-            nextFacade.gameObject.SetActive(true);
-            BindCurrentCharacter(nextFacade);
-            nextFacade.OnSwitchIn();
-
-            // 广播切人事件，供UI/特效/小地图等外围系统同步刷新
-            GameEvents.RaiseCharacterSwitched(previousFacade, nextFacade);
-        }
-
-        // 按槽位切人：外部输入层统一通过 0 基索引调用
-        public void SwitchCharacterByIndex(int index)
-        {
+            //1.空值校验
             if (teamCharacters == null || teamCharacters.Length == 0)
             {
                 return;
             }
 
-            if (index < 0 || index >= teamCharacters.Length)
-            {
+            //2.根据玩家运行时数据确定当前受控角色槽位
+            int targetIndex = playerRuntimeData != null
+                ? Mathf.Clamp(playerRuntimeData.currentCharacterIndex, 0, teamCharacters.Length - 1)
+                : Mathf.Clamp(defaultCharacterIndex, 0, teamCharacters.Length - 1);
+
+            //3.按槽位绑定当前受控角色
+            BindCurrentCharacter(teamCharacters[targetIndex]);
+        }
+        //绑定受控角色：同步缓存角色所有核心组件
+        public void BindCurrentCharacter(CharacterContext context)
+        {
+            //1.空值校验
+            if (context == null)
                 return;
+
+            //2.解析当前角色在队伍中的槽位索引
+            int characterIndex = -1;
+            if (teamCharacters != null)
+            {
+                for (int i = 0; i < teamCharacters.Length; i++)
+                {
+                    if (teamCharacters[i] == context)
+                    {
+                        characterIndex = i;
+                        break;
+                    }
+                }
             }
 
-            CharacterFacade nextFacade = teamCharacters[index];
-            if (nextFacade == null)
+            //3.同步玩家运行时当前受控槽位
+            if (playerRuntimeData != null && characterIndex >= 0)
             {
-                return;
+                playerRuntimeData.currentCharacterIndex = characterIndex;
             }
 
-            SwitchCharacter(nextFacade);
+            //4.获取当前槽位对应的角色运行时数据
+            CharacterRuntimeData runtimeData = null;
+            if (playerRuntimeData != null && playerRuntimeData.teamSlots != null && characterIndex >= 0 && characterIndex < playerRuntimeData.teamSlots.Count)
+            {
+                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[characterIndex];
+                if (slotData != null)
+                {
+                    runtimeData = slotData.runtimeData;
+                }
+            }
+
+            //5.只激活当前受控角色，关闭其他队伍角色
+            if (teamCharacters != null)
+            {
+                for (int i = 0; i < teamCharacters.Length; i++)
+                {
+                    CharacterContext teamCharacter = teamCharacters[i];
+                    if (teamCharacter == null)
+                    {
+                        continue;
+                    }
+
+                    teamCharacter.gameObject.SetActive(teamCharacter == context);
+                }
+            }
+
+            //6.同步当前角色位置，保证读档/切人后角色落点一致
+            if (playerRuntimeData != null)
+            {
+                context.transform.position = playerRuntimeData.playerPosition;
+                context.transform.rotation = Quaternion.Euler(playerRuntimeData.playerEulerAngles);
+            }
+
+            //7.初始化角色上下文
+            context.Initialize(runtimeData);
+
+            //8.同步当前受控角色缓存
+            _currentCharacterContext = context;
+
+            //10.切换角色时重新绑定当前角色的输入缓冲，保证玩家输入只写入当前受控角色
+            playerInputReader?.BindInputBuffer(context.InputBuffer);
+   
+
+            //11.配置当前角色的相机参数
+            SetupCurrentPlayerCamera();
+
+            //12.角色绑定完成后，主动把最新依赖同步给 UI 层
+            if (UIRoot.Instance != null)
+            {
+                UIRoot.Instance.InjectPlayerController(this);
+            }
         }
         #endregion
 
-        #region 相机管理
+        #region 解析当前角色观察点
         // 配置角色相机：解析当前角色观察点，并交给相机控制器初始化
         private void SetupCurrentPlayerCamera()
         {
@@ -253,32 +343,37 @@ namespace WutheringWaves
                 return;
             }
 
-            //2.自动查找当前角色观察点
+            //2.从当前受控角色上下文中解析观察点
             ResolveCameraTarget();
 
             //3.将当前角色观察点绑定到全局相机控制器
-            if (cameraTarget != null)
+            if (cameraTarget == null)
             {
-                playerCamera.BindCameraPivot(cameraTarget);
+                return;
             }
 
-            //4.初始化相机组件
+            playerCamera.BindCameraPivot(cameraTarget);
             playerCamera.Initialize();
         }
 
-        // 自动解析相机观察点
+        // 从当前受控角色上下文中解析相机观察点
         private void ResolveCameraTarget()
         {
-            if (_currentCharacterFacade == null)
+            //1.当前没有受控角色时，清空观察点，避免沿用旧角色相机锚点
+            if (_currentCharacterContext == null)
             {
                 cameraTarget = null;
                 return;
             }
 
-            // 每次切人都重新绑定当前角色观察点，避免沿用旧角色相机锚点
-            cameraTarget = _currentCharacterFacade.CameraTarget;
+            //2.每次绑定都从当前角色上下文读取观察点
+            cameraTarget = _currentCharacterContext.CameraTarget;
         }
 
+
+        #endregion
+
+        #region  统一驱动相机更新
         // 统一驱动相机更新：控制器只负责转发输入，相机细节由PlayerCamera内部处理
         public void UpdateCurrentPlayerCamera()
         {
@@ -292,108 +387,18 @@ namespace WutheringWaves
             // 更新相机缩放（滚轮输入）
             playerCamera.UpdateCameraZoom(playerInputReader.ZoomInput);
         }
-
-
-
-
-
-        // 处理输入层发出的切人请求：输入槽位为 1/2/3，这里统一换算成数组索引
-        private void HandleSwitchCharacterRequest(int slot)
-        {
-            SwitchCharacterByIndex(slot - 1);
-        }
-
-        // 判断当前角色是否允许切人：当前状态可打断时才放行
-        private bool CanSwitchCharacter()
-        {
-            if (_currentCharacterContext == null || _currentCharacterContext.StateMachine == null)
-            {
-                return true;
-            }
-
-            return _currentCharacterContext.StateMachine.IsInterruptible();
-        }
-
-        // 切人时同步新角色的位置和朝向：保证切换后角色无缝接手当前站位
-        private void SyncNextCharacterTransform(CharacterFacade nextFacade)
-        {
-            if (_currentCharacterFacade == null || nextFacade == null)
-            {
-                return;
-            }
-
-            nextFacade.transform.position = _currentCharacterFacade.transform.position;
-            nextFacade.transform.rotation = _currentCharacterFacade.transform.rotation;
-        }
-
-        // 解析角色在队伍中的索引：便于后续UI/逻辑按槽位读取当前角色
-        private int ResolveCharacterIndex(CharacterFacade facade)
-        {
-            if (teamCharacters == null || facade == null)
-            {
-                return -1;
-            }
-
-            for (int i = 0; i < teamCharacters.Length; i++)
-            {
-                if (teamCharacters[i] == facade)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
         #endregion
 
-        //2.获取玩家相机
-        private void ResolveplayerCamerar()
-        {
-            if (playerCamera == null)
-            {
-                playerCamera = GetComponent<PlayerCamera>();
-            }
-        }
-
-        
-
-        //4.1 解析队伍角色列表：优先使用编辑器配置，缺失时自动从子节点收集
-        private void ResolveTeamCharacters()
-        {
-            if (teamCharacters != null && teamCharacters.Length > 0)
-            {
-                return;
-            }
-
-            teamCharacters = GetComponentsInChildren<CharacterFacade>(true);
-        }
-
-        
 
 
 
-        // 初始化队伍激活状态：默认角色激活，其他角色隐藏并标记为非受控
-        private void SetupInitialTeamState()
-        {
-            //if (teamCharacters == null || teamCharacters.Length == 0)
-            //{
-            //    return;
-            //}
 
-            //for (int i = 0; i < teamCharacters.Length; i++)
-            //{
-            //    CharacterFacade facade = teamCharacters[i];
-            //    if (facade == null)
-            //    {
-            //        continue;
-            //    }
 
-            //    bool isDefaultCharacter = facade == defaultCharacterFacade;
-            //    facade.gameObject.SetActive(isDefaultCharacter);
-            //    facade.SetPlayerControlled(false);
-            //}
-        }
+
+
+
+
+
 
 
 

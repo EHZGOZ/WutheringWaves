@@ -67,5 +67,24 @@ namespace WutheringWaves
                 return false;
             }
         }
+        // 删除本地存档文件：只负责删除JSON文件，不负责重新创建默认存档
+        public bool Delete()
+        {
+            if (!File.Exists(_savePath))
+            {
+                return false;
+            }
+
+            try
+            {
+                File.Delete(_savePath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[JsonSaveRepository] Delete failed: {e.Message}");
+                return false;
+            }
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace WutheringWaves
         #endregion
 
         #region 初始化逻辑
-        // 外部初始化（由CharacterFacade调用，注入共享上下文）
+        // 外部初始化（由CharacterContext调用，注入共享上下文）
         public void Initialize(CharacterContext context)
         {
             InitializeComponents(context); // 初始化组件

@@ -19,7 +19,7 @@ namespace WutheringWaves
         private readonly List<Coroutine> delayCoroutines = new List<Coroutine>(); // 当前仍在等待播放的特效协程
         private readonly List<ActiveEffectInstance> activeEffects = new List<ActiveEffectInstance>(); // 当前已生成但尚未清理的特效对象
 
-        // 初始化：由 CharacterFacade 统一调用，绑定共享上下文与特效配置
+        // 初始化：由 CharacterContext 统一调用，绑定共享上下文与特效配置
         public void Initialize(CharacterContext context)
         {
             this.context = context;

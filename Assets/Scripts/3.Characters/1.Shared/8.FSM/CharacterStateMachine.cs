@@ -82,8 +82,8 @@ namespace WutheringWaves
     /// 负责：1.管理所有共享数据/组件依赖 2.调度状态生命周期 3.提供状态切换核心方法 4.对外暴露状态信息
     public class CharacterStateMachine : MonoBehaviour
     {
-        #region 1. 核心依赖配置（由CharacterFacade自动注入，与新架构对接）
-        [Header("=== 核心依赖（由CharacterFacade自动注入，无需手动赋值）===")]
+        #region 1. 核心依赖配置（由CharacterContext自动注入，与新架构对接）
+        [Header("=== 核心依赖（由CharacterContext自动注入，无需手动赋值）===")]
         [Header("角色共享上下文")]
         public CharacterContext context;
         [Header("角色静态模板数据")]
@@ -141,8 +141,8 @@ namespace WutheringWaves
 
         #endregion
 
-        #region 4. 初始化（由CharacterFacade调用，保证初始化顺序）
-        // 状态机初始化（由CharacterFacade统一调用，注入所有核心依赖）
+        #region 4. 初始化（由CharacterContext调用，保证初始化顺序）
+        // 状态机初始化（由CharacterContext统一调用，注入所有核心依赖）
         public void Initialize(CharacterContext context)
         {
             // 注入依赖

@@ -33,10 +33,11 @@ namespace WutheringWaves
         [Header(" 玩家控制")]
         [SerializeField] private PlayerController playerController; // 玩家控制
         [Header(" 玩家数据")]
-        [SerializeField] private PlayerRuntimeData playerRuntimeData = new PlayerRuntimeData(); // 玩家数据
-        
-        [Header(" 角色标识列表")]
-        public List<CharacterName> teamCharacterIds = new(); // 队伍角色标识列表
+        [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
+
+        [Header("默认队伍")]
+        [SerializeField] private List<CharacterName> defaultTeamCharacterIds = new();
+
         [Header(" 角色预制体映射")]
         [SerializeField] private List<CharacterPrefabMapping> characterPrefabMappings = new(); // Inspector 配置的角色预制体映射表
 
@@ -107,7 +108,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 初始化所有全局服务
+        #region 验证Inspector面板的所有引用是否赋值完整
         // 验证Inspector面板的所有引用是否赋值完整
         private bool ValidateInspectorReferences()
         {
@@ -227,11 +228,85 @@ namespace WutheringWaves
         {
             return characterPrefabMap.TryGetValue(characterName, out prefab);
         }
+        public void EnsureDefaultTeam(SaveData saveData)
+        {
+            // 1.空值检查
+            if (saveData == null)
+            {
+                return;
+            }
+
+            // 2.已有队伍则不覆盖，避免读档时把玩家队伍重置
+            if (saveData.teamSlots != null && saveData.teamSlots.Count > 0)
+            {
+                return;
+            }
+
+            // 3.确保队伍槽位列表存在
+            if (saveData.teamSlots == null)
+            {
+                saveData.teamSlots = new List<TeamCharacterSlotData>();
+            }
+
+            // 4.根据默认队伍配置创建槽位
+            for (int i = 0; i < defaultTeamCharacterIds.Count; i++)
+            {
+                CharacterName characterName = defaultTeamCharacterIds[i];
+
+                saveData.teamSlots.Add(new TeamCharacterSlotData
+                {
+                    characterName = characterName,
+                    runtimeData = CreateDefaultCharacterRuntimeData(characterName)
+                });
+            }
+
+            // 5.默认当前操控第一个角色
+            saveData.currentCharacterIndex = 0;
+        }
+
+        // 创建默认角色运行时数据：从角色预制体上的CharacterDataSO读取初始生命值，避免默认存档生成0血角色
+        private CharacterRuntimeData CreateDefaultCharacterRuntimeData(CharacterName characterName)
+        {
+            CharacterRuntimeData runtimeData = new CharacterRuntimeData
+            {
+                characterName = characterName
+            };
+
+            CharacterDataSO characterDataSO = ResolveCharacterDataSO(characterName);
+            if (characterDataSO != null)
+            {
+                runtimeData.Initialize(characterDataSO);
+            }
+
+            return runtimeData;
+        }
+
+        // 根据角色名称解析角色基础数据：优先走运行时字典，兜底扫描Inspector映射表
+        private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
+        {
+            GameObject prefab = null;
+            TryGetCharacterPrefab(characterName, out prefab);
+
+            if (prefab == null && characterPrefabMappings != null)
+            {
+                for (int i = 0; i < characterPrefabMappings.Count; i++)
+                {
+                    CharacterPrefabMapping mapping = characterPrefabMappings[i];
+                    if (mapping == null || mapping.characterName != characterName)
+                    {
+                        continue;
+                    }
+
+                    prefab = mapping.character;
+                    break;
+                }
+            }
+
+            CharacterContext context = prefab != null ? prefab.GetComponent<CharacterContext>() : null;
+            return context != null ? context.CharacterDataSO : null;
+        }
+
         #endregion
-
-
-
-
 
     }
 }

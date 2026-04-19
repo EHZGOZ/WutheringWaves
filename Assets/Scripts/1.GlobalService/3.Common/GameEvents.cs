@@ -22,7 +22,7 @@ namespace WutheringWaves
         public static event Action<PlayerStamina, bool> OnStaminaVisibilityChanged;
 
         // 切人事件：参数为切出角色、切入角色
-        public static event Action<CharacterFacade, CharacterFacade> OnCharacterSwitched;
+        public static event Action<CharacterContext, CharacterContext> OnCharacterSwitched;
         #endregion
 
         #region 事件派发
@@ -57,7 +57,7 @@ namespace WutheringWaves
         }
 
         // 派发切人事件：通知 UI、特效、小地图等外围系统同步当前角色
-        public static void RaiseCharacterSwitched(CharacterFacade previous, CharacterFacade current)
+        public static void RaiseCharacterSwitched(CharacterContext previous, CharacterContext current)
         {
             OnCharacterSwitched?.Invoke(previous, current);
         }

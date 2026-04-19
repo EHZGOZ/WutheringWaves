@@ -24,7 +24,6 @@ namespace WutheringWaves
         [Tooltip("体力回满后，延迟多久隐藏 UI")]
         [SerializeField] private float fullStaminaFadeDelay = 1f;
 
-        private CharacterDataSO characterData; // 当前绑定角色的静态模板数据
         private float currentStamina; // 当前共享体力值
         private float lastStaminaCostTime = -999f; // 上一次消耗体力的时间
         private float lastVisibleRequestTime = -999f; // 上一次请求显示体力 UI 的时间
@@ -61,16 +60,10 @@ namespace WutheringWaves
         #endregion
 
         #region 3. 初始化
-        // 初始化玩家共享体力：首次进入时建立默认值，切角色时按当前角色配置重新同步上限
-        public void Initialize(CharacterContext context)
+        // 初始化玩家共享体力：首次进入时建立默认值，切角色时沿用玩家层共享体力配置
+        public void Initialize()
         {
-            // 1. 同步当前角色的静态模板数据。
-            characterData = context != null ? context.CharacterDataSO : null;
-
-            // 2. 把角色体力配置同步到玩家层体力组件。
-            ApplyCharacterDataConfig();
-
-            // 3. 首次初始化时，从角色模板读取默认体力。
+            // 1. 首次初始化时，使用PlayerStamina自身配置建立共享体力。
             if (!initialized)
             {
                 currentStamina = maxStamina;
@@ -81,27 +74,13 @@ namespace WutheringWaves
             }
             else
             {
-                // 4. 切角色时沿用已存在的共享体力值，但要按当前角色上限做一次夹取。
+                // 2. 切角色时沿用已存在的共享体力值，只按玩家共享体力上限做一次夹取。
                 currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
             }
 
-            // 5. 同步初始显示状态并通知 UI。
+            // 3. 同步初始显示状态并通知 UI。
             NotifyStaminaChanged();
             SetVisible(false, true);
-        }
-
-        // 同步当前角色的静态体力配置：让共享体力逻辑依旧从 CharacterDataSO 读取参数
-        private void ApplyCharacterDataConfig()
-        {
-            if (characterData == null)
-            {
-                return;
-            }
-
-            maxStamina = characterData.maxStaminaData;
-            runDrainPerSecond = characterData.staminaCostInRun;
-            regenPerSecond = characterData.staminaRecovery;
-            regenDelay = characterData.staminaRecoveryDelay;
         }
         #endregion
 

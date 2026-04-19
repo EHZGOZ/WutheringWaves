@@ -6,14 +6,12 @@ namespace WutheringWaves
     public class CharacterRuntimeData
     {
         [Header("=== 角色运行时数据 ===")]
-        [Tooltip("当前生命值")]
+        [Header("角色名称")]
         [SerializeField] public CharacterName characterName; // 角色名称
+        [Header("最大生命值")]
+        [SerializeField] public float maxHealth; // 最大生命值
+        [Header("当前生命值")]
         [SerializeField] public float currentHealth; // 当前生命值
-        [SerializeField] public float maxHealth; // 当前生命值
-        [SerializeField] public Vector3 Position=Vector3.zero; // 当前位置
-        [SerializeField] public Vector3 EulerAngles= Vector3.zero; // 当前旋转角
-
-        public bool IsInitialized { get; private set; } // 是否完成初始化
 
         // 运行时数据初始化：从角色静态模板中读取初始生命值
         public void Initialize(CharacterDataSO characterDataSO)
@@ -21,17 +19,14 @@ namespace WutheringWaves
             //1.空值校验
             if (characterDataSO == null)
             {
-                currentHealth = 0f;
-                IsInitialized = false;
+                Debug.Log("characterDataSO为空");
                 return;
             }
 
-            //2.初始化当前生命值
+            //2.角色基础数据初始化当前
+            characterName = characterDataSO.characterName;
             currentHealth = characterDataSO.maxHealth;
             maxHealth = characterDataSO.maxHealth;
-            characterName = characterDataSO.characterName;
-            //3.标记初始化完成
-            IsInitialized = true;
         }
 
         // 将外部运行时数据复制到当前对象：读档时保留原对象引用，只回填字段
@@ -47,10 +42,7 @@ namespace WutheringWaves
             characterName = source.characterName;
             currentHealth = source.currentHealth;
             maxHealth = source.maxHealth;
-            Position = source.Position;
-            EulerAngles = source.EulerAngles;
-            //3.标记数据已准备完成，避免后续再次被默认值覆盖
-            IsInitialized = true;
+
         }
 
         // 克隆一份独立运行时数据：用于存档快照和调试镜像，避免共享引用
@@ -61,8 +53,6 @@ namespace WutheringWaves
                 characterName = characterName,
                 currentHealth = currentHealth,
                 maxHealth = maxHealth,
-                Position = Position,
-                EulerAngles = EulerAngles,
             };
         }
 

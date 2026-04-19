@@ -6,20 +6,23 @@ using UnityEngine.UI;
 namespace WutheringWaves
 {
     /// <summary>
-    /// 榄傜被娓告垙 瑙掕壊鎶€鑳経I鎺у埗鍣?    /// 鍔熻兘锛氳礋璐ｇ鐞嗚鑹叉妧鑳姐€丵鐖嗗彂鐨勫叏閮║I鏄剧ず閫昏緫
-    /// 鍖呭惈锛氭妧鑳藉浘鏍囧垏鎹€佸喎鍗撮伄缃┿€佸喎鍗存暟瀛椼€佹寜閿彁绀恒€佸彲鐢?绂佺敤鐘舵€侀鑹层€侀攣瀹?瑙ｉ攣鐘舵€?    /// 渚濊禆锛欳haracterFacade锛堣鑹茬粺涓€鍏ュ彛锛夈€丆haracterAttack锛堟敾鍑?鎶€鑳介€昏緫锛?    /// </summary>
+    /// 角色技能UI控制器：负责管理技能、Q爆发和体力显示逻辑
+    /// 依赖CharacterContext作为当前角色统一入口
+    /// </summary>
     [DisallowMultipleComponent]
     public class CharacterSkillUI : MonoBehaviour
     {
         #region 瑙掕壊缁戝畾鐩稿叧
         [Header("=== 瑙掕壊缁戝畾璁剧疆 ===")]
         [Tooltip("鎵嬪姩缁戝畾鐨勮鑹查棬闈㈣剼鏈紝浼樺厛绾ф渶楂橈紝鎵嬪姩鎸囧畾鍚庝笉浼氳嚜鍔ㄦ煡鎵?")]
-        [SerializeField] private CharacterFacade targetFacade;
+        [FormerlySerializedAs("targetFacade")]
+        [SerializeField] private CharacterContext targetContext;
         [Tooltip("鏄惁浠庡綋鍓嶇墿浣撲笂鐨刄IRoot鑷姩鑾峰彇瑙掕壊闂ㄩ潰")]
         [FormerlySerializedAs("autoBindFromUIManager")]
         [SerializeField] private bool autoBindFromUIRoot = true;
-        [Tooltip("鍏滃簳鏂规锛氭棤浠讳綍缁戝畾鏃讹紝鑷姩鍦ㄥ叏鍦烘櫙鏌ユ壘CharacterFacade")]
-        [SerializeField] private bool autoFindCharacterFacade = true;
+        [Tooltip("兜底方案：无任何绑定时，自动在全场景查找CharacterContext")]
+        [FormerlySerializedAs("autoFindCharacterFacade")]
+        [SerializeField] private bool autoFindCharacterContext = true;
 
         private UIRoot _uiRoot; // UIRoot 引用
         private CharacterAttack _attackLogic; // 技能逻辑引用
@@ -98,16 +101,16 @@ namespace WutheringWaves
             InitializeStaticUI();
         }
 
-        public void InjectDependencies(UIRoot root, CharacterFacade facade)
+        public void InjectDependencies(UIRoot root, CharacterContext context)
         {
             if (root != null)
             {
                 _uiRoot = root;
             }
 
-            if (facade != null)
+            if (context != null)
             {
-                targetFacade = facade;
+                targetContext = context;
             }
 
             TryBindCharacterUI();
@@ -115,9 +118,9 @@ namespace WutheringWaves
         }
 
         // 鍏煎鏃ч摼璺細鍏佽澶栭儴浠嶆寜鏃ф帴鍙ｆ敞鍏haracterCore
-        public void SetTargetFacade(CharacterFacade facade)
+        public void SetTargetContext(CharacterContext context)
         {
-            targetFacade = facade;
+            targetContext = context;
             TryBindCharacterUI();
             RefreshUI();
         }
@@ -181,8 +184,8 @@ namespace WutheringWaves
 
         private bool TryBindCharacterUI()
         {
-            CharacterFacade nextFacade = ResolveTargetFacade();
-            CharacterContext context = nextFacade != null ? nextFacade.Context : null;
+            CharacterContext nextContext = ResolveTargetContext();
+            CharacterContext context = nextContext;
             CharacterAttack nextAttack = context != null ? context.AttackLogic : null;
             JinxiSpecialSkillLinker nextJinxiLinker = context != null && context.StateMachine != null ? context.StateMachine.JinxiSpecialSkillLinker : null;
             PlayerStamina nextStamina = context != null ? context.PlayerStamina : null;
@@ -194,7 +197,7 @@ namespace WutheringWaves
             }
 
             // 保存当前绑定入口
-            targetFacade = nextFacade;
+            targetContext = nextContext;
 
             // 角色逻辑未变化时，只补充订阅
             if (_attackLogic == nextAttack && _jinxiSpecialSkillLinker == nextJinxiLinker && _playerStamina == nextStamina)
@@ -215,26 +218,26 @@ namespace WutheringWaves
             return true;
         }
 
-        private CharacterFacade ResolveTargetFacade()
+        private CharacterContext ResolveTargetContext()
         {
-            if (targetFacade != null)
+            if (targetContext != null)
             {
-                return targetFacade;
+                return targetContext;
             }
 
-            // 方案1：从UIRoot获取角色门面
-            if (autoBindFromUIRoot && _uiRoot != null && _uiRoot.Facade != null)
+            // 方案1：从UIRoot获取角色上下文
+            if (autoBindFromUIRoot && _uiRoot != null && _uiRoot.Context != null)
             {
-                return _uiRoot.Facade;
+                return _uiRoot.Context;
             }
 
-            // 方案2：全场景自动查找角色门面
-            if (autoFindCharacterFacade)
+            // 方案2：全场景自动查找角色上下文
+            if (autoFindCharacterContext)
             {
-                CharacterFacade facade = FindObjectOfType<CharacterFacade>();
-                if (facade != null)
+                CharacterContext context = FindObjectOfType<CharacterContext>();
+                if (context != null)
                 {
-                    return facade;
+                    return context;
                 }
             }
 
@@ -385,13 +388,13 @@ namespace WutheringWaves
 
         private void UpdateStaminaFollow()
         {
-            CharacterFacade facade = targetFacade;
-            if (staminaRoot == null || facade == null)
+            CharacterContext context = targetContext;
+            if (staminaRoot == null || context == null)
             {
                 return;
             }
 
-            Transform staminaAnchor = facade.transform.Find("StaminaAnchor");
+            Transform staminaAnchor = context.transform.Find("StaminaAnchor");
             Camera followCamera = ResolveFollowCamera();
             if (staminaAnchor == null || followCamera == null)
             {
@@ -434,7 +437,7 @@ namespace WutheringWaves
                 return uiFollowCamera;
             }
 
-            //CharacterContext context = targetFacade != null ? targetFacade.Context : null;
+            //CharacterContext context = targetContext != null ? targetContext.Context : null;
             //if (context != null && context.PlayerCamera != null && context.PlayerCamera.cameraPivot != null)
             //{
             //    return context.PlayerCamera.cameraPivot.GetComponent<Camera>();

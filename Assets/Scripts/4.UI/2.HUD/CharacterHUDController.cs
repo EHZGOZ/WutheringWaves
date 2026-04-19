@@ -18,7 +18,7 @@ namespace WutheringWaves
         [SerializeField] private GameObject enemyStunBar; // 敌人韧性条
         [SerializeField] private CharacterSkillUI[] skillUIs; // 技能UI集合
 
-        private CharacterFacade facade; // 当前绑定的角色门面
+        private CharacterContext context; // 当前绑定的角色上下文
         private UIRoot uiRoot; // UI根节点引用
         private bool initialized; // 是否已完成初始化
 
@@ -41,10 +41,10 @@ namespace WutheringWaves
             if (enemyStunBar == null) enemyStunBar = enemyStun;
         }
 
-        public void Initialize(CharacterFacade injectedFacade, UIRoot injectedRoot)
+        public void Initialize(CharacterContext injectedContext, UIRoot injectedRoot)
         {
             // 初始化时缓存依赖，并把依赖继续下发到各个技能UI
-            facade = injectedFacade;
+            context = injectedContext;
             uiRoot = injectedRoot;
             CacheSkillUIs();
             InjectDependencies();
@@ -60,10 +60,10 @@ namespace WutheringWaves
             }
         }
 
-        public void SetCharacterFacade(CharacterFacade injectedFacade)
+        public void SetCharacterContext(CharacterContext injectedContext)
         {
             // 角色对象变化时，及时把新依赖同步给子UI
-            facade = injectedFacade;
+            context = injectedContext;
             InjectDependencies();
         }
 
@@ -102,7 +102,7 @@ namespace WutheringWaves
                 CharacterSkillUI skillUI = skillUIs[i];
                 if (skillUI != null)
                 {
-                    skillUI.InjectDependencies(uiRoot, facade);
+                    skillUI.InjectDependencies(uiRoot, context);
                 }
             }
         }

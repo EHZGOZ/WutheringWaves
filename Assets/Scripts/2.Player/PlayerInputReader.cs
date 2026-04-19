@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -58,7 +58,11 @@ namespace WutheringWaves
 
             //4.标记初始化完成
             isInitialized = true;
+
+            //5.启用玩家输入
+            EnablePlayerInput();
         }
+
 
         //1.获取玩家输入组件
         private void ResolvePlayerInput()
@@ -109,6 +113,7 @@ namespace WutheringWaves
         {
             EnsureInitialized();
             MoveInput = value.Get<Vector2>();
+            //Debug.Log($"[PlayerInputReader] MoveInput: {MoveInput}");
         }
 
         // 视角输入回调
@@ -116,6 +121,7 @@ namespace WutheringWaves
         {
             EnsureInitialized();
             LookInput = value.Get<Vector2>();
+            //Debug.Log($"[PlayerInputReader] LookInput: {LookInput}");
         }
 
         // 跳跃输入回调：按下时写入跳跃缓冲
@@ -205,16 +211,48 @@ namespace WutheringWaves
 
         #region 输入开关
         // 禁用玩家输入：用于切角色、过场或UI接管输入
+        // 禁用玩家输入：用于切角色、过场或UI接管输入
         public void DisablePlayerInput()
         {
             EnsureInitialized();
+
+            if (playerInput == null)
+            {
+                return;
+            }
+
+            // 1.先禁用动作映射
             playerActionMap?.Disable();
+
+            // 2.停用 PlayerInput，避免继续接收玩家输入消息
+            playerInput.DeactivateInput();
+
+            // 3.清空输入状态，避免恢复时残留旧输入
+            ResetInputStates();
         }
+
 
         // 启用玩家输入：恢复玩家动作映射
         public void EnablePlayerInput()
         {
             EnsureInitialized();
+
+            if (playerInput == null)
+            {
+                Debug.LogError("[PlayerInputReader] 启用玩家输入失败：PlayerInput为空。", this);
+                return;
+            }
+
+            // 1.激活 PlayerInput，确保输入系统开始向当前对象发送输入消息
+            playerInput.ActivateInput();
+
+            // 2.明确切换到 Player 动作映射，避免当前停留在 UI 或其他 ActionMap
+            playerInput.SwitchCurrentActionMap("Player");
+
+            // 3.重新缓存当前动作映射
+            playerActionMap = playerInput.currentActionMap;
+
+            // 4.兜底启用动作映射
             playerActionMap?.Enable();
         }
         #endregion

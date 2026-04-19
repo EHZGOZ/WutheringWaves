@@ -5,14 +5,31 @@ using UnityEngine.SceneManagement;
 
 namespace WutheringWaves
 {
+    [System.Serializable]
+    public class TeamCharacterSlotData
+    {
+        [Header("角色名称")]
+        public CharacterName characterName;
+
+        [Header("角色运行时数据")]
+        public CharacterRuntimeData runtimeData;
+        // 克隆一份独立槽位数据，避免运行时数据和存档数据共享引用
+        public TeamCharacterSlotData Clone()
+        {
+            return new TeamCharacterSlotData
+            {
+                characterName = characterName,
+                runtimeData = runtimeData != null ? runtimeData.Clone() : new CharacterRuntimeData()
+            };
+        }
+    }
     // 存档数据：定义当前需要持久化的核心字段
     [Serializable]
     public class SaveData
     {
         public string sceneName = string.Empty; // 当前场景名
 
-        public List<CharacterName> teamCharacterIds = new();//队伍角色标识列表
-        public List<CharacterRuntimeData> teamCharacterRuntimeData = new();//队伍角色数据
+        public List<TeamCharacterSlotData> teamSlots = new(); // 队伍槽位数据
         public int currentCharacterIndex = 0; // 当前受控角色槽位
         
         public Vector3 playerPosition = Vector3.zero; // 玩家位置

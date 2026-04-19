@@ -44,18 +44,6 @@ namespace WutheringWaves
         [SerializeField] internal EffectActionConfigSO effectActionConfigSO;
         #endregion
 
-        #region 耐力系统
-        [Header("==耐力相关==")]
-        [Header("最大耐力值")]
-        [SerializeField] internal float maxStaminaData = 100f;
-        [Header("跑步时每秒消耗的耐力值")]
-        [SerializeField] internal float staminaCostInRun = 5f;
-        [Header("静止时每秒恢复的耐力值")]
-        [SerializeField] internal float staminaRecovery = 10f;
-        [Header("耐力恢复延迟时间(秒)")]
-        [SerializeField] internal float staminaRecoveryDelay = 1f;
-        #endregion
-
         #region 缓冲相关
         [Header("=== 急停缓冲配置 ===")]
         [Header("移动缓冲的总滑行距离（米）")]

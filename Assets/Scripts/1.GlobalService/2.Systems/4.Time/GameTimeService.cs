@@ -7,14 +7,15 @@ namespace WutheringWaves
     public class GameTimeService : MonoBehaviour
     {
         public static GameTimeService Instance { get; private set; }
+
         [SerializeField] private float defaultTimeScale = 1f; // 默认时间缩放系数，1为正常游戏速度   
         private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏
-        public bool IsInitialized { get; private set; }        // 标记服务是否完成初始化
         public bool IsPaused => Time.timeScale <= 0f; // 判断游戏是否暂停（时间缩放小于等于0即为暂停）
         public float CurrentTimeScale => Time.timeScale; // 获取当前的时间缩放值
 
-        // 脚本唤醒时执行，单例初始化
-        private void Awake()
+
+        // 初始化时间服务，设置默认参数
+        public void Initialize()
         {
             // 防止单例重复，若已存在实例则销毁当前对象
             if (Instance != null && Instance != this)
@@ -25,16 +26,6 @@ namespace WutheringWaves
 
             // 赋值单例实例
             Instance = this;
-        }
-
-        // 初始化时间服务，设置默认参数
-        public void Initialize()
-        {
-            // 防止重复初始化
-            if (IsInitialized)
-            {
-                return;
-            }
 
             // 确保默认时间缩放为有效值，不小于0.0001
             defaultTimeScale = Mathf.Max(0.0001f, defaultTimeScale);
@@ -42,8 +33,7 @@ namespace WutheringWaves
             _resumeTimeScale = defaultTimeScale;
             // 设置初始时间缩放
             SetTimeScale(defaultTimeScale);
-            // 标记初始化完成
-            IsInitialized = true;
+ 
         }
 
         // 暂停游戏，将时间缩放设为0

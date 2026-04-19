@@ -76,8 +76,24 @@ namespace WutheringWaves
                 return;
             }
 
+            // 1.缓存当前角色观察点，用于玩家输入旋转
             cameraPivot = targetPivot;
+
+            // 2.把主虚拟相机绑定到当前角色观察点
+            if (VirtualCamera != null)
+            {
+                VirtualCamera.Follow = cameraPivot;
+                VirtualCamera.LookAt = cameraPivot;
+            }
+
+            // 3.如果副虚拟相机也需要跟随当前角色，也同步绑定
+            if (virtualCamera2 != null)
+            {
+                virtualCamera2.Follow = cameraPivot;
+                virtualCamera2.LookAt = cameraPivot;
+            }
         }
+
         #endregion
 
         #region 更新第三人称镜头

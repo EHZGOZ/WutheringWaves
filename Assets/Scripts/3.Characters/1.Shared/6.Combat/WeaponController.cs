@@ -13,7 +13,7 @@ namespace WutheringWaves
         private Coroutine weaponCoroutine; // 当前武器表现协程
         private GameObject currentWeapon; // 当前实例化的武器对象
 
-        //初始化：由 CharacterFacade 统一调用，绑定角色上下文与配置
+        //初始化：由 CharacterContext 统一调用，绑定角色上下文与配置
         public void Initialize(CharacterContext context)
         {
             this.context = context;
