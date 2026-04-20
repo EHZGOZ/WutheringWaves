@@ -5,6 +5,8 @@ namespace WutheringWaves
 {
     public class PlayerController : MonoBehaviour
     {
+        public static PlayerController Instance { get; private set; }
+
 
         [Header(" 玩家数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
@@ -47,11 +49,22 @@ namespace WutheringWaves
 
         #region 生命周期
 
-        private void OnDestroy()
+        private void Awake()
         {
-            // 控制器销毁时解绑输入事件，避免残留委托引用
-            UnsubscribeInputEvents();
+            // 单例模式核心：如果已存在玩家控制器，销毁当前重复对象
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+
+            // 玩家控制器作为玩家根节点，切换场景时不销毁
+            DontDestroyOnLoad(gameObject);
         }
+
+
 
         private void LateUpdate()
         {
@@ -59,14 +72,19 @@ namespace WutheringWaves
             UpdateCurrentPlayerCamera();
 
         }
-        private void OnDisable()
+        private void OnDestroy()
         {
+            // 控制器销毁时解绑输入事件，避免残留委托引用
+            UnsubscribeInputEvents();
 
+            // 如果销毁的是当前单例，清空单例引用
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
-        private void OnApplicationQuit()
-        {
 
-        }
+
         #endregion
 
         #region 初始化组件
@@ -92,8 +110,6 @@ namespace WutheringWaves
             SpawnCharacter();
             //7.绑定受控角色：同步缓存角色所有核心组件
             BindCurrentCharacter();
-            //8.解析当前角色观察点
-            SetupCurrentPlayerCamera();
 
 
         }
@@ -171,7 +187,6 @@ namespace WutheringWaves
                 return;
             }
 
-            playerRuntimeData.SyncRuntimeDataFromSaveData(SaveService.Instance.Load());
         }
         #endregion
 
@@ -328,7 +343,7 @@ namespace WutheringWaves
             //12.角色绑定完成后，主动把最新依赖同步给 UI 层
             if (UIRoot.Instance != null)
             {
-                UIRoot.Instance.InjectPlayerController(this);
+                UIRoot.Instance.RefreshUIRoot(this);
             }
         }
         #endregion

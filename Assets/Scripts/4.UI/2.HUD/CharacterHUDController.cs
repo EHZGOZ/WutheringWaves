@@ -1,110 +1,302 @@
+﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WutheringWaves
 {
+    [System.Serializable]
+    public class TeamAvatarSlotUI
+    {
+        [Header("头像根节点")]
+        public GameObject root; // 整个头像槽位，没角色时隐藏
+
+        [Header("头像图片")]
+        public Image avatarIcon; // 角色头像图片
+
+        [Header("当前角色底框")]
+        public GameObject selectedFrame; // 当前受控角色底框
+    }
+
     [DisallowMultipleComponent]
-    // 角色HUD控制器：负责管理血条、体力条和技能UI的可见性与依赖注入
+    // 角色HUD控制器：负责玩家HUD、技能UI、Q爆发UI和共享体力UI的显示与刷新
     public class CharacterHUDController : MonoBehaviour
     {
-        [Header("HUD Root")]
+        [Header("=== HUD根节点 ===")]
         [SerializeField] private GameObject hudPanel; // HUD根节点
 
-        [Header("HUD Widgets")]
-        [SerializeField] private GameObject playerHealthbar; // 玩家血条
-        [SerializeField] private GameObject playerStaminabar; // 玩家体力条
-        [SerializeField] private GameObject healthPotionUI; // 药水UI
-        [SerializeField] private GameObject enemyHealthSlider; // 敌人血条
-        [SerializeField] private GameObject enemyHealthText; // 敌人血量文本
-        [SerializeField] private GameObject enemyStunBar; // 敌人韧性条
-        [SerializeField] private CharacterSkillUI[] skillUIs; // 技能UI集合
+        #region 角色绑定相关
+        [Header("=== 角色绑定设置 ===")]
+        [Tooltip("手动绑定的角色上下文，优先级最高")]
+        [SerializeField] private CharacterContext context; // 当前绑定的角色上下文
 
-        private CharacterContext context; // 当前绑定的角色上下文
         private UIRoot uiRoot; // UI根节点引用
-        private bool initialized; // 是否已完成初始化
+        private CharacterAttack attackLogic; // 当前角色攻击逻辑
+        private JinxiSpecialSkillLinker jinxiSpecialSkillLinker; // 今汐专属技能逻辑
+        private PlayerStamina playerStamina; // 玩家共享体力逻辑
+        private bool hasSubscribedAttackEvent; // 是否已经订阅技能刷新事件
+        private bool hasSubscribedStaminaEvent; // 是否已经订阅体力刷新事件
+        #endregion
 
-        public void ConfigureIfMissing(
-            GameObject panel,
-            GameObject playerHp,
-            GameObject playerStamina,
-            GameObject healthPotion,
-            GameObject enemyHpSlider,
-            GameObject enemyHpText,
-            GameObject enemyStun)
+        #region 技能UI引用
+        [Header("=== 队伍头像UI ===")]
+        [SerializeField] private TeamAvatarSlotUI[] teamAvatarSlots = new TeamAvatarSlotUI[3]; // 三人队伍头像槽位
+
+        [Header("=== 技能图标 ===")]
+        [SerializeField] private Image eSkillIcon; // 当前E技能图标
+        [SerializeField] private Image qBurstIcon; // 当前Q技能图标
+
+        [Header("=== 冷却显示 ===")]
+        [SerializeField] private Image eSkillCooldownMask; // E技能冷却遮罩
+        [SerializeField] private Image qBurstCooldownMask; // Q爆发冷却遮罩
+        [SerializeField] private TextMeshProUGUI eSkillCooldownText; // E技能冷却数字
+        [SerializeField] private TextMeshProUGUI qBurstCooldownText; // Q爆发冷却数字
+
+        [Header("技能冷却/禁用状态的UI颜色")]
+        [SerializeField] private Color disableColor = new Color(0.45f, 0.45f, 0.45f, 1f); // 禁用颜色
+        [SerializeField] private Color normalColor = Color.white; // 正常颜色
+
+        [Header("E技能键盘按键提示")]
+        [SerializeField] private Image eKeyImage; // E技能键盘按键提示
+        [Header("Q爆发键盘按键提示")]
+        [SerializeField] private Image qKeyImage; // Q爆发键盘按键提示
+        #endregion
+
+        #region 体力槽UI引用
+        [Header("=== 体力槽UI ===")]
+        [SerializeField] private RectTransform staminaRoot; // 体力槽根节点
+        [SerializeField] private Image staminaRingBg; // 体力槽背景
+        [SerializeField] private Image staminaRingFill; // 体力槽填充
+        [SerializeField] private CanvasGroup staminaCanvasGroup; // 体力槽透明度控制
+
+        [Header("=== 体力槽显示配置 ===")]
+        [SerializeField] private Camera uiFollowCamera; // 体力槽跟随使用的相机
+        [SerializeField] private Vector3 staminaWorldOffset = Vector3.zero; // 体力槽世界偏移
+        [SerializeField] private Vector2 staminaScreenOffset = new Vector2(40f, 0f); // 体力槽屏幕偏移
+        [SerializeField] [Min(0f)] private float staminaFollowSmooth = 18f; // 体力槽跟随平滑
+        [SerializeField] [Range(0f, 1f)] private float staminaHiddenAlpha = 0f; // 体力槽隐藏透明度
+        [SerializeField] [Min(0f)] private float staminaFadeSpeed = 8f; // 体力槽淡入淡出速度
+        #endregion
+
+        #region 初始化
+        // 初始化角色HUD：由UIRoot传入自身引用
+        public void Initialize(UIRoot uiRoot)
         {
-            // 兼容旧场景拖线方式：仅在字段为空时回填引用
-            if (hudPanel == null) hudPanel = panel;
-            if (playerHealthbar == null) playerHealthbar = playerHp;
-            if (playerStaminabar == null) playerStaminabar = playerStamina;
-            if (healthPotionUI == null) healthPotionUI = healthPotion;
-            if (enemyHealthSlider == null) enemyHealthSlider = enemyHpSlider;
-            if (enemyHealthText == null) enemyHealthText = enemyHpText;
-            if (enemyStunBar == null) enemyStunBar = enemyStun;
+            this.uiRoot = uiRoot;
         }
 
-        public void Initialize(CharacterContext injectedContext, UIRoot injectedRoot)
-        {
-            // 初始化时缓存依赖，并把依赖继续下发到各个技能UI
-            context = injectedContext;
-            uiRoot = injectedRoot;
-            CacheSkillUIs();
-            InjectDependencies();
-            initialized = true;
-        }
+        #endregion
 
+        #region 外部入口
+        // 设置HUD显隐
         public void SetVisible(bool visible)
         {
-            // HUD显隐统一通过根节点控制
             if (hudPanel != null)
             {
                 hudPanel.SetActive(visible);
             }
         }
 
+        // 设置当前角色上下文：切人或角色生成后由UIRoot调用
         public void SetCharacterContext(CharacterContext injectedContext)
         {
-            // 角色对象变化时，及时把新依赖同步给子UI
-            context = injectedContext;
-            InjectDependencies();
-        }
-
-        private void Awake()
-        {
-            CacheSkillUIs();
-        }
-
-        private void OnEnable()
-        {
-            if (initialized)
-            {
-                InjectDependencies();
-            }
-        }
-
-        private void CacheSkillUIs()
-        {
-            // 未显式拖拽时自动从子节点收集技能UI组件
-            if (skillUIs == null || skillUIs.Length == 0)
-            {
-                skillUIs = GetComponentsInChildren<CharacterSkillUI>(true);
-            }
-        }
-
-        private void InjectDependencies()
-        {
-            // 技能UI缺失时直接返回，避免空数组遍历
-            if (skillUIs == null || skillUIs.Length == 0)
+            if (injectedContext == null)
             {
                 return;
             }
 
-            for (int i = 0; i < skillUIs.Length; i++)
+            context = injectedContext;
+            RefreshHUD();
+        }
+        #endregion
+
+        #region 刷新HUD图标
+        // 刷新HUD显示：用于切人、队伍变化或运行时数据变化后调用
+        public void RefreshHUD()
+        {
+            RefreshHUDStaticIcons();
+        }
+        // 刷新HUD静态图标：队伍头像、E技能图标、Q爆发图标
+        private void RefreshHUDStaticIcons()
+        {
+            RefreshTeamAvatarIcons();
+            RefreshESkillIcon();
+            RefreshQBurstIcon();
+        }
+
+        // 刷新队伍头像：根据PlayerRuntimeData中的队伍槽位显示三人头像
+        private void RefreshTeamAvatarIcons()
+        {
+            // 1.头像槽位为空时直接返回
+            if (teamAvatarSlots == null || teamAvatarSlots.Length == 0)
             {
-                CharacterSkillUI skillUI = skillUIs[i];
-                if (skillUI != null)
+                return;
+            }
+
+            // 2.获取玩家运行时数据
+            PlayerRuntimeData playerRuntimeData = context != null && context.PlayerController != null
+                ? context.PlayerController.PlayerRuntimeData
+                : null;
+
+            // 3.没有队伍数据时，隐藏全部头像槽位
+            if (playerRuntimeData == null || playerRuntimeData.teamSlots == null)
+            {
+                SetAllAvatarSlotsVisible(false);
+                return;
+            }
+
+            // 4.逐个刷新头像槽位
+            for (int i = 0; i < teamAvatarSlots.Length; i++)
+            {
+                TeamAvatarSlotUI slotUI = teamAvatarSlots[i];
+                if (slotUI == null)
                 {
-                    skillUI.InjectDependencies(uiRoot, context);
+                    continue;
+                }
+
+                // 5.队伍没有这个槽位，隐藏
+                if (i >= playerRuntimeData.teamSlots.Count)
+                {
+                    SetAvatarSlotVisible(slotUI, false);
+                    continue;
+                }
+
+                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
+                if (slotData == null)
+                {
+                    SetAvatarSlotVisible(slotUI, false);
+                    continue;
+                }
+
+                // 6.根据角色名解析角色配置
+                CharacterDataSO characterDataSO = ResolveCharacterDataSO(slotData.characterName);
+                if (characterDataSO == null || characterDataSO.avatarIcon == null)
+                {
+                    SetAvatarSlotVisible(slotUI, false);
+                    continue;
+                }
+
+                // 7.显示头像槽位并设置头像
+                SetAvatarSlotVisible(slotUI, true);
+
+                if (slotUI.avatarIcon != null)
+                {
+                    slotUI.avatarIcon.sprite = characterDataSO.avatarIcon;
+                    slotUI.avatarIcon.color = normalColor;
+                }
+
+                // 8.显示当前受控角色底框
+                if (slotUI.selectedFrame != null)
+                {
+                    slotUI.selectedFrame.SetActive(i == playerRuntimeData.currentCharacterIndex);
                 }
             }
         }
+
+        // 刷新E技能默认图标：切换角色或绑定角色时调用
+        private void RefreshESkillIcon()
+        {
+            // 1.空值检查
+            if (context == null || context.CharacterDataSO == null || eSkillIcon == null)
+            {
+                return;
+            }
+
+            // 2.读取角色E技能图标列表
+            Sprite[] icons = context.CharacterDataSO.eSkillIcons;
+            if (icons == null || icons.Length == 0 || icons[0] == null)
+            {
+                return;
+            }
+
+            // 3.默认先显示第0张E技能图标
+            eSkillIcon.sprite = icons[0];
+            eSkillIcon.color = normalColor;
+        }
+
+        // 刷新Q爆发默认图标：切换角色或绑定角色时调用
+        private void RefreshQBurstIcon()
+        {
+            // 1.空值检查
+            if (context == null || context.CharacterDataSO == null || qBurstIcon == null)
+            {
+                return;
+            }
+
+            // 2.优先读取Q技能可释放图标列表
+            Sprite[] readyIcons = context.CharacterDataSO.qBurstReadyIcons;
+            if (readyIcons != null && readyIcons.Length > 0 && readyIcons[0] != null)
+            {
+                qBurstIcon.sprite = readyIcons[0];
+                qBurstIcon.color = normalColor;
+                return;
+            }
+
+            // 3.没有可释放图标时，兜底显示未充能图标
+            Sprite lockedIcon = context.CharacterDataSO.qBurstLockedIcon;
+            if (lockedIcon != null)
+            {
+                qBurstIcon.sprite = lockedIcon;
+                qBurstIcon.color = disableColor;
+            }
+        }
+        #endregion
+
+        #region 工具方法
+        // 隐藏或显示所有头像槽位
+        private void SetAllAvatarSlotsVisible(bool visible)
+        {
+            if (teamAvatarSlots == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < teamAvatarSlots.Length; i++)
+            {
+                TeamAvatarSlotUI slotUI = teamAvatarSlots[i];
+                if (slotUI == null)
+                {
+                    continue;
+                }
+
+                SetAvatarSlotVisible(slotUI, visible);
+            }
+        }
+
+        // 设置单个头像槽位显隐
+        private void SetAvatarSlotVisible(TeamAvatarSlotUI slotUI, bool visible)
+        {
+            if (slotUI == null)
+            {
+                return;
+            }
+
+            if (slotUI.root != null)
+            {
+                slotUI.root.SetActive(visible);
+            }
+
+            if (!visible && slotUI.selectedFrame != null)
+            {
+                slotUI.selectedFrame.SetActive(false);
+            }
+        }
+
+        // 根据角色名称解析角色配置
+        private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
+        {
+            if (GameBootstrap.Instance == null)
+            {
+                return null;
+            }
+
+            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
+            {
+                return null;
+            }
+
+            CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
+            return prefabContext != null ? prefabContext.CharacterDataSO : null;
+        }
+        #endregion
     }
 }

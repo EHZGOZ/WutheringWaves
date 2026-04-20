@@ -34,6 +34,8 @@ namespace WutheringWaves
         [SerializeField] private PlayerController playerController; // 玩家控制
         [Header(" 玩家数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;  // 是否输出详细日志
 
         [Header("默认队伍")]
         [SerializeField] private List<CharacterName> defaultTeamCharacterIds = new();
@@ -71,6 +73,10 @@ namespace WutheringWaves
             DontDestroyOnLoad(gameObject); // 场景切换时，不销毁该引导对象
             Bootstrap(); // 执行游戏初始化引导流程
         }
+        private void OnDestroy()
+        {
+            SaveCurrentGame();
+        }
         #endregion
 
         #region  执行游戏初始化引导流程
@@ -94,19 +100,15 @@ namespace WutheringWaves
 
             // 4.构建角色预制体映射表
             BuildCharacterPrefabMap();
-            // 5.玩家生成
-            SpawnCharacter(Target);
-            // 6.数据注入
-            ResolvePlayer();
 
-            // 7.玩家控制初始化
-            PlayerController.Initialize();
+            // 5.标记初始化完成 开启详细日志 → 输出引导完成提示
+            _bootstrapped = true;
+            if (verboseLog)
+            {
+                Debug.Log("[GameBootstrap] 初始化引导流程已完成。");
+            }
 
-            // 8.标记初始化完成 开启详细日志 → 输出引导完成提示
-            _bootstrapped = true; 
-            Debug.Log("[GameBootstrap] 初始化引导流程已完成。");
         }
-        #endregion
 
         #region 验证Inspector面板的所有引用是否赋值完整
         // 验证Inspector面板的所有引用是否赋值完整
@@ -178,36 +180,200 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 玩家生成
-        public void SpawnCharacter(Transform parent = null)
+        #endregion
+
+        #region 进入游戏
+        // 根据存档数据正式进入游戏：只处理玩家生成、数据注入和玩家初始化
+        private void EnterGameWithSaveData(SaveData saveData)
         {
-            if (playerPrefab == null)
+            // 1.空值检查
+            if (saveData == null)
             {
-                Debug.LogError($"[GameBootstrap] 未找到playerPrefab对应的预制体。", this);
+                Debug.LogError("[GameBootstrap] 进入游戏失败：存档数据为空。", this);
                 return;
             }
 
-            _spawnedPlayer=Instantiate(playerPrefab, Vector3.zero, Quaternion.identity, parent);
+            // 2.确保默认队伍存在，避免旧存档或异常存档没有角色
+            EnsureDefaultTeam(saveData);
+
+            // 3.解析玩家控制器和运行时数据，并互相注入
+            ResolvePlayer();
+
+            // 4.玩家控制器或玩家运行时数据为空时，无法进入游戏
+            if (playerController == null || playerRuntimeData == null)
+            {
+                Debug.LogError("[GameBootstrap] 进入游戏失败：缺少PlayerController或PlayerRuntimeData。", this);
+                return;
+            }
+
+            // 5.记录当前常驻玩家对象，避免旧逻辑认为玩家不存在
+            _spawnedPlayer = playerController.gameObject;
+
+            // 6.把存档数据写入PlayerRuntimeData
+            playerRuntimeData.SyncRuntimeDataFromSaveData(saveData);
+
+            // 7.初始化玩家控制器，生成队伍角色并绑定当前角色
+            playerController.Initialize();
+
+            Debug.Log("[GameBootstrap] 已根据存档数据进入游戏。");
         }
+        #endregion
+
+        #region 新建存档 读取存档  删除存档  保存存档
+        // 新建游戏：由空存档槽位点击新建时调用
+        public void StartNewGame(int slotIndex)
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.通过存档服务新建指定槽位存档
+            SaveData saveData = saveService != null ? saveService.CreateSave(slotIndex) : null;
+            if (saveData == null)
+            {
+                Debug.LogError($"[GameBootstrap] 新建游戏失败：槽位 {slotIndex + 1} 存档数据为空。", this);
+                return;
+            }
+
+            // 3.根据新建出来的存档进入游戏
+            EnterGameWithSaveData(saveData);
+        }
+
+        // 读取游戏：由已有存档槽位点击读取时调用
+        public void LoadGame(int slotIndex)
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.通过存档服务读取指定槽位存档
+            SaveData saveData = saveService != null ? saveService.LoadSave(slotIndex) : null;
+            if (saveData == null)
+            {
+                Debug.LogError($"[GameBootstrap] 读取游戏失败：槽位 {slotIndex + 1} 存档数据为空。", this);
+                return;
+            }
+
+            // 3.根据读取出来的存档进入游戏
+            EnterGameWithSaveData(saveData);
+        }
+
+        // 删除游戏存档：由存档菜单点击删除时调用
+        public bool DeleteGameSave(int slotIndex)
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.存档服务为空时无法删除
+            if (saveService == null)
+            {
+                Debug.LogError("[GameBootstrap] 删除存档失败：SaveService为空。", this);
+                return false;
+            }
+
+            // 3.交给存档服务删除指定槽位
+            bool ok = saveService.DeleteSave(slotIndex);
+
+            // 4.输出流程日志
+            if (ok)
+            {
+                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除成功。");
+            }
+            else
+            {
+                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除失败。");
+            }
+
+            return ok;
+        }
+
+        // 保存当前游戏：由游戏内保存、返回主菜单或退出游戏前调用
+        public bool SaveCurrentGame()
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.解析玩家控制器和运行时数据，保证存档前依赖是最新的
+            ResolvePlayer();
+
+            // 3.存档服务为空时无法保存
+            if (saveService == null)
+            {
+                Debug.LogError("[GameBootstrap] 保存当前游戏失败：SaveService为空。", this);
+                return false;
+            }
+
+            // 4.玩家运行时数据为空时无法收集场景数据
+            if (playerRuntimeData == null)
+            {
+                Debug.LogError("[GameBootstrap] 保存当前游戏失败：PlayerRuntimeData为空。", this);
+                return false;
+            }
+
+            // 5.当前没有正在使用的存档时，不允许保存
+            if (saveService.CurrentData == null || saveService.CurrentSlotIndex < 0)
+            {
+                Debug.LogWarning("[GameBootstrap] 保存当前游戏失败：当前没有正在使用的存档槽。", this);
+                return false;
+            }
+
+            // 6.先从场景中收集最新运行时数据
+            playerRuntimeData.SyncRuntimeDataFromScene();
+
+            // 7.把运行时数据写回当前存档数据
+            playerRuntimeData.SyncSaveDataFromRuntimeData(saveService.CurrentData);
+
+            // 8.交给存档服务保存当前槽位
+            bool ok = saveService.SaveCurrentSave();
+            if (ok)
+            {
+                Debug.Log("[GameBootstrap] 当前游戏保存成功。");
+            }
+            else
+            {
+                Debug.Log("[GameBootstrap] 当前游戏保存失败。");
+            }
+
+            return ok;
+        }
+
         #endregion
 
         #region 数据注入
         // 数据注入
         private void ResolvePlayer()
         {
-            if (playerRuntimeData == null)
+            // 1.优先使用PlayerController单例，保证拿到的是常驻玩家根节点
+            if (playerController == null)
             {
-                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
+                playerController = PlayerController.Instance;
             }
+
+            // 2.兜底：如果单例还没建立，就从场景中查找
             if (playerController == null)
             {
                 playerController = FindObjectOfType<PlayerController>();
             }
-            playerRuntimeData.Injected(PlayerController);
-            
-            playerController.Injected(PlayerRuntimeData);
+
+            // 3.优先从PlayerController身上获取PlayerRuntimeData
+            if (playerRuntimeData == null && playerController != null)
+            {
+                playerRuntimeData = playerController.PlayerRuntimeData;
+            }
+
+            // 4.兜底：如果PlayerController里还没绑定，就从场景中查找
+            if (playerRuntimeData == null)
+            {
+                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
+            }
+
+            // 5.互相注入，保证两边引用一致
+            if (playerRuntimeData != null && playerController != null)
+            {
+                playerRuntimeData.Injected(playerController);
+                playerController.Injected(playerRuntimeData);
+            }
         }
-       
+
+
         #endregion
 
         #region 角色生成
@@ -242,13 +408,7 @@ namespace WutheringWaves
                 return;
             }
 
-            // 3.确保队伍槽位列表存在
-            if (saveData.teamSlots == null)
-            {
-                saveData.teamSlots = new List<TeamCharacterSlotData>();
-            }
-
-            // 4.根据默认队伍配置创建槽位
+            // 3.根据默认队伍配置创建槽位
             for (int i = 0; i < defaultTeamCharacterIds.Count; i++)
             {
                 CharacterName characterName = defaultTeamCharacterIds[i];
@@ -281,7 +441,7 @@ namespace WutheringWaves
             return runtimeData;
         }
 
-        // 根据角色名称解析角色基础数据：优先走运行时字典，兜底扫描Inspector映射表
+        // 根据角色名称解析角色基础数据
         private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
         {
             GameObject prefab = null;
@@ -308,5 +468,6 @@ namespace WutheringWaves
 
         #endregion
 
+        
     }
 }

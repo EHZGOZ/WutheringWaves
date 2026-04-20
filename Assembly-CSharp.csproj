@@ -86,9 +86,9 @@
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapMarker.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\3.Core\CharacterContext.cs" />
     <Compile Include="Assets\Scripts\4.UI\2.HUD\CharacterHUDController.cs" />
-    <Compile Include="Assets\Scripts\4.UI\2.HUD\CharacterSkillUI.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiDragonController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\1.Save\PlayerPrefsSettingsRepository.cs" />
+    <Compile Include="Assets\Scripts\4.UI\3.Menu\SavedGameMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\8.FSM\CharacterStateBase.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\WeaponConfigSO.cs" />
@@ -100,6 +100,7 @@
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\States\JinxiStates.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\AnimationConfigSO.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiFeatureRoot.cs" />
+    <Compile Include="Assets\Scripts\4.UI\3.Menu\SaveSlotUI.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Scripts\For demo scenes\HS_CameraHolder.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterDataSO.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.Audio\AudioService.cs" />
@@ -118,6 +119,8 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\Sword slash VFX\Demo scene\HDRP and URP.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\DissolveNoise.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
@@ -141,6 +144,7 @@
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Scroll.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Add_CenterGlow.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />

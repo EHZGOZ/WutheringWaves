@@ -104,14 +104,12 @@ namespace WutheringWaves
         // 缩放输入回调
         public void OnZoom(InputValue value)
         {
-            EnsureInitialized();
             ZoomInput = value.Get<Vector2>();
         }
 
         // 移动输入回调
         public void OnMove(InputValue value)
         {
-            EnsureInitialized();
             MoveInput = value.Get<Vector2>();
             //Debug.Log($"[PlayerInputReader] MoveInput: {MoveInput}");
         }
@@ -119,7 +117,6 @@ namespace WutheringWaves
         // 视角输入回调
         public void OnLook(InputValue value)
         {
-            EnsureInitialized();
             LookInput = value.Get<Vector2>();
             //Debug.Log($"[PlayerInputReader] LookInput: {LookInput}");
         }
@@ -127,7 +124,6 @@ namespace WutheringWaves
         // 跳跃输入回调：按下时写入跳跃缓冲
         public void OnJump(InputValue value)
         {
-            EnsureInitialized();
             JumpInput = value.isPressed;
             if (value.isPressed)
             {
@@ -138,7 +134,6 @@ namespace WutheringWaves
         // 奔跑输入回调：同步状态并写入奔跑缓冲
         public void OnRun(InputValue value)
         {
-            EnsureInitialized();
             RunInput = value.isPressed;
             inputBuffer?.BufferRun(value.isPressed);
         }
@@ -146,21 +141,19 @@ namespace WutheringWaves
         // 锁定输入回调
         public void OnLock(InputValue value)
         {
-            EnsureInitialized();
             LockInput = value.isPressed;
         }
 
         // 闪避输入回调
         public void OnDodge(InputValue value)
         {
-            EnsureInitialized();
             DodgeInput = value.isPressed;
         }
 
         // 普攻输入回调：同步状态并写入攻击缓冲
         public void OnAttack(InputValue value)
         {
-            EnsureInitialized();
+
             AttackInput = value.isPressed;
             inputBuffer?.BufferAttack(value.isPressed);
         }
@@ -168,7 +161,7 @@ namespace WutheringWaves
         // 共鸣技能输入回调：按下时写入技能缓冲
         public void OnResonanceESkillInput(InputValue value)
         {
-            EnsureInitialized();
+
             ESkillInput = value.isPressed;
             if (value.isPressed)
             {
@@ -179,7 +172,7 @@ namespace WutheringWaves
         // 共鸣解放输入回调：按下时写入大招缓冲
         public void OnResonanceQBurstInput(InputValue value)
         {
-            EnsureInitialized();
+
             QBurstInput = value.isPressed;
             if (value.isPressed)
             {
@@ -190,21 +183,21 @@ namespace WutheringWaves
         // 1号位切人输入回调
         public void OnKey1(InputValue value)
         {
-            EnsureInitialized();
+
             HandleSwitchCharacterInput(1, value);
         }
 
         // 2号位切人输入回调
         public void OnKey2(InputValue value)
         {
-            EnsureInitialized();
+
             HandleSwitchCharacterInput(2, value);
         }
 
         // 3号位切人输入回调
         public void OnKey3(InputValue value)
         {
-            EnsureInitialized();
+
             HandleSwitchCharacterInput(3, value);
         }
         #endregion
@@ -214,7 +207,6 @@ namespace WutheringWaves
         // 禁用玩家输入：用于切角色、过场或UI接管输入
         public void DisablePlayerInput()
         {
-            EnsureInitialized();
 
             if (playerInput == null)
             {
@@ -235,7 +227,6 @@ namespace WutheringWaves
         // 启用玩家输入：恢复玩家动作映射
         public void EnablePlayerInput()
         {
-            EnsureInitialized();
 
             if (playerInput == null)
             {
@@ -258,15 +249,6 @@ namespace WutheringWaves
         #endregion
 
         #region 内部工具
-        // 确保输入读取器已初始化：避免外部漏调初始化导致空引用
-        private void EnsureInitialized()
-        {
-            if (!isInitialized)
-            {
-                Initialize();
-            }
-        }
-
         // 统一处理切人按键：仅在按下瞬间抛出切人请求，避免长按重复触发
         private void HandleSwitchCharacterInput(int targetSlot, InputValue value)
         {

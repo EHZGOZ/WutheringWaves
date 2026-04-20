@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using UnityEngine;
 
@@ -86,5 +86,11 @@ namespace WutheringWaves
                 return false;
             }
         }
+        // 判断当前存档文件是否存在
+        public bool Exists()
+        {
+            return File.Exists(_savePath);
+        }
+
     }
 }

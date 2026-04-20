@@ -12,7 +12,23 @@ namespace WutheringWaves
         [SerializeField] internal float baseAttack = 100f;
         [Header("最大生命值")]
         [SerializeField] internal float maxHealth = 1000f;
+
+        [Header("=== UI图标配置 ===")]
+        [Header("角色头像")]
+        public Sprite avatarIcon; // 角色头像图标
+
+        [Header("E技能图标列表")]
+        public Sprite[] eSkillIcons; // E技能图标列表，按角色技能阶段顺序配置
+
+        [Header("Q技能未充能图标")]
+        public Sprite qBurstLockedIcon; // Q技能未充能或不可释放时显示的图标
+
+        [Header("Q技能可释放图标列表")]
+        public Sprite[] qBurstReadyIcons; // Q技能可释放时的图标列表，按角色技能阶段顺序配置
+
         #endregion
+
+
 
         #region 动画相关
         [Header("=== 动画配置 ===")]

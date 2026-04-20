@@ -84,6 +84,9 @@ namespace WutheringWaves
             {
                 VirtualCamera.Follow = cameraPivot;
                 VirtualCamera.LookAt = cameraPivot;
+
+                // 初始化绑定时强制刷新相机，避免镜头从旧位置缓慢追到角色身上
+                VirtualCamera.PreviousStateIsValid = false;
             }
 
             // 3.如果副虚拟相机也需要跟随当前角色，也同步绑定
@@ -91,6 +94,9 @@ namespace WutheringWaves
             {
                 virtualCamera2.Follow = cameraPivot;
                 virtualCamera2.LookAt = cameraPivot;
+
+                // 初始化绑定时强制刷新相机，避免副相机沿用旧位置
+                virtualCamera2.PreviousStateIsValid = false;
             }
         }
 
