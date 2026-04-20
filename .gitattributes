@@ -1,18 +1,20 @@
-# ==============================================================================
-# Unity 项目 Git LFS 标准配置（只管大二进制文件，文本文件Git原生管理）
-# ==============================================================================
+# Unity Git LFS rules
+# Track large binary/generated assets with Git LFS.
+# Keep scripts, scenes, prefabs, materials, ScriptableObjects, and meta files as normal Git text unless listed here.
 
-# ====================== 3D 模型 / 外部源文件 (二进制大文件) ======================
+# 3D models / source files
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
 *.3ds filter=lfs diff=lfs merge=lfs -text
 *.blend filter=lfs diff=lfs merge=lfs -text
 *.max filter=lfs diff=lfs merge=lfs -text
+*.ma filter=lfs diff=lfs merge=lfs -text
+*.mb filter=lfs diff=lfs merge=lfs -text
 *.maya filter=lfs diff=lfs merge=lfs -text
 *.gltf filter=lfs diff=lfs merge=lfs -text
 *.glb filter=lfs diff=lfs merge=lfs -text
 
-# ====================== 纹理 / 贴图 (二进制大文件) ======================
+# Textures / images
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
@@ -20,6 +22,7 @@
 *.bmp filter=lfs diff=lfs merge=lfs -text
 *.gif filter=lfs diff=lfs merge=lfs -text
 *.psd filter=lfs diff=lfs merge=lfs -text
+*.psb filter=lfs diff=lfs merge=lfs -text
 *.ai filter=lfs diff=lfs merge=lfs -text
 *.eps filter=lfs diff=lfs merge=lfs -text
 *.exr filter=lfs diff=lfs merge=lfs -text
@@ -28,12 +31,14 @@
 *.astc filter=lfs diff=lfs merge=lfs -text
 *.basis filter=lfs diff=lfs merge=lfs -text
 *.tif filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
 
-# ====================== 音频 / 视频 (二进制大文件) ======================
+# Audio / video
 *.mp3 filter=lfs diff=lfs merge=lfs -text
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.ogg filter=lfs diff=lfs merge=lfs -text
 *.aiff filter=lfs diff=lfs merge=lfs -text
+*.aif filter=lfs diff=lfs merge=lfs -text
 *.flac filter=lfs diff=lfs merge=lfs -text
 *.m4a filter=lfs diff=lfs merge=lfs -text
 *.wma filter=lfs diff=lfs merge=lfs -text
@@ -43,15 +48,26 @@
 *.webm filter=lfs diff=lfs merge=lfs -text
 *.ogv filter=lfs diff=lfs merge=lfs -text
 
-# ====================== 地形 / 资源包 (二进制大文件) ======================
+# Fonts
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.otf filter=lfs diff=lfs merge=lfs -text
+*.ttc filter=lfs diff=lfs merge=lfs -text
+*.woff filter=lfs diff=lfs merge=lfs -text
+*.woff2 filter=lfs diff=lfs merge=lfs -text
+*.fontsettings filter=lfs diff=lfs merge=lfs -text
+
+# TextMesh Pro generated font assets can exceed Git host file limits.
+# This intentionally targets generated SDF font assets without tracking every .asset file.
+*SDF.asset filter=lfs diff=lfs merge=lfs -text
+
+# Terrain / build / packaged assets
 *.terrain filter=lfs diff=lfs merge=lfs -text
 *.terrainlayer filter=lfs diff=lfs merge=lfs -text
 *.unitypackage filter=lfs diff=lfs merge=lfs -text
 *.bundle filter=lfs diff=lfs merge=lfs -text
+*.bytes filter=lfs diff=lfs merge=lfs -text
 
-# ====================== 字体 / 文档 / 压缩包 (二进制大文件) ======================
-*.ttf filter=lfs diff=lfs merge=lfs -text
-*.otf filter=lfs diff=lfs merge=lfs -text
+# Documents / archives
 *.pdf filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.7z filter=lfs diff=lfs merge=lfs -text
