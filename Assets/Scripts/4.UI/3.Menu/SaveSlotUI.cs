@@ -14,6 +14,8 @@ namespace WutheringWaves
 
         [Header("新建存档")]
         [SerializeField] private Button createButton; // 新建存档按钮
+        [Header("主动存档")]
+        [SerializeField] private Button saveButton; // 主动存档按钮
         [Header("读取存档")]
         [SerializeField] private Button loadButton; // 读取存档按钮
         [Header("删除存档")]
@@ -21,6 +23,7 @@ namespace WutheringWaves
 
         private int slotIndex; // 当前槽位索引
         private Action<int> onCreateRequested; // 新建存档请求
+        private Action<int> onSaveRequested; // 主动存档请求
         private Action<int> onLoadRequested; // 读取存档请求
         private Action<int> onDeleteRequested; // 删除存档请求
 
@@ -49,11 +52,13 @@ namespace WutheringWaves
         public void Initialize(
             int slotIndex,
             Action<int> createRequested,
+             Action<int> saveRequested,
             Action<int> loadRequested,
             Action<int> deleteRequested)
         {
             this.slotIndex = slotIndex;
             onCreateRequested = createRequested;
+            onSaveRequested = saveRequested;
             onLoadRequested = loadRequested;
             onDeleteRequested = deleteRequested;
 
@@ -73,6 +78,11 @@ namespace WutheringWaves
             {
                 createButton.onClick.AddListener(HandleCreateClicked);
             }
+            if (saveButton != null)
+            {
+                saveButton.onClick.AddListener(HandleSaveClicked);
+            }
+
 
             if (loadButton != null)
             {
@@ -98,6 +108,11 @@ namespace WutheringWaves
             {
                 createButton.onClick.RemoveListener(HandleCreateClicked);
             }
+            if (saveButton != null)
+            {
+                saveButton.onClick.RemoveListener(HandleSaveClicked);
+            }
+
 
             if (loadButton != null)
             {
@@ -115,6 +130,10 @@ namespace WutheringWaves
         private void HandleCreateClicked()
         {
             onCreateRequested?.Invoke(slotIndex);
+        }
+        private void HandleSaveClicked()
+        {
+            onSaveRequested?.Invoke(slotIndex);
         }
 
         private void HandleLoadClicked()
@@ -137,7 +156,7 @@ namespace WutheringWaves
         #endregion
 
         // 刷新槽位显示：根据是否有存档决定显示哪些按钮
-        public void Refresh(bool hasSave)
+        public void Refresh(bool hasSave, bool canManualSave)
         {
             if (slotTitleText != null)
             {
@@ -149,10 +168,13 @@ namespace WutheringWaves
                 slotStateText.text = hasSave ? "已有存档" : "空存档槽";
             }
 
-            SetButtonVisible(createButton, !hasSave);
+            SetButtonVisible(createButton, !hasSave && !canManualSave);
+            SetButtonVisible(saveButton, canManualSave);
             SetButtonVisible(loadButton, hasSave);
             SetButtonVisible(deleteButton, hasSave);
         }
+
+
 
     }
 }

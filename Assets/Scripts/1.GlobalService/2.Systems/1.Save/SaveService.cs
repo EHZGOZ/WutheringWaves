@@ -229,6 +229,48 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 保存到指定槽位
+        // 保存到指定槽位：用于游戏中主动存档，可以覆盖已有存档，但不切换当前正在玩的槽位
+        public bool SaveToSlot(int slotIndex, SaveData data)
+        {
+            // 1.槽位非法时不保存
+            if (!IsValidSlotIndex(slotIndex))
+            {
+                Debug.Log($"[存档服务] 保存到指定槽位失败：槽位索引非法。slotIndex = {slotIndex}");
+                return false;
+            }
+
+            // 2.存档数据为空时不保存
+            if (data == null)
+            {
+                Debug.Log("[存档服务] 保存到指定槽位失败：存档数据为空。");
+                return false;
+            }
+
+            // 3.创建目标槽位仓储，只写目标槽，不改变当前正在使用的槽位
+            JsonSaveRepository targetRepository = CreateRepository(slotIndex);
+
+            // 4.保存到目标槽位，已有文件会被覆盖
+            bool ok = targetRepository.Save(data);
+
+            if (verboseLog)
+            {
+                if (ok)
+                {
+                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档成功。当前游玩槽位仍然是 {CurrentSlotIndex + 1}。");
+                }
+                else
+                {
+                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档失败。");
+                }
+            }
+
+            return ok;
+        }
+
+
+        #endregion
+
         #region 存档槽查询
         // 判断指定槽位是否已有存档
         public bool HasSave(int slotIndex)

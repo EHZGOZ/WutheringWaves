@@ -73,10 +73,6 @@ namespace WutheringWaves
             DontDestroyOnLoad(gameObject); // 场景切换时，不销毁该引导对象
             Bootstrap(); // 执行游戏初始化引导流程
         }
-        private void OnDestroy()
-        {
-            SaveCurrentGame();
-        }
         #endregion
 
         #region  执行游戏初始化引导流程
@@ -219,7 +215,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 新建存档 读取存档  删除存档  保存存档
+        #region 新建存档 读取存档  删除存档  保存存档 保存当前存档指定槽位
         // 新建游戏：由空存档槽位点击新建时调用
         public void StartNewGame(int slotIndex)
         {
@@ -334,6 +330,61 @@ namespace WutheringWaves
 
             return ok;
         }
+
+        // 保存当前游戏到指定槽位：用于存档菜单主动选择槽位保存，可以覆盖已有存档
+        public bool SaveCurrentGameToSlot(int slotIndex)
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.解析玩家控制器和运行时数据，保证存档前依赖是最新的
+            ResolvePlayer();
+
+            // 3.存档服务为空时无法保存
+            if (saveService == null)
+            {
+                Debug.LogError("[GameBootstrap] 保存游戏失败：SaveService为空。", this);
+                return false;
+            }
+
+            // 4.玩家运行时数据为空时无法收集场景数据
+            if (playerRuntimeData == null)
+            {
+                Debug.LogError("[GameBootstrap] 保存游戏失败：PlayerRuntimeData为空。", this);
+                return false;
+            }
+
+            // 5.当前没有进入游戏时，不允许主动存档
+            if (playerController == null || playerController.CurrentCharacterContext == null)
+            {
+                Debug.LogWarning("[GameBootstrap] 保存游戏失败：当前还没有可保存的玩家角色。", this);
+                return false;
+            }
+
+            // 6.创建一份新的存档数据，用来承接当前场景运行数据
+            SaveData saveData = SaveData.CreateDefault();
+
+            // 7.先从场景中收集最新运行时数据
+            playerRuntimeData.SyncRuntimeDataFromScene();
+
+            // 8.把运行时数据写入新的存档数据
+            playerRuntimeData.SyncSaveDataFromRuntimeData(saveData);
+
+            // 9.交给存档服务保存到指定槽位，已有存档会被覆盖
+            bool ok = saveService.SaveToSlot(slotIndex, saveData);
+
+            if (ok)
+            {
+                Debug.Log($"[GameBootstrap] 当前游戏已保存到槽位 {slotIndex + 1}。");
+            }
+            else
+            {
+                Debug.Log($"[GameBootstrap] 当前游戏保存到槽位 {slotIndex + 1} 失败。");
+            }
+
+            return ok;
+        }
+
 
         #endregion
 

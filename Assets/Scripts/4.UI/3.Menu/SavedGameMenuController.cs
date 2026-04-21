@@ -17,12 +17,15 @@ namespace WutheringWaves
         [SerializeField] private Button backButton; // 返回主菜单按钮
 
         private Action<int> onCreateSaveRequested; // 新建存档请求
+        private Action<int> onSaveRequested; // 主动存档请求
         private Action<int> onLoadSaveRequested; // 读取存档请求
         private Action<int> onDeleteSaveRequested; // 删除存档请求
         private Action onBackRequested; // 返回主菜单请求
 
         private bool initialized; // 是否已初始化
         private bool listenersBound; // 是否已绑定按钮事件
+        private bool canManualSave; // 当前存档菜单是否允许主动存档
+
 
         #region 生命周期
         private void OnEnable()
@@ -48,16 +51,19 @@ namespace WutheringWaves
         #region 初始化
         // 初始化存档菜单：由UIRoot传入各类请求回调
         public void Initialize(
-            Action<int> createSaveRequested,
-            Action<int> loadSaveRequested,
-            Action<int> deleteSaveRequested,
-            Action backRequested)
+        Action<int> createSaveRequested,
+        Action<int> loadSaveRequested,
+        Action<int> deleteSaveRequested,
+        Action<int> saveRequested,
+        Action backRequested)
         {
             // 1.缓存外部流程回调
             onCreateSaveRequested = createSaveRequested;
             onLoadSaveRequested = loadSaveRequested;
             onDeleteSaveRequested = deleteSaveRequested;
+            onSaveRequested = saveRequested;
             onBackRequested = backRequested;
+
 
             // 2.自动补齐槽位引用
             ResolveSlotUIs();
@@ -96,10 +102,12 @@ namespace WutheringWaves
                 }
 
                 slotUI.Initialize(
-                    i,
-                    HandleCreateSaveRequested,
-                    HandleLoadSaveRequested,
-                    HandleDeleteSaveRequested);
+                  i,
+                 HandleCreateSaveRequested,
+                HandleLoadSaveRequested,
+                HandleDeleteSaveRequested,
+                HandleSaveRequested);
+
             }
         }
         private void BindListeners()
@@ -136,6 +144,10 @@ namespace WutheringWaves
         {
             onCreateSaveRequested?.Invoke(slotIndex);
         }
+        private void HandleSaveRequested(int slotIndex)
+        {
+            onSaveRequested?.Invoke(slotIndex);
+        }
 
         private void HandleLoadSaveRequested(int slotIndex)
         {
@@ -169,6 +181,14 @@ namespace WutheringWaves
             }
         }
 
+        // 设置是否允许主动存档：主菜单选档时为false，游戏中存档时为true
+        public void SetCanManualSave(bool canManualSave)
+        {
+            this.canManualSave = canManualSave;
+            RefreshSlots();
+        }
+
+
         // 刷新所有槽位显示
         public void RefreshSlots()
         {
@@ -185,7 +205,8 @@ namespace WutheringWaves
                 // 根据真实本地存档文件刷新槽位状态
                 bool hasSave = SaveService.Instance != null && SaveService.Instance.HasSave(i);
 
-                slotUI.Refresh(hasSave);
+                slotUI.Refresh(hasSave, canManualSave);
+
             }
         }
         #endregion
