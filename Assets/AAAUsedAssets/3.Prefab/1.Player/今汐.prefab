@@ -4932,7 +4932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8396027793862158915}
   m_Layer: 0
-  m_Name: Look Root
+  m_Name: "\u4ECA\u6C50Look Root"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -24,8 +24,8 @@ namespace WutheringWaves
         public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转
 
 
-        #region 初始化
-        public void Injected(PlayerController playerController)
+        #region 角色绑定
+        public void Bind(PlayerController playerController)
         {
             this.playerController = playerController;
             if (this.playerController == null)
@@ -76,8 +76,6 @@ namespace WutheringWaves
             playerEulerAngles = saveData.playerEulerAngles;
         }
         #endregion
-
-
 
         #region  从 场景数据 中获取 运行数据
         //  从 场景数据 中获取 运行数据

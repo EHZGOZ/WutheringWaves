@@ -26,10 +26,6 @@ namespace WutheringWaves
         [SerializeField] private UIRoot uiRoot; // 游戏ui总节点
 
         [Header("=== 玩家服务 (Inspector 注入) ===")]
-        [Header(" 玩家预制体")]
-        [SerializeField] private GameObject playerPrefab; // 玩家预制体
-        [Header(" 玩家父节点")]
-        [SerializeField] private Transform Target; // 玩家预制体
         [Header(" 玩家控制")]
         [SerializeField] private PlayerController playerController; // 玩家控制
         [Header(" 玩家数据")]
@@ -46,18 +42,16 @@ namespace WutheringWaves
         // 运行时缓存：通过角色名快速获取对应预制体
         private readonly Dictionary<CharacterName, GameObject> characterPrefabMap = new();
         private bool _bootstrapped; // 标记：是否已完成游戏初始化引导，防止重复执行
-        private GameObject _spawnedPlayer; // 存储生成后的玩家游戏对象
+
 
         #region 外部访问
         public SaveData CurrentSaveData => saveService != null ? saveService.CurrentData : null;  // 外部只读属性：获取当前存档数据（空值安全）
         public GameTimeService TimeService => gameTimeService;  // 外部只读属性：获取时间服务（供其他系统统一使用）
         public PlayerController PlayerController => playerController;  // 外部只读属性：获取生成后的玩家对象
-        public GameObject SpawnedPlayer => _spawnedPlayer;  // 外部只读属性：获取生成后的玩家对象
         public PlayerRuntimeData PlayerRuntimeData => playerRuntimeData;  // 外部只读属性：获取生成后的玩家对象
         public Dictionary<CharacterName, GameObject> CharacterPrefabMap => characterPrefabMap;  // 外部只读属性：获取角色字典
 
         #endregion
-
 
         #region 生命周期
         private void Awake()
@@ -71,12 +65,18 @@ namespace WutheringWaves
 
             Instance = this; // 赋值单例实例
             DontDestroyOnLoad(gameObject); // 场景切换时，不销毁该引导对象
-            Bootstrap(); // 执行游戏初始化引导流程
+        }
+
+        private void Start()
+        {
+            // 等其他全局服务完成Awake后，再统一执行初始化流程
+            Bootstrap();
         }
         #endregion
 
-        #region  执行游戏初始化引导流程
-        // 游戏核心引导方法：统一调度所有初始化逻辑
+
+        #region  游戏必要核心启动
+        // 游戏必要核心启动
         public void Bootstrap()
         {
             // 1.已完成初始化，直接返回，避免重复执行
@@ -99,11 +99,6 @@ namespace WutheringWaves
 
             // 5.标记初始化完成 开启详细日志 → 输出引导完成提示
             _bootstrapped = true;
-            if (verboseLog)
-            {
-                Debug.Log("[GameBootstrap] 初始化引导流程已完成。");
-            }
-
         }
 
         #region 验证Inspector面板的所有引用是否赋值完整
@@ -135,9 +130,27 @@ namespace WutheringWaves
                 Debug.LogError("[GameBootstrap] 缺少游戏时间服务(GameTimeService)引用。", this);
                 ok = false;
             }
-
+            if (uiRoot == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少游戏UI根节点(UIRoot)引用。", this);
+                ok = false;
+            }
+            if (playerController == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少玩家节点(playerController)引用。", this);
+                ok = false;
+            }
+            if (playerRuntimeData == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少运行数据节点(playerRuntimeData)引用。", this);
+                ok = false;
+            }
             return ok; // 返回最终验证结果
         }
+
+        #endregion
+
+        #region 初始化所有全局游戏服务
         // 初始化所有全局游戏服务（空值安全调用）
         private void InitializeServices()
         {
@@ -145,6 +158,7 @@ namespace WutheringWaves
             saveService?.Initialize();
             audioService?.Initialize();
             effectService?.Initialize();
+            uiRoot?.Initialize();
         }
         #endregion
 
@@ -195,27 +209,60 @@ namespace WutheringWaves
             // 3.解析玩家控制器和运行时数据，并互相注入
             ResolvePlayer();
 
-            // 4.玩家控制器或玩家运行时数据为空时，无法进入游戏
-            if (playerController == null || playerRuntimeData == null)
-            {
-                Debug.LogError("[GameBootstrap] 进入游戏失败：缺少PlayerController或PlayerRuntimeData。", this);
-                return;
-            }
-
-            // 5.记录当前常驻玩家对象，避免旧逻辑认为玩家不存在
-            _spawnedPlayer = playerController.gameObject;
-
-            // 6.把存档数据写入PlayerRuntimeData
+            // 4.把存档数据写入PlayerRuntimeData
             playerRuntimeData.SyncRuntimeDataFromSaveData(saveData);
 
-            // 7.初始化玩家控制器，生成队伍角色并绑定当前角色
+            // 5.初始化玩家控制器，生成队伍角色并绑定当前角色
             playerController.Initialize();
 
+            // 6.进入游戏后绑定UI并显示玩法界面
+            uiRoot?.ShowGameplayUI();
+
+            if (verboseLog)
             Debug.Log("[GameBootstrap] 已根据存档数据进入游戏。");
         }
         #endregion
 
-        #region 新建存档 读取存档  删除存档  保存存档 保存当前存档指定槽位
+        #region 数据注入
+        // 数据注入
+        private void ResolvePlayer()
+        {
+            // 1.优先使用PlayerController单例，保证拿到的是常驻玩家根节点
+            if (playerController == null)
+            {
+                playerController = PlayerController.Instance;
+            }
+
+            // 2.兜底：如果单例还没建立，就从场景中查找
+            if (playerController == null)
+            {
+                playerController = FindObjectOfType<PlayerController>();
+            }
+
+            // 3.优先从PlayerController身上获取PlayerRuntimeData
+            if (playerRuntimeData == null && playerController != null)
+            {
+                playerRuntimeData = playerController.PlayerRuntimeData;
+            }
+
+            // 4.兜底：如果PlayerController里还没绑定，就从场景中查找
+            if (playerRuntimeData == null)
+            {
+                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
+            }
+
+            // 5.互相注入，保证两边引用一致
+            if (playerRuntimeData != null && playerController != null)
+            {
+                playerRuntimeData.Bind(playerController);
+                playerController.Bind(playerRuntimeData);
+            }
+        }
+
+
+        #endregion
+
+        #region 新建存档  保存存档 保存至指定槽位 读取存档  删除存档 
         // 新建游戏：由空存档槽位点击新建时调用
         public void StartNewGame(int slotIndex)
         {
@@ -232,53 +279,6 @@ namespace WutheringWaves
 
             // 3.根据新建出来的存档进入游戏
             EnterGameWithSaveData(saveData);
-        }
-
-        // 读取游戏：由已有存档槽位点击读取时调用
-        public void LoadGame(int slotIndex)
-        {
-            // 1.基础引导未完成时先补齐
-            Bootstrap();
-
-            // 2.通过存档服务读取指定槽位存档
-            SaveData saveData = saveService != null ? saveService.LoadSave(slotIndex) : null;
-            if (saveData == null)
-            {
-                Debug.LogError($"[GameBootstrap] 读取游戏失败：槽位 {slotIndex + 1} 存档数据为空。", this);
-                return;
-            }
-
-            // 3.根据读取出来的存档进入游戏
-            EnterGameWithSaveData(saveData);
-        }
-
-        // 删除游戏存档：由存档菜单点击删除时调用
-        public bool DeleteGameSave(int slotIndex)
-        {
-            // 1.基础引导未完成时先补齐
-            Bootstrap();
-
-            // 2.存档服务为空时无法删除
-            if (saveService == null)
-            {
-                Debug.LogError("[GameBootstrap] 删除存档失败：SaveService为空。", this);
-                return false;
-            }
-
-            // 3.交给存档服务删除指定槽位
-            bool ok = saveService.DeleteSave(slotIndex);
-
-            // 4.输出流程日志
-            if (ok)
-            {
-                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除成功。");
-            }
-            else
-            {
-                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除失败。");
-            }
-
-            return ok;
         }
 
         // 保存当前游戏：由游戏内保存、返回主菜单或退出游戏前调用
@@ -385,49 +385,56 @@ namespace WutheringWaves
             return ok;
         }
 
-
-        #endregion
-
-        #region 数据注入
-        // 数据注入
-        private void ResolvePlayer()
+        // 读取游戏：由已有存档槽位点击读取时调用
+        public void LoadGame(int slotIndex)
         {
-            // 1.优先使用PlayerController单例，保证拿到的是常驻玩家根节点
-            if (playerController == null)
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.通过存档服务读取指定槽位存档
+            SaveData saveData = saveService != null ? saveService.LoadSave(slotIndex) : null;
+            if (saveData == null)
             {
-                playerController = PlayerController.Instance;
+                Debug.LogError($"[GameBootstrap] 读取游戏失败：槽位 {slotIndex + 1} 存档数据为空。", this);
+                return;
             }
 
-            // 2.兜底：如果单例还没建立，就从场景中查找
-            if (playerController == null)
-            {
-                playerController = FindObjectOfType<PlayerController>();
-            }
-
-            // 3.优先从PlayerController身上获取PlayerRuntimeData
-            if (playerRuntimeData == null && playerController != null)
-            {
-                playerRuntimeData = playerController.PlayerRuntimeData;
-            }
-
-            // 4.兜底：如果PlayerController里还没绑定，就从场景中查找
-            if (playerRuntimeData == null)
-            {
-                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
-            }
-
-            // 5.互相注入，保证两边引用一致
-            if (playerRuntimeData != null && playerController != null)
-            {
-                playerRuntimeData.Injected(playerController);
-                playerController.Injected(playerRuntimeData);
-            }
+            // 3.根据读取出来的存档进入游戏
+            EnterGameWithSaveData(saveData);
         }
 
+        // 删除游戏存档：由存档菜单点击删除时调用
+        public bool DeleteGameSave(int slotIndex)
+        {
+            // 1.基础引导未完成时先补齐
+            Bootstrap();
+
+            // 2.存档服务为空时无法删除
+            if (saveService == null)
+            {
+                Debug.LogError("[GameBootstrap] 删除存档失败：SaveService为空。", this);
+                return false;
+            }
+
+            // 3.交给存档服务删除指定槽位
+            bool ok = saveService.DeleteSave(slotIndex);
+
+            // 4.输出流程日志
+            if (ok)
+            {
+                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除成功。");
+            }
+            else
+            {
+                Debug.Log($"[GameBootstrap] 槽位 {slotIndex + 1} 存档删除失败。");
+            }
+
+            return ok;
+        }
 
         #endregion
 
-        #region 角色生成
+        #region 角色生成（外部调用）
 
         // 根据角色名称生成角色
         public GameObject SpawnCharacter(CharacterName characterName, Vector3 position, Quaternion rotation, Transform parent = null)

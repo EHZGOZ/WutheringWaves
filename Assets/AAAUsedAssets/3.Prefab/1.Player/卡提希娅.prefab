@@ -1601,7 +1601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5373334628332721591}
   m_Layer: 6
-  m_Name: Look Root
+  m_Name: "\u5361\u63D0\u5E0C\u5A05Look Root"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7744,8 +7744,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b275a99d75e40bb4b8342cf851e9fd4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useDecorationSword: 0
   DecorationSword: {fileID: 0}
   decorationSwordFadeSpeed: 1
+  useDragonHorn: 0
   DragonHorn: {fileID: 0}
   dragonHornFadeSpeed: 1
 --- !u!114 &7523068889197416398

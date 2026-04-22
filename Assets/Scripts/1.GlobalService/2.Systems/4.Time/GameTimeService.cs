@@ -12,29 +12,49 @@ namespace WutheringWaves
         private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏
         public bool IsPaused => Time.timeScale <= 0f; // 判断游戏是否暂停（时间缩放小于等于0即为暂停）
         public float CurrentTimeScale => Time.timeScale; // 获取当前的时间缩放值
+        public bool IsInitialized { get; private set; } // 是否已初始化
 
-
-        // 初始化时间服务，设置默认参数
-        public void Initialize()
+        #region 生命周期
+        private void Awake()
         {
-            // 防止单例重复，若已存在实例则销毁当前对象
+            // 1.保持单例，避免多个GameTimeService争抢时间状态
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            // 赋值单例实例
+            // 2.缓存单例引用
             Instance = this;
 
-            // 确保默认时间缩放为有效值，不小于0.0001
-            defaultTimeScale = Mathf.Max(0.0001f, defaultTimeScale);
-            // 初始化恢复时间缩放为默认值
-            _resumeTimeScale = defaultTimeScale;
-            // 设置初始时间缩放
-            SetTimeScale(defaultTimeScale);
- 
+            // 3.时间服务跨场景保留
+            DontDestroyOnLoad(gameObject);
         }
+        #endregion
+
+        #region 初始化
+        // 初始化时间服务，设置默认参数
+        public void Initialize()
+        {
+            // 1.已经初始化过时直接返回，避免重复重置时间状态
+            if (IsInitialized)
+            {
+                return;
+            }
+
+            // 2.确保默认时间缩放为有效值，不小于0.0001
+            defaultTimeScale = Mathf.Max(0.0001f, defaultTimeScale);
+
+            // 3.初始化恢复时间缩放为默认值
+            _resumeTimeScale = defaultTimeScale;
+
+            // 4.设置初始时间缩放
+            SetTimeScale(defaultTimeScale);
+
+            // 5.标记初始化完成
+            IsInitialized = true;
+        }
+        #endregion
 
         // 暂停游戏，将时间缩放设为0
         public void Pause()

@@ -47,6 +47,11 @@ namespace WutheringWaves
         // 输入读取器初始化：获取输入组件，缓存动作映射，并重置输入状态
         public void Initialize()
         {
+            if(isInitialized)
+            {
+                return;
+            }
+
             //1.获取玩家输入组件
             ResolvePlayerInput();
 
@@ -203,7 +208,6 @@ namespace WutheringWaves
         #endregion
 
         #region 输入开关
-        // 禁用玩家输入：用于切角色、过场或UI接管输入
         // 禁用玩家输入：用于切角色、过场或UI接管输入
         public void DisablePlayerInput()
         {

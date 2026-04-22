@@ -2,7 +2,6 @@
 
 namespace WutheringWaves
 {
-    [DisallowMultipleComponent]
     // 玩家共享体力组件：挂在 Player 层，统一管理所有角色共用的体力运行时逻辑
     public class PlayerStamina : MonoBehaviour
     {
@@ -31,7 +30,7 @@ namespace WutheringWaves
         private bool initialized; // 组件是否已经初始化完成
         private bool isVisible; // 当前体力 UI 是否可见
 
-        #region 1. 对外只读属性
+        #region 对外只读属性
         public float MaxStamina => maxStamina;
         public float CurrentStamina => currentStamina;
         public float NormalizedStamina => maxStamina <= 0f ? 0f : currentStamina / maxStamina;
@@ -45,7 +44,6 @@ namespace WutheringWaves
         public bool IsInitialized => initialized;
         #endregion
 
-        #region 2. 生命周期
         private void Update()
         {
             // 未初始化时不执行共享体力逻辑。
@@ -57,9 +55,8 @@ namespace WutheringWaves
             UpdateRecovery();
             UpdateVisibility();
         }
-        #endregion
 
-        #region 3. 初始化
+        #region 初始化
         // 初始化玩家共享体力：首次进入时建立默认值，切角色时沿用玩家层共享体力配置
         public void Initialize()
         {
@@ -84,7 +81,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 4. 动作体力判定
+        #region  动作体力判定
         public bool CanRun()
         {
             return currentStamina > 0.01f;
@@ -101,7 +98,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 5. 动作体力消耗
+        #region 动作体力消耗
         public bool TryConsumeSprint()
         {
             return TryConsume(sprintCost);
@@ -169,15 +166,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 6. 外部工具方法
-        public void ForceRefreshEvents()
-        {
-            NotifyStaminaChanged();
-            SetVisible(isVisible, true);
-        }
-        #endregion
-
-        #region 7. 恢复逻辑
+        #region 恢复逻辑
         private void UpdateRecovery()
         {
             bool canRecover = currentStamina < maxStamina && (Time.time - lastStaminaCostTime) >= regenDelay;
@@ -198,7 +187,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 8. UI 可见性
+        #region UI 可见性
         private void UpdateVisibility()
         {
             if (currentStamina < maxStamina - 0.001f)
@@ -224,7 +213,12 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 9. 事件通知
+        #region 事件通知
+        public void ForceRefreshEvents()
+        {
+            NotifyStaminaChanged();
+            SetVisible(isVisible, true);
+        }
         private void NotifyStaminaChanged()
         {
             GameEvents.RaiseStaminaChanged(this, currentStamina, maxStamina, NormalizedStamina);

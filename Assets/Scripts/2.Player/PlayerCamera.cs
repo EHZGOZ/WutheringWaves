@@ -31,6 +31,7 @@ namespace WutheringWaves
         #endregion
 
         #region 私有字段
+        private bool isInitialized; // 是否已完成初始化
 
         private const float _threshold = 0.01f; // 输入阈值
         private float _cinemachineTargetYaw; // 水平旋转角
@@ -40,67 +41,79 @@ namespace WutheringWaves
         internal float _currentZoomDistance; // 当前缩放距离
         #endregion
 
-        #region 初始化
-        internal void Initialize()
-        {
-            //1.获取第三人称相机组件
-            if (VirtualCamera != null)
-            {
-                _thirdPersonFollow = VirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-            }
-
-            //2.初始化相机距离
-            if (_thirdPersonFollow != null)
-            {
-                _currentZoomDistance = DefaultZoomDistance;
-                _thirdPersonFollow.CameraDistance = _currentZoomDistance;
-            }
-
-            //3.初始化观察点旋转角度
-            if (cameraPivot == null)
-            {
-                Debug.LogWarning($"【{gameObject.name}】PlayerCamera 未绑定 cameraPivot，跳过相机朝向初始化。", this);
-                return;
-            }
-            _cinemachineTargetYaw = cameraPivot.rotation.eulerAngles.y;
-            _cinemachineTargetPitch = cameraPivot.rotation.eulerAngles.x;
-        }
-        #endregion
-
-        #region 观察点管理
+        #region 角色绑定
         // 绑定相机观察点：由外部控制器提供当前角色的统一观察锚点
-        internal void BindCameraPivot(Transform targetPivot)
+        public void BindCameraPivot(Transform targetPivot)
         {
             if (targetPivot == null)
             {
                 return;
             }
 
-            // 1.缓存当前角色观察点，用于玩家输入旋转
+            // 1.缓存当前角色观察点
             cameraPivot = targetPivot;
 
-            // 2.把主虚拟相机绑定到当前角色观察点
+            // 2.兜底获取第三人称相机组件，避免忘记调用Initialize
+            if (_thirdPersonFollow == null && VirtualCamera != null)
+            {
+                _thirdPersonFollow = VirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            }
+
+            // 3.绑定主虚拟相机
             if (VirtualCamera != null)
             {
                 VirtualCamera.Follow = cameraPivot;
                 VirtualCamera.LookAt = cameraPivot;
-
-                // 初始化绑定时强制刷新相机，避免镜头从旧位置缓慢追到角色身上
                 VirtualCamera.PreviousStateIsValid = false;
             }
 
-            // 3.如果副虚拟相机也需要跟随当前角色，也同步绑定
+            // 4.绑定副虚拟相机
             if (virtualCamera2 != null)
             {
                 virtualCamera2.Follow = cameraPivot;
                 virtualCamera2.LookAt = cameraPivot;
-
-                // 初始化绑定时强制刷新相机，避免副相机沿用旧位置
                 virtualCamera2.PreviousStateIsValid = false;
+            }
+
+            // 5.根据当前观察点刷新旋转角度
+            _cinemachineTargetYaw = cameraPivot.rotation.eulerAngles.y;
+            _cinemachineTargetPitch = cameraPivot.rotation.eulerAngles.x;
+
+            // 6.同步当前缩放距离，不强制重置玩家缩放习惯
+            if (_thirdPersonFollow != null)
+            {
+                _thirdPersonFollow.CameraDistance = _currentZoomDistance;
             }
         }
 
         #endregion
+
+        #region 初始化
+        public void Initialize()
+        {
+            if (isInitialized)
+            {
+                return;
+            }
+
+            // 1.获取第三人称相机组件
+            if (VirtualCamera != null)
+            {
+                _thirdPersonFollow = VirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            }
+
+            // 2.初始化默认缩放距离
+            _currentZoomDistance = Mathf.Clamp(DefaultZoomDistance, MinZoomDistance, MaxZoomDistance);
+
+            // 3.同步相机初始距离
+            if (_thirdPersonFollow != null)
+            {
+                _thirdPersonFollow.CameraDistance = _currentZoomDistance;
+            }
+            isInitialized = true;
+        }
+
+        #endregion  
 
         #region 更新第三人称镜头
         // 处理视角旋转：旋转观察点，由Cinemachine根据观察点生成最终镜头

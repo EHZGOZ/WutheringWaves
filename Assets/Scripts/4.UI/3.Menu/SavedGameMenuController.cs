@@ -52,16 +52,16 @@ namespace WutheringWaves
         // 初始化存档菜单：由UIRoot传入各类请求回调
         public void Initialize(
         Action<int> createSaveRequested,
-        Action<int> loadSaveRequested,
-        Action<int> deleteSaveRequested,
         Action<int> saveRequested,
+        Action<int> loadSaveRequested,
+        Action<int> deleteSaveRequested,  
         Action backRequested)
         {
             // 1.缓存外部流程回调
             onCreateSaveRequested = createSaveRequested;
-            onLoadSaveRequested = loadSaveRequested;
-            onDeleteSaveRequested = deleteSaveRequested;
             onSaveRequested = saveRequested;
+            onLoadSaveRequested = loadSaveRequested;
+            onDeleteSaveRequested = deleteSaveRequested;    
             onBackRequested = backRequested;
 
 
@@ -104,9 +104,10 @@ namespace WutheringWaves
                 slotUI.Initialize(
                   i,
                  HandleCreateSaveRequested,
-                HandleLoadSaveRequested,
-                HandleDeleteSaveRequested,
-                HandleSaveRequested);
+                 HandleSaveRequested,
+                 HandleLoadSaveRequested,
+                 HandleDeleteSaveRequested
+                );
 
             }
         }

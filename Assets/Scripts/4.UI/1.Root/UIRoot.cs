@@ -28,13 +28,11 @@ namespace WutheringWaves
         [Tooltip("当前玩家控制器")]
         [SerializeField] private PlayerController playerController;
         [Tooltip("当前绑定的角色上下文")]
-        [SerializeField] private CharacterContext context; 
+        [SerializeField] private CharacterContext context;
 
+        private bool IsInitialized;
         public CharacterContext Context => context; // 当前角色上下文
-        private bool isGameplayStarted; // 是否已经进入玩法
         private bool isSettingsMenuOpen; // 设置菜单是否打开
-
-
 
         #region 生命周期
         private void Awake()
@@ -49,18 +47,10 @@ namespace WutheringWaves
             // 2.缓存单例引用
             Instance = this;
 
-            // 3.如果UIRoot需要跨场景保留，就开启这一句
+            // 3.UIRoot作为全局UI根节点，切换场景时不销毁
             DontDestroyOnLoad(gameObject);
-
-            // 4.解析所有UI控制器
-            ResolveControllers();
-
-            // 5.初始化UI流程
-            InitializeUIFlow();
-
-            // 6.启动时显示主菜单
-            ShowMainMenu();
         }
+
         private void Update()
         {
             // 按下Esc时切换设置菜单
@@ -69,12 +59,66 @@ namespace WutheringWaves
                 ToggleSettingsMenu();
             }
         }
+        #endregion
 
+        #region 绑定玩家依赖
+        // 绑定玩家控制器：进入游戏或切换角色后，由PlayerController主动传入最新玩家引用
+        public void Bind(PlayerController controller)
+        {
+            // 1.空值检查
+            if (controller == null)
+            {
+                return;
+            }
 
+            // 2.缓存玩家控制器
+            playerController = controller;
+
+            // 3.绑定当前角色上下文
+            BindCharacterContext(controller.CurrentCharacterContext);
+        }
+
+        // 绑定当前角色上下文：作为HUD和小地图的统一角色入口
+        public void BindCharacterContext(CharacterContext context)
+        {
+            // 1.空值检查
+            if (context == null)
+            {
+                return;
+            }
+
+            // 2.缓存当前角色上下文
+            this.context = context;
+
+            // 3.把当前角色上下文同步给HUD和小地图
+            characterHUDController?.SetCharacterContext(this.context);
+            miniMapController?.Bind(this.context);
+
+        }
+        #endregion
+
+        #region 初始化
+        // 初始化UIRoot：解析子控制器，绑定页面流程，并显示初始主菜单
+        public void Initialize()
+        {
+            if (IsInitialized)
+            {
+                return;
+            }
+            // 1.解析所有UI控制器
+            ResolveControllers();
+
+            // 2.初始化UI流程
+            InitializeUIFlow();
+
+            // 3.启动时显示主菜单
+            ShowMainMenu();
+
+            IsInitialized = true;
+        }
         #endregion
 
         #region 解析所有UI控制器
-
         private void ResolveControllers()
         {
             // 1.主菜单控制器：优先Inspector，其次子节点，最后自动补组件
@@ -120,7 +164,7 @@ namespace WutheringWaves
             HandleCreateSaveRequested,
             HandleSaveRequested,
             HandleLoadSaveRequested,
-             HandleDeleteSaveRequested,
+            HandleDeleteSaveRequested,
             ShowMainMenu
             );
 
@@ -196,8 +240,6 @@ namespace WutheringWaves
             SetPauseAndCursor(true);
         }
 
-
-
         // 显示设置菜单：当前设置功能还没做，先保留页面切换入口
         public void ShowSettingsMenu()
         {
@@ -218,7 +260,6 @@ namespace WutheringWaves
             // 5.设置菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
         }
-
 
         // 显示玩法UI：新建存档或读档成功、真正进入游戏后调用
         public void ShowGameplayUI()
@@ -268,11 +309,11 @@ namespace WutheringWaves
 
         #endregion
 
-        #region 存档菜单请求
+        #region 新建 读取 储存 删除 存档 
         //新建
         private void HandleCreateSaveRequested(int slotIndex)
         {
-            Debug.Log($"[UIRoot] 请求新建存档：槽位 {slotIndex + 1}");
+            //Debug.Log($"[UIRoot] 请求新建存档：槽位 {slotIndex + 1}");
 
             // 1.GameBootstrap缺失时不进入游戏
             if (GameBootstrap.Instance == null)
@@ -287,7 +328,7 @@ namespace WutheringWaves
         //读取
         private void HandleLoadSaveRequested(int slotIndex)
         {
-            Debug.Log($"[UIRoot] 请求读取存档：槽位 {slotIndex + 1}");
+            //Debug.Log($"[UIRoot] 请求读取存档：槽位 {slotIndex + 1}");
 
             // 1.GameBootstrap缺失时不进入游戏
             if (GameBootstrap.Instance == null)
@@ -299,10 +340,10 @@ namespace WutheringWaves
             // 2.交给GameBootstrap处理读档和进入游戏流程
             GameBootstrap.Instance.LoadGame(slotIndex);
         }
-        //主动存档
+        //存档
         private void HandleSaveRequested(int slotIndex)
         {
-            Debug.Log($"[UIRoot] 请求主动存档：槽位 {slotIndex + 1}");
+            //Debug.Log($"[UIRoot] 请求主动存档：槽位 {slotIndex + 1}");
 
             // 1.GameBootstrap缺失时不保存
             if (GameBootstrap.Instance == null)
@@ -321,12 +362,10 @@ namespace WutheringWaves
                 Debug.Log($"[UIRoot] 主动存档完成，已留在存档菜单。槽位：{slotIndex + 1}");
             }
         }
-
-
         //删除
         private void HandleDeleteSaveRequested(int slotIndex)
         {
-            Debug.Log($"[UIRoot] 请求删除存档：槽位 {slotIndex + 1}");
+            //Debug.Log($"[UIRoot] 请求删除存档：槽位 {slotIndex + 1}");
 
             // 1.GameBootstrap缺失时不删除
             if (GameBootstrap.Instance == null)
@@ -343,40 +382,6 @@ namespace WutheringWaves
         }
 
         #endregion
-
-        public void RefreshUIRoot(PlayerController controller)
-        {
-            // 1.注入玩家控制器
-            InjectPlayerController(controller);
-
-            // 2.进入游戏后显示玩法UI
-            ShowGameplayUI();
-        }
-
-        // 注入玩家控制器：由PlayerController在角色绑定完成后主动回写
-        public void InjectPlayerController(PlayerController controller)
-        {
-            if (controller == null)
-            {
-                return;
-            }
-
-            playerController = controller;
-            InjectCharacterContext(controller.CurrentCharacterContext);
-        }
-        // 注入当前角色上下文：作为UI层统一的角色入口
-        public void InjectCharacterContext(CharacterContext context)
-        {
-            if (context == null)
-            {
-                return;
-            }
-
-            this.context = context;
-            characterHUDController?.SetCharacterContext(this.context);
-            miniMapController?.InjectDependencies(this.context);
-        }
-    
 
         #region 工具方法
         private void SetPauseAndCursor(bool pause)
@@ -412,8 +417,6 @@ namespace WutheringWaves
 #endif
         }
         #endregion
-
-
 
     }
 }

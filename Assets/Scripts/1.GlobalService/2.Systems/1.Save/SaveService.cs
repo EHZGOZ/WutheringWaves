@@ -23,32 +23,46 @@ namespace WutheringWaves
         private JsonSaveRepository _jsonRepository; // 当前槽位对应的JSON存档仓储对象
         public PlayerPrefsSettingsRepository SettingsRepository { get; private set; } // 轻量级设置仓储
 
-        #region 初始化
-        // 初始化
-        public void Initialize()
+        #region 生命周期
+        private void Awake()
         {
-            // 单例模式核心：如果已存在实例，销毁当前重复对象
+            // 1.保持单例，避免多个SaveService争抢存档状态
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            Instance = this; // 赋值单例实例
-            DontDestroyOnLoad(gameObject); // 场景切换时，不销毁该服务对象
+            // 2.缓存单例引用
+            Instance = this;
 
-            // 1.初始化轻量级设置仓储
+            // 3.存档服务跨场景保留
+            DontDestroyOnLoad(gameObject);
+        }
+        #endregion
+
+        #region 初始化
+        // 初始化存档服务
+        public void Initialize()
+        {
+            // 1.已经初始化过时直接返回，避免重复初始化清空当前存档状态
+            if (IsInitialized)
+            {
+                return;
+            }
+
+            // 2.初始化轻量级设置仓储
             SettingsRepository = new PlayerPrefsSettingsRepository();
 
-            // 2.清空当前存档状态，等待UI选择具体槽位
+            // 3.清空当前存档状态，等待UI选择具体槽位
             _jsonRepository = null;
             CurrentData = null;
             CurrentSlotIndex = -1;
 
-            // 3.标记初始化完成
+            // 4.标记初始化完成
             IsInitialized = true;
 
-            // 4.打印初始化日志
+            // 5.打印初始化日志
             if (verboseLog)
             {
                 Debug.Log("[存档服务] 初始化完成，等待选择存档槽位。");
@@ -56,7 +70,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 新建存档 读取存档 删除存档
+        #region 新建存档 保存存档  保存到指定槽位 读取存档 删除存档
         // 新建指定槽位存档：用于空槽位创建新游戏
         public SaveData CreateSave(int slotIndex)
         {
@@ -103,6 +117,84 @@ namespace WutheringWaves
             }
 
             return null;
+        }
+
+        // 保存当前正在使用的存档：用于游戏内主动保存、退出前兜底保存
+        public bool SaveCurrentSave()
+        {
+            // 1.当前没有存档数据时不保存
+            if (CurrentData == null)
+            {
+                Debug.Log("[存档服务] 保存当前存档失败：当前存档数据为空。");
+                return false;
+            }
+
+            // 2.当前槽位非法时不保存，避免写错存档槽
+            if (!IsValidSlotIndex(CurrentSlotIndex))
+            {
+                Debug.Log($"[存档服务] 保存当前存档失败：当前槽位非法。CurrentSlotIndex = {CurrentSlotIndex}");
+                return false;
+            }
+
+            // 3.兜底创建当前槽位仓储，避免读取流程异常导致仓储为空
+            if (_jsonRepository == null)
+            {
+                _jsonRepository = CreateRepository(CurrentSlotIndex);
+            }
+
+            // 4.保存当前内存中的存档数据
+            bool ok = _jsonRepository.Save(CurrentData);
+            if (verboseLog)
+            {
+                if (ok)
+                {
+                    Debug.Log($"[存档服务] 槽位 {CurrentSlotIndex + 1} 当前存档保存成功。");
+                }
+                else
+                {
+                    Debug.Log($"[存档服务] 槽位 {CurrentSlotIndex + 1} 当前存档保存失败。");
+                }
+            }
+
+            return ok;
+        }
+
+        // 保存到指定槽位：用于游戏中主动存档，可以覆盖已有存档，但不切换当前正在玩的槽位
+        public bool SaveToSlot(int slotIndex, SaveData data)
+        {
+            // 1.槽位非法时不保存
+            if (!IsValidSlotIndex(slotIndex))
+            {
+                Debug.Log($"[存档服务] 保存到指定槽位失败：槽位索引非法。slotIndex = {slotIndex}");
+                return false;
+            }
+
+            // 2.存档数据为空时不保存
+            if (data == null)
+            {
+                Debug.Log("[存档服务] 保存到指定槽位失败：存档数据为空。");
+                return false;
+            }
+
+            // 3.创建目标槽位仓储，只写目标槽，不改变当前正在使用的槽位
+            JsonSaveRepository targetRepository = CreateRepository(slotIndex);
+
+            // 4.保存到目标槽位，已有文件会被覆盖
+            bool ok = targetRepository.Save(data);
+
+            if (verboseLog)
+            {
+                if (ok)
+                {
+                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档成功。当前游玩槽位仍然是 {CurrentSlotIndex + 1}。");
+                }
+                else
+                {
+                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档失败。");
+                }
+            }
+
+            return ok;
         }
 
         // 读取指定槽位存档：用于已有存档进入游戏
@@ -185,90 +277,6 @@ namespace WutheringWaves
 
             return false;
         }
-        #endregion
-
-        #region 保存当前存档
-        // 保存当前正在使用的存档：用于游戏内主动保存、退出前兜底保存
-        public bool SaveCurrentSave()
-        {
-            // 1.当前没有存档数据时不保存
-            if (CurrentData == null)
-            {
-                Debug.Log("[存档服务] 保存当前存档失败：当前存档数据为空。");
-                return false;
-            }
-
-            // 2.当前槽位非法时不保存，避免写错存档槽
-            if (!IsValidSlotIndex(CurrentSlotIndex))
-            {
-                Debug.Log($"[存档服务] 保存当前存档失败：当前槽位非法。CurrentSlotIndex = {CurrentSlotIndex}");
-                return false;
-            }
-
-            // 3.兜底创建当前槽位仓储，避免读取流程异常导致仓储为空
-            if (_jsonRepository == null)
-            {
-                _jsonRepository = CreateRepository(CurrentSlotIndex);
-            }
-
-            // 4.保存当前内存中的存档数据
-            bool ok = _jsonRepository.Save(CurrentData);
-            if (verboseLog)
-            {
-                if (ok)
-                {
-                    Debug.Log($"[存档服务] 槽位 {CurrentSlotIndex + 1} 当前存档保存成功。");
-                }
-                else
-                {
-                    Debug.Log($"[存档服务] 槽位 {CurrentSlotIndex + 1} 当前存档保存失败。");
-                }
-            }
-
-            return ok;
-        }
-        #endregion
-
-        #region 保存到指定槽位
-        // 保存到指定槽位：用于游戏中主动存档，可以覆盖已有存档，但不切换当前正在玩的槽位
-        public bool SaveToSlot(int slotIndex, SaveData data)
-        {
-            // 1.槽位非法时不保存
-            if (!IsValidSlotIndex(slotIndex))
-            {
-                Debug.Log($"[存档服务] 保存到指定槽位失败：槽位索引非法。slotIndex = {slotIndex}");
-                return false;
-            }
-
-            // 2.存档数据为空时不保存
-            if (data == null)
-            {
-                Debug.Log("[存档服务] 保存到指定槽位失败：存档数据为空。");
-                return false;
-            }
-
-            // 3.创建目标槽位仓储，只写目标槽，不改变当前正在使用的槽位
-            JsonSaveRepository targetRepository = CreateRepository(slotIndex);
-
-            // 4.保存到目标槽位，已有文件会被覆盖
-            bool ok = targetRepository.Save(data);
-
-            if (verboseLog)
-            {
-                if (ok)
-                {
-                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档成功。当前游玩槽位仍然是 {CurrentSlotIndex + 1}。");
-                }
-                else
-                {
-                    Debug.Log($"[存档服务] 槽位 {slotIndex + 1} 主动存档失败。");
-                }
-            }
-
-            return ok;
-        }
-
-
         #endregion
 
         #region 存档槽查询
