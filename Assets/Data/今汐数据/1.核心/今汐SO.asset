@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: 0
   baseAttack: 10
-  maxHealth: 100
+  maxHealth: 10000
+  avatarIcon: {fileID: 0}
+  eSkillIcons: []
+  qBurstLockedIcon: {fileID: 0}
+  qBurstReadyIcons: []
   animationConfigSO: {fileID: 11400000, guid: 8016c7b2e228841469cb160d0e507179, type: 2}
   combatConfig: {fileID: 11400000, guid: ca6c8ddaaaa41d5418eb38909d976deb, type: 2}
   movementConfigSO: {fileID: 11400000, guid: 9b1a4ac4c97c4f2ead7a9bb7a5f9a0b1, type: 2}
   weaponConfigSO: {fileID: 11400000, guid: 31701b11094f46c3b579678f1e3d3af8, type: 2}
   effectActionConfigSO: {fileID: 11400000, guid: 5e2d9e6323ade2844ba3c152ae3645e9, type: 2}
-  maxStaminaData: 100
-  staminaCostInRun: 2
-  staminaRecovery: 20
-  staminaRecoveryDelay: 0.5
   moveStoppingDistance: 0.7
   moveStoppingTime: 1
   runStoppingDistance: 1

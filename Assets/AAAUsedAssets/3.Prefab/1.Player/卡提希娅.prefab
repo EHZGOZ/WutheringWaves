@@ -1616,7 +1616,7 @@ Transform:
   m_GameObject: {fileID: 1503510441713727175}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.0999999, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2124,8 +2124,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.05, y: 1.05, z: 1.05}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7814380034672521942}
   - {fileID: 7028829351769603850}
@@ -3250,10 +3250,10 @@ SkinnedMeshRenderer:
   - 0
   - 0
   - 0
-  - 100
   - 0
   - 0
-  - 0.0047683716
+  - 0
+  - 0
   - 0
   - 0
   - 0
@@ -7584,6 +7584,10 @@ MonoBehaviour:
   effectController: {fileID: 0}
   jinxiFeatureRoot: {fileID: 0}
   katixiyaFeatureRoot: {fileID: 0}
+  enableHealthTest: 0
+  testDamage: 100
+  enableHealthDrainTest: 0
+  healthDrainPerSecond: 10
 --- !u!114 &2834003447178871222
 MonoBehaviour:
   m_ObjectHideFlags: 0

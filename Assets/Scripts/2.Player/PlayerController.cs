@@ -194,20 +194,22 @@ namespace WutheringWaves
         //1.订阅输入层切人事件：由玩家输入统一驱动角色切换
         private void SubscribeInputEvents()
         {
-            //if (playerInputReader != null)
-            //{
-            //    playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-            //    playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
-            //}
+            if (playerInputReader != null)
+            {
+                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+                playerInputReader.OnSwitchCharacterRequested += HandleSwitchCharacterRequest;
+            }
         }
+
         // 解绑输入层切人事件：防止对象销毁后残留订阅
         private void UnsubscribeInputEvents()
         {
-            //if (playerInputReader != null)
-            //{
-            //    playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
-            //}
+            if (playerInputReader != null)
+            {
+                playerInputReader.OnSwitchCharacterRequested -= HandleSwitchCharacterRequest;
+            }
         }
+
         #endregion
 
         #endregion
@@ -508,11 +510,11 @@ namespace WutheringWaves
                 return;
             }
 
-            // 3.只激活当前受控角色，关闭其他队伍角色
-            SetOnlyCurrentCharacterActive(context);
-
-            // 4.根据绑定模式同步当前角色位置旋转
+            // 3.先把目标角色移动到正确位置，避免目标角色在旧位置被激活
             ApplyPlayerTransformToCharacter(context, bindMode);
+
+            // 4.再只激活当前受控角色，关闭其他队伍角色
+            SetOnlyCurrentCharacterActive(context);
 
             // 5.设置当前受控角色上下文，并同步输入、相机、UI
             SetCurrentCharacterContext(context);
@@ -685,6 +687,78 @@ namespace WutheringWaves
         #endregion
 
         #endregion
+
+        #region 切换角色
+        // 处理输入层发来的切人请求：targetSlot为1/2/3
+        private void HandleSwitchCharacterRequest(int targetSlot)
+        {
+            //1.把输入槽位转换成数组索引
+            int targetIndex = targetSlot - 1;
+
+            //2.检查是否可以切换到目标角色
+            if (!CanSwitchToCharacter(targetIndex))
+            {
+                return;
+            }
+
+            //3.记录切换前角色，方便事件通知
+            CharacterContext previousContext = _currentCharacterContext;
+            CharacterContext targetContext = teamCharacters[targetIndex];
+
+            //4.绑定目标角色
+            BindCurrentCharacter(targetContext);
+
+            //5.通知其他系统当前角色发生变化
+            GameEvents.RaiseCharacterSwitched(previousContext, _currentCharacterContext);
+        }
+
+        // 判断是否可以切换到指定角色
+        private bool CanSwitchToCharacter(int targetIndex)
+        {
+            //1.队伍为空时不能切换
+            if (teamCharacters == null || teamCharacters.Length == 0)
+            {
+                return false;
+            }
+
+            //2.索引非法时不能切换
+            if (targetIndex < 0 || targetIndex >= teamCharacters.Length)
+            {
+                return false;
+            }
+
+            CharacterContext targetContext = teamCharacters[targetIndex];
+
+            //3.目标角色为空时不能切换
+            if (targetContext == null)
+            {
+                return false;
+            }
+
+            //4.目标角色已经是当前角色时不重复切换
+            if (targetContext == _currentCharacterContext)
+            {
+                return false;
+            }
+
+            //5.目标角色死亡时先不允许切换
+            if (targetContext.CharacterRuntimeData != null && targetContext.CharacterRuntimeData.IsDead)
+            {
+                return false;
+            }
+
+            //6.当前角色处于不可打断状态时先不允许切换
+            if (_currentCharacterContext != null
+                && _currentCharacterContext.StateMachine != null
+                && !_currentCharacterContext.StateMachine.IsInterruptible())
+            {
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
 
     }
 }

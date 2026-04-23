@@ -91,31 +91,6 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 初始化
-        // 初始化小地图控制器：只初始化自身，不绑定具体角色
-        public void Initialize()
-        {
-            // 1.已经初始化过时直接返回，避免重复初始化
-            if (initialized)
-            {
-                return;
-            }
-
-            // 2.缓存小地图相机
-            CacheCamera();
-
-            // 3.应用小地图正交相机尺寸
-            ApplyMiniMapOrthographicSize();
-
-            // 4.初始化运行时状态
-            cameraVelocity = Vector3.zero;
-            initialized = true;
-
-            // 5.刷新当前显隐状态
-            SetVisible(isVisible);
-        }
-        #endregion
-
         #region 绑定角色
         // 绑定当前角色上下文：由UIRoot.BindCharacterContext调用
         public void Bind(CharacterContext context)
@@ -171,6 +146,33 @@ namespace WutheringWaves
         }
         #endregion
 
+
+        #region 初始化
+        // 初始化小地图控制器：只初始化自身，不绑定具体角色
+        public void Initialize()
+        {
+            // 1.已经初始化过时直接返回，避免重复初始化
+            if (initialized)
+            {
+                return;
+            }
+
+            // 2.缓存小地图相机
+            CacheCamera();
+
+            // 3.应用小地图正交相机尺寸
+            ApplyMiniMapOrthographicSize();
+
+            // 4.初始化运行时状态
+            cameraVelocity = Vector3.zero;
+            initialized = true;
+
+            // 5.刷新当前显隐状态
+            SetVisible(isVisible);
+        }
+        #endregion
+
+        
         #region 外部调用
         // 设置小地图显隐
         public void SetVisible(bool visible)

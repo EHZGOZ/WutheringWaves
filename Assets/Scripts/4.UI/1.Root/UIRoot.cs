@@ -91,7 +91,8 @@ namespace WutheringWaves
             this.context = context;
 
             // 3.把当前角色上下文同步给HUD和小地图
-            characterHUDController?.SetCharacterContext(this.context);
+            characterHUDController?.Bind(this.context);
+
             miniMapController?.Bind(this.context);
 
         }

@@ -23,19 +23,8 @@ namespace WutheringWaves
     {
         [Header("=== HUD根节点 ===")]
         [SerializeField] private GameObject hudPanel; // HUD根节点
-
-        #region 角色绑定相关
-        [Header("=== 角色绑定设置 ===")]
-        [Tooltip("手动绑定的角色上下文，优先级最高")]
+        [Header("角色上下文")]
         [SerializeField] private CharacterContext context; // 当前绑定的角色上下文
-
-        private UIRoot uiRoot; // UI根节点引用
-        private CharacterAttack attackLogic; // 当前角色攻击逻辑
-        private JinxiSpecialSkillLinker jinxiSpecialSkillLinker; // 今汐专属技能逻辑
-        private PlayerStamina playerStamina; // 玩家共享体力逻辑
-        private bool hasSubscribedAttackEvent; // 是否已经订阅技能刷新事件
-        private bool hasSubscribedStaminaEvent; // 是否已经订阅体力刷新事件
-        #endregion
 
         #region 技能UI引用
         [Header("=== 队伍头像UI ===")]
@@ -61,6 +50,13 @@ namespace WutheringWaves
         [SerializeField] private Image qKeyImage; // Q爆发键盘按键提示
         #endregion
 
+        #region 生命值槽UI引用
+        [Header("=== 生命值槽UI ===")]
+        [SerializeField] private Image healthSlotImage; // 生命值槽背景
+        [SerializeField] private Image healthFillImage; // 生命值填充
+        [SerializeField] private TextMeshProUGUI healthText; // 生命值文本
+        #endregion
+
         #region 体力槽UI引用
         [Header("=== 体力槽UI ===")]
         [SerializeField] private RectTransform staminaRoot; // 体力槽根节点
@@ -77,35 +73,108 @@ namespace WutheringWaves
         [SerializeField] [Min(0f)] private float staminaFadeSpeed = 8f; // 体力槽淡入淡出速度
         #endregion
 
-        #region 初始化
-        // 初始化角色HUD：由UIRoot传入自身引用
-        public void Initialize(UIRoot uiRoot)
+        private UIRoot uiRoot; // UI根节点引用
+        private CharacterAttack attackLogic; // 当前角色攻击逻辑
+        private JinxiSpecialSkillLinker jinxiSpecialSkillLinker; // 今汐专属技能逻辑
+        private PlayerStamina playerStamina; // 玩家共享体力逻辑
+        private bool hasSubscribedAttackEvent; // 是否已经订阅技能刷新事件
+        private bool hasSubscribedStaminaEvent; // 是否已经订阅体力刷新事件
+        private bool hasSubscribedHealthEvent; // 是否已经订阅生命值刷新事件
+
+        #region 生命周期
+        private void OnDestroy()
         {
-            this.uiRoot = uiRoot;
+            UnsubscribeHealthEvent();
         }
 
         #endregion
 
-        #region 外部入口
-        // 设置HUD显隐
-        public void SetVisible(bool visible)
+        #region 绑定角色
+        // 绑定当前角色上下文：切人、新建、读档后由UIRoot调用
+        public void Bind(CharacterContext injectedContext)
         {
-            if (hudPanel != null)
-            {
-                hudPanel.SetActive(visible);
-            }
-        }
-
-        // 设置当前角色上下文：切人或角色生成后由UIRoot调用
-        public void SetCharacterContext(CharacterContext injectedContext)
-        {
+            // 1.空值检查
             if (injectedContext == null)
             {
                 return;
             }
 
+            // 2.缓存当前角色上下文
             context = injectedContext;
+
+            // 3.刷新HUD静态显示
             RefreshHUD();
+
+            // 4.主动刷新当前角色生命值，避免刚绑定时UI还是旧角色血量
+            context.ForceRefreshHealth();
+        }
+
+        #endregion
+
+        #region 初始化
+        // 初始化角色HUD：只处理一次性依赖和事件订阅
+        public void Initialize(UIRoot uiRoot)
+        {
+            this.uiRoot = uiRoot;
+
+            // HUD初始化时订阅生命值变化事件
+            SubscribeHealthEvent();
+        }
+
+        #endregion
+
+        #region 事件订阅
+        // 订阅生命值变化事件
+        private void SubscribeHealthEvent()
+        {
+            if (hasSubscribedHealthEvent)
+            {
+                return;
+            }
+
+            GameEvents.OnHealthChanged += HandleHealthChanged;
+            hasSubscribedHealthEvent = true;
+        }
+
+        // 解绑生命值变化事件
+        private void UnsubscribeHealthEvent()
+        {
+            if (!hasSubscribedHealthEvent)
+            {
+                return;
+            }
+
+            GameEvents.OnHealthChanged -= HandleHealthChanged;
+            hasSubscribedHealthEvent = false;
+        }
+        #endregion
+
+        #region 生命值UI刷新
+        // 处理生命值变化事件
+        private void HandleHealthChanged(CharacterContext source, float current, float max, float normalized)
+        {
+            //1.只刷新当前HUD绑定的角色
+            if (source == null || source != context)
+            {
+                return;
+            }
+
+            //2.刷新生命值UI
+            RefreshHealthUI(current, max, normalized);
+        }
+
+        // 刷新生命值UI
+        private void RefreshHealthUI(float current, float max, float normalized)
+        {
+            if (healthFillImage != null)
+            {
+                healthFillImage.fillAmount = Mathf.Clamp01(normalized);
+            }
+
+            if (healthText != null)
+            {
+                healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+            }
         }
         #endregion
 
@@ -241,7 +310,34 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 根据角色数据更换角色技能图片
+        // 根据角色名称解析角色配置
+        private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
+        {
+            if (GameBootstrap.Instance == null)
+            {
+                return null;
+            }
+
+            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
+            {
+                return null;
+            }
+
+            CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
+            return prefabContext != null ? prefabContext.CharacterDataSO : null;
+        }
+        #endregion
+
         #region 工具方法
+        // 设置HUD显隐
+        public void SetVisible(bool visible)
+        {
+            if (hudPanel != null)
+            {
+                hudPanel.SetActive(visible);
+            }
+        }
         // 隐藏或显示所有头像槽位
         private void SetAllAvatarSlotsVisible(bool visible)
         {
@@ -281,22 +377,7 @@ namespace WutheringWaves
             }
         }
 
-        // 根据角色名称解析角色配置
-        private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
-        {
-            if (GameBootstrap.Instance == null)
-            {
-                return null;
-            }
 
-            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
-            {
-                return null;
-            }
-
-            CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
-            return prefabContext != null ? prefabContext.CharacterDataSO : null;
-        }
         #endregion
     }
 }

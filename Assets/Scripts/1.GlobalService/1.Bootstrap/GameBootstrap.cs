@@ -72,6 +72,17 @@ namespace WutheringWaves
             // 等其他全局服务完成Awake后，再统一执行初始化流程
             Bootstrap();
         }
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
+        private void OnApplicationQuit()
+        {
+            SaveCurrentGame();
+        }
         #endregion
 
 

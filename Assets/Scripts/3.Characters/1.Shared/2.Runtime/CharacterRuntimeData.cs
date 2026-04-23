@@ -13,6 +13,11 @@ namespace WutheringWaves
         [Header("当前生命值")]
         [SerializeField] public float currentHealth; // 当前生命值
 
+        public float NormalizedHealth => maxHealth <= 0f ? 0f : currentHealth / maxHealth; // 生命值百分比
+        public bool IsDead => currentHealth <= 0f; // 是否死亡
+
+
+        #region 初始化
         // 运行时数据初始化：从角色静态模板中读取初始生命值
         public void Initialize(CharacterDataSO characterDataSO)
         {
@@ -27,8 +32,14 @@ namespace WutheringWaves
             characterName = characterDataSO.characterName;
             currentHealth = characterDataSO.maxHealth;
             maxHealth = characterDataSO.maxHealth;
+
+            //3.生命值容错，保证初始化后的生命值始终处于合法范围
+            ClampHealth();
         }
 
+        #endregion
+
+        #region 数据相关
         // 将外部运行时数据复制到当前对象：读档时保留原对象引用，只回填字段
         public void CopyFrom(CharacterRuntimeData source)
         {
@@ -43,7 +54,10 @@ namespace WutheringWaves
             currentHealth = source.currentHealth;
             maxHealth = source.maxHealth;
 
+            //3.生命值容错：防止旧存档或异常存档中的生命值越界
+            ClampHealth();
         }
+
 
         // 克隆一份独立运行时数据：用于存档快照和调试镜像，避免共享引用
         public CharacterRuntimeData Clone()
@@ -55,6 +69,48 @@ namespace WutheringWaves
                 maxHealth = maxHealth,
             };
         }
+        #endregion
+
+        #region 生命值相关
+        // 受到伤害
+        public void TakeDamage(float damage)
+        {
+            // 1.无效伤害不处理
+            if (damage <= 0f || IsDead)
+            {
+                return;
+            }
+
+            // 2.扣除生命值，并限制范围
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0f, maxHealth);
+        }
+
+        // 恢复生命值
+        public void Heal(float amount)
+        {
+            // 1.无效治疗不处理
+            if (amount <= 0f || IsDead)
+            {
+                return;
+            }
+
+            // 2.恢复生命值，并限制范围
+            currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
+        }
+
+        // 设置当前生命值
+        public void SetHealth(float value)
+        {
+            currentHealth = Mathf.Clamp(value, 0f, maxHealth);
+        }
+
+        // 校准生命值：读档或配置变化后使用
+        public void ClampHealth()
+        {
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        }
+
+        #endregion
 
     }
 }

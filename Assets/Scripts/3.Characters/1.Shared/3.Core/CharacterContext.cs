@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
+
 
 namespace WutheringWaves
 {
@@ -128,12 +130,6 @@ namespace WutheringWaves
             if (runtimeData != null)
             {
                 this.runtimeData.CopyFrom(runtimeData);
-
-                // 兼容旧存档：旧数据只记录角色名时，生命值会是0，状态机会立刻判定死亡
-                if (this.runtimeData.maxHealth <= 0f)
-                {
-                    this.runtimeData.Initialize(characterDataSO);
-                }
             }
             else
             {
@@ -299,6 +295,107 @@ namespace WutheringWaves
         #endregion
 
         #endregion
+
+        #region 生命值控制
+        // 受到伤害：角色生命值统一入口
+        public void TakeDamage(float damage)
+        {
+            //1.空值检查
+            if (runtimeData == null)
+            {
+                return;
+            }
+
+            //2.记录扣血前是否存活，用于后面判断是否需要进入受击
+            bool wasAlive = !runtimeData.IsDead;
+
+            //3.由运行时数据处理扣血
+            runtimeData.TakeDamage(damage);
+
+            //4.通知外部刷新生命值表现
+            NotifyHealthChanged();
+
+            //5.仍然存活时，请求进入受击状态；死亡状态由状态机已有血量判断处理
+            if (wasAlive && !runtimeData.IsDead)
+            {
+                //stateMachine?.RequestHit();
+            }
+        }
+
+        // 恢复生命值：角色生命值统一入口
+        public void Heal(float amount)
+        {
+            //1.空值检查
+            if (runtimeData == null)
+            {
+                return;
+            }
+
+            //2.由运行时数据处理回血
+            runtimeData.Heal(amount);
+
+            //3.通知外部刷新生命值表现
+            NotifyHealthChanged();
+        }
+
+        // 强制刷新生命值：切换角色、初始化或UI重新绑定时使用
+        public void ForceRefreshHealth()
+        {
+            NotifyHealthChanged();
+        }
+
+        // 通知生命值发生变化
+        private void NotifyHealthChanged()
+        {
+            if (runtimeData == null)
+            {
+                return;
+            }
+
+            GameEvents.RaiseHealthChanged(this, runtimeData.currentHealth, runtimeData.maxHealth, runtimeData.NormalizedHealth);
+        }
+        #endregion
+
+        private void Update()
+        {
+            UpdateHealthTest();
+        }
+        #region 生命值测试
+        [Header("=== 生命值测试 ===")]
+        [SerializeField] private bool enableHealthTest = false; // 是否启用生命值测试
+        [SerializeField] private float testDamage = 100f; // 单次测试扣血
+        [SerializeField] private bool enableHealthDrainTest = false; // 是否启用持续掉血测试
+        [SerializeField] private float healthDrainPerSecond = 10f; // 每秒持续扣除生命值
+
+        // 更新生命值测试逻辑
+        private void UpdateHealthTest()
+        {
+            //1.未开启测试时不处理
+            if (!enableHealthTest)
+            {
+                return;
+            }
+
+            //2.按H扣除一次生命值
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                TakeDamage(testDamage);
+            }
+
+            //3.按J恢复一次生命值
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                Heal(testDamage);
+            }
+
+            //4.开启持续掉血时，每帧按时间扣血
+            if (enableHealthDrainTest)
+            {
+                TakeDamage(healthDrainPerSecond * Time.deltaTime);
+            }
+        }
+        #endregion
+
 
     }
 }

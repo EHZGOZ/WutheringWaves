@@ -14,6 +14,10 @@ namespace WutheringWaves
         // 角色状态变化事件：参数为状态机、旧状态、新状态
         public static event Action<CharacterStateMachine, CharacterState, CharacterState> OnCharacterStateChanged;
 
+        // 生命值变化事件：参数为角色上下文、当前值、最大值、归一化值
+        public static event Action<CharacterContext, float, float, float> OnHealthChanged;
+
+
         // 技能 UI 刷新事件：参数为当前角色攻击逻辑
         public static event Action<CharacterAttack> OnSkillUIStateChanged;
 
@@ -40,10 +44,16 @@ namespace WutheringWaves
 
         #region 角色通用相关
         // 派发角色状态变化事件
-        public static void RaiseCharacterStateChanged(CharacterStateMachine source, CharacterState oldState, CharacterState newState)
+        public static void RaiseCharacterStateChanged(CharacterStateMachine stateMachine, CharacterState oldState, CharacterState newState)
         {
-            OnCharacterStateChanged?.Invoke(source, oldState, newState);
+            OnCharacterStateChanged?.Invoke(stateMachine, oldState, newState);
         }
+        // 派发生命值变化事件
+        public static void RaiseHealthChanged(CharacterContext source, float current, float max, float normalized)
+        {
+            OnHealthChanged?.Invoke(source, current, max, normalized);
+        }
+
 
         // 派发技能 UI 刷新事件
         public static void RaiseSkillUIStateChanged(CharacterAttack source)

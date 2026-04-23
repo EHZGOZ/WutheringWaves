@@ -75,9 +75,9 @@ namespace WutheringWaves
                 virtualCamera2.PreviousStateIsValid = false;
             }
 
-            // 5.根据当前观察点刷新旋转角度
-            _cinemachineTargetYaw = cameraPivot.rotation.eulerAngles.y;
-            _cinemachineTargetPitch = cameraPivot.rotation.eulerAngles.x;
+            //// 5.根据当前观察点刷新旋转角度
+            //_cinemachineTargetYaw = cameraPivot.rotation.eulerAngles.y;
+            //_cinemachineTargetPitch = cameraPivot.rotation.eulerAngles.x;
 
             // 6.同步当前缩放距离，不强制重置玩家缩放习惯
             if (_thirdPersonFollow != null)
