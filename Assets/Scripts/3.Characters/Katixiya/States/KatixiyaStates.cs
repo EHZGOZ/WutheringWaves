@@ -1720,9 +1720,15 @@
         private void DashingEnterAnimation()
         {
             if (_dashDirection)
+            {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashForward), 0f, 0, 0);
+            }
+                
             else
+            {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashBackward), 0f, 0, 0);
+            }
+               
         }
         #endregion
 

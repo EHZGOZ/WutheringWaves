@@ -23795,6 +23795,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa864d0e406e344286c9e87f94b00bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableRootMotionDebug: 1
+  onlyLogWhenMoved: 1
 --- !u!1 &7360849714985933867
 GameObject:
   m_ObjectHideFlags: 0

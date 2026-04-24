@@ -20,4 +20,20 @@ MonoBehaviour:
     clip: {fileID: -623603649343465320, guid: 85d7535ceb9b080419b2c0b7b21c3eae, type: 3}
   - animationId: 2
     clip: {fileID: -623603649343465320, guid: 8c40b20560322b04d866b9f9977ca3fb, type: 3}
+  - animationId: 4
+    clip: {fileID: -623603649343465320, guid: 2dd74960ebc18074e9471b2e644e5a96, type: 3}
+  - animationId: 5
+    clip: {fileID: -623603649343465320, guid: f6ad25873d084334eb97fc5e95413bdb, type: 3}
+  - animationId: 6
+    clip: {fileID: -623603649343465320, guid: eff3f6ee118d3804e9c7e0f04fc4879d, type: 3}
+  - animationId: 7
+    clip: {fileID: -623603649343465320, guid: eff3f6ee118d3804e9c7e0f04fc4879d, type: 3}
+  - animationId: 7
+    clip: {fileID: -623603649343465320, guid: f663f15ea83e6ee428017dbb3b9b26e3, type: 3}
+  - animationId: 8
+    clip: {fileID: -623603649343465320, guid: f663f15ea83e6ee428017dbb3b9b26e3, type: 3}
+  - animationId: 9
+    clip: {fileID: -623603649343465320, guid: b7b6611563302a841b974cbf4b1796d7, type: 3}
+  - animationId: 10
+    clip: {fileID: -623603649343465320, guid: 1bb1f62391889134eb0a4a5ab54bcd1f, type: 3}
   combatAnimations: []

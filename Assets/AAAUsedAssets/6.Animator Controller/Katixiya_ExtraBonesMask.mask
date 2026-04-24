@@ -1,0 +1,545 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Katixiya_ExtraBonesMask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 0
+  - m_Path: Armature/Root
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair001_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_L/Bone_Hair012_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_L/Bone_Hair012_L/Bone_Hair013_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_R/Bone_Hair012_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair011_R/Bone_Hair012_R/Bone_Hair013_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair026_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair026_R/Bone_Hair027_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair026_R/Bone_Hair027_R/Bone_Hair028_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair031_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair031_R/Bone_Hair032_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair031_R/Bone_Hair032_R/Bone_Hair033_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair041_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair041_R/Bone_Hair042_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_R/Bone_Hair022_R/Bone_Hair023_R/Bone_Hair024_R/Bone_Hair025_R/Bone_Hair041_R/Bone_Hair042_R/Bone_Hair043_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M/Bone_Hair024_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M/Bone_Hair024_M/Bone_Hair025_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M/Bone_Hair024_M/Bone_Hair025_M/Bone_Hair026_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M/Bone_Hair024_M/Bone_Hair025_M/Bone_Hair026_M/Bone_Hair027_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair023_M/Bone_Hair024_M/Bone_Hair025_M/Bone_Hair026_M/Bone_Hair027_M/Bone_Hair028_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L/Bone_Hair052_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L/Bone_Hair052_L/Bone_Hair053_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L/Bone_Hair052_L/Bone_Hair053_L/Bone_Hair054_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L/Bone_Hair052_L/Bone_Hair053_L/Bone_Hair054_L/Bone_Hair055_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_L/Bone_Hair052_L/Bone_Hair053_L/Bone_Hair054_L/Bone_Hair055_L/Bone_Hair056_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R/Bone_Hair052_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R/Bone_Hair052_R/Bone_Hair053_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R/Bone_Hair052_R/Bone_Hair053_R/Bone_Hair054_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R/Bone_Hair052_R/Bone_Hair053_R/Bone_Hair054_R/Bone_Hair055_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_M/Bone_Hair022_M/Bone_Hair051_R/Bone_Hair052_R/Bone_Hair053_R/Bone_Hair054_R/Bone_Hair055_R/Bone_Hair056_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair026_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair026_L/Bone_Hair027_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair026_L/Bone_Hair027_L/Bone_Hair028_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair031_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair031_L/Bone_Hair032_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair031_L/Bone_Hair032_L/Bone_Hair033_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair041_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair041_L/Bone_Hair042_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair021_L/Bone_Hair022_L/Bone_Hair023_L/Bone_Hair024_L/Bone_Hair025_L/Bone_Hair041_L/Bone_Hair042_L/Bone_Hair043_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L/Bone_Piao002_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L/Bone_Piao002_L/Bone_Piao003_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L/Bone_Piao002_L/Bone_Piao013_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L/Bone_Piao002_L/Bone_Piao015_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_L/Bone_Piao011_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R/Bone_Piao002_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R/Bone_Piao002_R/Bone_Piao003_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R/Bone_Piao002_R/Bone_Piao013_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R/Bone_Piao002_R/Bone_Piao015_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Piao001_R/Bone_Piao011_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Other002_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair002_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair002_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair001_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair004_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair003_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair003_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair004_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair005_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair005_R/Bone_Hair006_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair005_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/Bone_Hair005_L/Bone_Hair006_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001Neck/Bip001Head/MarkCase
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger0
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger0/Bip001LFinger01
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger0/Bip001LFinger01/Bip001LFinger02
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger0/Bip001LFinger01/Bip001LFinger02/Bip001LFinger03
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger1/Bip001LFinger11
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger1/Bip001LFinger11/Bip001LFinger12
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger1/Bip001LFinger11/Bip001LFinger12/Bip001LFinger13
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger2/Bip001LFinger21
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger2/Bip001LFinger21/Bip001LFinger22
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger2/Bip001LFinger21/Bip001LFinger22/Bip001LFinger23
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger3
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger3/Bip001LFinger31
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger3/Bip001LFinger31/Bip001LFinger32
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger3/Bip001LFinger31/Bip001LFinger32/Bip001LFinger33
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger4
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger4/Bip001LFinger41
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger4/Bip001LFinger41/Bip001LFinger42
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/Bip001LFinger4/Bip001LFinger41/Bip001LFinger42/Bip001LFinger43
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LHand/WeaponProp01
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LForeTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LForeTwist/Bip001LForeTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001LForeTwist/Bip001LForeTwist1/Bip001LForeTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001_L_Elbow_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bip001_L_Elbow_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LForearm/Bone_Other001_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LUpArmTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LUpArmTwist/Bip001LUpArmTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bip001LUpArmTwist/Bip001LUpArmTwist1/Bip001LUpArmTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L/Bone_Piao033_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L/Bone_Piao033_L/Bone_Piao034_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L/Bone_Piao033_L/Bone_Piao034_L/Bone_Piao035_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L/Bone_Piao033_L/Bone_Piao034_L/Bone_Piao035_L/Bone_Piao036_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001LUpperArm/Bone_Piao031_L/Bone_Piao032_L/Bone_Piao033_L/Bone_Piao034_L/Bone_Piao035_L/Bone_Piao036_L/Bone_Piao037_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001_Shoulder_L_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001_Shoulder_L_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001LClavicle/Bip001_Shoulder_L_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger0
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger0/Bip001RFinger01
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger0/Bip001RFinger01/Bip001RFinger02
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger0/Bip001RFinger01/Bip001RFinger02/Bip001RFinger03
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger1/Bip001RFinger11
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger1/Bip001RFinger11/Bip001RFinger12
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger1/Bip001RFinger11/Bip001RFinger12/Bip001RFinger13
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger2/Bip001RFinger21
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger2/Bip001RFinger21/Bip001RFinger22
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger2/Bip001RFinger21/Bip001RFinger22/Bip001RFinger23
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger3
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger3/Bip001RFinger31
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger3/Bip001RFinger31/Bip001RFinger32
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger3/Bip001RFinger31/Bip001RFinger32/Bip001RFinger33
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger4
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger4/Bip001RFinger41
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger4/Bip001RFinger41/Bip001RFinger42
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/Bip001RFinger4/Bip001RFinger41/Bip001RFinger42/Bip001RFinger43
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RHand/WeaponProp02
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RForeTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RForeTwist/Bip001RForeTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001RForeTwist/Bip001RForeTwist1/Bip001RForeTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001_R_Elbow_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bip001_R_Elbow_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RForearm/Bone_Other001_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RUpArmTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RUpArmTwist/Bip001RUpArmTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bip001RUpArmTwist/Bip001RUpArmTwist1/Bip001RUpArmTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R/Bone_Piao033_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R/Bone_Piao033_R/Bone_Piao034_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R/Bone_Piao033_R/Bone_Piao034_R/Bone_Piao035_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R/Bone_Piao033_R/Bone_Piao034_R/Bone_Piao035_R/Bone_Piao036_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001RUpperArm/Bone_Piao031_R/Bone_Piao032_R/Bone_Piao033_R/Bone_Piao034_R/Bone_Piao035_R/Bone_Piao036_R/Bone_Piao037_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001_Shoulder_R_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001_Shoulder_R_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bip001RClavicle/Bip001_Shoulder_R_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Chest001_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Chest001_L/Bone_Chest002_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Chest001_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Chest001_R/Bone_Chest002_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R/Bone_Piao044_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R/Bone_Piao044_R/Bone_Piao045_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R/Bone_Piao046_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R/Bone_Piao046_R/Bone_Piao047_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_R/Bone_Piao042_R/Bone_Piao043_R/Bone_Piao046_R/Bone_Piao047_R/Bone_Piao048_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L/Bone_Piao044_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L/Bone_Piao044_L/Bone_Piao045_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L/Bone_Piao046_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L/Bone_Piao046_L/Bone_Piao047_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao041_L/Bone_Piao042_L/Bone_Piao043_L/Bone_Piao046_L/Bone_Piao047_L/Bone_Piao048_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L/Bone_Piao024_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L/Bone_Piao024_L/Bone_Piao025_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L/Bone_Piao024_L/Bone_Piao025_L/Bone_Piao026_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L/Bone_Piao024_L/Bone_Piao025_L/Bone_Piao026_L/Bone_Piao027_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_L/Bone_Piao022_L/Bone_Piao023_L/Bone_Piao024_L/Bone_Piao025_L/Bone_Piao026_L/Bone_Piao027_L/Bone_Piao028_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R/Bone_Piao024_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R/Bone_Piao024_R/Bone_Piao025_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R/Bone_Piao024_R/Bone_Piao025_R/Bone_Piao026_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R/Bone_Piao024_R/Bone_Piao025_R/Bone_Piao026_R/Bone_Piao027_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao021_R/Bone_Piao022_R/Bone_Piao023_R/Bone_Piao024_R/Bone_Piao025_R/Bone_Piao026_R/Bone_Piao027_R/Bone_Piao028_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao051_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/Bone_Piao051_M/Bone_Piao052_M
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/HitCase
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/Bip001Spine2/WingCase
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bip001Spine1/HuluProp01
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_L/Bone_Skirt002_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_L/Bone_Skirt002_L/Bone_Skirt003_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_L/Bone_Skirt002_L/Bone_Skirt003_L/Bone_Skirt004_L
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_R/Bone_Skirt002_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_R/Bone_Skirt002_R/Bone_Skirt003_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001Spine/Bone_Skirt001_R/Bone_Skirt002_R/Bone_Skirt003_R/Bone_Skirt004_R
+    m_Weight: 1
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001LFoot
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001LFoot/Bip001LToe0
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001_L_Knee_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001_L_Knee_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001_L_Calf
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bip001_L_Calf/Bip001_L_CalfTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LCalf/Bone_Other003_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LThighTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LThighTwist/Bip001LThighTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001LThigh/Bip001LThighTwist/Bip001LThighTwist1/Bip001LThighTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_L_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_L_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_L_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001RFoot
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001RFoot/Bip001RToe0
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001_R_Knee_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001_R_Knee_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001_R_Calf
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RCalf/Bip001_R_Calf/Bip001_R_CalfTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RThighTwist
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RThighTwist/Bip001RThighTwist1
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001RThigh/Bip001RThighTwist/Bip001RThighTwist1/Bip001RThighTwist2
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_R_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_R_F
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bip001_Leg_R_B
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/Bip001Pelvis/Bone_Other000_M
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/WeaponProp03
+    m_Weight: 0
+  - m_Path: Armature/Root/Bip001/WeaponProp03/WeaponProp04
+    m_Weight: 0
+  - m_Path: Armature/Root/WeaponProp05
+    m_Weight: 0
+  - m_Path: Armature/Root/WeaponProp06
+    m_Weight: 0
+  - m_Path: Armature/Root/WeaponProp07
+    m_Weight: 0
+  - m_Path: Armature/Root/CameraPosition
+    m_Weight: 0
+  - m_Path: Armature/Root/MiddleCase
+    m_Weight: 0
+  - m_Path: Armature/Root/LeftSuspensionCase
+    m_Weight: 0
+  - m_Path: Armature/Root/RightSuspensionCase
+    m_Weight: 0
+  - m_Path: R2T1KatixiyaMd10011_LOD0
+    m_Weight: 0

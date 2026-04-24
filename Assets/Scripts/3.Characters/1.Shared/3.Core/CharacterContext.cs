@@ -99,8 +99,6 @@ namespace WutheringWaves
             InitializeCharacterExclusiveModules();
             // 8.启动状态机
             InitializeStateMachine();
-
-
         }
 
         #region 验证核心组件
@@ -296,6 +294,11 @@ namespace WutheringWaves
 
         #endregion
 
+        private void Update()
+        {
+            UpdateHealthTest();
+        }
+
         #region 生命值控制
         // 受到伤害：角色生命值统一入口
         public void TakeDamage(float damage)
@@ -356,10 +359,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        private void Update()
-        {
-            UpdateHealthTest();
-        }
+        
         #region 生命值测试
         [Header("=== 生命值测试 ===")]
         [SerializeField] private bool enableHealthTest = false; // 是否启用生命值测试
