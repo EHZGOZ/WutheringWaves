@@ -361,10 +361,6 @@ namespace WutheringWaves
                 return null;
             }
 
-            //// 4.生成后先隐藏，等绑定当前角色时再激活
-            //context.gameObject.SetActive(false);
-
-            //return context;
             // 4.生成后先不隐藏，等绑定当前角色时由SetOnlyCurrentCharacterActive统一处理显隐
             return context;
 

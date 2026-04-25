@@ -105,6 +105,76 @@ namespace WutheringWaves
             return null;
         }
 
+        // 根据移动动画ID获取动画名称
+        public string GetLocomotionAnimationName(LocomotionAnimationId animationId)
+        {
+            //1.Idle / Move / Run 都由 Locomotion 混合树驱动
+            if (animationId == LocomotionAnimationId.Idle
+                || animationId == LocomotionAnimationId.Move
+                || animationId == LocomotionAnimationId.Run)
+            {
+                return "Locomotion";
+            }
+
+            //2.其他动作优先读取配置里的动画Clip名称
+            AnimationClip clip = GetLocomotionClip(animationId);
+            if (clip != null)
+            {
+                return clip.name;
+            }
+
+            //3.配置缺失时使用默认动画名称兜底
+            switch (animationId)
+            {
+                case LocomotionAnimationId.Stop_Run:
+                    return "Stop_Run";
+                case LocomotionAnimationId.Jump_Walk:
+                    return "Jump_Walk";
+                case LocomotionAnimationId.Jump_Run:
+                    return "Jump_Run";
+                case LocomotionAnimationId.Fall:
+                    return "Fall_Loop";
+                case LocomotionAnimationId.Land:
+                    return "Land";
+                case LocomotionAnimationId.DashForward:
+                    return "DashF";
+                case LocomotionAnimationId.DashBackward:
+                    return "DashB";
+                case LocomotionAnimationId.AirDashForward:
+                    return "Jump_Second_F";
+                case LocomotionAnimationId.AirDashBackward:
+                    return "Jump_Second_B";
+                case LocomotionAnimationId.FloatDashingForward:
+                    return "SkillMove_F";
+                case LocomotionAnimationId.FloatDashingBackward:
+                    return "SkillMove_B";
+                case LocomotionAnimationId.Dodge:
+                    return "Dodge";
+                default:
+                    return string.Empty;
+            }
+        }
+        // 根据移动动画ID获取动画长度
+        public float GetLocomotionAnimationLength(LocomotionAnimationId animationId)
+        {
+            //1.优先读取配置里的动画Clip长度
+            AnimationClip clip = GetLocomotionClip(animationId);
+            if (clip != null)
+            {
+                return clip.length;
+            }
+
+            //2.配置缺失时使用默认时长兜底
+            switch (animationId)
+            {
+                case LocomotionAnimationId.Land:
+                    return 1.03f;
+                default:
+                    return 0f;
+            }
+        }
+
+
         // 根据 AttackId 获取对应的战斗动画剪辑
         public AnimationClip GetCombatClip(AttackId attackId)
         {
@@ -124,5 +194,34 @@ namespace WutheringWaves
 
             return null;
         }
+
+        // 根据攻击ID获取战斗动画名称
+        public string GetCombatAnimationName(AttackId attackId)
+        {
+            //1.优先读取配置里的动画Clip名称
+            AnimationClip clip = GetCombatClip(attackId);
+            if (clip != null)
+            {
+                return clip.name;
+            }
+
+            //2.配置缺失时返回空字符串
+            return string.Empty;
+        }
+
+        // 根据攻击ID获取战斗动画长度
+        public float GetCombatAnimationLength(AttackId attackId)
+        {
+            //1.优先读取配置里的动画Clip长度
+            AnimationClip clip = GetCombatClip(attackId);
+            if (clip != null)
+            {
+                return clip.length;
+            }
+
+            //2.配置缺失时返回0
+            return 0f;
+        }
+
     }
 }

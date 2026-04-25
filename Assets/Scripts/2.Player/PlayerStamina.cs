@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace WutheringWaves
 {
@@ -11,7 +12,8 @@ namespace WutheringWaves
         [Tooltip("奔跑每秒消耗的体力")]
         [SerializeField] private float runDrainPerSecond = 2.5f;
         [Tooltip("单次冲刺消耗的体力")]
-        [SerializeField] private float sprintCost = 15f;
+        [FormerlySerializedAs("sprintCost")]
+        [SerializeField] private float dashCost = 15f;
         [Tooltip("单次御空冲刺消耗的体力")]
         [SerializeField] private float floatDashCost = 15f;
         [Tooltip("体力每秒恢复速度")]
@@ -35,7 +37,7 @@ namespace WutheringWaves
         public float CurrentStamina => currentStamina;
         public float NormalizedStamina => maxStamina <= 0f ? 0f : currentStamina / maxStamina;
         public float RunDrainPerSecond => runDrainPerSecond;
-        public float SprintCost => sprintCost;
+        public float DashCost => dashCost;
         public float FloatDashCost => floatDashCost;
         public float RegenPerSecond => regenPerSecond;
         public float RegenDelay => regenDelay;
@@ -44,6 +46,7 @@ namespace WutheringWaves
         public bool IsInitialized => initialized;
         #endregion
 
+        #region 生命周期函数
         private void Update()
         {
             // 未初始化时不执行共享体力逻辑。
@@ -55,6 +58,7 @@ namespace WutheringWaves
             UpdateRecovery();
             UpdateVisibility();
         }
+        #endregion
 
         #region 初始化
         // 初始化玩家共享体力：首次进入时建立默认值，切角色时沿用玩家层共享体力配置
@@ -87,9 +91,9 @@ namespace WutheringWaves
             return currentStamina > 0.01f;
         }
 
-        public bool CanSprint()
+        public bool CanDash()
         {
-            return currentStamina >= sprintCost;
+            return currentStamina >= dashCost;
         }
 
         public bool CanFloatDash()
@@ -99,9 +103,9 @@ namespace WutheringWaves
         #endregion
 
         #region 动作体力消耗
-        public bool TryConsumeSprint()
+        public bool TryConsumeDash()
         {
-            return TryConsume(sprintCost);
+            return TryConsume(dashCost);
         }
 
         public bool TryConsumeFloatDash()

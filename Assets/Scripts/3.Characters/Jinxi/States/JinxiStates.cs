@@ -6,222 +6,26 @@
 {
     #region 具体状态实现类（所有状态继承自抽象基类，实现生命周期方法）
 
-    #region 过渡动画状态
-    // 过渡动画状态
-    public class JinxiTransitionState : CharacterBaseState
-    {
-        private float _transitionTimer; // 过渡动画计时器
-
-        public JinxiTransitionState(CharacterStateMachine stateMachine, CharacterStateFactory factory)
-            : base(stateMachine, factory) { }
-
-        public override void EnterState()
-        {
-            // 1. 初始化数据
-            InitializeTransitionData();
-
-            // 2. 播放进入过渡状态动画
-            TransitionEnterAnimation();
-
-            //3.检查移动急停初始化
-            CheckMoveToIdle();
-
-        }
-
-        #region EnterState子方法
-        //1. 初始化数据
-        private void InitializeTransitionData()
-        {
-            _transitionTimer = stateMachine.CurrentTransitionParams.Duration;
-        }
-        // 2. 过渡状态动画
-        private void TransitionEnterAnimation()
-        {
-            //stateMachine.Animator.SetTrigger(stateMachine.CurrentTransitionParams.AnimationTrigger);
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(stateMachine.CurrentTransitionParams.locomotionAnimationId), 0.3f, 0, 0);
-        }
-        //3.检查 移动急停初始化
-        private void CheckMoveToIdle()
-        {
-            if (stateMachine.PreviousStateType == CharacterState.JinxiMove)
-            {
-                //调用初始化
-                if (stateMachine.movementLogic.HasPressedShift())
-                {
-                    //奔跑缓冲
-                    stateMachine.movementLogic.InitializeStopping(stateMachine.movementLogic.runStoppingDistance, stateMachine.movementLogic.runStoppingTime);
-                }
-                else
-                {
-                    //移动缓冲
-                    stateMachine.movementLogic.InitializeStopping(stateMachine.movementLogic.moveStoppingDistance, stateMachine.movementLogic.moveStoppingTime);
-                }
-            }
-        }
-        #endregion
-
-        public override void UpdateState()
-        {
-            //1.常态重力
-            stateMachine.movementLogic.ApplyGroundingForce();
-
-            //2.实现移动急停 二次衰减式惯性滑行
-            RealizationMoveToIdle();
-            //3. 状态转换
-            CheckStateTransitions();
-            //4.计时并自然过渡到默认状态
-            UpdateTransitionTimer();
-        }
-
-        #region UpdateState子方法
-
-        //实现 移动急停 二次衰减式惯性滑行
-        private void RealizationMoveToIdle()
-        {
-            if (stateMachine.PreviousStateType == CharacterState.JinxiMove)
-            {
-                if (stateMachine.movementLogic.HasPressedShift())
-                {
-                    //1.实现急停逻辑
-                    stateMachine.movementLogic.HandleStoppingMovement();
-                    //2.动画传参
-                    stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-                }
-                else
-                {
-                    //1.实现急停逻辑
-                    stateMachine.movementLogic.HandleStoppingMovement();
-                    //2.动画传参
-                    stateMachine.movementLogic.UpdateStopMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-                }
-
-            }
-        }
-
-        //计时并自然过渡到默认状态
-        private void UpdateTransitionTimer()
-        {
-            // 1. 倒计时
-            _transitionTimer -= Time.deltaTime;
-
-            // 2. 计时结束，自然过渡到默认状态
-            if (_transitionTimer <= 0f)
-            {
-                //_isTransitionComplete = true;
-                SwitchState(stateMachine.CurrentTransitionParams.DefaultNextState);
-            }
-        }
-        #endregion
-
-        public override void ExitState()
-        {
-            //1.退出过渡状态动画
-            TransitionExitAnimation();
-            //2. 重置垂直速度
-            stateMachine.movementLogic.ResetVerticalVelocity();
-        }
-
-        #region ExitState子方法
-        //1.退出过渡状态动画
-        private void TransitionExitAnimation()
-        {
-            //// 1. 重置动画 Trigger（防止残留）
-            //stateMachine.Animator.ResetTrigger(stateMachine.CurrentTransitionParams.AnimationTrigger);
-            // 2. 防止动画出错
-            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-        }
-        #endregion
-
-        // 状态转换
-        private void CheckStateTransitions()
-        {
-            //死亡状态
-            if (stateMachine.runtimeData.currentHealth <= 0)
-            {
-                SwitchState(CharacterState.JinxiDead);
-                return;
-            }
-            //爆发状态
-            if (stateMachine.JinxiSpecialSkillLinker.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
-            {
-                stateMachine.IsStateLocked = false;
-                SwitchState(CharacterState.JinxiQBurst);
-                return;
-            }
-            //受击状态
-            if (stateMachine.TryConsumeHitRequest())
-            {
-                SwitchState(CharacterState.JinxiHit);
-                return;
-            }
-            //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
-            {
-                SwitchState(CharacterState.JinxiESkill);
-                return;
-            }
-            //冲刺状态
-            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
-            {
-                SwitchState(CharacterState.JinxiDash);
-                return;
-            }
-            // 跳跃状态
-            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
-            {
-                SwitchState(CharacterState.JinxiJump);
-                return;
-            }
-            //下落状态
-            if (!stateMachine.movementLogic.CustomCheckGrounded())
-            {
-                SwitchState(CharacterState.JinxiFall);
-                return;
-            }
-            //御空攻击状态
-            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
-            {
-                SwitchState(CharacterState.JinxiAirAttack);
-                return;
-            }
-            //攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable())
-            {
-                SwitchState(CharacterState.JinxiAttack);
-                return;
-            }
-            //移动状态
-            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && stateMachine.movementLogic.CustomCheckGrounded())
-            {
-                SwitchState(CharacterState.JinxiMove);
-                return;
-            }
-        }
-    }
-    #endregion
-
-    #region 待机状态
+     #region 待机状态
     //待机状态
     public class JinxiIdleState : CharacterBaseState
     {
         public JinxiIdleState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
         private float _stateTime;
-        private int _idleNum; // 随机数
         public override void EnterState()
         {
             // 1. 进入待机状态动画
             IdleEnterAnimation();
             // 2.初始化待机状态
             InitializeIdleState();
-            // 3.重置连招
         }
 
         #region EnterState子状态
         //1. 进入待机状态动画
         private void IdleEnterAnimation()
         {
-            stateMachine.Animator.SetTrigger("Idle");
-            // JinxiIdle / Move / Run 继续交给 Blend Tree 参数驱动
+            //1.切换到 Locomotion 混合树
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.3f, 0, 0);
             //2.展示背负装饰剑
             stateMachine.manifestation.ShowDecorationSwordFade();
         }
@@ -229,7 +33,6 @@
         private void InitializeIdleState()
         {
             _stateTime = 0f;
-            _idleNum = UnityEngine.Random.Range(0, 10);
         }
         #endregion
 
@@ -263,9 +66,8 @@
         {
             // 1. 退出待机状态动画
             IdleExitAnimation();
-            //2. 配置待机动作过渡参数并切换状态
-            PrepareToTransition();
-            //3. 重置垂直速度
+
+            //2. 重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -273,30 +75,9 @@
         // 1. 退出待机状态动画
         private void IdleExitAnimation()
         {
-            stateMachine.Animator.ResetTrigger("Idle");
+
         }
-        //2. 配置待机动作过渡参数并切换状态
-        private void PrepareToTransition()
-        {
-            if (_idleNum >= 5)
-            {
-                stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
-                {
-                    locomotionAnimationId = LocomotionAnimationId.Idle, // 你的动画 Trigger 名称
-                    Duration = 12.6f, // 假设落地动画时长0.3秒，根据实际Clip修改
-                    DefaultNextState = CharacterState.JinxiIdle // 无打断时默认切 JinxiIdle
-                };
-            }
-            else
-            {
-                stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
-                {
-                    locomotionAnimationId = LocomotionAnimationId.Idle, // 你的动画 Trigger 名称
-                    Duration = 15.2f, // 假设落地动画时长0.3秒，根据实际Clip修改
-                    DefaultNextState = CharacterState.JinxiIdle // 无打断时默认切 JinxiIdle
-                };
-            }
-        }
+
         #endregion
 
         //状态转换判断
@@ -333,7 +114,7 @@
                 SwitchState(CharacterState.JinxiDash);
                 return;
             }
-            //下落状态
+            //坠落状态
             if (!stateMachine.movementLogic.CustomCheckGrounded())
             {
                 SwitchState(CharacterState.JinxiFall);
@@ -363,18 +144,18 @@
                 SwitchState(CharacterState.JinxiMove);
                 return;
             }
-            //过渡状态
-            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= 10f)
-            {
-                // 统一先切到 JinxiTransition，由 JinxiTransition 处理后续
-                SwitchState(CharacterState.JinxiTransition);
-                return;
-            }
+            ////过渡状态
+            //if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= 10f)
+            //{
+            //    // 统一先切到 JinxiTransition，由 JinxiTransition 处理后续
+            //    SwitchState(CharacterState.JinxiTransition);
+            //    return;
+            //}
         }
     }
     #endregion
 
-    #region 移动状态
+     #region 移动状态
     //移动状态
     public class JinxiMoveState : CharacterBaseState
     {
@@ -399,9 +180,10 @@
         //2.进入移动状态动画
         private void MovingEnterAnimation()
         {
-            // JinxiIdle / Move / Run 继续交给 Blend Tree 参数驱动
-            stateMachine.Animator.SetTrigger("Move");
+            //1.切换到 Locomotion 混合树
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Move), 0.3f, 0, 0);
         }
+
         #endregion
 
         public override void UpdateState()
@@ -436,9 +218,8 @@
         {
             //1.清除移动动画残存
             MovingExitAnimation();
-            //2. 配置落地过渡参数并切换状态
-            PrepareToTransition();
-            //3. 重置垂直速度
+
+            //2. 重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -446,35 +227,9 @@
         // 1. 退出移动状态动画
         private void MovingExitAnimation()
         {
-            // CrossFade 直切动画后无需再清理 Trigger
+
         }
-        //2. 配置缓冲过渡参数并切换状态
-        private void PrepareToTransition()
-        {
-            //奔跑缓冲）
-            if (stateMachine.movementLogic.HasPressedShift())
-            {
-                stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
-                {
-                    locomotionAnimationId = LocomotionAnimationId.Stop_Run, // 你的动画 Trigger 名称
-                    Duration = stateMachine.movementLogic.runStoppingTime, // 假设落地动画时长0.3秒，根据实际Clip修改
-                    DefaultNextState = CharacterState.JinxiIdle // 无打断时默认切 JinxiIdle
-                };
-                //stateMachine.Animator.SetFloat("BufferingFloat", 1f);
-                return;
-            }
-            //移动缓冲
-            if (!stateMachine.movementLogic.HasPressedShift())
-            {
-                stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
-                {
-                    locomotionAnimationId = LocomotionAnimationId.Idle, // 你的动画 Trigger 名称
-                    Duration = stateMachine.movementLogic.moveStoppingTime, // 假设落地动画时长0.3秒，根据实际Clip修改
-                    DefaultNextState = CharacterState.JinxiIdle // 无打断时默认切 JinxiIdle
-                };
-                return;
-            }
-        }
+
         #endregion
 
         private void CheckStateTransitions()
@@ -510,7 +265,7 @@
                 SwitchState(CharacterState.JinxiDash);
                 return;
             }
-            //下落状态
+            //坠落状态
             if (!stateMachine.movementLogic.CustomCheckGrounded())
             {
                 SwitchState(CharacterState.JinxiFall);
@@ -534,18 +289,221 @@
                 SwitchState(CharacterState.JinxiAttack);
                 return;
             }
-            //移动  待机  Transition状态
+            // 收步状态
             if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && stateMachine.movementLogic.CustomCheckGrounded())
             {
-                // 统一先切到 JinxiTransition，由 JinxiTransition 处理后续
-                SwitchState(CharacterState.JinxiTransition);
+                SwitchState(CharacterState.JinxiStop);
+                return;
+            }
+
+        }
+    }
+    #endregion
+
+     #region 收步状态
+    // 收步状态
+    public class JinxiStopState : CharacterBaseState
+    {
+        private float _stopTimer; // 收步计时器
+        private bool _isRunStop;  // 是否是奔跑后的收步
+
+        public JinxiStopState(CharacterStateMachine stateMachine, CharacterStateFactory factory)
+            : base(stateMachine, factory) { }
+
+        public override void EnterState()
+        {
+            //1.初始化收步数据
+            InitializeStopData();
+
+            //2.播放收步动画
+            StopEnterAnimation();
+
+            //3.初始化收步滑行
+            InitializeStopMovement();
+        }
+
+        #region EnterState子方法
+        //1.初始化收步数据
+        private void InitializeStopData()
+        {
+            _isRunStop = stateMachine.movementLogic.HasPressedShift();
+            _stopTimer = _isRunStop ? stateMachine.movementLogic.runStoppingTime : stateMachine.movementLogic.moveStoppingTime;
+        }
+
+        //2.播放收步动画
+        private void StopEnterAnimation()
+        {
+            if (_isRunStop)
+            {
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Stop_Run), 0.1f, 0, 0);
+            }
+            else
+            {
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.1f, 0, 0);
+            }
+        }
+
+        //3.初始化收步滑行
+        private void InitializeStopMovement()
+        {
+            if (_isRunStop)
+            {
+                stateMachine.movementLogic.InitializeStopping(
+                    stateMachine.movementLogic.runStoppingDistance,
+                    stateMachine.movementLogic.runStoppingTime
+                );
+            }
+            else
+            {
+                stateMachine.movementLogic.InitializeStopping(
+                    stateMachine.movementLogic.moveStoppingDistance,
+                    stateMachine.movementLogic.moveStoppingTime
+                );
+            }
+        }
+        #endregion
+
+        public override void UpdateState()
+        {
+            //1.常态重力
+            stateMachine.movementLogic.ApplyGroundingForce();
+
+            //2.实现收步滑行
+            RealizationStopMovement();
+
+            //3.状态转换
+            CheckStateTransitions();
+
+            //4.更新收步计时
+            UpdateStopTimer();
+        }
+
+        #region UpdateState子方法
+        //2.实现收步滑行
+        private void RealizationStopMovement()
+        {
+            //1.实现急停逻辑
+            stateMachine.movementLogic.HandleStoppingMovement();
+
+            //2.动画传参
+            if (_isRunStop)
+            {
+                stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+            }
+            else
+            {
+                stateMachine.movementLogic.UpdateStopMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+            }
+        }
+
+        //4.更新收步计时
+        private void UpdateStopTimer()
+        {
+            _stopTimer -= Time.deltaTime;
+
+            if (_stopTimer <= 0f)
+            {
+                SwitchState(CharacterState.JinxiIdle);
+            }
+        }
+        #endregion
+
+        public override void ExitState()
+        {
+            //1.退出收步状态动画
+            StopExitAnimation();
+
+            //2.重置垂直速度
+            stateMachine.movementLogic.ResetVerticalVelocity();
+        }
+
+        #region ExitState子方法
+        //1.退出收步状态动画
+        private void StopExitAnimation()
+        {
+            //防止动画参数残留
+            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+        #endregion
+
+        //状态转换
+        private void CheckStateTransitions()
+        {
+            //死亡状态
+            if (stateMachine.runtimeData.currentHealth <= 0)
+            {
+                SwitchState(CharacterState.JinxiDead);
+                return;
+            }
+
+            //爆发状态
+            if (stateMachine.JinxiSpecialSkillLinker.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiQBurst);
+                return;
+            }
+
+            //受击状态
+            if (stateMachine.TryConsumeHitRequest())
+            {
+                SwitchState(CharacterState.JinxiHit);
+                return;
+            }
+
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+
+            //冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
+            {
+                SwitchState(CharacterState.JinxiDash);
+                return;
+            }
+
+            //跳跃状态
+            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
+            {
+                SwitchState(CharacterState.JinxiJump);
+                return;
+            }
+
+            //坠落状态
+            if (!stateMachine.movementLogic.CustomCheckGrounded())
+            {
+                SwitchState(CharacterState.JinxiFall);
+                return;
+            }
+
+            //御空攻击状态
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
+            {
+                SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+
+            //攻击状态
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable())
+            {
+                SwitchState(CharacterState.JinxiAttack);
+                return;
+            }
+
+            //移动状态
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && stateMachine.movementLogic.CustomCheckGrounded())
+            {
+                SwitchState(CharacterState.JinxiMove);
                 return;
             }
         }
     }
     #endregion
 
-    #region 跳跃状态
+     #region 跳跃状态
     //跳跃状态
     public class JinxiJumpState : CharacterBaseState
     {
@@ -570,7 +528,7 @@
             LocomotionAnimationId jumpAnimationId = stateMachine.IsHoldingRun
                 ? LocomotionAnimationId.Jump_Run
                 : LocomotionAnimationId.Jump_Walk;
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(jumpAnimationId), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(jumpAnimationId), 0f, 0, 0);
         }
         //2.初始化跳跃状态
         private void InitializeJumpingState()
@@ -669,38 +627,38 @@
     }
     #endregion
 
-    #region 下落状态
-    //下落状态
+     #region 坠落状态
+    //坠落状态
     public class JinxiFallState : CharacterBaseState
     {
-        //已处于下落状态的时间
+        //已处于坠落状态的时间
         private float _stateTimer;
         public JinxiFallState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
         public override void EnterState()
         {
-            //1.下落动画
+            //1.坠落动画
             FallingEnterAnimation();
-            //2.重置下坠时间
+            //2.重置坠落时间
             InitializeFallingState();
             //3.重置连招
         }
 
         #region EnterState子状态
-        // 1. 进入下落状态动画
+        // 1. 进入坠落状态动画
         private void FallingEnterAnimation()
         {
             //stateMachine.Animator.SetTrigger("Fall");
             if (stateMachine.PreviousStateType == CharacterState.JinxiAirDash || stateMachine.PreviousStateType == CharacterState.JinxiFloatDash || stateMachine.PreviousStateType == CharacterState.JinxiJump)
             {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0.2f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0.2f, 0, 0);
             }
             else
             {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0, 0, 0);
             }
 
         }
-        //2.初始化下落状态
+        //2.初始化坠落状态
         private void InitializeFallingState()
         {
             //2.重置下坠时间
@@ -710,9 +668,9 @@
 
         public override void UpdateState()
         {
-            //1.更新下坠时间
+            //1.更新坠落时间
             _stateTimer += Time.deltaTime;
-            //2.下坠逻辑
+            //2.坠落逻辑
             stateMachine.movementLogic.HandleFallingMovement(stateMachine.MoveInput);
             stateMachine.movementLogic.ApplyGroundingForce();
 
@@ -726,30 +684,21 @@
 
         public override void ExitState()
         {
-            //1.退出下落状态动画
+            //1.退出坠落状态动画
             FallingExitAnimation();
             //2.落地垂直速度重置
             stateMachine.movementLogic.ResetVerticalVelocity();
-            //3. 配置落地过渡参数并切换状态
-            PrepareToTransition();
+
         }
 
         #region ExitState子状态
-        // 1. 退出下落状态动画
+        // 1. 退出坠落状态动画
         private void FallingExitAnimation()
         {
             //stateMachine.Animator.ResetTrigger("Fall");
         }
         //2. 配置落地过渡参数并切换状态
-        private void PrepareToTransition()
-        {
-            stateMachine.CurrentTransitionParams = new CharacterStateMachine.TransitionParams
-            {
-                locomotionAnimationId = LocomotionAnimationId.Land, // 你的动画 Trigger 名称
-                Duration = stateMachine.attackLogic.GetLocomotionAnimationLength(LocomotionAnimationId.Land),
-                DefaultNextState = CharacterState.JinxiIdle // 无打断时默认切 JinxiIdle
-            };
-        }
+
         #endregion
 
         //状态转换判断
@@ -798,24 +747,192 @@
                 SwitchState(CharacterState.JinxiAirAttack);
                 return;
             }
-            //下落攻击状态
+            //坠落攻击状态
             if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.JinxiFallAttack);
                 return;
             }
-            //移动  待机  Transition状态
+            // 着地状态
             if (stateMachine.movementLogic.CustomCheckGrounded())
             {
-                // 统一先切到 JinxiTransition，由 JinxiTransition 处理后续
-                SwitchState(CharacterState.JinxiTransition);
+                SwitchState(CharacterState.JinxiLand);
+                return;
+            }
+
+        }
+    }
+    #endregion
+
+     #region 着地状态
+    // 着地状态
+    public class JinxiLandState : CharacterBaseState
+    {
+        private float _landTimer; // 着地计时器
+
+        public JinxiLandState(CharacterStateMachine stateMachine, CharacterStateFactory factory)
+            : base(stateMachine, factory) { }
+
+        public override void EnterState()
+        {
+            //1.初始化着地数据
+            InitializeLandData();
+
+            //2.播放着地动画
+            LandEnterAnimation();
+        }
+
+        #region EnterState子方法
+        //1.初始化着地数据
+        private void InitializeLandData()
+        {
+            _landTimer = stateMachine.GetLocomotionAnimationLength(LocomotionAnimationId.Land);
+        }
+
+        //2.播放着地动画
+        private void LandEnterAnimation()
+        {
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Land), 0.1f, 0, 0);
+        }
+        #endregion
+
+        public override void UpdateState()
+        {
+            //1.常态重力
+            stateMachine.movementLogic.ApplyGroundingForce();
+
+            //2.动画传参，防止BlendTree参数残留
+            LandUpdateAnimation();
+
+            //3.状态转换
+            CheckStateTransitions();
+
+            //4.更新着地计时
+            UpdateLandTimer();
+        }
+
+        #region UpdateState子方法
+        //2.更新着地动画参数
+        private void LandUpdateAnimation()
+        {
+            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+
+        //4.更新着地计时
+        private void UpdateLandTimer()
+        {
+            _landTimer -= Time.deltaTime;
+
+            if (_landTimer > 0f)
+            {
+                return;
+            }
+
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold)
+            {
+                SwitchState(CharacterState.JinxiMove);
+                return;
+            }
+
+            SwitchState(CharacterState.JinxiIdle);
+        }
+        #endregion
+
+        public override void ExitState()
+        {
+            //1.退出着地状态动画
+            LandExitAnimation();
+
+            //2.重置垂直速度
+            stateMachine.movementLogic.ResetVerticalVelocity();
+        }
+
+        #region ExitState子方法
+        //1.退出着地状态动画
+        private void LandExitAnimation()
+        {
+            // CrossFade 直切动画后无需再清理 Trigger
+        }
+        #endregion
+
+        //状态转换
+        private void CheckStateTransitions()
+        {
+            //死亡状态
+            if (stateMachine.runtimeData.currentHealth <= 0)
+            {
+                SwitchState(CharacterState.JinxiDead);
+                return;
+            }
+
+            //爆发状态
+            if (stateMachine.JinxiSpecialSkillLinker.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiQBurst);
+                return;
+            }
+
+            //受击状态
+            if (stateMachine.TryConsumeHitRequest())
+            {
+                SwitchState(CharacterState.JinxiHit);
+                return;
+            }
+
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+
+            //冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
+            {
+                SwitchState(CharacterState.JinxiDash);
+                return;
+            }
+
+            //跳跃状态
+            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
+            {
+                SwitchState(CharacterState.JinxiJump);
+                return;
+            }
+
+            //坠落状态
+            if (!stateMachine.movementLogic.CustomCheckGrounded())
+            {
+                SwitchState(CharacterState.JinxiFall);
+                return;
+            }
+
+            //御空攻击状态
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
+            {
+                SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+
+            //攻击状态
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable())
+            {
+                SwitchState(CharacterState.JinxiAttack);
+                return;
+            }
+
+            //移动状态
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold)
+            {
+                SwitchState(CharacterState.JinxiMove);
                 return;
             }
         }
     }
     #endregion
 
-    #region 攻击状态
+     #region 攻击状态
     //攻击状态
     public class JinxiAttackState : CharacterBaseState
     {
@@ -878,7 +995,7 @@
             //龙隐藏
             stateMachine.JinxiSpecialSkillLinker.HideDragonInstantly();
             //攻击动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_attackStep), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_attackStep.attackId), 0f, 0, 0);
             //御剑动画
             stateMachine.context?.WeaponController?.PlayWeaponAction(_attackStep);
             //龙动画
@@ -920,7 +1037,7 @@
         {
             //防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-            if (_stateTime * 1.5f > stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep) && !hasUpataAttackingUpdateAnimation)
+            if (_stateTime * 1.5f > stateMachine.GetCombatAnimationLength(_attackStep.attackId) && !hasUpataAttackingUpdateAnimation)
             {
                 hasUpataAttackingUpdateAnimation = true;
                 stateMachine.manifestation.ShowDecorationSwordFade();
@@ -1004,7 +1121,7 @@
                 return;
             }
             // 待机状态
-            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
+            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_attackStep.attackId))
             {
                 SwitchState(CharacterState.JinxiIdle);
                 return;
@@ -1013,7 +1130,7 @@
     }
     #endregion
 
-    #region 重击状态
+     #region 重击状态
     //重击状态
     public class JinxiHeavyAttackState : CharacterBaseState
     {
@@ -1118,7 +1235,7 @@
                 SwitchState(CharacterState.JinxiAttack);
                 return;
             }
-            // 下落
+            // 坠落
             if (!stateMachine.movementLogic.CustomCheckGrounded())
             {
                 SwitchState(CharacterState.JinxiFall);
@@ -1140,7 +1257,7 @@
     }
     #endregion
 
-    #region 下落攻击状态
+     #region 下落攻击状态
     // 下落攻击状态
     public class JinxiFallAttackState : CharacterBaseState
     {
@@ -1208,7 +1325,7 @@
         private void FallAttackingEnterAnimation()
         {
             //下落攻击开始动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepStart), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepStart.attackId), 0f, 0, 0);
             //装饰剑隐藏
             stateMachine.manifestation.HideDecorationSwordFade();
             //御剑
@@ -1235,13 +1352,13 @@
             //1.状态时长递增
             _stateTime += Time.deltaTime;
             // 1. 强制守门：Start 动画没播完，什么都不做
-            if (_stateTime <= stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepStart))
+            if (_stateTime <= stateMachine.GetCombatAnimationLength(_fallattackStepStart.attackId))
                 return;
             // 2. 状态：start -> loop
             if (_phase == FallAttackPhase.start)
             {
                 stateMachine.IsStateLocked = false;
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepLoop), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepLoop.attackId), 0f, 0, 0);
                 //同步攻击阶段信息
                 stateMachine.currentStep = _fallattackStepLoop;
                 //御剑
@@ -1256,7 +1373,7 @@
                     //落地特效
                     stateMachine.effectController?.PlayEffectAction(_fallattackStepEnd);
                     _endStateTime = 0f;
-                    stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_fallattackStepEnd), 0f, 0, 0);
+                    stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepEnd.attackId), 0f, 0, 0);
                     //同步攻击阶段信息
                     stateMachine.currentStep = _fallattackStepEnd;
                     _phase = FallAttackPhase.end;
@@ -1265,7 +1382,7 @@
             else if (_phase == FallAttackPhase.end)
             {
                 _endStateTime += Time.deltaTime;
-                if (_endStateTime > stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepEnd))
+                if (_endStateTime > stateMachine.GetCombatAnimationLength(_fallattackStepEnd.attackId))
                 {
                     _phase = FallAttackPhase.over;
                 }
@@ -1295,7 +1412,7 @@
         // 3. 更新下落攻击状态动画
         private void FallAttackingUpdateAnimation()
         {
-            if (_stateTime * 1.5f > stateMachine.attackLogic.GetCharacterAnimationLength(_fallattackStepEnd) && !hasUpdateFallAttackingAnimation)
+            if (_stateTime * 1.5f > stateMachine.GetCombatAnimationLength(_fallattackStepEnd.attackId) && !hasUpdateFallAttackingAnimation)
             {
                 hasUpdateFallAttackingAnimation = true;
                 //显示装饰剑
@@ -1390,7 +1507,7 @@
     }
     #endregion
 
-    #region 御空攻击状态
+     #region 御空攻击状态
     // 御空攻击状态
     public class JinxiAirAttackState : CharacterBaseState
     {
@@ -1460,7 +1577,7 @@
             // 装饰剑隐藏
             stateMachine.manifestation.HideDecorationSwordFade();
             // 播放攻击动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_attackStep), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_attackStep.attackId), 0f, 0, 0);
             // 御剑/龙/特效表现
             stateMachine.context?.WeaponController?.PlayWeaponAction(_attackStep);
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_attackStep);
@@ -1498,7 +1615,7 @@
             // 防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
             // 动画快结束时显示装饰剑
-            if (_stateTime * 1.2f > stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep) && !_hasUpdatedExitAnimation)
+            if (_stateTime * 1.2f > stateMachine.GetCombatAnimationLength(_attackStep.attackId) && !_hasUpdatedExitAnimation)
             {
                 _hasUpdatedExitAnimation = true;
                 stateMachine.manifestation.ShowDecorationSwordFade();
@@ -1593,7 +1710,7 @@
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_attackStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -1636,8 +1753,8 @@
                     SwitchState(CharacterState.JinxiFloatDash);
                     return;
                 }
-                //下落状态
-                if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
+                //坠落状态
+                if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= stateMachine.GetCombatAnimationLength(_attackStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiFall);
                     return;
@@ -1655,7 +1772,7 @@
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_attackStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_attackStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -1666,7 +1783,7 @@
     }
     #endregion
 
-    #region 冲刺状态
+     #region 冲刺状态
     //冲刺状态
     public class JinxiDashState : CharacterBaseState
     {
@@ -1720,9 +1837,9 @@
         private void DashingEnterAnimation()
         {
             if (_dashDirection)
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashForward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.DashForward), 0f, 0, 0);
             else
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.DashBackward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.DashBackward), 0f, 0, 0);
         }
         #endregion
 
@@ -1840,7 +1957,7 @@
     }
     #endregion
 
-    #region 空中冲刺状态
+     #region 空中冲刺状态
     //空中冲刺状态
     public class JinxiAirDashState : CharacterBaseState
     {
@@ -1886,12 +2003,12 @@
             if (_airDashDirection)
             {
                 //stateMachine.Animator.SetTrigger("AirDashF");
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.AirDashForward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.AirDashForward), 0f, 0, 0);
             }
             else
             {
                 //stateMachine.Animator.SetTrigger("AirDashB");
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.AirDashBackward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.AirDashBackward), 0f, 0, 0);
             }
         }
         #endregion
@@ -1977,7 +2094,7 @@
     }
     #endregion
 
-    #region 御空冲刺状态
+     #region 御空冲刺状态
     // 御空冲刺状态
     public class JinxiFloatDashState : CharacterBaseState
     {
@@ -2027,11 +2144,11 @@
         {
             if (_floatDashDirection)
             {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingForward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingForward), 0f, 0, 0);
             }
             else
             {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingBackward), 0f, 0, 0);
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.FloatDashingBackward), 0f, 0, 0);
             }
         }
         #endregion
@@ -2120,7 +2237,7 @@
                 SwitchState(CharacterState.JinxiAirAttack);
                 return;
             }
-            //下落状态
+            //坠落状态
             if (!stateMachine.JinxiSpecialSkillLinker.IsFloating || _stateTime >= 1.9f)
             {
                 SwitchState(CharacterState.JinxiFall);
@@ -2130,7 +2247,7 @@
     }
     #endregion
 
-    #region 闪避状态
+     #region 闪避状态
     // 闪避状态
     public class JinxiDodgeState : CharacterBaseState
     {
@@ -2141,7 +2258,7 @@
             // 初始化：锁死状态+标记闪避+开启无敌+播放闪避动画+停止冲刺
             stateMachine.IsStateLocked = true;
 
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetLocomotionAnimationName(LocomotionAnimationId.Dodge), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Dodge), 0f, 0, 0);
 
         }
 
@@ -2182,7 +2299,7 @@
     }
     #endregion
 
-    #region 御空闪避状态
+     #region 御空闪避状态
     // 御空闪避状态
     public class JinxiFloatDodgeState : CharacterBaseState
     {
@@ -2194,7 +2311,7 @@
     }
     #endregion
 
-    #region 战技状态（流光夕影）（神霓飞芒）（逐天取月）（乘岁凌霄）
+     #region 战技状态（流光夕影）（神霓飞芒）（逐天取月）（乘岁凌霄）
     // 战技状态
     public class JinxiESkillState : CharacterBaseState
     {
@@ -2272,7 +2389,7 @@
         private void ESkillEnterAnimation()
         {
             // 播放角色动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_currentSkillStep), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_currentSkillStep.attackId), 0f, 0, 0);
             // 御剑/龙/特效表现
             stateMachine.context?.WeaponController?.PlayWeaponAction(_currentSkillStep);
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_currentSkillStep);
@@ -2394,7 +2511,7 @@
                 {
                     SwitchState(CharacterState.JinxiAttack);
                 }
-                //下落状态
+                //坠落状态
                 if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= 6.3f)
                 {
                     SwitchState(CharacterState.JinxiFall);
@@ -2407,7 +2524,7 @@
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_currentSkillStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -2461,14 +2578,14 @@
                     SwitchState(CharacterState.JinxiAttack);
                     return;
                 }
-                //下落状态
+                //坠落状态
                 if (!stateMachine.movementLogic.CustomCheckGrounded() && _stateTime >= 2.3f)
                 {
                     SwitchState(CharacterState.JinxiFall);
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_currentSkillStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -2522,14 +2639,14 @@
                     SwitchState(CharacterState.JinxiAttack);
                     return;
                 }
-                //下落状态
+                //坠落状态
                 if (!stateMachine.movementLogic.CustomCheckGrounded() && stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.JinxiFall);
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_currentSkillStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -2577,7 +2694,7 @@
                     SwitchState(CharacterState.JinxiJump);
                     return;
                 }
-                //下落状态
+                //坠落状态
                 if (!stateMachine.movementLogic.CustomCheckGrounded() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.JinxiFall);
@@ -2602,7 +2719,7 @@
                     return;
                 }
                 // 待机状态
-                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.attackLogic.GetCharacterAnimationLength(_currentSkillStep))
+                if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= stateMachine.GetCombatAnimationLength(_currentSkillStep.attackId))
                 {
                     SwitchState(CharacterState.JinxiIdle);
                     return;
@@ -2612,7 +2729,7 @@
     }
     #endregion
 
-    #region 爆发状态
+     #region 爆发状态
     // 爆发状态
     public class JinxiQBurstState : CharacterBaseState
     {
@@ -2654,7 +2771,7 @@
         private void QBurstEnterAnimation()
         {
             //动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.attackLogic.GetCharacterAnimationTriggerName(_step), 0f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_step.attackId), 0f, 0, 0);
             //龙动画
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_step);
             //隐藏剑
@@ -2753,7 +2870,7 @@
                 SwitchState(CharacterState.JinxiDash);
                 return;
             }
-            //下落状态
+            //坠落状态
             if (!stateMachine.movementLogic.CustomCheckGrounded())
             {
                 SwitchState(CharacterState.JinxiFall);
@@ -2793,7 +2910,7 @@
     }
     #endregion
 
-    #region 受击状态
+     #region 受击状态
     //受击状态
     public class JinxiHitState : CharacterBaseState
     {
@@ -2837,7 +2954,7 @@
     }
     #endregion
 
-    #region 死亡状态
+     #region 死亡状态
     //死亡状态
     public class JinxiDeadState : CharacterBaseState
     {

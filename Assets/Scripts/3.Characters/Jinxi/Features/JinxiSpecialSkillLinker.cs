@@ -136,8 +136,12 @@ namespace WutheringWaves
             // 注册今汐完整状态集合：当前 JinxiStates 中的状态都由今汐层显式接管
             factory.RegisterState(CharacterState.JinxiIdle, new JinxiIdleState(machine, factory));
             factory.RegisterState(CharacterState.JinxiMove, new JinxiMoveState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiStop, new JinxiStopState(machine, factory));
+
             factory.RegisterState(CharacterState.JinxiJump, new JinxiJumpState(machine, factory));
             factory.RegisterState(CharacterState.JinxiFall, new JinxiFallState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiLand, new JinxiLandState(machine, factory));
+
             factory.RegisterState(CharacterState.JinxiAttack, new JinxiAttackState(machine, factory));
             factory.RegisterState(CharacterState.JinxiHeavyAttack, new JinxiHeavyAttackState(machine, factory));
             factory.RegisterState(CharacterState.JinxiFallAttack, new JinxiFallAttackState(machine, factory));
@@ -151,7 +155,6 @@ namespace WutheringWaves
             factory.RegisterState(CharacterState.JinxiQBurst, new JinxiQBurstState(machine, factory));
             factory.RegisterState(CharacterState.JinxiHit, new JinxiHitState(machine, factory));
             factory.RegisterState(CharacterState.JinxiDead, new JinxiDeadState(machine, factory));
-            factory.RegisterState(CharacterState.JinxiTransition, new JinxiTransitionState(machine, factory));
         }
 
         // 由外部装配入口注入今汐龙表现控制器，后续统一由今汐驱动层编排龙表现

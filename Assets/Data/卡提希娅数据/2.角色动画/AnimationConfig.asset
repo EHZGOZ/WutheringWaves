@@ -18,22 +18,42 @@ MonoBehaviour:
     clip: {fileID: -623603649343465320, guid: 80c239e4b42499c45aec72b56e0e2695, type: 3}
   - animationId: 2
     clip: {fileID: -623603649343465320, guid: 85d7535ceb9b080419b2c0b7b21c3eae, type: 3}
-  - animationId: 2
+  - animationId: 3
     clip: {fileID: -623603649343465320, guid: 8c40b20560322b04d866b9f9977ca3fb, type: 3}
   - animationId: 4
-    clip: {fileID: -623603649343465320, guid: 2dd74960ebc18074e9471b2e644e5a96, type: 3}
+    clip: {fileID: -623603649343465320, guid: 44780ac1651d4e3498e27ce22e2db5bd, type: 3}
   - animationId: 5
     clip: {fileID: -623603649343465320, guid: f6ad25873d084334eb97fc5e95413bdb, type: 3}
   - animationId: 6
-    clip: {fileID: -623603649343465320, guid: eff3f6ee118d3804e9c7e0f04fc4879d, type: 3}
-  - animationId: 7
-    clip: {fileID: -623603649343465320, guid: eff3f6ee118d3804e9c7e0f04fc4879d, type: 3}
+    clip: {fileID: -623603649343465320, guid: 44780ac1651d4e3498e27ce22e2db5bd, type: 3}
   - animationId: 7
     clip: {fileID: -623603649343465320, guid: f663f15ea83e6ee428017dbb3b9b26e3, type: 3}
   - animationId: 8
-    clip: {fileID: -623603649343465320, guid: f663f15ea83e6ee428017dbb3b9b26e3, type: 3}
+    clip: {fileID: -623603649343465320, guid: bc4905a5171f2364dbd195bc42b30c4f, type: 3}
   - animationId: 9
     clip: {fileID: -623603649343465320, guid: b7b6611563302a841b974cbf4b1796d7, type: 3}
   - animationId: 10
     clip: {fileID: -623603649343465320, guid: 1bb1f62391889134eb0a4a5ab54bcd1f, type: 3}
-  combatAnimations: []
+  - animationId: 11
+    clip: {fileID: -623603649343465320, guid: b5fa1dfa4481d70408b009fd7b0a1d3d, type: 3}
+  - animationId: 12
+    clip: {fileID: -623603649343465320, guid: a561c494462a70d46b9a6b140db2c934, type: 3}
+  - animationId: 12
+    clip: {fileID: -623603649343465320, guid: a561c494462a70d46b9a6b140db2c934, type: 3}
+  combatAnimations:
+  - attackId: 1
+    clip: {fileID: -623603649343465320, guid: de1d215b929454d489a2ea91d655a8d6, type: 3}
+  - attackId: 2
+    clip: {fileID: -623603649343465320, guid: dd4167f2a544b194e8172e1fe71463e8, type: 3}
+  - attackId: 3
+    clip: {fileID: -623603649343465320, guid: 6cdd1d1fbc7b0c74db402d97b6503673, type: 3}
+  - attackId: 4
+    clip: {fileID: -623603649343465320, guid: 62447d15f9766b1499d909a7c1c99721, type: 3}
+  - attackId: 5
+    clip: {fileID: -623603649343465320, guid: 0e7ef9b10e0d9da40bda67eaa907e1a4, type: 3}
+  - attackId: 6
+    clip: {fileID: -623603649343465320, guid: 93a209aaffa63874b99860a119f373e0, type: 3}
+  - attackId: 7
+    clip: {fileID: -623603649343465320, guid: 28b2bc8a441522b4fbf8ea13515c2ddb, type: 3}
+  - attackId: 16
+    clip: {fileID: -623603649343465320, guid: dd2567d7ecd932a458c6aab7ad960206, type: 3}

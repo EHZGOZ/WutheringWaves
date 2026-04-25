@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Unity.VisualScripting;
-using UnityEditor;
-
-
-//using UnityEditor.Rendering.LookDev;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.SocialPlatforms;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
 
 namespace WutheringWaves
 {
@@ -21,37 +8,40 @@ namespace WutheringWaves
     //角色核心状态枚举
     public enum CharacterState
     {
-        JinxiIdle,              // 待机
-        JinxiMove,        // 移动
+        JinxiIdle,              // 待机状态
+        JinxiMove,        // 移动状态
+        JinxiStop,       // 收步状态
 
-        JinxiJump,      // 跳跃
-        JinxiFall,         // 空中下落/滞空阶段
+        JinxiJump,      // 跳跃状态
+        JinxiFall,         // 坠落状态
+        JinxiLand,       // 着地状态
 
-        JinxiAttack,    // 攻击
-        JinxiHeavyAttack,//重击
-        JinxiFallAttack,    //下落攻击
-        JinxiAirAttack,     //御空攻击
+        JinxiAttack,    // 攻击状态
+        JinxiHeavyAttack,//重击状态
+        JinxiFallAttack,    //下落攻击状态
+        JinxiAirAttack,     //御空攻击状态
 
 
-        JinxiDash,        // 冲刺
-        JinxiAirDash,    // 空中冲刺
-        JinxiFloatDash,//御空冲刺
+        JinxiDash,        // 冲刺状态
+        JinxiAirDash,    // 空中冲刺状态
+        JinxiFloatDash,//御空冲刺状态
 
-        JinxiDodge,    //闪避
-        JinxiFloatDodge,//御空闪避
+        JinxiDodge,    //闪避状态
+        JinxiFloatDodge,//御空闪避状态
 
-        JinxiESkill,         //战技
-        JinxiQBurst,         //爆发
+        JinxiESkill,         //战技状态
+        JinxiQBurst,         //爆发状态
 
-        JinxiHit,        // 受击
-        JinxiDead,       // 死亡
-        JinxiTransition,// 过渡动画状态
+        JinxiHit,        // 受击状态
+        JinxiDead,       // 死亡状态
+///////////////////////////////////////
+        KatixiyaIdle,              // 待机状态
+        KatixiyaMove,        // 移动状态
+        KatixiyaStop,       // 收步状态
 
-        KatixiyaIdle,              // 待机
-        KatixiyaMove,        // 移动
-
-        KatixiyaJump,      // 跳跃
-        KatixiyaFall,         // 空中下落/滞空阶段
+        KatixiyaJump,      // 跳跃状态
+        KatixiyaFall,         // 坠落状态
+        KatixiyaLand,       // 着地状态
 
         KatixiyaAttack,    // 攻击
         KatixiyaHeavyAttack,//重击
@@ -59,20 +49,21 @@ namespace WutheringWaves
         KatixiyaAirAttack,     //御空攻击
 
 
-        KatixiyaDash,        // 冲刺
-        KatixiyaAirDash,    // 空中冲刺
-        KatixiyaFloatDash,//御空冲刺
+        KatixiyaDash,        // 冲刺状态
+        KatixiyaAirDash,    // 空中冲刺状态
+        KatixiyaFloatDash,//御空冲刺状态
 
-        KatixiyaDodge,    //闪避
-        KatixiyaFloatDodge,//御空闪避
+        KatixiyaDodge,    //闪避状态
+        KatixiyaFloatDodge,//御空闪避状态
 
 
-        KatixiyaESkill,         //战技
-        KatixiyaQBurst,         //爆发
+        KatixiyaESkill,         //战技状态
+        KatixiyaQBurst,         //爆发状态
 
-        KatixiyaHit,        // 受击
-        KatixiyaDead,       // 死亡
-        KatixiyaTransition,// 过渡动画状态
+        KatixiyaHit,        // 受击状态
+        KatixiyaDead,       // 死亡状态
+
+
         Error
     }
     #endregion
@@ -128,8 +119,6 @@ namespace WutheringWaves
         #endregion
 
         #region 3. 状态共享数据
-        // 过渡动画参数（源状态切状态前赋值，JinxiTransition 状态消费）
-        public TransitionParams CurrentTransitionParams;
         public AttackStep currentStep;
         //是否状态锁定
         public bool IsStateLocked { get; set; } = false;
@@ -237,9 +226,11 @@ namespace WutheringWaves
             {
                 JinxiIdleState => CharacterState.JinxiIdle,// 待机
                 JinxiMoveState => CharacterState.JinxiMove,// 移动
-                JinxiJumpState => CharacterState.JinxiJump,// 跳跃
+                JinxiStopState => CharacterState.JinxiStop,// 收步状态
 
+                JinxiJumpState => CharacterState.JinxiJump,// 跳跃
                 JinxiFallState => CharacterState.JinxiFall, // 空中下落/滞空阶段
+                JinxiLandState => CharacterState.JinxiLand,// 着地状态
 
                 JinxiAttackState => CharacterState.JinxiAttack,// 攻击
                 JinxiHeavyAttackState => CharacterState.JinxiHeavyAttack,//重击
@@ -258,13 +249,17 @@ namespace WutheringWaves
 
                 JinxiHitState => CharacterState.JinxiHit,// 受击
                 JinxiDeadState => CharacterState.JinxiDead,// 死亡
-                JinxiTransitionState => CharacterState.JinxiTransition,// 过渡动画状态
+
+
+
 
                 KatixiyaIdleState => CharacterState.KatixiyaIdle,// 待机
                 KatixiyaMoveState => CharacterState.KatixiyaMove,// 移动
-                KatixiyaJumpState => CharacterState.KatixiyaJump,// 跳跃
+                KatixiyaStopState => CharacterState.KatixiyaStop,// 收步
 
-                KatixiyaFallState => CharacterState.KatixiyaFall, // 空中下落/滞空阶段
+                KatixiyaJumpState => CharacterState.KatixiyaJump,// 跳跃
+                KatixiyaFallState => CharacterState.KatixiyaFall, // 坠落
+                KatixiyaLandState => CharacterState.KatixiyaLand,// 着地状态
 
                 KatixiyaAttackState => CharacterState.KatixiyaAttack,// 攻击
                 KatixiyaHeavyAttackState => CharacterState.KatixiyaHeavyAttack,//重击
@@ -283,7 +278,9 @@ namespace WutheringWaves
 
                 KatixiyaHitState => CharacterState.KatixiyaHit,// 受击
                 KatixiyaDeadState => CharacterState.KatixiyaDead,// 死亡
-                KatixiyaTransitionState => CharacterState.KatixiyaTransition,// 过渡动画状态
+                
+                
+
                 _ => CharacterState.Error
             };
         }
@@ -486,20 +483,66 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 9.过渡动画参数结构体
-        // 过渡动画参数：用于源状态向 JinxiTransition 状态传递配置
-        public struct TransitionParams
+        #region 10.动画查询
+        // 根据移动动画ID获取动画名称
+        public string GetLocomotionAnimationName(LocomotionAnimationId animationId)
         {
-            public LocomotionAnimationId locomotionAnimationId; 
-            public float Duration;           // 动画固定时长（秒）
-            public CharacterState DefaultNextState; // 无打断时，动画结束后切到的状态
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return string.Empty;
+            }
+
+            //2.从动画配置中获取移动动画名称
+            return characterData.animationConfigSO.GetLocomotionAnimationName(animationId);
         }
+
+        // 根据移动动画ID获取动画长度
+        public float GetLocomotionAnimationLength(LocomotionAnimationId animationId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return 0f;
+            }
+
+            //2.从动画配置中获取移动动画长度
+            return characterData.animationConfigSO.GetLocomotionAnimationLength(animationId);
+        }
+
+        // 根据攻击动画ID获取战斗动画名称
+        public string GetCombatAnimationName(AttackId attackId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return string.Empty;
+            }
+
+            //2.从动画配置中获取战斗动画名称
+            return characterData.animationConfigSO.GetCombatAnimationName(attackId);
+        }
+
+        // 根据攻击动画ID获取战斗动画长度
+        public float GetCombatAnimationLength(AttackId attackId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return 0f;
+            }
+
+            //2.从动画配置中获取战斗动画长度
+            return characterData.animationConfigSO.GetCombatAnimationLength(attackId);
+        }
+
+
         #endregion
 
     }
     #endregion
 
-    
+
 }
 
 

@@ -6,7 +6,6 @@ namespace WutheringWaves
 {
     public class CharacterMovement : MonoBehaviour
     {
-        #region 1. 配置字段
         [Header("=== 核心依赖配置 ===")]
         [Tooltip("角色共享上下文")]
         [SerializeField] private CharacterContext context; // 角色共享上下文
@@ -23,128 +22,44 @@ namespace WutheringWaves
         [Tooltip("移动输入阈值")]
         [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float moveThreshold = 0.1f;
-        #endregion
 
-        #region 2. 组件依赖 + 状态机上下文
         public GameObject mainCamera;//主相机
         private CharacterController controller; //角色控制器
         private Animator animator; // 动画控制器
+        private PlayerStamina playerStamina; // 玩家共享体力
+
+
+        #region 生命周期
+        private void Update()
+        {
+            //冲刺计时器
+            UpdateDashCDTimers();
+            //是否长按shift过
+            HasPressedShift();
+        }
         #endregion
 
         #region 初始化逻辑
         // 外部初始化（由CharacterContext调用，注入共享上下文）
         public void Initialize(CharacterContext context)
         {
-            InitializeComponents(context); // 初始化组件
-            InitializeStateData(); // 初始化状态数据
+            BindContext(context); // 绑定共享上下文与核心组件
+            ApplyMovementConfig(); // 同步角色移动配置
+            InitializeRuntimeData(); // 初始化运行时移动数据
         }
 
-        private void InitializeComponents(CharacterContext context)
+        // 绑定共享上下文与移动逻辑依赖
+        private void BindContext(CharacterContext context)
         {
             this.context = context; // 角色共享上下文
-            mainCamera = ResolveMainCamera();//主相机
-            controller = context != null ? context.CharacterController : null;//角色控制器
-            animator = context != null ? context.Animator : null;// 动画控制器
-            ApplyMovementConfig(); // 从角色配置资源同步移动配置
+
+            controller = context != null ? context.CharacterController : null; // 角色控制器
+            animator = context != null ? context.Animator : null; // 动画控制器
+            playerStamina = context != null ? context.PlayerStamina : null; // 玩家共享体力
+
+            BindMainCamera(); // 主相机
         }
 
-        // 解析主相机：兼容新架构下相机由 PlayerController 延后初始化的情况
-        private GameObject ResolveMainCamera()
-        {
-            if (mainCamera != null)
-            {
-                return mainCamera;
-            }
-
-            //if (context != null && context.PlayerCamera != null && context.PlayerCamera.cameraPivot != null)
-            //{
-            //   // mainCamera = context.PlayerCamera.cameraPivot;
-            //    return mainCamera;
-            //}
-
-            Camera unityMainCamera = Camera.main;
-            if (unityMainCamera != null)
-            {
-                mainCamera = unityMainCamera.gameObject;
-                return mainCamera;
-            }
-
-            GameObject taggedMainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            if (taggedMainCamera != null)
-            {
-                mainCamera = taggedMainCamera;
-            }
-
-            return mainCamera;
-        }
-
-        // 获取玩家共享体力：统一从 Context 中读取，避免在各个动作逻辑里重复判空
-        private PlayerStamina ResolvePlayerStamina()
-        {
-            return context != null ? context.PlayerStamina : null;
-        }
-
-        // 统一读取当前角色是否处于御空状态，避免共享移动层只写死到单个角色专属驱动
-        private bool IsCharacterFloating()
-        {
-            if (context == null || context.StateMachine == null)
-            {
-                return false;
-            }
-
-            if (context.StateMachine.JinxiSpecialSkillLinker != null)
-            {
-                return context.StateMachine.JinxiSpecialSkillLinker.IsFloating;
-            }
-
-            if (context.StateMachine.KatixiyaSpecialSkillLinker != null)
-            {
-                return context.StateMachine.KatixiyaSpecialSkillLinker.IsFloating;
-            }
-
-            return false;
-        }
-
-        // 统一读取当前角色是否处于大招状态，避免共享层继续写死到今汐状态枚举
-        private bool IsBursting()
-        {
-            if (context == null || context.StateMachine == null)
-            {
-                return false;
-            }
-
-            CharacterState currentState = context.StateMachine.CurrentStateType;
-            return currentState == CharacterState.JinxiQBurst
-                || currentState == CharacterState.KatixiyaQBurst;
-        }
-
-        // 判断角色控制器当前是否可用：用于拦截失活控制器上的 Move 调用
-        private bool CanUseCharacterController()
-        {
-            return controller != null && controller.enabled && controller.gameObject.activeInHierarchy;
-        }
-
-        // 统一执行角色位移：所有 CharacterController.Move 都收口到这里，方便后续继续迁移
-        private void ApplyCharacterMove(Vector3 movement)
-        {
-            if (!CanUseCharacterController())
-            {
-                return;
-            }
-
-            controller.Move(movement);
-        }
-
-        private void InitializeStateData()
-        {
-            // 基础移动状态：初始为基础步行速度，与角色默认静止/步行逻辑匹配
-            _characterSpeed = moveSpeed;
-            // 目标旋转角度：初始与角色自身Y轴旋转一致，避免无输入时旋转偏差
-            _targetRot = transform.eulerAngles.y;
-            // 旋转平滑速度：SmoothDampAngle要求ref参数，初始化为0保证平滑计算起步正常
-            _rotationVelocity = 0f;
-
-        }
 
         // 从配置资源同步移动配置：位移参数走 MovementConfigSO，其他旧参数暂时继续走 CharacterDataSO
         private void ApplyMovementConfig()
@@ -195,14 +110,51 @@ namespace WutheringWaves
             groundCheckOriginOffset = characterDataSO.groundCheckOriginOffset;
             groundCheckDistance = characterDataSO.groundCheckDistance;
         }
-        #endregion
-        private void Update()
+        private void InitializeRuntimeData()
         {
-            //冲刺计时器
-            UpdateDashCDTimers();
-            //是否长按shift过
-            HasPressedShift();
+            // 基础移动状态：初始为基础步行速度，与角色默认静止/步行逻辑匹配
+            _characterSpeed = moveSpeed;
+            // 目标旋转角度：初始与角色自身Y轴旋转一致，避免无输入时旋转偏差
+            _targetRot = transform.eulerAngles.y;
+            // 旋转平滑速度：SmoothDampAngle要求ref参数，初始化为0保证平滑计算起步正常
+            _rotationVelocity = 0f;
+
         }
+
+        // 绑定主相机：初始化阶段只解析一次
+        private void BindMainCamera()
+        {
+            if (mainCamera != null)
+            {
+                return;
+            }
+
+            Camera unityMainCamera = Camera.main;
+            if (unityMainCamera != null)
+            {
+                mainCamera = unityMainCamera.gameObject;
+                return;
+            }
+
+            mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        }
+
+
+        #endregion
+
+        #region 统一执行角色位移
+        // 统一执行 CharacterController 位移：控制器不可用时直接跳过
+        private void ApplyCharacterMove(Vector3 movement)
+        {
+            if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            controller.Move(movement);
+        }
+
+        #endregion
 
         #region 动画逻辑
         //正常动画
@@ -255,7 +207,7 @@ namespace WutheringWaves
         //旋转
         public void HandleCharacterRotation(Vector2 move)
         {
-            if (ResolveMainCamera() == null)
+            if (mainCamera == null)
             {
                 return;
             }
@@ -273,10 +225,6 @@ namespace WutheringWaves
         //移动
         private void HandleNormalMovement(float speed)
         {
-            if (!CanUseCharacterController())
-            {
-                return;
-            }
 
             Vector3 moveDir = Quaternion.Euler(0.0f, _targetRot, 0.0f) * Vector3.forward;
             ApplyCharacterMove(moveDir.normalized * speed * Time.deltaTime);
@@ -321,10 +269,6 @@ namespace WutheringWaves
         //实现跳跃
         public void HandleJumpMovement(Vector2 move)
         {
-            if (!CanUseCharacterController() || ResolveMainCamera() == null)
-            {
-                return;
-            }
 
             // 1. 将2D输入向量转换为3D世界空间的水平方向向量
             Vector3 inputDir = new Vector3(move.x, 0, move.y);
@@ -364,10 +308,7 @@ namespace WutheringWaves
         //实现下坠
         public void HandleFallingMovement(Vector2 move)
         {
-            if (!CanUseCharacterController() || ResolveMainCamera() == null)
-            {
-                return;
-            }
+
 
             // 1. 将2D输入向量转换为3D世界空间的水平方向向量
             Vector3 inputDir = new Vector3(move.x, 0, move.y);
@@ -414,22 +355,22 @@ namespace WutheringWaves
         [HideInInspector] // 运行时缓存：实际数值由 MovementConfigSO 注入
         public float dashGlobalCDPenalty = 1.3f;
 
-        #region JinxiDash
+        #region 地面冲刺运行时数据
         // 冲刺相关（CD计时器）
-        public int DashCount { get; set; } = 0;//剩余可冲刺数
+        public int DashCount { get; set; } = 0;//当前连续冲刺次数
         public float DashInternalCDTimer { get; set; } = 0f; // 内置CD计时器
         public float DashGlobalCDTimer { get; set; } = 0f;  // 全局CD计时器
 
         // 记录上一次冲刺的时间戳（用于判断是否触发全局CD）
         public float LastDashTimestamp { get; set; } = -100f; // 初始值设为-100，保证第一次冲刺不会误判
         public Vector3 DashDirection { get; set; } = Vector3.forward;//冲刺方向
-        public bool DashSteerable { get; set; } = false;//是否可转向 true向前 false向后
+        public bool DashSteerable { get; set; } = false;//冲刺阶段是否允许转向
+
         #endregion
 
         // 判断地面冲刺是否可用
         public bool IsDashAvailable()
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
             // 条件1：可打断状态
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             // 条件2：在地面（未触发坠落）
@@ -441,7 +382,8 @@ namespace WutheringWaves
             // 条件5：内置CD结束（非首次冲刺需要）
             bool isInternalCDOver = DashInternalCDTimer <= 0;
             // 条件6：是否有足够体力
-            bool hasEnoughStamina = playerStamina == null || playerStamina.CanSprint();
+            bool hasEnoughStamina = playerStamina == null || playerStamina.CanDash();
+
 
             return isCanInterrupt && isGrounded && isGlobalCDOver && isUnderMaxCount && (DashCount == 0 || isInternalCDOver) && hasEnoughStamina;
         }
@@ -489,9 +431,9 @@ namespace WutheringWaves
 
         public bool TryConsumeDashStamina()
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
-            return playerStamina == null || playerStamina.TryConsumeSprint();
+            return playerStamina == null || playerStamina.TryConsumeDash();
         }
+
         #endregion   
 
         #region 空中冲刺
@@ -520,7 +462,7 @@ namespace WutheringWaves
 
         public Vector3 CalculateAirDashDirection(Vector2 move, out bool Direction)
         {
-            if (ResolveMainCamera() == null)
+            if (mainCamera == null)
             {
                 Direction = false;
                 return (-transform.forward).normalized;
@@ -543,10 +485,7 @@ namespace WutheringWaves
         //空中冲刺移动：冻结垂直速度 + 水平冲刺位移（含转向）
         public void HandleAirDashMovement(Vector2 move, ref Vector3 dashDir, bool isLocked,bool Direction)
         {
-            if (!CanUseCharacterController() || ResolveMainCamera() == null)
-            {
-                return;
-            }
+
 
             // 1. 重置垂直速度：空中冲刺时，取消重力/下落速度，保持水平冲刺
             _verticalVelocity = 0f;
@@ -610,7 +549,6 @@ namespace WutheringWaves
         // 判断御空冲刺是否可用
         public bool IsFloatDashAvailable()
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
             // 条件1：可打断状态
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             // 条件2：不在地面（未触发坠落）
@@ -621,10 +559,31 @@ namespace WutheringWaves
             bool hasEnoughStamina = playerStamina == null || playerStamina.CanFloatDash();
             return isCanInterrupt && !isGrounded && isFloating && hasEnoughStamina;
         }
+        // 统一读取当前角色是否处于御空状态，避免共享移动层只写死到单个角色专属驱动
+        private bool IsCharacterFloating()
+        {
+            if (context == null || context.StateMachine == null)
+            {
+                return false;
+            }
+
+            if (context.StateMachine.JinxiSpecialSkillLinker != null)
+            {
+                return context.StateMachine.JinxiSpecialSkillLinker.IsFloating;
+            }
+
+            if (context.StateMachine.KatixiyaSpecialSkillLinker != null)
+            {
+                return context.StateMachine.KatixiyaSpecialSkillLinker.IsFloating;
+            }
+
+            return false;
+        }
+
         // 计算御空冲刺方向 + 旋转至八方向(前/后/左/右/四斜向)
         public bool CalculateFloatDashDirection(Vector2 move)
         {
-            if (ResolveMainCamera() == null)
+            if (mainCamera == null)
             {
                 return false;
             }
@@ -691,7 +650,6 @@ namespace WutheringWaves
 
         public bool TryConsumeFloatDashStamina()
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
             return playerStamina == null || playerStamina.TryConsumeFloatDash();
         }
 
@@ -701,22 +659,22 @@ namespace WutheringWaves
         [Header("=== 急停缓冲配置 ===")]
         [Tooltip("移动缓冲的总滑行距离（米）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float moveStoppingDistance = 0.7f;
+        public float moveStoppingDistance;
         [Tooltip("移动缓冲的总时长（秒）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float moveStoppingTime = 1.33f;
+        public float moveStoppingTime;
         [Tooltip("奔跑缓冲的总滑行距离（米）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float runStoppingDistance = 0.7f;
+        public float runStoppingDistance;
         [Tooltip("奔跑缓冲的总时长（秒）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float runStoppingTime = 1.33f;
+        public float runStoppingTime;
         [Tooltip("急停缓冲的总滑行距离（米）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float dashStoppingDistance = 1f;
+        public float dashStoppingDistance;
         [Tooltip("急停缓冲的总时长（秒）")]
         [HideInInspector] // 运行时缓存：实际数值由 CharacterDataSO 注入
-        public float dashStoppingTime = 0.66f;
+        public float dashStoppingTime;
 
         // 缓冲阶段的私有临时数据
         private float _stoppingTimer;//已经运行的时间
@@ -756,10 +714,7 @@ namespace WutheringWaves
         // 实现急停缓冲逻辑  作用：二次衰减式惯性滑行，模拟真实冲刺后收步的惯性效果
         public bool HandleStoppingMovement()
         {
-            if (!CanUseCharacterController())
-            {
-                return true;
-            }
+
 
             // 如果滑行时间已耗尽，直接返回滑行完成
             if (_stoppingTimer >= StoppingTime) return true;
@@ -802,8 +757,6 @@ namespace WutheringWaves
 
         private bool ResolveRunState(Vector2 move, bool isHoldingRun)
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
-
             if (move.magnitude <= moveThreshold || !isHoldingRun)
             {
                 _isRunning = false;
@@ -822,8 +775,6 @@ namespace WutheringWaves
 
         private bool ResolveRunVisualState(Vector2 move, bool isHoldingRun)
         {
-            PlayerStamina playerStamina = ResolvePlayerStamina();
-
             if (move.magnitude <= moveThreshold || !isHoldingRun)
             {
                 return false;
@@ -870,14 +821,7 @@ namespace WutheringWaves
         //地面状态每帧调用：施加下压力保持 isGrounded
         public void ApplyGroundingForce()
         {
-            if (!CanUseCharacterController())
-            {
-                return;
-            }
-
-            if (controller.isGrounded
-                || IsCharacterFloating()
-                || IsBursting())
+            if (controller.isGrounded)
             {
                 _verticalVelocity = -5f;
             }
@@ -918,10 +862,7 @@ namespace WutheringWaves
         // 自定义地面检测：使用 SphereCast（球体射线）
         public bool CustomCheckGrounded()
         {
-            if (!CanUseCharacterController())
-            {
-                return false;
-            }
+
 
             // 1. 计算检测起点：角色底部 + 微小偏移
             // CharacterController.center.y 是中心偏移，height是高度

@@ -79,6 +79,13 @@ namespace WutheringWaves
         public KatixiyaFeatureRoot KatixiyaFeatureRoot => katixiyaFeatureRoot; // 卡提希娅独属模块根节点
         #endregion
 
+        #region 生命周期
+        private void Update()
+        {
+            UpdateHealthTest();
+        }
+        #endregion
+
         #region 初始化
         // 角色门面初始化总入口：统一接管上下文、输入、共享模块与角色专属模块的启动顺序
         public void Initialize(CharacterRuntimeData runtimeData)
@@ -165,13 +172,20 @@ namespace WutheringWaves
         {
             if (animator == null)
             {
-                animator = GetComponentInChildren<Animator>();
+                animator = GetComponentInChildren<Animator>(true);
             }
+
+
+            // 禁用角色时保留所有Animator状态，避免重新启用时动画重置导致颤动
+            SetAllAnimatorsKeepStateOnDisable();
+
+
             if (characterController == null)
             {
                 characterController = GetComponent<CharacterController>();
             }
         }
+
         #endregion
 
         #region 自动补齐内层核心组件
@@ -195,7 +209,7 @@ namespace WutheringWaves
             }
             if (rootMotion == null)
             {
-                rootMotion = GetComponentInChildren <CharacterRootMotion>();
+                rootMotion = GetComponentInChildren<CharacterRootMotion>(true);
             }
             if (weaponController == null)
             {
@@ -294,11 +308,6 @@ namespace WutheringWaves
 
         #endregion
 
-        private void Update()
-        {
-            UpdateHealthTest();
-        }
-
         #region 生命值控制
         // 受到伤害：角色生命值统一入口
         public void TakeDamage(float damage)
@@ -358,7 +367,6 @@ namespace WutheringWaves
             GameEvents.RaiseHealthChanged(this, runtimeData.currentHealth, runtimeData.maxHealth, runtimeData.NormalizedHealth);
         }
         #endregion
-
         
         #region 生命值测试
         [Header("=== 生命值测试 ===")]
@@ -396,6 +404,21 @@ namespace WutheringWaves
         }
         #endregion
 
+        // 设置所有子Animator禁用时保留状态，避免角色启用时动画状态重置导致颤动
+        private void SetAllAnimatorsKeepStateOnDisable()
+        {
+            Animator[] animators = GetComponentsInChildren<Animator>(true);
+
+            for (int i = 0; i < animators.Length; i++)
+            {
+                if (animators[i] == null)
+                {
+                    continue;
+                }
+
+                animators[i].keepAnimatorStateOnDisable = true;
+            }
+        }
 
     }
 }

@@ -94,11 +94,11 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1.5
+  m_Height: 1.45
   m_Radius: 0.18
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.05
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.7, z: -0.05}
 --- !u!114 &2546084832966390445
@@ -421,6 +421,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: f91aebb501a6e774fac636c93aff0809, type: 2}
+    - target: {fileID: 5866666021909216657, guid: dda0b7c9d040c3446b7fe189cb6df7b8, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -451,5 +455,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa864d0e406e344286c9e87f94b00bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableRootMotionDebug: 1
-  onlyLogWhenMoved: 1
+  enableRootMotionDebug: 0
+  onlyLogWhenMoved: 0
