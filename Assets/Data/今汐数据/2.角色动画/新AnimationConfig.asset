@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7c9c14a1df4cc1b88f32e5a7f96e31, type: 3}
+  m_Name: "\u65B0AnimationConfig"
+  m_EditorClassIdentifier: 
+  characterName: 0
+  locomotionAnimations:
+  - animationId: 1
+    clip: {fileID: -623603649343465320, guid: 0c6ee09fa7ce926469e2d1e0e227b529, type: 3}
+  - animationId: 2
+    clip: {fileID: -623603649343465320, guid: 8716318a55bd5764994a9f7678602b88, type: 3}
+  - animationId: 3
+    clip: {fileID: -623603649343465320, guid: 95291e27f4062dc49b55925756d35a88, type: 3}
+  - animationId: 4
+    clip: {fileID: -623603649343465320, guid: d555a9b5919911443af24004d7d14bf4, type: 3}
+  - animationId: 5
+    clip: {fileID: -623603649343465320, guid: 45f2075522d488d4c9d14e692facd7ad, type: 3}
+  - animationId: 6
+    clip: {fileID: -623603649343465320, guid: 5d97cc1a4fbe91f4f8c49fc6a7fb2310, type: 3}
+  - animationId: 7
+    clip: {fileID: -623603649343465320, guid: c69a589d162e0d94983e3a6cd02369c0, type: 3}
+  - animationId: 8
+    clip: {fileID: -623603649343465320, guid: bd90957c5524d6142bf718ecfa2dffaf, type: 3}
+  - animationId: 9
+    clip: {fileID: -623603649343465320, guid: 756d0136711113845b92a2cfe6b45949, type: 3}
+  - animationId: 10
+    clip: {fileID: -623603649343465320, guid: 7f812ebab1c28bd43a90c4f15d59fa23, type: 3}
+  - animationId: 11
+    clip: {fileID: -623603649343465320, guid: 2c909a068a7063c4ea63767e0a1d7bfe, type: 3}
+  - animationId: 12
+    clip: {fileID: -623603649343465320, guid: 34e95ae9647ce93408ca4278a036fb70, type: 3}
+  - animationId: 13
+    clip: {fileID: -623603649343465320, guid: 5c91ed51499702941ac04cb243b34eb9, type: 3}
+  - animationId: 14
+    clip: {fileID: -623603649343465320, guid: 1ffbdd90f2c2bc744932650dcf599476, type: 3}
+  combatAnimations:
+  - attackId: 1
+    clip: {fileID: -623603649343465320, guid: 2a4591f9005f4924898f42e60371aa46, type: 3}
+  - attackId: 2
+    clip: {fileID: -623603649343465320, guid: 12d38f82ed361984aa94f90c68432dfa, type: 3}
+  - attackId: 3
+    clip: {fileID: -623603649343465320, guid: f0e4450d8943c3d45bc7468e5c36119f, type: 3}
+  - attackId: 4
+    clip: {fileID: -623603649343465320, guid: 2bd49f24f9bc808469cca7350ea7004f, type: 3}
+  - attackId: 21
+    clip: {fileID: -623603649343465320, guid: b475264d3e9161e41a021474955c876a, type: 3}
+  - attackId: 5
+    clip: {fileID: -623603649343465320, guid: 0a4dce2423c240042a85e58f0775d8fa, type: 3}
+  - attackId: 6
+    clip: {fileID: -623603649343465320, guid: a70844700a3c72c458b26ce6619a3785, type: 3}
+  - attackId: 7
+    clip: {fileID: -623603649343465320, guid: ea89c8c7e8be2aa4c89f224b9cd38ef8, type: 3}
+  - attackId: 8
+    clip: {fileID: -623603649343465320, guid: 9bbc58c93e001cc469f126ab0e95e4a0, type: 3}
+  - attackId: 9
+    clip: {fileID: -623603649343465320, guid: c0764f8aa8e5fa24d8daff0dd7ae9bf3, type: 3}
+  - attackId: 10
+    clip: {fileID: -623603649343465320, guid: 4764c2de367332546aeebb952b8275dc, type: 3}
+  - attackId: 11
+    clip: {fileID: -623603649343465320, guid: 127cd1939ad14404683934b53a65e166, type: 3}
+  - attackId: 12
+    clip: {fileID: -623603649343465320, guid: f8c9ac04f5a8b6c4aac267717e8fbe6b, type: 3}
+  - attackId: 13
+    clip: {fileID: -623603649343465320, guid: d0857382b41304b429a2bdea9ea24172, type: 3}
+  - attackId: 14
+    clip: {fileID: -623603649343465320, guid: deb71270607b3574da1b8cf09b510309, type: 3}
+  - attackId: 15
+    clip: {fileID: -623603649343465320, guid: b9118c0345ff60847bf6c4ca4fafd5f3, type: 3}
+  - attackId: 16
+    clip: {fileID: -623603649343465320, guid: f8e7ed0b73854404397cdb4939838e23, type: 3}
+  - attackId: 17
+    clip: {fileID: -623603649343465320, guid: b7ce6e80fb8348744bebfdb6acbb1ebc, type: 3}
+  - attackId: 18
+    clip: {fileID: -623603649343465320, guid: d1dd1ae251f7b45409ba37caf7502c7a, type: 3}
+  - attackId: 19
+    clip: {fileID: -623603649343465320, guid: 4704fcdee4a4f1d4c9306826059b4fc9, type: 3}
+  - attackId: 20
+    clip: {fileID: -623603649343465320, guid: 19092c58a7b812f4398e22e73f51eb26, type: 3}

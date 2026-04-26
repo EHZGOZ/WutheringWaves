@@ -664,7 +664,10 @@ namespace WutheringWaves
             // 2.绑定输入到当前受控角色
             playerInputReader?.BindInputBuffer(context.InputBuffer);
 
-            // 3.绑定相机到当前受控角色
+            // 3.切换角色后强制回到默认状态
+            context.StateMachine?.ForceResetToDefaultState();
+
+            // 4.绑定相机到当前受控角色
             if (context.CameraTarget == null)
             {
                 Debug.LogWarning("[PlayerController] 当前角色缺少相机观察点。", context);
@@ -674,17 +677,22 @@ namespace WutheringWaves
                 playerCamera?.BindCameraPivot(context.CameraTarget);
             }
 
-            // 4.绑定UI到当前受控角色
+            // 5.绑定UI到当前受控角色
             if (UIRoot.Instance != null)
             {
                 UIRoot.Instance.Bind(this);
             }
         }
+
         #endregion
 
         #endregion
 
         #region 切换角色
+        [Header("切人最小间隔时间")]
+        [SerializeField] private float switchCharacterInterval = 0.3f;
+
+        private float lastSwitchCharacterTime = -999f; // 上一次成功切人的时间
         // 处理输入层发来的切人请求：targetSlot为1/2/3
         private void HandleSwitchCharacterRequest(int targetSlot)
         {
@@ -704,8 +712,12 @@ namespace WutheringWaves
             //4.绑定目标角色
             BindCurrentCharacter(targetContext);
 
-            //5.通知其他系统当前角色发生变化
+            //5.记录本次成功切人的时间
+            lastSwitchCharacterTime = Time.time;
+
+            //6.通知其他系统当前角色发生变化
             GameEvents.RaiseCharacterSwitched(previousContext, _currentCharacterContext);
+
         }
 
         // 判断是否可以切换到指定角色
@@ -737,19 +749,26 @@ namespace WutheringWaves
                 return false;
             }
 
-            //5.目标角色死亡时先不允许切换
+            //5.切人间隔未结束时不能切换
+            if (Time.time - lastSwitchCharacterTime < switchCharacterInterval)
+            {
+                return false;
+            }
+
+            //6.目标角色死亡时先不允许切换
             if (targetContext.CharacterRuntimeData != null && targetContext.CharacterRuntimeData.IsDead)
             {
                 return false;
             }
 
-            //6.当前角色处于不可打断状态时先不允许切换
+            //7.当前角色处于不可打断状态时先不允许切换
             if (_currentCharacterContext != null
                 && _currentCharacterContext.StateMachine != null
                 && !_currentCharacterContext.StateMachine.IsInterruptible())
             {
                 return false;
             }
+
 
             return true;
         }

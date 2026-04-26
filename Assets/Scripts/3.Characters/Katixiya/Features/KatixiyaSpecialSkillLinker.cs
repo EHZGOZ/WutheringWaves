@@ -47,10 +47,12 @@ namespace WutheringWaves
         // 统一从 CombatConfigSO 读取攻击段配置，未配置时返回空列表避免空引用
         public List<AttackStep> AttackSteps => combatConfig != null && combatConfig.attackSteps != null ? combatConfig.attackSteps : emptyAttackSteps;
         public List<AttackStep> FallAttackSteps => combatConfig != null && combatConfig.fallAttackSteps != null ? combatConfig.fallAttackSteps : emptyAttackSteps;
+        public List<AttackStep> HeavyAttackSteps => combatConfig != null && combatConfig.heavyAttackSteps != null ? combatConfig.heavyAttackSteps : emptyAttackSteps;
         public List<AttackStep> ESkillAttackSteps => combatConfig != null && combatConfig.eSkillAttackSteps != null ? combatConfig.eSkillAttackSteps : emptyAttackSteps;
         public List<AttackStep> QBurstAttackSteps => combatConfig != null && combatConfig.qBurstAttackSteps != null ? combatConfig.qBurstAttackSteps : emptyAttackSteps;
 
-        public bool IsFloating => false; // 卡提希娅当前没有御空机制，保留给通用移动/表现层查询
+        public bool IsFloating => false; // 卡提希娅当前没有御空机制，先返回 false 兼容通用系统
+
         public float ESkillCD => eSkillCD;
         public float ESkillCDTimer => Mathf.Max(0f, eSkillCDTimer);
         public float QBurstCD => qBurstCD;
@@ -82,6 +84,18 @@ namespace WutheringWaves
             IsAvailable = characterDataSO != null && characterDataSO.characterName == CharacterName.卡提希娅;
 
             ResetAllRuntimeState();
+        }
+        // 重置卡提希娅专属驱动的全部运行时状态
+        private void ResetAllRuntimeState()
+        {
+            currentStep = null;
+
+            currentComboCount = 0;
+            comboWindowTimer = 0f;
+            isComboWindowOpen = false;
+
+            eSkillCDTimer = 0f;
+            qBurstCDTimer = 0f;
         }
         #endregion
 
@@ -195,6 +209,48 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 重击
+        // 地面重击可用性判断
+        public bool IsHeavyAttackable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+
+            return isCanInterrupt;
+        }
+
+        // 初始化重击攻击段：卡提希娅当前只有一段重击但是会根据情况判断是空中重击还是地面重击
+        public AttackStep InitializeHeavyAttackStep()
+        {
+            if (HeavyAttackSteps.Count == 0)
+            {
+                Debug.LogError("HeavyAttackSteps 配置为空！");
+                return null;
+            }
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
+            AttackStep step;
+
+            if (isGrounded)
+            {
+                 step = GetAttackStepAt(HeavyAttackSteps, 0);
+            }
+            else
+            {
+                 step = GetAttackStepAt(HeavyAttackSteps, 1);
+            }
+           
+            if (step == null)
+            {
+                Debug.LogError("HeavyAttackSteps 缺少重击攻击段配置！");
+                return null;
+            }
+
+            currentStep = step;
+            attackLogic?.SetCurrentStep(step);
+            return step;
+        }
+
+        #endregion
+
         #region 下落攻击
         // 下落攻击可用性判断
         public bool IsFallAttackable()
@@ -275,7 +331,8 @@ namespace WutheringWaves
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isCDOver = qBurstCDTimer <= 0f;
-            return isCanInterrupt && HasQBurstConfigured && isCDOver;
+            //return isCanInterrupt && HasQBurstConfigured && isCDOver;
+            return false;//还没做，防止误进入
         }
         #endregion
 
@@ -296,20 +353,6 @@ namespace WutheringWaves
         {
             qBurstCDTimer = qBurstCD;
             NotifySkillUIChanged();
-        }
-        #endregion
-
-        #region 技能UI显示
-        // 获取当前 E 技 UI 应展示的总时长
-        public float GetCurrentESkillDisplayDuration()
-        {
-            return eSkillCD;
-        }
-
-        // 获取当前 E 技 UI 应展示的剩余时长
-        public float GetCurrentESkillDisplayTimer()
-        {
-            return ESkillCDTimer;
         }
         #endregion
 
@@ -356,18 +399,7 @@ namespace WutheringWaves
             return stepList[index];
         }
 
-        // 重置卡提希娅专属驱动的全部运行时状态
-        private void ResetAllRuntimeState()
-        {
-            currentStep = null;
-
-            currentComboCount = 0;
-            comboWindowTimer = 0f;
-            isComboWindowOpen = false;
-
-            eSkillCDTimer = 0f;
-            qBurstCDTimer = 0f;
-        }
+        
 
         // 通知技能 UI 刷新
         private void NotifySkillUIChanged()

@@ -19,7 +19,7 @@ MonoBehaviour:
   eSkillIcons: []
   qBurstLockedIcon: {fileID: 0}
   qBurstReadyIcons: []
-  animationConfigSO: {fileID: 11400000, guid: 8016c7b2e228841469cb160d0e507179, type: 2}
+  animationConfigSO: {fileID: 11400000, guid: d39782b2d3ea0a5449c5f4d26fffd134, type: 2}
   combatConfig: {fileID: 11400000, guid: ca6c8ddaaaa41d5418eb38909d976deb, type: 2}
   movementConfigSO: {fileID: 11400000, guid: 9b1a4ac4c97c4f2ead7a9bb7a5f9a0b1, type: 2}
   weaponConfigSO: {fileID: 11400000, guid: 31701b11094f46c3b579678f1e3d3af8, type: 2}

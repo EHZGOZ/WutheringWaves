@@ -45,6 +45,7 @@ namespace WutheringWaves
         #region 按住状态缓存
         private bool isRunKeyPressed; // 记录Shift当前是否处于按下状态
         private bool isHAttackKeyPressed;// 记录Attack当前是否处于按下状态
+        private bool hasTriggeredHeavyAttackThisPress;// 本次按压是否已经触发过重击
         #endregion
 
         #region 初始化
@@ -84,6 +85,7 @@ namespace WutheringWaves
             WantsToHAttack = false;
             isHAttackKeyPressed = false;
             hAttackInputTimestamp = -Mathf.Infinity;
+            hasTriggeredHeavyAttackThisPress = false;
 
             WantsToQBurst = false;
             qBurstInputTimestamp = -Mathf.Infinity;
@@ -101,7 +103,7 @@ namespace WutheringWaves
             }
 
             CheckRunKeyLongPressState();//每帧检测奔跑按键长按状态并更新标记
-            CheckHAttackKeyLongPressState(); //每帧检测重攻击按键长按状态并更新标记
+            CheckHAttackKeyLongPressState();//每帧检测重攻击按键长按状态并更新标记
         }
 
         #region 请求写入方法（供输入读取器/外观层调用）
@@ -121,43 +123,85 @@ namespace WutheringWaves
 
             if (isPressed)
             {
-                dashInputTimestamp = Time.time;
-                runInputTimestamp = Time.time;
-
                 WantsToDash = true;
-                IsHoldingRun = false; // 按下瞬间不设置IsHoldingRun，等超过阈值再设置
+                dashInputTimestamp = Time.time;
+
+                IsHoldingRun = false;
+                runInputTimestamp = Time.time;
             }
             else
             {
                 IsHoldingRun = false;
                 isRunKeyPressed = false;
-                runInputTimestamp = -Mathf.Infinity;
             }
         }
+
 
         // 写入攻击/御空攻击/重攻击请求
         public void BufferAttack(bool isPressed)
         {
             EnsureInitialized();
-            isHAttackKeyPressed = isPressed;
 
             if (isPressed)
             {
-                attackInputTimestamp = Time.time;
-                airAttackInputTimestamp = Time.time;
+                // 1.记录当前攻击键已按下
+                isHAttackKeyPressed = true;
+
+                // 2.记录按下起始时间，用于后续松开时判断轻击/重击
                 hAttackInputTimestamp = Time.time;
 
-                WantsToAttack = true;
-                WantsToAirAttack = true;
+                // 3.重置本次按压的重击触发标记
+                hasTriggeredHeavyAttackThisPress = false;
+
+                // 4.按下时先不直接写入攻击请求，避免轻击和重击范围重叠
+                WantsToAttack = false;
+                WantsToAirAttack = false;
                 WantsToHAttack = false;
             }
             else
             {
-                WantsToHAttack = false;
+                // 1.只有原本处于按下状态时，才处理松开判定
+                if (!isHAttackKeyPressed)
+                {
+                    return;
+                }
+
+                // 2.计算本次按住时长
+                float pressDuration = Time.time - hAttackInputTimestamp;
+
+                // 3.先结束按住状态
                 isHAttackKeyPressed = false;
-                hAttackInputTimestamp = -Mathf.Infinity;
+
+                // 4.如果本次按压已经触发过重击，松开时不再补发任何攻击请求
+                if (hasTriggeredHeavyAttackThisPress)
+                {
+                    hasTriggeredHeavyAttackThisPress = false;
+                    return;
+                }
+
+                // 5.阈值之前松开：判定为轻攻击
+                if (pressDuration < longPressThreshold)
+                {
+                    attackInputTimestamp = Time.time;
+                    airAttackInputTimestamp = Time.time;
+
+                    WantsToAttack = true;
+                    WantsToAirAttack = true;
+                    WantsToHAttack = false;
+                }
+                // 6.兜底：如果超阈值时还没来得及在 Update 中触发重击，则在松开时补发一次
+                else
+                {
+                    hAttackInputTimestamp = Time.time;
+
+                    WantsToAttack = false;
+                    WantsToAirAttack = false;
+                    WantsToHAttack = true;
+                    hasTriggeredHeavyAttackThisPress = false;
+                }
             }
         }
+
 
         // 写入战技请求
         public void BufferESkill()
@@ -237,6 +281,26 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 重击相关
+        public bool CheckAndConsumeHeavyAttackRequest()
+        {
+            EnsureInitialized();
+
+            if (WantsToHAttack && (Time.time - hAttackInputTimestamp) <= inputBufferTime)
+            {
+                WantsToHAttack = false;
+                return true;
+            }
+            return false;
+        }
+
+        //重击时移除多余重击请求
+        public void CleanWantsToHeavyAttackRequest()
+        {
+            WantsToHAttack = false;
+        }
+        #endregion
+
         #region 御空攻击相关
         public bool CheckAndConsumeAirAttackRequest()
         {
@@ -310,9 +374,22 @@ namespace WutheringWaves
         //每帧检测重攻击按键长按状态并更新标记（Update调用）
         private void CheckHAttackKeyLongPressState()
         {
-            if (isHAttackKeyPressed && Time.time - hAttackInputTimestamp >= longPressThreshold)
+            // 1.只有攻击键处于按下状态，且本次按压还没触发过重击时才继续判断
+            if (!isHAttackKeyPressed || hasTriggeredHeavyAttackThisPress)
             {
+                return;
+            }
+
+            // 2.按住超过阈值时，立即触发重击请求
+            if (Time.time - hAttackInputTimestamp >= longPressThreshold)
+            {
+                WantsToAttack = false;
+                WantsToAirAttack = false;
+
                 WantsToHAttack = true;
+                hAttackInputTimestamp = Time.time;
+
+                hasTriggeredHeavyAttackThisPress = true;
             }
         }
         #endregion

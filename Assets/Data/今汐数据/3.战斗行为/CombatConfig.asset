@@ -42,7 +42,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 1
+      executionAttackCostTime: 0.8
       comboWindowDuration: 1.5
   - attackId: 4
     hitConfig:
@@ -85,6 +85,7 @@ MonoBehaviour:
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
+  heavyAttackSteps: []
   skillAirAttackSteps:
   - attackId: 12
     hitConfig:

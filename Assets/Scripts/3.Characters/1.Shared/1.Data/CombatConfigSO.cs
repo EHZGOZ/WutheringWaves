@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace WutheringWaves
@@ -56,6 +56,8 @@ namespace WutheringWaves
 
         [Header("下落攻击段的核心列表")]
         [SerializeField] internal List<AttackStep> fallAttackSteps = new List<AttackStep>();
+        [Header("重攻击段的核心列表")]
+        [SerializeField] internal List<AttackStep> heavyAttackSteps = new List<AttackStep>();
 
         [Header("御空攻击段的核心列表（空中）")]
         [SerializeField] internal List<AttackStep> skillAirAttackSteps = new List<AttackStep>();

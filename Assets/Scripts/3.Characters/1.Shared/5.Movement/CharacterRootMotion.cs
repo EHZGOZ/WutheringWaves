@@ -29,7 +29,8 @@ namespace WutheringWaves
                 && (stateMachine.CurrentStateType == CharacterState.JinxiMove
                 || stateMachine.CurrentStateType == CharacterState.JinxiIdle
                 || stateMachine.CurrentStateType == CharacterState.KatixiyaMove
-                || stateMachine.CurrentStateType == CharacterState.KatixiyaIdle))
+                || stateMachine.CurrentStateType == CharacterState.KatixiyaIdle
+                ))
             {
                 return;
             }

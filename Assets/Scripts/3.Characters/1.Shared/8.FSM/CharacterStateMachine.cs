@@ -296,11 +296,30 @@ namespace WutheringWaves
             CurrentState.UpdateState();
 
         }
-     
+
 
         #endregion
 
         #region 7. 公共方法判断方法
+        // 强制回到当前角色默认状态（当前今汐/卡提希娅都是待机）
+        public void ForceResetToDefaultState()
+        {
+            // 1.空值检查
+            if (StateFactory == null || characterData == null)
+            {
+                return;
+            }
+
+            // 2.解除状态锁，避免切人时因为旧状态锁定导致无法切回默认状态
+            IsStateLocked = false;
+
+            //// 3.清空当前角色输入状态，避免切人瞬间把旧输入带进新角色
+            //ResetInputState();先别清
+
+            // 4.切回当前角色默认状态
+            SwitchState(GetDefaultState());
+        }
+
 
         // 判断当前状态是否可被打断
         public bool IsInterruptible()
@@ -338,13 +357,16 @@ namespace WutheringWaves
         public bool CheckAndConsumeDashRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeDashRequest();
         public bool CheckAndConsumeAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAttackRequest();
         public bool CheckAndConsumeAirAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAirAttackRequest();
+        public bool CheckAndConsumeHeavyAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeHeavyAttackRequest();
         public bool CheckAndConsumeESkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeESkillRequest();
         public bool CheckAndConsumeQBurstRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQBurstRequest();
 
         public void CleanWantsToJumpRequest() => InputBuffer?.CleanWantsToJumpRequest();
         public void CleanWantsToDashRequest() => InputBuffer?.CleanWantsToDashRequest();
         public void CleanWantsToAttackRequest() => InputBuffer?.CleanWantsToAttackRequest();
-        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();
+        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();   
+        public void CleanWantsToHeavyAttackRequest() => InputBuffer?.CleanWantsToHeavyAttackRequest();
+
         public void CleanWantsToESkilltRequest() => InputBuffer?.CleanWantsToESkilltRequest();
 
         // 重置输入层状态（死亡/复活等需要清空请求时使用）

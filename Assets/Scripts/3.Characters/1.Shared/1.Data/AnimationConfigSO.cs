@@ -45,7 +45,9 @@ namespace WutheringWaves
         ESkill02 = 17,
         ESkill03 = 18,
         ESkill04 = 19,
-        QBurst = 20
+        QBurst = 20,
+        HAttack01 = 21,
+        HAttack02 = 22
     }
 
     [System.Serializable]
@@ -175,6 +177,7 @@ namespace WutheringWaves
         }
 
 
+        
         // 根据 AttackId 获取对应的战斗动画剪辑
         public AnimationClip GetCombatClip(AttackId attackId)
         {

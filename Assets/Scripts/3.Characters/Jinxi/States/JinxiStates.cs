@@ -573,7 +573,6 @@
         // 1. 退出跳跃状态动画
         private void JumpingExitAnimation()
         {
-            // CrossFade 直切动画后无需再清理 Trigger
         }
         #endregion
 
@@ -615,6 +614,12 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+            //下落攻击状态
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
+            {
+                SwitchState(CharacterState.JinxiFallAttack);
                 return;
             }
             //坠落状态
@@ -695,9 +700,8 @@
         // 1. 退出坠落状态动画
         private void FallingExitAnimation()
         {
-            //stateMachine.Animator.ResetTrigger("Fall");
+
         }
-        //2. 配置落地过渡参数并切换状态
 
         #endregion
 
@@ -747,7 +751,7 @@
                 SwitchState(CharacterState.JinxiAirAttack);
                 return;
             }
-            //坠落攻击状态
+            //下落攻击状态
             if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.JinxiFallAttack);
@@ -968,10 +972,6 @@
             _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeNormalAttackStep();
             //2.同步攻击阶段信息
             stateMachine.currentStep = _attackStep;
-            if(stateMachine.PreviousStateType!=CharacterState.JinxiAttack)
-            {
-                stateMachine.JinxiSpecialSkillLinker.ResetNormalCombo();
-            }
         }
         //2.初始化攻击状态
         private void InitializeAttackState()

@@ -57,3 +57,7 @@ MonoBehaviour:
     clip: {fileID: -623603649343465320, guid: 28b2bc8a441522b4fbf8ea13515c2ddb, type: 3}
   - attackId: 16
     clip: {fileID: -623603649343465320, guid: dd2567d7ecd932a458c6aab7ad960206, type: 3}
+  - attackId: 21
+    clip: {fileID: -623603649343465320, guid: d78585d65e66aa746af76aca17d263b2, type: 3}
+  - attackId: 22
+    clip: {fileID: -623603649343465320, guid: 931888b2636e7c04c862612dae3f42ed, type: 3}

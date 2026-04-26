@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3c5dc94490ca6d41a8fd0d4e9cc357b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBufferTime: 0.3
+  inputBufferTime: 0.2
   longPressThreshold: 0.15
 --- !u!114 &7408138358391806747
 MonoBehaviour:
@@ -343,12 +343,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25c442e695006c24d828f1da347f8060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill1CD: 5
+  eSkillCD: 5
   qBurstCD: 15
-  skill2WindowCD: 5
-  skill3WindowCD: 5
-  skill4WindowCD: 5
-  floatingDuration: 10
 --- !u!1001 &7261049197835367413
 PrefabInstance:
   m_ObjectHideFlags: 0
