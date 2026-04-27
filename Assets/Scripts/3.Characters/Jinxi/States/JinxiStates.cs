@@ -1,5 +1,6 @@
 ﻿
-    using System.Collections;
+using DG.Tweening;
+using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     namespace WutheringWaves
@@ -108,6 +109,13 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
+
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -130,6 +138,12 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -259,6 +273,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -281,6 +301,12 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -457,6 +483,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
 
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
@@ -483,6 +515,13 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
 
@@ -616,8 +655,14 @@
                 SwitchState(CharacterState.JinxiAirAttack);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.JinxiFallAttack);
                 return;
@@ -652,8 +697,11 @@
         // 1. 进入坠落状态动画
         private void FallingEnterAnimation()
         {
-            //stateMachine.Animator.SetTrigger("Fall");
-            if (stateMachine.PreviousStateType == CharacterState.JinxiAirDash || stateMachine.PreviousStateType == CharacterState.JinxiFloatDash || stateMachine.PreviousStateType == CharacterState.JinxiJump)
+            if (stateMachine.PreviousStateType == CharacterState.JinxiAirDash 
+                || stateMachine.PreviousStateType == CharacterState.JinxiFloatDash 
+                || stateMachine.PreviousStateType == CharacterState.JinxiJump
+                || stateMachine.PreviousStateType == CharacterState.JinxiQBurst
+                )
             {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Fall), 0.2f, 0, 0);
             }
@@ -733,6 +781,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             // 御空冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsFloatDashAvailable())
             {
@@ -752,7 +806,7 @@
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.JinxiFallAttack);
                 return;
@@ -795,8 +849,14 @@
 
         //2.播放着地动画
         private void LandEnterAnimation()
-        {
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Land), 0.1f, 0, 0);
+        {if(stateMachine.PreviousPreviousStateType!=CharacterState.JinxiQBurst)
+            {
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Land), 0.1f, 0, 0);
+            }else
+            {
+                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Land), 0.3f, 0, 0);
+            }
+           
         }
         #endregion
 
@@ -890,6 +950,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
 
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
@@ -916,6 +982,13 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
 
@@ -1094,6 +1167,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -1105,6 +1184,12 @@
             if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
             {
                 SwitchState(CharacterState.JinxiJump);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -1136,119 +1221,233 @@
     {
         private enum HeavyAttackPhase
         {
-            Execution, // 重击执行阶段（不可打断，释放伤害）
-            Recovery   // 重击恢复阶段（可打断，收招后摇）
+            Execution, // 重击执行阶段：核心动作，不可打断
+            Recovery   // 重击恢复阶段：收招后摇，可打断
         }
 
-        private float _stateTime;              // 重击状态时长
-        private HeavyAttackPhase _phase;       // 重击阶段
-        private float _heavyAttackCostTime;    // 重击总动画时长
-        private float _executionCostTime;      // 重击执行阶段时长
+        private HeavyAttackPhase _phase;
+        private AttackStep _heavyAttackStep;
+
+        private float _stateTime;//处于重击状态的时长
+        private float _executionDuration;//重击执行阶段时长
+        private float _animationLength;//重击动画总时长
 
         public JinxiHeavyAttackState(CharacterStateMachine stateMachine, CharacterStateFactory factory)
             : base(stateMachine, factory) { }
 
         public override void EnterState()
         {
-            // 1. 初始化重击数据
+            //1.初始化重击数据
             InitializeHeavyAttackData();
-            // 2. 锁定状态（重击前摇不可打断）
-            stateMachine.IsStateLocked = true;
-            // 3. 进入重击状态动画
-            HeavyAttackingEnterAnimation();
-            // 4. 清空重击输入缓存
-            //stateMachine.InputHandler.CleanWantsToHeavyAttackRequest();
-        }
-        // 3. 进入重击状态动画
-        private void HeavyAttackingEnterAnimation()
-        {
-            stateMachine.Animator.SetTrigger("HeavyAttack");
+
+            //重击数据为空时直接回待机，防止后续空引用
+            if (_heavyAttackStep == null)
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiIdle);
+                return;
+            }
+
+            //2.初始化重击状态
+            InitializeHeavyAttackState();
+
+            //3.进入重击状态动画
+            HeavyAttackEnterAnimation();
         }
 
+        #region EnterState子方法
+        //1.初始化重击数据
         private void InitializeHeavyAttackData()
         {
-            _stateTime = 0;
+            //1.获取当前重击攻击段
+            _heavyAttackStep = stateMachine.JinxiSpecialSkillLinker.InitializeHeavyAttackStep();
 
+            //重击数据为空时直接返回，防止后续空引用
+            if (_heavyAttackStep == null)
+            {
+                _executionDuration = 0f;
+                _animationLength = 0f;
+                return;
+            }
+
+            //2.同步攻击阶段信息
+            stateMachine.currentStep = _heavyAttackStep;
+
+            //3.初始化重击执行阶段时长
+            _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_heavyAttackStep);
+
+            //4.初始化重击动画总时长
+            _animationLength = stateMachine.GetCombatAnimationLength(_heavyAttackStep.attackId);
         }
+
+        //2.初始化重击状态
+        private void InitializeHeavyAttackState()
+        {
+            //1.清理重击输入请求，避免重复触发
+            stateMachine.CleanWantsToHeavyAttackRequest();
+
+            //2.初始化状态时间
+            _stateTime = 0f;
+
+            //3.初始化重击阶段
+            _phase = HeavyAttackPhase.Execution;
+
+            //4.锁定状态，执行阶段不能随意切走
+            stateMachine.IsStateLocked = true;
+        }
+
+        //3.进入重击状态动画
+        private void HeavyAttackEnterAnimation()
+        {
+            //播放角色重击动画
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_heavyAttackStep.attackId), 0f, 0, 0);
+
+            //播放武器表现
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_heavyAttackStep);
+
+            //播放重击特效
+            stateMachine.effectController?.PlayEffectAction(_heavyAttackStep);
+
+            //隐藏装饰剑
+            stateMachine.manifestation.HideDecorationSwordFade();
+        }
+        #endregion
 
         public override void UpdateState()
         {
-            // 更新状态时间+切换阶段
-            UpdateAttackPhase();
-            // 动画参数同步
-            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-            // 状态切换判断
+            //1.更新重击阶段
+            UpdateHeavyAttackPhase();
+
+            //2.更新重击状态动画
+            HeavyAttackUpdateAnimation();
+
+            //3.状态转换
             CheckStateTransitions();
         }
 
-        private void UpdateAttackPhase()
+        #region UpdateState子方法
+        //1.更新重击阶段
+        private void UpdateHeavyAttackPhase()
         {
             _stateTime += Time.deltaTime;
-            // 执行阶段结束 → 进入可打断的恢复阶段
-            if (_stateTime > _executionCostTime)
+
+            //执行阶段结束后进入恢复阶段
+            if (_phase == HeavyAttackPhase.Execution && _stateTime >= _executionDuration)
             {
                 _phase = HeavyAttackPhase.Recovery;
                 stateMachine.IsStateLocked = false;
             }
         }
 
+        //2.更新重击状态动画
+        private void HeavyAttackUpdateAnimation()
+        {
+            //同步移动混合树参数，防止退出重击时动画参数突变
+            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+        #endregion
+
         public override void ExitState()
         {
-            // 1. 退出重击状态动画
-            HeavyAttackingExitAnimation();
+            //1.退出重击状态动画
+            HeavyAttackExitAnimation();
+
+            //2.重置垂直速度
+            stateMachine.movementLogic.ResetVerticalVelocity();
         }
-        // 1. 退出重击状态动画
-        private void HeavyAttackingExitAnimation()
+
+        #region ExitState子方法
+        //1.退出重击状态动画
+        private void HeavyAttackExitAnimation()
         {
-            stateMachine.Animator.ResetTrigger("HeavyAttack");
+            //结束武器表现
+            stateMachine.context?.WeaponController?.EndWeaponAction();
+
+            //结束重击特效
+            stateMachine.context?.EffectController?.EndEffectAction();
+
+            //显示装饰剑
+            stateMachine.manifestation.ShowDecorationSwordFade();
         }
+        #endregion
 
         private void CheckStateTransitions()
         {
-            // 死亡
+            //死亡状态
             if (stateMachine.runtimeData.currentHealth <= 0)
             {
+                stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.JinxiDead);
                 return;
             }
-            // 受击
+            //爆发状态
+            if (stateMachine.JinxiSpecialSkillLinker.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiQBurst);
+                return;
+            }
+            //受击状态
             if (stateMachine.TryConsumeHitRequest())
             {
                 SwitchState(CharacterState.JinxiHit);
                 return;
             }
-            // 冲刺
+
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
+
+            //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
                 SwitchState(CharacterState.JinxiDash);
                 return;
             }
-            // 跳跃
+
+            //跳跃状态
             if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
             {
                 SwitchState(CharacterState.JinxiJump);
                 return;
             }
-            // 普通攻击（重击恢复阶段可衔接普攻）
+
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
+                return;
+            }
+
+            //攻击状态
             if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable())
             {
                 SwitchState(CharacterState.JinxiAttack);
                 return;
             }
-            // 坠落
-            if (!stateMachine.movementLogic.CustomCheckGrounded())
-            {
-                SwitchState(CharacterState.JinxiFall);
-                return;
-            }
-            // 移动
-            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && stateMachine.characterController.isGrounded)
+
+            //移动状态
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold
+                && stateMachine.movementLogic.CustomCheckGrounded()
+                )
             {
                 SwitchState(CharacterState.JinxiMove);
                 return;
             }
-            // 待机（重击结束）
-            if (_stateTime >= _heavyAttackCostTime)
+
+            //待机状态
+            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold
+                && _stateTime >= _animationLength)
             {
                 SwitchState(CharacterState.JinxiIdle);
                 return;
@@ -1466,6 +1665,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //冲刺状态
             if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -1483,6 +1688,12 @@
             if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
             {
                 SwitchState(CharacterState.JinxiJump);
+                return;
+            }
+            //重击状态
+            if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -1591,7 +1802,6 @@
             UpdateStateTimeAndChangePhase();
             //2. 动画参数同步
             AirAttackingUpdateAnimation();
-
             //4. 状态切换判断
             CheckStateTransitions();
         }
@@ -1678,6 +1888,12 @@
                     SwitchState(CharacterState.JinxiESkill);
                     return;
                 }
+                //延奏状态
+                if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+                {
+                    SwitchState(CharacterState.JinxiQteSkill);
+                    return;
+                }
                 // 冲刺状态
                 if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
                 {
@@ -1695,6 +1911,12 @@
                 if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
                 {
                     SwitchState(CharacterState.JinxiAirAttack);
+                    return;
+                }
+                //重击状态
+                if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable() && _phase == AirAttackPhase.Recovery)
+                {
+                    SwitchState(CharacterState.JinxiHeavyAttack);
                     return;
                 }
                 // 攻击
@@ -1917,6 +2139,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //冲刺状态
             if ((stateMachine.WantsToDash && stateMachine.movementLogic.IsDashAvailable()))
             {
@@ -1933,6 +2161,12 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -2054,8 +2288,6 @@
             }
         }
         #endregion
-
-
         //状态转换
         private void CheckStateTransitions()
         {
@@ -2072,6 +2304,12 @@
                 SwitchState(CharacterState.JinxiESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
             //御空攻击状态
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
@@ -2079,7 +2317,7 @@
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.JinxiFallAttack);
                 return;
@@ -2222,6 +2460,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
                 return;
             }
             //御空冲刺状态
@@ -2378,7 +2622,7 @@
         private void InitializeState()
         {
             //1. 消费E技能请求
-            stateMachine.CleanWantsToESkilltRequest();
+            stateMachine.CleanWantsToESkillRequest();
             //2.数据初始化
             _statePhase = ESkillStatePhase.Execution;
             _stateTime = 0f;
@@ -2494,6 +2738,12 @@
                     SwitchState(CharacterState.JinxiESkill);
                     return;
                 }
+                //延奏状态
+                if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+                {
+                    SwitchState(CharacterState.JinxiQteSkill);
+                    return;
+                }
                 //御空冲刺状态
                 if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsFloatDashAvailable() && _statePhase == ESkillStatePhase.Recovery)
                 {
@@ -2504,6 +2754,12 @@
                 if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
                 {
                     SwitchState(CharacterState.JinxiAirAttack);
+                    return;
+                }
+                //重击状态
+                if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                {
+                    SwitchState(CharacterState.JinxiHeavyAttack);
                     return;
                 }
                 // 攻击状态
@@ -2572,6 +2828,12 @@
                     SwitchState(CharacterState.JinxiAirAttack);
                     return;
                 }
+                //重击状态
+                if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                {
+                    SwitchState(CharacterState.JinxiHeavyAttack);
+                    return;
+                }
                 // 攻击状态
                 if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
@@ -2631,6 +2893,12 @@
                 if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
                 {
                     SwitchState(CharacterState.JinxiAirAttack);
+                    return;
+                }
+                //重击状态
+                if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                {
+                    SwitchState(CharacterState.JinxiHeavyAttack);
                     return;
                 }
                 // 攻击
@@ -2706,6 +2974,12 @@
                     SwitchState(CharacterState.JinxiAirAttack);
                     return;
                 }
+                //重击状态
+                if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable() && _statePhase == ESkillStatePhase.Recovery)
+                {
+                    SwitchState(CharacterState.JinxiHeavyAttack);
+                    return;
+                }
                 // 攻击
                 if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable() && _statePhase == ESkillStatePhase.Recovery)
                 {
@@ -2733,104 +3007,161 @@
     // 爆发状态
     public class JinxiQBurstState : CharacterBaseState
     {
+        private enum QBurstPhase
+        {
+            Execution, // 爆发执行阶段：核心动作，不可打断
+            Recovery   // 爆发恢复阶段：收招后摇，可打断
+        }
+
+        private QBurstPhase _statePhase;
+        private AttackStep _currentQBurstStep;
+
         private float _stateTime;//处于爆发状态的时长
-        private float lockTime = 3f;//处于锁定的时长
-        private AttackStep _step;
-        private bool hasUpateQBurstAnimation;//判断是否更新爆发动画
+        private float _executionDuration;//爆发执行阶段时长
+        private float _animationLength;//爆发动画总时长
+
         public JinxiQBurstState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
+
         public override void EnterState()
         {
             //1.初始化爆发数据
             InitializeQBurstData();
+
+            //爆发数据为空时直接回待机，防止后续空引用
+            if (_currentQBurstStep == null)
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiIdle);
+                return;
+            }
+
             //2.初始化爆发状态
-            InitialazeQBurstState();
+            InitializeQBurstState();
+
             //3.进入爆发状态动画
             QBurstEnterAnimation();
-            //4.重置连招
         }
 
         #region EnterState子方法
         //1.初始化爆发数据
         private void InitializeQBurstData()
         {
-            _step = stateMachine.JinxiSpecialSkillLinker.QBurstAttackSteps[0];
-            stateMachine.currentStep = _step;
+            //1.获取当前爆发攻击段
+            if (stateMachine.JinxiSpecialSkillLinker.QBurstAttackSteps.Count == 0)
+            {
+                Debug.LogError("今汐 QBurstAttackSteps 配置为空！");
+                _currentQBurstStep = null;
+                _executionDuration = 0f;
+                _animationLength = 0f;
+                return;
+            }
+
+            _currentQBurstStep = stateMachine.JinxiSpecialSkillLinker.QBurstAttackSteps[0];
+
+            //爆发数据为空时直接返回，防止后续空引用
+            if (_currentQBurstStep == null)
+            {
+                _executionDuration = 0f;
+                _animationLength = 0f;
+                return;
+            }
+
+            //2.同步攻击阶段信息
+            stateMachine.currentStep = _currentQBurstStep;
+
+            //3.初始化爆发执行阶段时长
+            _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_currentQBurstStep);
+
+            //4.初始化爆发动画总时长
+            _animationLength = stateMachine.GetCombatAnimationLength(_currentQBurstStep.attackId);
+
+            //5.进入爆发冷却
             stateMachine.JinxiSpecialSkillLinker.OnQBurstUsed();
         }
+
         //2.初始化爆发状态
-        private void InitialazeQBurstState()
+        private void InitializeQBurstState()
         {
-            //数据初始化
+            //1.清理爆发输入请求，避免重复触发
+            stateMachine.CleanWantsToQBurstRequest();
+
+            //2.初始化状态时间
             _stateTime = 0f;
-            //状态锁定
+
+            //3.初始化爆发阶段
+            _statePhase = QBurstPhase.Execution;
+
+            //4.锁定状态，执行阶段不能随意切走
             stateMachine.IsStateLocked = true;
-            //数据初始化
-            hasUpateQBurstAnimation = false;
         }
+
         //3.进入爆发状态动画
         private void QBurstEnterAnimation()
         {
-            //动画
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_step.attackId), 0f, 0, 0);
-            //龙动画
-            stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_step);
-            //隐藏剑
+            //播放角色爆发动画
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_currentQBurstStep.attackId), 0f, 0, 0);
+
+            //播放龙动画
+            stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_currentQBurstStep);
+
+            //隐藏装饰剑
             stateMachine.manifestation.HideDecorationSwordFade();
-            //特效
-            stateMachine.effectController?.PlayEffectAction(_step);
+
+            //播放爆发特效
+            stateMachine.effectController?.PlayEffectAction(_currentQBurstStep);
         }
         #endregion
 
         public override void UpdateState()
         {
-            //1.更新状态锁定
-            UpdateStateTimeAndChangePhase();
-            //2. 更新爆发动画
-            FallAttackingUpdateAnimation();
+            //1.更新爆发阶段
+            UpdateQBurstPhase();
+
+            //2.更新爆发状态动画
+            QBurstUpdateAnimation();
+
             //3.状态转换
             CheckStateTransitions();
         }
 
-        #region UpdateState子状态
-        //1.更新状态锁定
-        private void UpdateStateTimeAndChangePhase()
+        #region UpdateState子方法
+        //1.更新爆发阶段
+        private void UpdateQBurstPhase()
         {
             _stateTime += Time.deltaTime;
-            if (_stateTime > lockTime)
+
+            //执行阶段结束后进入恢复阶段
+            if (_statePhase == QBurstPhase.Execution && _stateTime >= _executionDuration)
             {
+                _statePhase = QBurstPhase.Recovery;
                 stateMachine.IsStateLocked = false;
             }
         }
-        // 2. 更新爆发动画
-        private void FallAttackingUpdateAnimation()
+
+        //2.更新爆发状态动画
+        private void QBurstUpdateAnimation()
         {
-            //防止动画出错
+            //同步移动混合树参数，防止技能结束后动画参数突变
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-
-            //if (_stateTime > 2f&&!hasUpateQBurstAnimation)
-            //{
-            //    hasUpateQBurstAnimation = true;
-            //    //运镜
-            //    stateMachine.characterData.CameraMovement();
-            //}
-
         }
         #endregion
+
         public override void ExitState()
         {
             //1.退出爆发状态动画
             QBurstExitAnimation();
+
             //2.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
-        #region ExitState子状态
+        #region ExitState子方法
         //1.退出爆发状态动画
         private void QBurstExitAnimation()
         {
-            // CrossFade 直切动画后无需再清理 Trigger
             //龙隐藏
             stateMachine.JinxiSpecialSkillLinker.HideDragonInstantly();
+
             //隐藏特效
             stateMachine.context?.EffectController?.EndEffectAction();
         }
@@ -2844,16 +3175,286 @@
                 SwitchState(CharacterState.JinxiDead);
                 return;
             }
+
             //受击状态
             if (stateMachine.TryConsumeHitRequest())
             {
                 SwitchState(CharacterState.JinxiHit);
                 return;
             }
+
+            //执行阶段不处理退出
+            if (_statePhase == QBurstPhase.Execution)
+            {
+                return;
+            }
+
             //战技状态
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
+                return;
+            }
+
+            //御空冲刺状态
+            if (stateMachine.WantsToDash && stateMachine.movementLogic.IsFloatDashAvailable())
+            {
+                SwitchState(CharacterState.JinxiFloatDash);
+                return;
+            }
+
+            //冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
+            {
+                SwitchState(CharacterState.JinxiDash);
+                return;
+            }
+            
+
+            //跳跃状态
+            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
+            {
+                SwitchState(CharacterState.JinxiJump);
+                return;
+            }
+
+            //御空攻击状态
+            if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
+            {
+                SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
+                return;
+            }
+
+            //攻击状态
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAttackable())
+            {
+                SwitchState(CharacterState.JinxiAttack);
+                return;
+            }
+
+            //移动状态
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold
+                && stateMachine.movementLogic.CustomCheckGrounded()
+                )
+            {
+                SwitchState(CharacterState.JinxiMove);
+                return;
+            }
+
+            //坠落状态
+            if (_stateTime >= 0.99f * (_animationLength))
+            {
+                SwitchState(CharacterState.JinxiFall);
+                return;
+            }
+        }
+    }
+    #endregion
+
+     #region 延奏技能状态
+    //延奏技能状态
+    public class JinxiQteSkillState : CharacterBaseState
+    {
+        private enum QteSkillPhase
+        {
+            Execution, // 延奏技能执行阶段：不可打断
+            Recovery   // 延奏技能恢复阶段：可打断
+        }
+
+        private QteSkillPhase _statePhase;
+        private AttackStep _currentQteStep;
+
+        private float _stateTime;//处于延奏技能状态的时长
+        private float _executionDuration;//延奏技能执行阶段时长
+        private float _animationLength;//延奏技能动画总时长
+
+        public JinxiQteSkillState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
+
+        public override void EnterState()
+        {
+            //1.初始化延奏技能数据
+            InitializeQteSkillData();
+
+            //延奏技能数据为空时直接回待机，防止后续空引用
+            if (_currentQteStep == null)
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiIdle);
+                return;
+            }
+
+            //2.初始化延奏技能状态
+            InitializeQteSkillState();
+
+            //3.进入延奏技能状态动画
+            QteSkillEnterAnimation();
+        }
+
+        #region EnterState子方法
+        //1.初始化延奏技能数据
+        private void InitializeQteSkillData()
+        {
+            //1.获取当前延奏技能攻击段
+            _currentQteStep = stateMachine.JinxiSpecialSkillLinker.InitializeQteSkillStep();
+
+            //延奏技能数据为空时直接返回，防止后续空引用
+            if (_currentQteStep == null)
+            {
+                _executionDuration = 0f;
+                _animationLength = 0f;
+                return;
+            }
+
+            //2.同步攻击阶段信息
+            stateMachine.currentStep = _currentQteStep;
+
+            //3.初始化延奏技能执行阶段时长
+            _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_currentQteStep);
+
+            //4.初始化延奏技能动画总时长
+            _animationLength = stateMachine.GetCombatAnimationLength(_currentQteStep.attackId);
+        }
+
+        //2.初始化延奏技能状态
+        private void InitializeQteSkillState()
+        {
+            //1.清理延奏技能输入请求，避免重复触发
+            stateMachine.CleanWantsToQteSkillRequest();
+
+            //2.初始化状态时间
+            _stateTime = 0f;
+
+            //3.初始化技能阶段
+            _statePhase = QteSkillPhase.Execution;
+
+            //4.锁定状态，执行阶段不能随意切走
+            stateMachine.IsStateLocked = true;
+        }
+
+        //3.进入延奏技能状态动画
+        private void QteSkillEnterAnimation()
+        {
+            //播放角色延奏技能动画
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_currentQteStep.attackId), 0f, 0, 0);
+
+            //播放武器表现
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_currentQteStep);
+
+            //龙动画
+            stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_currentQteStep);
+
+            //播放延奏技能特效
+            stateMachine.effectController?.PlayEffectAction(_currentQteStep);
+
+            //隐藏装饰剑
+            stateMachine.manifestation.HideDecorationSwordFade();
+        }
+        #endregion
+
+        public override void UpdateState()
+        {
+            //1.更新延奏技能阶段
+            UpdateQteSkillPhase();
+
+            //2.更新延奏技能状态动画
+            QteSkillUpdateAnimation();
+
+            //3.状态转换
+            CheckStateTransitions();
+        }
+
+        #region UpdateState子方法
+        //1.更新延奏技能阶段
+        private void UpdateQteSkillPhase()
+        {
+            _stateTime += Time.deltaTime;
+
+            if (_statePhase == QteSkillPhase.Execution && _stateTime >= _executionDuration)
+            {
+                _statePhase = QteSkillPhase.Recovery;
+                stateMachine.IsStateLocked = false;
+            }
+        }
+
+        //2.更新延奏技能状态动画
+        private void QteSkillUpdateAnimation()
+        {
+            //同步移动混合树参数，防止技能结束后移动参数突变
+            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+        #endregion
+
+        public override void ExitState()
+        {
+            //1.退出延奏技能状态动画
+            QteSkillExitAnimation();
+
+            //2.重置垂直速度
+            stateMachine.movementLogic.ResetVerticalVelocity();
+        }
+
+        #region ExitState子方法
+        //1.退出延奏技能状态动画
+        private void QteSkillExitAnimation()
+        {
+            //结束武器表现
+            stateMachine.context?.WeaponController?.EndWeaponAction();
+
+            //结束延奏技能特效
+            stateMachine.context?.EffectController?.EndEffectAction();
+
+            //显示装饰剑
+            stateMachine.manifestation.ShowDecorationSwordFade();
+        }
+        #endregion
+
+        private void CheckStateTransitions()
+        {
+            //死亡状态
+            if (stateMachine.runtimeData.currentHealth <= 0)
+            {
+                SwitchState(CharacterState.JinxiDead);
+                return;
+            }
+            //爆发状态
+            if (stateMachine.JinxiSpecialSkillLinker.IsQBurstable() && stateMachine.CheckAndConsumeQBurstRequest())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiQBurst);
+                return;
+            }
+
+            //受击状态
+            if (stateMachine.TryConsumeHitRequest())
+            {
+                SwitchState(CharacterState.JinxiHit);
+                return;
+            }
+
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.JinxiESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.JinxiQteSkill);
                 return;
             }
             //御空冲刺状态
@@ -2870,13 +3471,8 @@
                 SwitchState(CharacterState.JinxiDash);
                 return;
             }
-            //坠落状态
-            if (!stateMachine.movementLogic.CustomCheckGrounded())
-            {
-                SwitchState(CharacterState.JinxiFall);
-                return;
-            }
-            // 跳跃状态
+
+            //跳跃状态
             if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
             {
                 SwitchState(CharacterState.JinxiJump);
@@ -2886,6 +3482,12 @@
             if (stateMachine.CheckAndConsumeAirAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsAirAttackable())
             {
                 SwitchState(CharacterState.JinxiAirAttack);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.JinxiSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.JinxiHeavyAttack);
                 return;
             }
             //攻击状态
@@ -2901,7 +3503,7 @@
                 return;
             }
             // 待机状态
-            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= 6f)
+            if (stateMachine.MoveInput.magnitude < stateMachine.movementLogic.moveThreshold && _stateTime >= _animationLength)
             {
                 SwitchState(CharacterState.JinxiIdle);
                 return;

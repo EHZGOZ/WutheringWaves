@@ -31,6 +31,8 @@ namespace WutheringWaves
 
         JinxiESkill,         //战技状态
         JinxiQBurst,         //爆发状态
+        JinxiQteSkill,       //延奏技能状态
+
 
         JinxiHit,        // 受击状态
         JinxiDead,       // 死亡状态
@@ -59,6 +61,8 @@ namespace WutheringWaves
 
         KatixiyaESkill,         //战技状态
         KatixiyaQBurst,         //爆发状态
+        KatixiyaQteSkill,       //延奏技能状态
+
 
         KatixiyaHit,        // 受击状态
         KatixiyaDead,       // 死亡状态
@@ -246,6 +250,7 @@ namespace WutheringWaves
 
                 JinxiESkillState => CharacterState.JinxiESkill,//战技
                 JinxiQBurstState => CharacterState.JinxiQBurst,//爆发
+                JinxiQteSkillState => CharacterState.JinxiQteSkill,//延奏技能
 
                 JinxiHitState => CharacterState.JinxiHit,// 受击
                 JinxiDeadState => CharacterState.JinxiDead,// 死亡
@@ -275,6 +280,8 @@ namespace WutheringWaves
 
                 KatixiyaESkillState => CharacterState.KatixiyaESkill,//战技
                 KatixiyaQBurstState => CharacterState.KatixiyaQBurst,//爆发
+                KatixiyaQteSkillState => CharacterState.KatixiyaQteSkill,//延奏技能
+
 
                 KatixiyaHitState => CharacterState.KatixiyaHit,// 受击
                 KatixiyaDeadState => CharacterState.KatixiyaDead,// 死亡
@@ -356,18 +363,24 @@ namespace WutheringWaves
         public bool CheckAndConsumeJumpRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeJumpRequest();
         public bool CheckAndConsumeDashRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeDashRequest();
         public bool CheckAndConsumeAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAttackRequest();
-        public bool CheckAndConsumeAirAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAirAttackRequest();
+        public bool CheckAndConsumeFallAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeFallAttackRequest();
         public bool CheckAndConsumeHeavyAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeHeavyAttackRequest();
+        public bool CheckAndConsumeAirAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAirAttackRequest();
         public bool CheckAndConsumeESkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeESkillRequest();
         public bool CheckAndConsumeQBurstRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQBurstRequest();
+        public bool CheckAndConsumeQteSkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQteSkillRequest();
+
 
         public void CleanWantsToJumpRequest() => InputBuffer?.CleanWantsToJumpRequest();
         public void CleanWantsToDashRequest() => InputBuffer?.CleanWantsToDashRequest();
         public void CleanWantsToAttackRequest() => InputBuffer?.CleanWantsToAttackRequest();
-        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();   
+        public void CleanWantsToFallAttackRequest() => InputBuffer?.CleanWantsToFallAttackRequest();
         public void CleanWantsToHeavyAttackRequest() => InputBuffer?.CleanWantsToHeavyAttackRequest();
+        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();
+        public void CleanWantsToESkillRequest() => InputBuffer?.CleanWantsToESkillRequest();
+        public void CleanWantsToQBurstRequest() => InputBuffer?.CleanWantsToQBurstRequest();
+        public void CleanWantsToQteSkillRequest() => InputBuffer?.CleanWantsToQteSkillRequest();
 
-        public void CleanWantsToESkilltRequest() => InputBuffer?.CleanWantsToESkilltRequest();
 
         // 重置输入层状态（死亡/复活等需要清空请求时使用）
         public void ResetInputState()

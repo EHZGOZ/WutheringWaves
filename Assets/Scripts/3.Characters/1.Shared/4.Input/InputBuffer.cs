@@ -23,10 +23,13 @@ namespace WutheringWaves
 
         public bool WantsToAttack { get; private set; }    // 触发攻击用（按下瞬间）
         public bool WantsToAirAttack { get; private set; } // 触发御空攻击用（按下瞬间）
+        public bool WantsToFallAttack { get; private set; } // 触发下落攻击用
         public bool WantsToHAttack { get; private set; }   // 触发重攻击用（长按）
 
         public bool WantsToQBurst { get; private set; }    // 触发爆发用（按下瞬间）
         public bool WantsToESkill { get; private set; }    // 触发战技用（按下瞬间）
+        public bool WantsToQteSkill { get; private set; }  // 触发延奏QTE用（按下瞬间）
+
         #endregion
 
         #region 时间戳缓存
@@ -35,17 +38,33 @@ namespace WutheringWaves
         private float runInputTimestamp; //用于奔跑的shift按下时间戳
 
         private float attackInputTimestamp;//用于Attack按下时间戳
-        private float airAttackInputTimestamp;//用于御空攻击按下时间戳
+        private float fallAttackInputTimestamp;//用于下落攻击按下时间戳
         private float hAttackInputTimestamp;//用于重攻击按下时间戳
+        private float airAttackInputTimestamp;//用于御空攻击按下时间戳
 
         private float qBurstInputTimestamp;//用于爆发按下时间戳
         private float eSkillInputTimestamp;//用于战技按下时间戳
+        private float qteSkillInputTimestamp;//用于延奏QTE按下时间戳
+
         #endregion
 
         #region 按住状态缓存
         private bool isRunKeyPressed; // 记录Shift当前是否处于按下状态
         private bool isHAttackKeyPressed;// 记录Attack当前是否处于按下状态
         private bool hasTriggeredHeavyAttackThisPress;// 本次按压是否已经触发过重击
+        #endregion
+
+        #region 生命周期函数
+        private void Update()
+        {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
+            CheckRunKeyLongPressState();//每帧检测奔跑按键长按状态并更新标记
+            CheckHAttackKeyLongPressState();//每帧检测重攻击按键长按状态并更新标记
+        }
         #endregion
 
         #region 初始化
@@ -82,6 +101,19 @@ namespace WutheringWaves
             WantsToAirAttack = false;
             airAttackInputTimestamp = -Mathf.Infinity;
 
+            WantsToAttack = false;
+            attackInputTimestamp = -Mathf.Infinity;
+
+            WantsToAirAttack = false;
+            airAttackInputTimestamp = -Mathf.Infinity;
+
+            WantsToFallAttack = false;
+            fallAttackInputTimestamp = -Mathf.Infinity;
+
+            WantsToHAttack = false;
+            hAttackInputTimestamp = -Mathf.Infinity;
+
+
             WantsToHAttack = false;
             isHAttackKeyPressed = false;
             hAttackInputTimestamp = -Mathf.Infinity;
@@ -92,19 +124,12 @@ namespace WutheringWaves
 
             WantsToESkill = false;
             eSkillInputTimestamp = -Mathf.Infinity;
+
+            WantsToQteSkill = false;
+            qteSkillInputTimestamp = -Mathf.Infinity;
+
         }
         #endregion
-
-        private void Update()
-        {
-            if (!_isInitialized)
-            {
-                return;
-            }
-
-            CheckRunKeyLongPressState();//每帧检测奔跑按键长按状态并更新标记
-            CheckHAttackKeyLongPressState();//每帧检测重攻击按键长按状态并更新标记
-        }
 
         #region 请求写入方法（供输入读取器/外观层调用）
         // 写入跳跃请求
@@ -137,7 +162,7 @@ namespace WutheringWaves
         }
 
 
-        // 写入攻击/御空攻击/重攻击请求
+        // 写入攻击/御空攻击/重攻击请求/下落攻击请求
         public void BufferAttack(bool isPressed)
         {
             EnsureInitialized();
@@ -184,11 +209,14 @@ namespace WutheringWaves
                 {
                     attackInputTimestamp = Time.time;
                     airAttackInputTimestamp = Time.time;
+                    fallAttackInputTimestamp = Time.time;
 
                     WantsToAttack = true;
                     WantsToAirAttack = true;
+                    WantsToFallAttack = true;
                     WantsToHAttack = false;
                 }
+
                 // 6.兜底：如果超阈值时还没来得及在 Update 中触发重击，则在松开时补发一次
                 else
                 {
@@ -218,6 +246,15 @@ namespace WutheringWaves
             qBurstInputTimestamp = Time.time;
             WantsToQBurst = true;
         }
+
+        // 写入延奏QTE请求
+        public void BufferQteSkill()
+        {
+            EnsureInitialized();
+            qteSkillInputTimestamp = Time.time;
+            WantsToQteSkill = true;
+        }
+
         #endregion
 
         #region 跳跃相关
@@ -280,6 +317,27 @@ namespace WutheringWaves
             WantsToAttack = false;
         }
         #endregion
+
+        #region 下落攻击相关
+        public bool CheckAndConsumeFallAttackRequest()
+        {
+            EnsureInitialized();
+
+            if (WantsToFallAttack && (Time.time - fallAttackInputTimestamp) <= inputBufferTime)
+            {
+                WantsToFallAttack = false;
+                return true;
+            }
+            return false;
+        }
+
+        //下落攻击时移除多余请求
+        public void CleanWantsToFallAttackRequest()
+        {
+            WantsToFallAttack = false;
+        }
+        #endregion
+
 
         #region 重击相关
         public bool CheckAndConsumeHeavyAttackRequest()
@@ -355,9 +413,29 @@ namespace WutheringWaves
         }
 
         //战技时移除多余战技请求
-        public void CleanWantsToESkilltRequest()
+        public void CleanWantsToESkillRequest()
         {
             WantsToESkill = false;
+        }
+        #endregion
+
+        #region 延奏QTE相关
+        public bool CheckAndConsumeQteSkillRequest()
+        {
+            EnsureInitialized();
+
+            if (WantsToQteSkill && (Time.time - qteSkillInputTimestamp) <= inputBufferTime)
+            {
+                WantsToQteSkill = false;
+                return true;
+            }
+            return false;
+        }
+
+        //延奏QTE时移除多余请求
+        public void CleanWantsToQteSkillRequest()
+        {
+            WantsToQteSkill = false;
         }
         #endregion
 

@@ -32,6 +32,7 @@ namespace WutheringWaves
         public bool LockInput { get; private set; } // 锁定输入
         public bool ESkillInput { get; private set; } // 共鸣技能输入
         public bool QBurstInput { get; private set; } // 共鸣解放输入
+        public bool QteSkillInput { get; private set; } // 延奏输入
         public int LastSwitchCharacterSlot { get; private set; } // 最近一次切人请求槽位
 
         // 切人请求事件：参数为目标槽位（1/2/3）
@@ -101,6 +102,7 @@ namespace WutheringWaves
             AttackInput = false;
             ESkillInput = false;
             QBurstInput = false;
+            QteSkillInput = false;
             LastSwitchCharacterSlot = 0;
         }
         #endregion
@@ -182,6 +184,16 @@ namespace WutheringWaves
             if (value.isPressed)
             {
                 inputBuffer?.BufferQBurst();
+            }
+        }
+        // 延奏输入回调：按下时写入延奏Qte缓冲
+        public void OnQteSkill(InputValue value)
+        {
+
+            QteSkillInput = value.isPressed;
+            if (value.isPressed)
+            {
+                inputBuffer?.BufferQteSkill();
             }
         }
 

@@ -85,3 +85,7 @@ MonoBehaviour:
     clip: {fileID: -623603649343465320, guid: 4704fcdee4a4f1d4c9306826059b4fc9, type: 3}
   - attackId: 20
     clip: {fileID: -623603649343465320, guid: 19092c58a7b812f4398e22e73f51eb26, type: 3}
+  - attackId: 23
+    clip: {fileID: -623603649343465320, guid: 24eb9e672b5974f48a7328f8ca56e221, type: 3}
+  - attackId: 21
+    clip: {fileID: -623603649343465320, guid: b475264d3e9161e41a021474955c876a, type: 3}

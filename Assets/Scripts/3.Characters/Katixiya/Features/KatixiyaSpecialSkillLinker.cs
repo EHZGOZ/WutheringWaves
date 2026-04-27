@@ -50,6 +50,8 @@ namespace WutheringWaves
         public List<AttackStep> HeavyAttackSteps => combatConfig != null && combatConfig.heavyAttackSteps != null ? combatConfig.heavyAttackSteps : emptyAttackSteps;
         public List<AttackStep> ESkillAttackSteps => combatConfig != null && combatConfig.eSkillAttackSteps != null ? combatConfig.eSkillAttackSteps : emptyAttackSteps;
         public List<AttackStep> QBurstAttackSteps => combatConfig != null && combatConfig.qBurstAttackSteps != null ? combatConfig.qBurstAttackSteps : emptyAttackSteps;
+        public List<AttackStep> QteSkillAttackSteps => combatConfig != null && combatConfig.qteSkillAttackSteps != null ? combatConfig.qteSkillAttackSteps : emptyAttackSteps;
+
 
         public bool IsFloating => false; // 卡提希娅当前没有御空机制，先返回 false 兼容通用系统
 
@@ -85,18 +87,6 @@ namespace WutheringWaves
 
             ResetAllRuntimeState();
         }
-        // 重置卡提希娅专属驱动的全部运行时状态
-        private void ResetAllRuntimeState()
-        {
-            currentStep = null;
-
-            currentComboCount = 0;
-            comboWindowTimer = 0f;
-            isComboWindowOpen = false;
-
-            eSkillCDTimer = 0f;
-            qBurstCDTimer = 0f;
-        }
         #endregion
 
         #region 状态注册
@@ -112,20 +102,26 @@ namespace WutheringWaves
             factory.RegisterState(CharacterState.KatixiyaIdle, new KatixiyaIdleState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaMove, new KatixiyaMoveState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaStop, new KatixiyaStopState(machine, factory));
+
             factory.RegisterState(CharacterState.KatixiyaJump, new KatixiyaJumpState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaFall, new KatixiyaFallState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaLand, new KatixiyaLandState(machine, factory));
+
             factory.RegisterState(CharacterState.KatixiyaAttack, new KatixiyaAttackState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaHeavyAttack, new KatixiyaHeavyAttackState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaFallAttack, new KatixiyaFallAttackState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaAirAttack, new KatixiyaAirAttackState(machine, factory));
+
             factory.RegisterState(CharacterState.KatixiyaDash, new KatixiyaDashState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaAirDash, new KatixiyaAirDashState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaFloatDash, new KatixiyaFloatDashState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaDodge, new KatixiyaDodgeState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaFloatDodge, new KatixiyaFloatDodgeState(machine, factory));
+
             factory.RegisterState(CharacterState.KatixiyaESkill, new KatixiyaESkillState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaQBurst, new KatixiyaQBurstState(machine, factory));
+            factory.RegisterState(CharacterState.KatixiyaQteSkill, new KatixiyaQteSkillState(machine, factory));
+
             factory.RegisterState(CharacterState.KatixiyaHit, new KatixiyaHitState(machine, factory));
             factory.RegisterState(CharacterState.KatixiyaDead, new KatixiyaDeadState(machine, factory));
         }
@@ -336,8 +332,34 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 变奏
+        #region 延奏QTE
+        // 延奏QTE可用性判断
+        public bool IsQteSkillable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            return isCanInterrupt;
+        }
 
+        // 初始化延奏QTE攻击段：当前只取一段
+        public AttackStep InitializeQteSkillStep()
+        {
+            if (QteSkillAttackSteps.Count == 0)
+            {
+                Debug.LogError("QteSkillAttackSteps 配置为空！");
+                return null;
+            }
+
+            AttackStep step = GetAttackStepAt(QteSkillAttackSteps, 0);
+            if (step == null)
+            {
+                Debug.LogError("QteSkillAttackSteps 缺少延奏QTE攻击段配置！");
+                return null;
+            }
+
+            currentStep = step;
+            attackLogic?.SetCurrentStep(step);
+            return step;
+        }
         #endregion
 
         #region 技能使用回调
@@ -398,8 +420,19 @@ namespace WutheringWaves
 
             return stepList[index];
         }
+        // 重置卡提希娅专属驱动的全部运行时状态
+        private void ResetAllRuntimeState()
+        {
+            currentStep = null;
 
-        
+            currentComboCount = 0;
+            comboWindowTimer = 0f;
+            isComboWindowOpen = false;
+
+            eSkillCDTimer = 0f;
+            qBurstCDTimer = 0f;
+        }
+
 
         // 通知技能 UI 刷新
         private void NotifySkillUIChanged()

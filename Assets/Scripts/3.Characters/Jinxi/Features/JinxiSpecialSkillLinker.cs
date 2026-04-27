@@ -75,10 +75,13 @@ namespace WutheringWaves
         // 统一从 CombatConfigSO 读取攻击段配置，未配置时返回空列表避免空引用
         public List<AttackStep> AttackSteps => combatConfig != null && combatConfig.attackSteps != null ? combatConfig.attackSteps : emptyAttackSteps;
         public List<AttackStep> FallAttackSteps => combatConfig != null && combatConfig.fallAttackSteps != null ? combatConfig.fallAttackSteps : emptyAttackSteps;
+        public List<AttackStep> HeavyAttackSteps => combatConfig != null && combatConfig.heavyAttackSteps != null ? combatConfig.heavyAttackSteps : emptyAttackSteps;
         public List<AttackStep> SkillAirAttackSteps => combatConfig != null && combatConfig.skillAirAttackSteps != null ? combatConfig.skillAirAttackSteps : emptyAttackSteps;
         public List<AttackStep> SkillAttackSteps => combatConfig != null && combatConfig.skillAttackSteps != null ? combatConfig.skillAttackSteps : emptyAttackSteps;
         public List<AttackStep> ESkillAttackSteps => combatConfig != null && combatConfig.eSkillAttackSteps != null ? combatConfig.eSkillAttackSteps : emptyAttackSteps;
         public List<AttackStep> QBurstAttackSteps => combatConfig != null && combatConfig.qBurstAttackSteps != null ? combatConfig.qBurstAttackSteps : emptyAttackSteps;
+        public List<AttackStep> QteSkillAttackSteps => combatConfig != null && combatConfig.qteSkillAttackSteps != null ? combatConfig.qteSkillAttackSteps : emptyAttackSteps;
+
 
         public bool IsFloating => isFloating;
         public float Skill1CD => skill1CD;
@@ -110,6 +113,13 @@ namespace WutheringWaves
         #endregion
         #endregion
 
+        #region 生命周期
+        private void Update()
+        {
+            UpdateRuntime();
+        }
+        #endregion
+
         #region 初始化
         // 今汐专属状态机驱动初始化：由 JinxiFeatureRoot 统一拉起
         public void Initialize(CharacterContext context)
@@ -125,6 +135,16 @@ namespace WutheringWaves
 
             ResetAllRuntimeState();
         }
+        
+
+        // 由外部装配入口注入今汐龙表现控制器，后续统一由今汐驱动层编排龙表现
+        public void SetDragonController(JinxiDragonController controller)
+        {
+            jinxiDragonController = controller;
+        }
+        #endregion
+
+        #region 状态注册
         // 向状态工厂补注册今汐专属 / 今汐强化版状态
         public void RegisterSpecialStates(CharacterStateFactory factory, CharacterStateMachine machine)
         {
@@ -146,29 +166,23 @@ namespace WutheringWaves
             factory.RegisterState(CharacterState.JinxiHeavyAttack, new JinxiHeavyAttackState(machine, factory));
             factory.RegisterState(CharacterState.JinxiFallAttack, new JinxiFallAttackState(machine, factory));
             factory.RegisterState(CharacterState.JinxiAirAttack, new JinxiAirAttackState(machine, factory));
+
             factory.RegisterState(CharacterState.JinxiDash, new JinxiDashState(machine, factory));
             factory.RegisterState(CharacterState.JinxiAirDash, new JinxiAirDashState(machine, factory));
             factory.RegisterState(CharacterState.JinxiFloatDash, new JinxiFloatDashState(machine, factory));
             factory.RegisterState(CharacterState.JinxiDodge, new JinxiDodgeState(machine, factory));
             factory.RegisterState(CharacterState.JinxiFloatDodge, new JinxiFloatDodgeState(machine, factory));
+
             factory.RegisterState(CharacterState.JinxiESkill, new JinxiESkillState(machine, factory));
             factory.RegisterState(CharacterState.JinxiQBurst, new JinxiQBurstState(machine, factory));
+            factory.RegisterState(CharacterState.JinxiQteSkill, new JinxiQteSkillState(machine, factory));
+
             factory.RegisterState(CharacterState.JinxiHit, new JinxiHitState(machine, factory));
             factory.RegisterState(CharacterState.JinxiDead, new JinxiDeadState(machine, factory));
-        }
-
-        // 由外部装配入口注入今汐龙表现控制器，后续统一由今汐驱动层编排龙表现
-        public void SetDragonController(JinxiDragonController controller)
-        {
-            jinxiDragonController = controller;
         }
         #endregion
 
         #region 运行时更新
-        private void Update()
-        {
-            UpdateRuntime();
-        }
         // 更新今汐专属的连击窗口、技能冷却、派生窗口与御空持续时间
         public bool UpdateRuntime()
         {
@@ -305,6 +319,37 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 重击
+        // 地面重击可用性判断
+        public bool IsHeavyAttackable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
+            return isCanInterrupt && isGrounded && !isFloating;
+        }
+
+        // 初始化重击攻击段：今汐当前只有一段重击
+        public AttackStep InitializeHeavyAttackStep()
+        {
+            if (HeavyAttackSteps.Count == 0)
+            {
+                Debug.LogError("HeavyAttackSteps 配置为空！");
+                return null;
+            }
+
+            AttackStep step = GetAttackStepAt(HeavyAttackSteps, 0);
+            if (step == null)
+            {
+                Debug.LogError("HeavyAttackSteps 缺少重击攻击段配置！");
+                return null;
+            }
+
+            currentStep = step;
+            attackLogic?.SetCurrentStep(step);
+            return step;
+        }
+        #endregion
+
         #region 下落攻击
         // 下落攻击可用性判断
         public bool IsFallAttackable()
@@ -408,8 +453,34 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 变奏
+        #region 延奏QTE
+        // 延奏QTE可用性判断
+        public bool IsQteSkillable()
+        {
+            bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
+            return isCanInterrupt;
+        }
 
+        // 初始化延奏QTE攻击段：当前只取一段
+        public AttackStep InitializeQteSkillStep()
+        {
+            if (QteSkillAttackSteps.Count == 0)
+            {
+                Debug.LogError("QteSkillAttackSteps 配置为空！");
+                return null;
+            }
+
+            AttackStep step = GetAttackStepAt(QteSkillAttackSteps, 0);
+            if (step == null)
+            {
+                Debug.LogError("QteSkillAttackSteps 缺少延奏QTE攻击段配置！");
+                return null;
+            }
+
+            currentStep = step;
+            attackLogic?.SetCurrentStep(step);
+            return step;
+        }
         #endregion
 
         #region 技能使用回调
@@ -510,40 +581,6 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 技能UI显示
-        // 获取当前 E 技能 UI 应展示阶段的总时长
-        public float GetCurrentESkillDisplayDuration()
-        {
-            switch (CurrentESkillUIIndex)
-            {
-                case 4:
-                    return skill4WindowCD;
-                case 3:
-                    return skill3WindowCD;
-                case 2:
-                    return skill2WindowCD;
-                default:
-                    return skill1CD;
-            }
-        }
-
-        // 获取当前 E 技能 UI 应展示阶段的剩余时长
-        public float GetCurrentESkillDisplayTimer()
-        {
-            switch (CurrentESkillUIIndex)
-            {
-                case 4:
-                    return Skill4WindowTimer;
-                case 3:
-                    return Skill3WindowTimer;
-                case 2:
-                    return Skill2WindowTimer;
-                default:
-                    return Skill1CDTimer;
-            }
-        }
-        #endregion
-
         #region 内部工具
         // 初始化连段攻击步骤：窗口开启时进入下一段，否则回到第一段
         private AttackStep InitializeComboStep(List<AttackStep> stepList, ref int comboIndex, ref bool comboWindowOpen)
@@ -621,8 +658,6 @@ namespace WutheringWaves
                 GameEvents.RaiseSkillUIStateChanged(attackLogic);
             }
         }
-
-
         #endregion
     }
 }

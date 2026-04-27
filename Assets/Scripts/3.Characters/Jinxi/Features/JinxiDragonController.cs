@@ -89,10 +89,10 @@ namespace WutheringWaves
 
         private void PlayDragonAction(AttackId attackId, AttackStep step)
         {
-            if (!CanPlayDragonAction(attackId))
-            {
-                return;
-            }
+            //if (!CanPlayDragonAction(attackId))
+            //{
+            //    return;
+            //}
 
             ApplyDragonOffset(attackId);
 
@@ -108,6 +108,9 @@ namespace WutheringWaves
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0.2f, 0f, attackId, step));
                     return;
                 case AttackId.QBurst:
+                    dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 0f, attackId, step));
+                    return;
+                case AttackId.QteSkill:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 0f, attackId, step));
                     return;
                 case AttackId.ESkill03:
@@ -149,23 +152,25 @@ namespace WutheringWaves
             }
         }
 
-        private bool CanPlayDragonAction(AttackId attackId)
-        {
-            switch (attackId)
-            {
-                case AttackId.Attack03:
-                case AttackId.QBurst:
-                case AttackId.ESkill03:
-                case AttackId.ESkill04:
-                case AttackId.FloatAttackGround03:
-                case AttackId.FloatAttackAir03:
-                case AttackId.FloatAttackGround04:
-                case AttackId.FloatAttackAir04:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+        //private bool CanPlayDragonAction(AttackId attackId)
+        //{
+        //    switch (attackId)
+        //    {
+        //        case AttackId.Attack03:
+        //        case AttackId.QBurst:
+        //        case AttackId.QteSkill:
+        //        case AttackId.ESkill03:
+        //        case AttackId.ESkill04:
+        //        case AttackId.FloatAttackGround03:
+        //        case AttackId.FloatAttackAir03:
+        //        case AttackId.FloatAttackGround04:
+        //        case AttackId.FloatAttackAir04:
+        //            return true;
+        //        default:
+        //            return false;
+        //    }
+        //}
+
 
         private void UpdateDragonPosition()
         {

@@ -69,6 +69,8 @@ namespace WutheringWaves
         [SerializeField] internal List<AttackStep> eSkillAttackSteps = new List<AttackStep>();
         [Header("爆发攻击段的核心列表")]
         [SerializeField] internal List<AttackStep> qBurstAttackSteps = new List<AttackStep>();
+        [Header("延奏QTE攻击段的核心列表")]
+        [SerializeField] internal List<AttackStep> qteSkillAttackSteps = new List<AttackStep>();
 
         [Header(" ===技能倍率===")]
         [Header("共鸣技能CD")]

@@ -47,7 +47,8 @@ namespace WutheringWaves
         ESkill04 = 19,
         QBurst = 20,
         HAttack01 = 21,
-        HAttack02 = 22
+        HAttack02 = 22,
+        QteSkill = 23,
     }
 
     [System.Serializable]

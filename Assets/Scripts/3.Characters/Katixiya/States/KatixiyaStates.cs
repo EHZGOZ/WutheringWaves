@@ -590,7 +590,7 @@
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.KatixiyaFallAttack);
                 return;
@@ -712,7 +712,7 @@
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.KatixiyaFallAttack);
                 return;
@@ -1307,6 +1307,18 @@
                 SwitchState(CharacterState.KatixiyaHit);
                 return;
             }
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            // 御空冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsFloatDashAvailable())
+            {
+                SwitchState(CharacterState.KatixiyaFloatDash);
+                return;
+            }
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -1325,6 +1337,12 @@
             if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsHeavyAttackable())
             {
                 SwitchState(CharacterState.KatixiyaHeavyAttack);
+                return;
+            }
+            //下落攻击状态
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaFallAttack);
                 return;
             }
 
@@ -1911,7 +1929,7 @@
                 return;
             }
             //下落攻击状态
-            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
             {
                 SwitchState(CharacterState.KatixiyaFallAttack);
                 return;
@@ -2038,7 +2056,7 @@
         private void InitializeESkillState()
         {
             //清理战技输入请求，避免重复触发
-            stateMachine.CleanWantsToESkilltRequest();
+            stateMachine.CleanWantsToESkillRequest();
 
             //初始化状态时间
             _stateTime = 0f;
@@ -2114,12 +2132,6 @@
 
         private void CheckStateTransitions()
         {
-            //技能执行阶段不处理退出
-            if (_statePhase == ESkillStatePhase.Execution)
-            {
-                return;
-            }
-
             //死亡状态
             if (stateMachine.runtimeData.currentHealth <= 0)
             {
@@ -2133,6 +2145,12 @@
                 SwitchState(CharacterState.KatixiyaHit);
                 return;
             }
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
 
             //坠落状态
             if (!stateMachine.movementLogic.CustomCheckGrounded())
@@ -2140,7 +2158,18 @@
                 SwitchState(CharacterState.KatixiyaFall);
                 return;
             }
-
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaHeavyAttack);
+                return;
+            }
+            //下落攻击状态
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaFallAttack);
+                return;
+            }
             //攻击状态
             if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsAttackable())
             {
@@ -2149,7 +2178,7 @@
             }
 
             //移动状态
-            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && _stateTime >= _animationLength)
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold)
             {
                 SwitchState(CharacterState.KatixiyaMove);
                 return;
@@ -2187,6 +2216,214 @@
         public override void ExitState()
         {
 
+        }
+    }
+    #endregion
+
+     #region 延奏技能状态
+    //延奏技能状态
+    public class KatixiyaQteSkillState : CharacterBaseState
+    {
+        private enum QteSkillPhase
+        {
+            Execution, // 延奏技能执行阶段：不可打断
+            Recovery   // 延奏技能恢复阶段：可打断
+        }
+
+        private QteSkillPhase _statePhase;
+        private AttackStep _currentQteStep;
+
+        private float _stateTime;//处于延奏技能状态的时长
+        private float _executionDuration;//延奏技能执行阶段时长
+        private float _animationLength;//延奏技能动画总时长
+
+        public KatixiyaQteSkillState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
+
+        public override void EnterState()
+        {
+            //1.初始化延奏技能数据
+            InitializeQteSkillData();
+
+            //延奏技能数据为空时直接回待机，防止后续空引用
+            if (_currentQteStep == null)
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.KatixiyaIdle);
+                return;
+            }
+
+            //2.初始化延奏技能状态
+            InitializeQteSkillState();
+
+            //3.进入延奏技能状态动画
+            QteSkillEnterAnimation();
+        }
+
+        #region EnterState子方法
+        //1.初始化延奏技能数据
+        private void InitializeQteSkillData()
+        {
+            //1.获取当前延奏技能攻击段
+            _currentQteStep = stateMachine.KatixiyaSpecialSkillLinker.InitializeQteSkillStep();
+
+            //延奏技能数据为空时直接返回，防止后续空引用
+            if (_currentQteStep == null)
+            {
+                _executionDuration = 0f;
+                _animationLength = 0f;
+                return;
+            }
+
+            //2.同步攻击阶段信息
+            stateMachine.currentStep = _currentQteStep;
+
+            //3.初始化延奏技能执行阶段时长
+            _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_currentQteStep);
+
+            //4.初始化延奏技能动画总时长
+            _animationLength = stateMachine.GetCombatAnimationLength(_currentQteStep.attackId);
+        }
+
+        //2.初始化延奏技能状态
+        private void InitializeQteSkillState()
+        {
+            //1.清理延奏技能输入请求，避免重复触发
+            stateMachine.CleanWantsToQteSkillRequest();
+
+            //2.初始化状态时间
+            _stateTime = 0f;
+
+            //3.初始化技能阶段
+            _statePhase = QteSkillPhase.Execution;
+
+            //4.锁定状态，执行阶段不能随意切走
+            stateMachine.IsStateLocked = true;
+        }
+
+        //3.进入延奏技能状态动画
+        private void QteSkillEnterAnimation()
+        {
+            //播放角色延奏技能动画
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_currentQteStep.attackId), 0f, 0, 0);
+
+            //播放武器表现
+            stateMachine.context?.WeaponController?.PlayWeaponAction(_currentQteStep);
+
+            //播放延奏技能特效
+            stateMachine.effectController?.PlayEffectAction(_currentQteStep);
+        }
+        #endregion
+
+        public override void UpdateState()
+        {
+            //1.更新延奏技能阶段
+            UpdateQteSkillPhase();
+
+            //2.更新延奏技能状态动画
+            QteSkillUpdateAnimation();
+
+            //3.状态转换
+            CheckStateTransitions();
+        }
+
+        #region UpdateState子方法
+        //1.更新延奏技能阶段
+        private void UpdateQteSkillPhase()
+        {
+            _stateTime += Time.deltaTime;
+
+            if (_statePhase == QteSkillPhase.Execution && _stateTime >= _executionDuration)
+            {
+                _statePhase = QteSkillPhase.Recovery;
+                stateMachine.IsStateLocked = false;
+            }
+        }
+
+        //2.更新延奏技能状态动画
+        private void QteSkillUpdateAnimation()
+        {
+            //同步移动混合树参数，防止技能结束后移动参数突变
+            stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+        #endregion
+
+        public override void ExitState()
+        {
+            //1.退出延奏技能状态动画
+            QteSkillExitAnimation();
+
+            //2.重置垂直速度
+            stateMachine.movementLogic.ResetVerticalVelocity();
+        }
+
+        #region ExitState子方法
+        //1.退出延奏技能状态动画
+        private void QteSkillExitAnimation()
+        {
+            //结束武器表现
+            stateMachine.context?.WeaponController?.EndWeaponAction();
+
+            //结束延奏技能特效
+            stateMachine.context?.EffectController?.EndEffectAction();
+        }
+        #endregion
+
+        private void CheckStateTransitions()
+        {
+            //死亡状态
+            if (stateMachine.runtimeData.currentHealth <= 0)
+            {
+                SwitchState(CharacterState.KatixiyaDead);
+                return;
+            }
+
+            //受击状态
+            if (stateMachine.TryConsumeHitRequest())
+            {
+                SwitchState(CharacterState.KatixiyaHit);
+                return;
+            }
+
+            //执行阶段不处理退出
+            if (_statePhase == QteSkillPhase.Execution)
+            {
+                return;
+            }
+
+            //跳跃状态
+            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
+            {
+                SwitchState(CharacterState.KatixiyaJump);
+                return;
+            }
+
+            //冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
+            {
+                SwitchState(CharacterState.KatixiyaDash);
+                return;
+            }
+
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
+            {
+                SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+
+            //移动状态
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && _stateTime >= _animationLength)
+            {
+                SwitchState(CharacterState.KatixiyaMove);
+                return;
+            }
+
+            //待机状态
+            if (_stateTime >= _animationLength)
+            {
+                SwitchState(CharacterState.KatixiyaIdle);
+                return;
+            }
         }
     }
     #endregion

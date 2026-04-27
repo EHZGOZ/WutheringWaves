@@ -96,6 +96,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "QteSkill",
+                    "type": "Button",
+                    "id": "79cf8675-bc6f-45a2-9ec1-7ef1de98b2aa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Key1",
                     "type": "Button",
                     "id": "1f0136d6-af70-4fb4-bb10-5cdff6af9b24",
@@ -341,6 +350,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "ResonanceQBurstInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2a5b619-0a61-4cf5-ac02-bdc8b23c114a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "QteSkill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
