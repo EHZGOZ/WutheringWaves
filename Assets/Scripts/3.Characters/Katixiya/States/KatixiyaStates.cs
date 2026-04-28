@@ -106,6 +106,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -240,6 +246,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
             //冲刺状态
@@ -432,6 +444,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
 
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
@@ -577,6 +595,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
             //坠落状态
             if (_stateTimer >= JumpLockTime)
             {
@@ -691,6 +715,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
             // 御空冲刺状态
@@ -840,6 +870,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
 
@@ -1080,6 +1116,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
 
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
@@ -1311,6 +1353,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
             // 御空冲刺状态
@@ -1579,6 +1627,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
             //冲刺状态
             if ((_phase == FallAttackPhase.end || _phase == FallAttackPhase.over) && stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
@@ -1789,6 +1843,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
             //冲刺状态
             if ((stateMachine.WantsToDash && stateMachine.movementLogic.IsDashAvailable()))
             {
@@ -1928,6 +1988,12 @@
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
+                return;
+            }
             //下落攻击状态
             if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
             {
@@ -1938,6 +2004,12 @@
             if (!stateMachine.movementLogic.CustomCheckGrounded())
             {
                 SwitchState(CharacterState.KatixiyaFall);
+                return;
+            }
+            // 着地状态
+            if (stateMachine.movementLogic.CustomCheckGrounded())
+            {
+                SwitchState(CharacterState.KatixiyaLand);
                 return;
             }
         }
@@ -2149,6 +2221,12 @@
             if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
+                return;
+            }
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
+            {
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
 
@@ -2376,43 +2454,62 @@
                 SwitchState(CharacterState.KatixiyaDead);
                 return;
             }
-
             //受击状态
             if (stateMachine.TryConsumeHitRequest())
             {
                 SwitchState(CharacterState.KatixiyaHit);
                 return;
             }
-
-            //执行阶段不处理退出
-            if (_statePhase == QteSkillPhase.Execution)
+            //战技状态
+            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
             {
+                SwitchState(CharacterState.KatixiyaESkill);
                 return;
-            }
-
-            //跳跃状态
-            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
-            {
-                SwitchState(CharacterState.KatixiyaJump);
-                return;
-            }
-
+            }     
             //冲刺状态
             if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsDashAvailable())
             {
                 SwitchState(CharacterState.KatixiyaDash);
                 return;
             }
-
-            //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
+            //延奏状态
+            if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
             {
-                SwitchState(CharacterState.KatixiyaESkill);
+                SwitchState(CharacterState.KatixiyaQteSkill);
                 return;
             }
-
+            // 空中冲刺状态
+            if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsAirDashAvailable())
+            {
+                SwitchState(CharacterState.KatixiyaAirDash);
+                return;
+            }
+            //跳跃状态
+            if (stateMachine.CheckAndConsumeJumpRequest() && stateMachine.movementLogic.IsJumpAvailable())
+            {
+                SwitchState(CharacterState.KatixiyaJump);
+                return;
+            }
+            //重击状态
+            if (stateMachine.CheckAndConsumeHeavyAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsHeavyAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaHeavyAttack);
+                return;
+            }
+            //下落攻击状态
+            if (stateMachine.CheckAndConsumeFallAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsFallAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaFallAttack);
+                return;
+            }
+            //攻击状态
+            if (stateMachine.CheckAndConsumeAttackRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsAttackable())
+            {
+                SwitchState(CharacterState.KatixiyaAttack);
+                return;
+            }
             //移动状态
-            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold && _stateTime >= _animationLength)
+            if (stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold)
             {
                 SwitchState(CharacterState.KatixiyaMove);
                 return;

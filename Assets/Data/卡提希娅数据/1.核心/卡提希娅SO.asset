@@ -15,10 +15,7 @@ MonoBehaviour:
   characterName: 1
   baseAttack: 10
   maxHealth: 20000
-  avatarIcon: {fileID: 0}
-  eSkillIcons: []
-  qBurstLockedIcon: {fileID: 0}
-  qBurstReadyIcons: []
+  characterUIConfigSO: {fileID: 11400000, guid: 5cbf34f8d00ef8942833343b80c7142f, type: 2}
   animationConfigSO: {fileID: 11400000, guid: e0ad08af1939635419e10e7ebe9d9a39, type: 2}
   combatConfig: {fileID: 11400000, guid: 77ceb74679711464a9b7ed77f8abdbfb, type: 2}
   movementConfigSO: {fileID: 11400000, guid: 3c983241b9d66c749bb93620d0db2c48, type: 2}

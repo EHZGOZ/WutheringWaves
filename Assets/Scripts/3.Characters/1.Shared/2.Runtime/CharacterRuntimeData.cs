@@ -112,5 +112,130 @@ namespace WutheringWaves
 
         #endregion
 
+        #region 运行时更新
+        // 手动推进角色中档运行时数据：由PlayerController统一调用，普通C#类不会自动执行Unity Update
+        public void UpdateRuntime(float deltaTime)
+        {
+            if (deltaTime <= 0f)
+            {
+                return;
+            }
+
+            switch (characterName)
+            {
+                case CharacterName.今汐:
+                    UpdateJinxiRuntime(deltaTime);
+                    break;
+
+                case CharacterName.卡提希娅:
+                    UpdateKatixiyaRuntime(deltaTime);
+                    break;
+            }
+        }
+
+        #region 今汐
+        [Header("=== 今汐技能运行时数据 ===")]
+        [SerializeField] public float jinxiESkill1CDTimer; // 今汐一段E技能剩余冷却
+        [SerializeField] public float jinxiQBurstCDTimer; // 今汐Q爆发剩余冷却
+
+        [SerializeField] public float jinxiESkill2WindowTimer; // 今汐E技能二段窗口剩余时间
+        [SerializeField] public float jinxiESkill3WindowTimer; // 今汐E技能三段窗口剩余时间
+        [SerializeField] public float jinxiESkill4WindowTimer; // 今汐E技能四段窗口剩余时间
+        [SerializeField] public float jinxiFloatingTimer; // 今汐御空剩余时间
+
+        [SerializeField] public bool jinxiIsESkill2WindowOpen; // 今汐E技能二段窗口是否开启
+        [SerializeField] public bool jinxiIsESkill3WindowOpen; // 今汐E技能三段窗口是否开启
+        [SerializeField] public bool jinxiIsESkill4WindowOpen; // 今汐E技能四段窗口是否开启
+        [SerializeField] public bool jinxiIsFloating; // 今汐是否处于御空状态
+                                                      // 推进今汐技能冷却、派生窗口与御空时间
+        private void UpdateJinxiRuntime(float deltaTime)
+        {
+            // ESkill1 冷却
+            if (jinxiESkill1CDTimer > 0f)
+            {
+                jinxiESkill1CDTimer = Mathf.Max(0f, jinxiESkill1CDTimer - deltaTime);
+            }
+
+            // QBurst 冷却
+            if (jinxiQBurstCDTimer > 0f)
+            {
+                jinxiQBurstCDTimer = Mathf.Max(0f, jinxiQBurstCDTimer - deltaTime);
+            }
+
+            // ESkill2 派生窗口
+            if (jinxiIsESkill2WindowOpen)
+            {
+                jinxiESkill2WindowTimer -= deltaTime;
+
+                if (jinxiESkill2WindowTimer <= 0f)
+                {
+                    jinxiESkill2WindowTimer = 0f;
+                    jinxiIsESkill2WindowOpen = false;
+                }
+            }
+
+            // ESkill3 派生窗口
+            if (jinxiIsESkill3WindowOpen)
+            {
+                jinxiESkill3WindowTimer -= deltaTime;
+
+                if (jinxiESkill3WindowTimer <= 0f)
+                {
+                    jinxiESkill3WindowTimer = 0f;
+                    jinxiIsESkill3WindowOpen = false;
+                }
+            }
+
+            // ESkill4 派生窗口
+            if (jinxiIsESkill4WindowOpen)
+            {
+                jinxiESkill4WindowTimer -= deltaTime;
+
+                if (jinxiESkill4WindowTimer <= 0f)
+                {
+                    jinxiESkill4WindowTimer = 0f;
+                    jinxiIsESkill4WindowOpen = false;
+                }
+            }
+
+            // 御空状态持续时间
+            if (jinxiIsFloating)
+            {
+                jinxiFloatingTimer -= deltaTime;
+
+                if (jinxiFloatingTimer <= 0f)
+                {
+                    jinxiFloatingTimer = 0f;
+                    jinxiIsFloating = false;
+                }
+            }
+        }
+        #endregion
+
+        #region 卡提希娅
+        [Header("=== 卡提希娅技能运行时数据 ===")]
+        [SerializeField] public float katixiyaESkillCDTimer;
+        [SerializeField] public float katixiyaQBurstCDTimer; // Q爆发冷却计时
+
+        // 推进卡提希娅技能冷却时间
+        private void UpdateKatixiyaRuntime(float deltaTime)
+        {
+            // ESkill 冷却
+            if (katixiyaESkillCDTimer > 0f)
+            {
+                katixiyaESkillCDTimer = Mathf.Max(0f, katixiyaESkillCDTimer - deltaTime);
+            }
+
+            // QBurst 冷却
+            if (katixiyaQBurstCDTimer > 0f)
+            {
+                katixiyaQBurstCDTimer = Mathf.Max(0f, katixiyaQBurstCDTimer - deltaTime);
+            }
+        }
+        #endregion
+
+        #endregion
+
+
     }
 }

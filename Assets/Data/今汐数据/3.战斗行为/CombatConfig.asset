@@ -105,7 +105,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 13
     hitConfig:
@@ -115,7 +115,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 14
     hitConfig:
@@ -125,7 +125,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 15
     hitConfig:
@@ -135,7 +135,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   skillAttackSteps:
   - attackId: 8
@@ -146,7 +146,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 9
     hitConfig:
@@ -156,7 +156,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 10
     hitConfig:
@@ -166,7 +166,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 11
     hitConfig:
@@ -176,7 +176,7 @@ MonoBehaviour:
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   eSkillAttackSteps:
   - attackId: 16

@@ -5959,7 +5959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.43137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10307,18 +10307,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hudPanel: {fileID: 1481210575}
   context: {fileID: 0}
-  teamAvatarSlots:
-  - root: {fileID: 0}
-    avatarIcon: {fileID: 0}
-    selectedFrame: {fileID: 0}
-  - root: {fileID: 0}
-    avatarIcon: {fileID: 0}
-    selectedFrame: {fileID: 0}
-  - root: {fileID: 0}
-    avatarIcon: {fileID: 0}
-    selectedFrame: {fileID: 0}
-  eSkillIcon: {fileID: 0}
-  qBurstIcon: {fileID: 0}
+  playerStamina: {fileID: 0}
+  uiConfig: {fileID: 0}
+  playerCamera: {fileID: 0}
+  eSkillIcons: []
+  qBurstLockedIcon:
+    sprite: {fileID: 0}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  qBurstReadyIcons: []
+  resonanceDecor:
+    sprite: {fileID: 0}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  concertoDecor:
+    sprite: {fileID: 0}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
   eSkillCooldownMask: {fileID: 0}
   qBurstCooldownMask: {fileID: 0}
   eSkillCooldownText: {fileID: 0}
@@ -10334,12 +10342,15 @@ MonoBehaviour:
   staminaRingBg: {fileID: 1020752609}
   staminaRingFill: {fileID: 2022072566}
   staminaCanvasGroup: {fileID: 374374623}
-  uiFollowCamera: {fileID: 0}
   staminaWorldOffset: {x: 0, y: 0, z: 0}
-  staminaScreenOffset: {x: 40, y: 0}
+  staminaScreenOffset: {x: 150, y: 0}
   staminaFollowSmooth: 18
   staminaHiddenAlpha: 0
-  staminaFadeSpeed: 8
+  staminaFadeSpeed: 3
+  staminaBaseSize: {x: 100, y: 100}
+  staminaMinScale: 0.8
+  staminaMaxScale: 0.9
+  staminaScaleSmooth: 18
 --- !u!1001 &1796824561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10350,7 +10361,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: runDrainPerSecond
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: fullStaminaFadeDelay
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4361222149857307356, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: m_Name
@@ -10395,6 +10414,10 @@ PrefabInstance:
     - target: {fileID: 5311199842627346400, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292550580018359768, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
+      propertyPath: MaxZoomDistance
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8292550580018359768, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: DefaultZoomDistance

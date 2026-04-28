@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaFeatureRoot.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerRuntimeData.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\3.Common\GameEvents.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterUIConfigSO.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\7.Visual\EffectController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\1.Save\SaveService.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\5.Movement\CharacterRootMotion.cs" />

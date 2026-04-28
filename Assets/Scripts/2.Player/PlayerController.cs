@@ -58,6 +58,11 @@ namespace WutheringWaves
             // 玩家控制器作为玩家根节点，切换场景时不销毁
             DontDestroyOnLoad(gameObject);
         }
+        private void Update()
+        {
+            // 统一驱动队伍中所有角色的中档运行时状态：即使角色对象被禁用，冷却也要继续推进
+            UpdateTeamCharacterRuntimeData();
+        }
 
 
         private void LateUpdate()
@@ -773,6 +778,32 @@ namespace WutheringWaves
             return true;
         }
         #endregion
+
+        #region 角色数据更新
+        // 统一推进队伍中所有角色的中档运行时数据：即使角色对象被禁用，冷却也要继续倒计时
+        private void UpdateTeamCharacterRuntimeData()
+        {
+            //1.队伍为空时不处理
+            if (teamCharacters == null || teamCharacters.Length == 0)
+            {
+                return;
+            }
+
+            //2.逐个推进角色运行时数据
+            for (int i = 0; i < teamCharacters.Length; i++)
+            {
+                CharacterContext context = teamCharacters[i];
+                if (context == null || context.CharacterRuntimeData == null)
+                {
+                    continue;
+                }
+
+                context.CharacterRuntimeData.UpdateRuntime(Time.deltaTime);
+            }
+        }
+        #endregion
+
+
 
 
     }

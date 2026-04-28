@@ -21,22 +21,24 @@ namespace WutheringWaves
         private CharacterAttack attackLogic;  // 共享攻击基础层（仅用于查询通用战斗数据）
         private CombatConfigSO combatConfig;  // 今汐战斗配置
         private JinxiDragonController jinxiDragonController; // 今汐龙表现控制器
+        private CharacterRuntimeData RuntimeData => context != null ? context.CharacterRuntimeData : null; // 今汐运行时数据快捷入口
+
 
         [Header("=== 今汐特殊机制配置 ===")]
         [Header("流光夕影冷却时间")]
-        [SerializeField] private float skill1CD = 5f;
+        [SerializeField] private float eSkill1CD = 5f;
 
         [Header("移岁诛邪冷却时间")]
         [SerializeField] private float qBurstCD = 15f;
 
         [Header("神霓飞芒窗口持续时间")]
-        [SerializeField] private float skill2WindowCD = 5f;
+        [SerializeField] private float eSkill2WindowDuration = 5f;
 
         [Header("逐天取月窗口持续时间")]
-        [SerializeField] private float skill3WindowCD = 5f;
+        [SerializeField] private float eSkill3WindowDuration = 5f;
 
         [Header("乘岁凌霄窗口持续时间")]
-        [SerializeField] private float skill4WindowCD = 5f;
+        [SerializeField] private float eSkill4WindowDuration = 5f;
 
         [Header("御空状态持续时间")]
         [SerializeField] private float floatingDuration = 10f;
@@ -53,20 +55,6 @@ namespace WutheringWaves
         private int currentAirComboCount;
         private float airComboWindowTimer;
         private bool isAirComboWindowOpen;
-
-        // 技能 / 爆发 / 派生窗口 / 御空计时器
-        private float skill1CDTimer;
-        private float qBurstCDTimer;
-        private float skill2WindowTimer;
-        private float skill3WindowTimer;
-        private float skill4WindowTimer;
-        private float floatingTimer;
-
-        // 技能派生窗口与御空状态
-        private bool isSkill2WindowOpen;
-        private bool isSkill3WindowOpen;
-        private bool isSkill4WindowOpen;
-        private bool isFloating;
         #endregion
 
         #region 对外状态
@@ -82,34 +70,34 @@ namespace WutheringWaves
         public List<AttackStep> QBurstAttackSteps => combatConfig != null && combatConfig.qBurstAttackSteps != null ? combatConfig.qBurstAttackSteps : emptyAttackSteps;
         public List<AttackStep> QteSkillAttackSteps => combatConfig != null && combatConfig.qteSkillAttackSteps != null ? combatConfig.qteSkillAttackSteps : emptyAttackSteps;
 
+        public bool IsFloating => RuntimeData != null && RuntimeData.jinxiIsFloating;
 
-        public bool IsFloating => isFloating;
-        public float Skill1CD => skill1CD;
-        public float Skill1CDTimer => Mathf.Max(0f, skill1CDTimer);
+        public float ESkill1CD => eSkill1CD;
+        
+
         public float QBurstCD => qBurstCD;
-        public float QBurstCDTimer => Mathf.Max(0f, qBurstCDTimer);
-        public float Skill2WindowTimer => isSkill2WindowOpen ? Mathf.Max(0f, skill2WindowTimer) : 0f;
-        public float Skill3WindowTimer => isSkill3WindowOpen ? Mathf.Max(0f, skill3WindowTimer) : 0f;
-        public float Skill4WindowTimer => isSkill4WindowOpen ? Mathf.Max(0f, skill4WindowTimer) : 0f;
-        public bool IsSkill2WindowOpen => isSkill2WindowOpen && skill2WindowTimer > 0f;
-        public bool IsSkill3WindowOpen => isSkill3WindowOpen && skill3WindowTimer > 0f;
-        public bool IsSkill4WindowOpen => isSkill4WindowOpen && skill4WindowTimer > 0f;
-        public bool CanUseSkill2 => IsSkill2WindowOpen;
-        public bool CanUseSkill3 => IsSkill3WindowOpen;
-        public bool CanUseSkill4 => IsSkill4WindowOpen;
+        
+
+        public float ESkill1CDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.jinxiESkill1CDTimer) : 0f;
+        public float QBurstCDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.jinxiQBurstCDTimer) : 0f;
+
+        public bool IsESkill2WindowOpen => RuntimeData != null
+            && RuntimeData.jinxiIsESkill2WindowOpen
+            && RuntimeData.jinxiESkill2WindowTimer > 0f;
+
+        public bool IsESkill3WindowOpen => RuntimeData != null
+            && RuntimeData.jinxiIsESkill3WindowOpen
+            && RuntimeData.jinxiESkill3WindowTimer > 0f;
+
+        public bool IsESkill4WindowOpen => RuntimeData != null
+            && RuntimeData.jinxiIsESkill4WindowOpen
+            && RuntimeData.jinxiESkill4WindowTimer > 0f;
+
+        public bool CanUseESkill2 => IsESkill2WindowOpen;
+        public bool CanUseESkill3 => IsESkill3WindowOpen;
+        public bool CanUseESkill4 => IsESkill4WindowOpen;
         public bool HasQBurstConfigured => QBurstAttackSteps.Count > 0;
 
-        // 当前 E 技能 UI 应展示的阶段：4 优先级最高，依次回退到 1
-        public int CurrentESkillUIIndex
-        {
-            get
-            {
-                if (IsSkill4WindowOpen) return 4;
-                if (IsSkill3WindowOpen) return 3;
-                if (IsSkill2WindowOpen) return 2;
-                return 1;
-            }
-        }
         #endregion
         #endregion
 
@@ -183,15 +171,13 @@ namespace WutheringWaves
         #endregion
 
         #region 运行时更新
-        // 更新今汐专属的连击窗口、技能冷却、派生窗口与御空持续时间
-        public bool UpdateRuntime()
+        // 更新今汐专属的短命战斗状态：连击窗口切人即丢，继续保留在 Linker 本地
+        public void UpdateRuntime()
         {
             if (!IsAvailable)
             {
-                return false;
+                return;
             }
-
-            bool isDirty = false;
 
             // 地面普攻连击窗口倒计时
             if (isComboWindowOpen)
@@ -212,85 +198,19 @@ namespace WutheringWaves
                     ResetAirCombo();
                 }
             }
-
-            // E 技一段冷却
-            if (skill1CDTimer > 0f)
-            {
-                skill1CDTimer = Mathf.Max(0f, skill1CDTimer - Time.deltaTime);
-                isDirty = true;
-            }
-
-            // Q 爆发冷却
-            if (qBurstCDTimer > 0f)
-            {
-                qBurstCDTimer = Mathf.Max(0f, qBurstCDTimer - Time.deltaTime);
-                isDirty = true;
-            }
-
-            // Skill2 派生窗口
-            if (isSkill2WindowOpen)
-            {
-                skill2WindowTimer -= Time.deltaTime;
-                isDirty = true;
-                if (skill2WindowTimer <= 0f)
-                {
-                    skill2WindowTimer = 0f;
-                    isSkill2WindowOpen = false;
-                }
-            }
-
-            // Skill3 派生窗口
-            if (isSkill3WindowOpen)
-            {
-                skill3WindowTimer -= Time.deltaTime;
-                isDirty = true;
-                if (skill3WindowTimer <= 0f)
-                {
-                    skill3WindowTimer = 0f;
-                    isSkill3WindowOpen = false;
-                }
-            }
-
-            // Skill4 派生窗口
-            if (isSkill4WindowOpen)
-            {
-                skill4WindowTimer -= Time.deltaTime;
-                isDirty = true;
-                if (skill4WindowTimer <= 0f)
-                {
-                    skill4WindowTimer = 0f;
-                    isSkill4WindowOpen = false;
-                }
-            }
-
-            // 御空状态持续时间
-            if (isFloating)
-            {
-                floatingTimer -= Time.deltaTime;
-                if (floatingTimer <= 0f)
-                {
-                    SetFloating(false);
-                }
-            }
-
-            if (isDirty)
-            {
-                NotifySkillUIChanged();
-            }
-
-            return isDirty;
         }
         #endregion
 
-        #region 普通攻击
+        #region 攻击
         // 地面普通攻击可用性判断
         public bool IsAttackable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isGrounded && !isFloating;
+            return isCanInterrupt && isGrounded && !IsFloating;
         }
-        // 初始化地面普攻段：根据连击窗口状态决定当前应打哪一段
+
+        // 初始化地面普攻攻击段：连击窗口开启时进入下一段，否则回到第一段
         public AttackStep InitializeNormalAttackStep()
         {
             AttackStep step = InitializeComboStep(AttackSteps, ref currentComboCount, ref isComboWindowOpen);
@@ -298,15 +218,16 @@ namespace WutheringWaves
             attackLogic?.SetCurrentStep(step);
             return step;
         }
-        // 开启地面普攻连击窗口；地面第四段普攻会顺带开启 Skill2 派生窗口
+
+        // 进入地面普攻连击窗口：第四段普攻命中后开启 ESkill2 派生窗口
         public void StartNormalComboWindow()
         {
             isComboWindowOpen = true;
             comboWindowTimer = attackLogic != null ? attackLogic.GetComboWindowDuration(currentStep) : 0f;
 
-            if (!isFloating && currentComboCount == 3)
+            if (currentComboCount == 3)
             {
-                OpenSkill2Window();
+                OpenESkill2Window();
             }
         }
 
@@ -314,8 +235,8 @@ namespace WutheringWaves
         public void ResetNormalCombo()
         {
             currentComboCount = 0;
-            isComboWindowOpen = false;
             comboWindowTimer = 0f;
+            isComboWindowOpen = false;
         }
         #endregion
 
@@ -325,7 +246,7 @@ namespace WutheringWaves
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isGrounded && !isFloating;
+            return isCanInterrupt && isGrounded && !IsFloating;
         }
 
         // 初始化重击攻击段：今汐当前只有一段重击
@@ -356,9 +277,29 @@ namespace WutheringWaves
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isInTheAir = context != null && context.MovementLogic != null && !context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isInTheAir && !isFloating;
+            return isCanInterrupt && isInTheAir && !IsFloating;
         }
-       
+
+        // 初始化下落攻击步骤：今汐当前固定三段下落攻击（起手 / 循环 / 收尾）
+        public void InitializeFallAttackSteps(out AttackStep stepStart, out AttackStep stepLoop, out AttackStep stepEnd)
+        {
+            stepStart = null;
+            stepLoop = null;
+            stepEnd = null;
+
+            if (FallAttackSteps.Count < 3)
+            {
+                Debug.LogError("FallAttackSteps 配置数量不足，至少需要 3 段！");
+                return;
+            }
+
+            stepStart = GetAttackStepAt(FallAttackSteps, 0);
+            stepLoop = GetAttackStepAt(FallAttackSteps, 1);
+            stepEnd = GetAttackStepAt(FallAttackSteps, 2);
+
+            currentStep = stepEnd != null ? stepEnd : stepStart;
+            attackLogic?.SetCurrentStep(currentStep);
+        }
         #endregion
 
         #region 御空攻击
@@ -366,17 +307,19 @@ namespace WutheringWaves
         public bool IsAirAttackable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            return isCanInterrupt && isFloating;
+            return isCanInterrupt && IsFloating;
         }
-        // 初始化御空攻击段：根据御空连击窗口决定当前应打哪一段
-        public AttackStep InitializeAirAttackStep(List<AttackStep> stepList)
+
+        // 初始化御空攻击攻击段：连击窗口开启时进入下一段，否则回到第一段
+        public AttackStep InitializeAirAttackStep()
         {
-            AttackStep step = InitializeComboStep(stepList, ref currentAirComboCount, ref isAirComboWindowOpen);
+            AttackStep step = InitializeComboStep(SkillAirAttackSteps, ref currentAirComboCount, ref isAirComboWindowOpen);
             currentStep = step;
             attackLogic?.SetCurrentStep(step);
             return step;
         }
-        // 开启御空攻击连击窗口；御空第四段攻击会顺带开启 Skill4 派生窗口
+
+        // 进入御空攻击连击窗口：第四段御空攻击命中后开启 ESkill4 派生窗口
         public void StartAirComboWindow()
         {
             isAirComboWindowOpen = true;
@@ -384,7 +327,7 @@ namespace WutheringWaves
 
             if (currentAirComboCount == 3)
             {
-                OpenSkill4Window();
+                OpenESkill4Window();
             }
         }
 
@@ -392,27 +335,46 @@ namespace WutheringWaves
         public void ResetAirCombo()
         {
             currentAirComboCount = 0;
-            isAirComboWindowOpen = false;
             airComboWindowTimer = 0f;
+            isAirComboWindowOpen = false;
         }
         #endregion
 
         #region 战技
-        // 战技可用性判断：任一派生阶段可用即可进入 JinxiESkill 状态
+        // 战技可用性判断：优先按 ESkill4 → ESkill3 → ESkill2 → ESkill1 顺序判定
         public bool IsESkillable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool canUseESkill = CanUseSkill1() || CanUseSkill2 || CanUseSkill3 || CanUseSkill4;
-            return isCanInterrupt && canUseESkill;
+            if (!isCanInterrupt)
+            {
+                return false;
+            }
+
+            if (CanUseESkill4)
+            {
+                return true;
+            }
+
+            if (CanUseESkill3)
+            {
+                return true;
+            }
+
+            if (CanUseESkill2)
+            {
+                return true;
+            }
+
+            return CanUseESkill1();
         }
         // 地面一段 E 技可用性判断
-        public bool CanUseSkill1()
+        public bool CanUseESkill1()
         {
-            bool isCDOver = skill1CDTimer <= 0f;
+            bool isCDOver = ESkill1CDTimer <= 0f;
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
             return isCDOver && isGrounded;
         }
-        // 初始化战技攻击段：根据当前派生窗口决定 Skill1 / 2 / 3 / 4 的对应攻击段
+        // 初始化战技攻击段：优先按 ESkill4 → ESkill3 → ESkill2 → ESkill1 顺序选择
         public AttackStep InitializeESkillStep()
         {
             if (ESkillAttackSteps.Count == 0)
@@ -421,25 +383,34 @@ namespace WutheringWaves
                 return null;
             }
 
-            AttackStep step = GetAttackStepAt(ESkillAttackSteps, GetCurrentESkillStepIndex());
+            AttackStep step = null;
+
+            if (CanUseESkill4)
+            {
+                step = GetAttackStepAt(ESkillAttackSteps, 3);
+            }
+            else if (CanUseESkill3)
+            {
+                step = GetAttackStepAt(ESkillAttackSteps, 2);
+            }
+            else if (CanUseESkill2)
+            {
+                step = GetAttackStepAt(ESkillAttackSteps, 1);
+            }
+            else if (CanUseESkill1())
+            {
+                step = GetAttackStepAt(ESkillAttackSteps, 0);
+            }
+
             if (step == null)
             {
-                Debug.LogError("ESkillAttackSteps 缺少当前窗口所需的攻击段配置！");
+                Debug.LogError("ESkillAttackSteps 缺少当前可用战技攻击段配置！");
                 return null;
             }
 
             currentStep = step;
             attackLogic?.SetCurrentStep(step);
             return step;
-        }
-
-        // 根据当前派生窗口状态，返回 E 技能实际应使用的攻击段索引
-        public int GetCurrentESkillStepIndex()
-        {
-            if (IsSkill4WindowOpen) return 3;
-            if (IsSkill3WindowOpen) return 2;
-            if (IsSkill2WindowOpen) return 1;
-            return 0;
         }
         #endregion
 
@@ -448,7 +419,7 @@ namespace WutheringWaves
         public bool IsQBurstable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool isCDOver = qBurstCDTimer <= 0f;
+            bool isCDOver = QBurstCDTimer <= 0f;
             return isCanInterrupt && HasQBurstConfigured && isCDOver;
         }
         #endregion
@@ -484,85 +455,131 @@ namespace WutheringWaves
         #endregion
 
         #region 技能使用回调
-        // Skill1 使用后：进入冷却，并关闭 Skill2 派生窗口
-        public void OnSkill1Used()
+        // ESkill1 使用后：进入冷却，并关闭 ESkill2 派生窗口
+        public void OnESkill1Used()
         {
-            skill1CDTimer = skill1CD;
-            isSkill2WindowOpen = false;
-            skill2WindowTimer = 0f;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiESkill1CDTimer = eSkill1CD;
+            RuntimeData.jinxiIsESkill2WindowOpen = false;
+            RuntimeData.jinxiESkill2WindowTimer = 0f;
             NotifySkillUIChanged();
         }
 
-        // Skill2 使用后：进入御空，并开启 Skill3 派生窗口
-        public void OnSkill2Used()
+        // ESkill2 使用后：关闭 ESkill2 派生窗口，并开启 ESkill3 派生窗口与御空状态
+        public void OnESkill2Used()
         {
-            isSkill2WindowOpen = false;
-            skill2WindowTimer = 0f;
-            OpenSkill3Window();
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill2WindowOpen = false;
+            RuntimeData.jinxiESkill2WindowTimer = 0f;
+
+            OpenESkill3Window();
             SetFloating(true);
             NotifySkillUIChanged();
         }
 
-        // Skill3 使用后：关闭 Skill3 派生窗口
-        public void OnSkill3Used()
+        // ESkill3 使用后：关闭 ESkill3 派生窗口
+        public void OnESkill3Used()
         {
-            isSkill3WindowOpen = false;
-            skill3WindowTimer = 0f;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill3WindowOpen = false;
+            RuntimeData.jinxiESkill3WindowTimer = 0f;
             NotifySkillUIChanged();
         }
 
-        // Skill4 使用后：收束空中派生链，关闭 Skill3 / Skill4 两个窗口
-        public void OnSkill4Used()
+        // ESkill4 使用后：收束空中派生链，关闭 ESkill3 / ESkill4 两个窗口
+        public void OnESkill4Used()
         {
-            isSkill4WindowOpen = false;
-            isSkill3WindowOpen = false;
-            skill4WindowTimer = 0f;
-            skill3WindowTimer = 0f;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill3WindowOpen = false;
+            RuntimeData.jinxiIsESkill4WindowOpen = false;
+            RuntimeData.jinxiESkill3WindowTimer = 0f;
+            RuntimeData.jinxiESkill4WindowTimer = 0f;
             NotifySkillUIChanged();
         }
 
         // Q 爆发使用后：进入爆发冷却
         public void OnQBurstUsed()
         {
-            qBurstCDTimer = qBurstCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiQBurstCDTimer = qBurstCD;
             NotifySkillUIChanged();
         }
         #endregion
 
         #region 技能窗口与御空控制
-        // 开启 Skill2 派生窗口（由地面普攻第四段触发）
-        public void OpenSkill2Window()
+        // 开启 ESkill2 派生窗口（由地面普攻第四段触发）
+        public void OpenESkill2Window()
         {
-            isSkill2WindowOpen = true;
-            skill2WindowTimer = skill2WindowCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill2WindowOpen = true;
+            RuntimeData.jinxiESkill2WindowTimer = eSkill2WindowDuration;
             NotifySkillUIChanged();
         }
 
-        // 开启 Skill3 派生窗口（由 Skill2 使用后触发）
-        public void OpenSkill3Window()
+        // 开启 ESkill3 派生窗口（由 ESkill2 使用后触发）
+        public void OpenESkill3Window()
         {
-            isSkill3WindowOpen = true;
-            skill3WindowTimer = skill3WindowCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill3WindowOpen = true;
+            RuntimeData.jinxiESkill3WindowTimer = eSkill3WindowDuration;
             NotifySkillUIChanged();
         }
 
-        // 开启 Skill4 派生窗口（由御空第四段攻击触发）
-        public void OpenSkill4Window()
+        // 开启 ESkill4 派生窗口（由御空第四段攻击触发）
+        public void OpenESkill4Window()
         {
-            isSkill4WindowOpen = true;
-            skill4WindowTimer = skill4WindowCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsESkill4WindowOpen = true;
+            RuntimeData.jinxiESkill4WindowTimer = eSkill4WindowDuration;
             NotifySkillUIChanged();
         }
 
         // 设置御空状态，并通过事件总线通知表现层同步更新
         public void SetFloating(bool value)
         {
-            isFloating = value;
-            floatingTimer = value ? floatingDuration : 0f;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.jinxiIsFloating = value;
+            RuntimeData.jinxiFloatingTimer = value ? floatingDuration : 0f;
 
             if (attackLogic != null)
             {
-                GameEvents.RaiseFloatingChanged(attackLogic, isFloating);
+                GameEvents.RaiseFloatingChanged(attackLogic, RuntimeData.jinxiIsFloating);
             }
         }
         #endregion
@@ -629,26 +646,35 @@ namespace WutheringWaves
         {
             currentStep = null;
 
+            // 地面普攻连段重置：属于切人即丢的短命战斗状态，继续保留在 Linker 本地
             currentComboCount = 0;
             comboWindowTimer = 0f;
             isComboWindowOpen = false;
 
+            // 御空攻击连段重置：属于切人即丢的短命战斗状态，继续保留在 Linker 本地
             currentAirComboCount = 0;
             airComboWindowTimer = 0f;
             isAirComboWindowOpen = false;
 
-            skill1CDTimer = 0f;
-            qBurstCDTimer = 0f;
-            skill2WindowTimer = 0f;
-            skill3WindowTimer = 0f;
-            skill4WindowTimer = 0f;
-            floatingTimer = 0f;
+            // 中档运行时技能状态重置：迁移到 CharacterRuntimeData，保证角色禁用后数据仍可保留
+            if (RuntimeData != null)
+            {
+                RuntimeData.jinxiESkill1CDTimer = 0f;
+                RuntimeData.jinxiQBurstCDTimer = 0f;
 
-            isSkill2WindowOpen = false;
-            isSkill3WindowOpen = false;
-            isSkill4WindowOpen = false;
-            isFloating = false;
+                RuntimeData.jinxiESkill2WindowTimer = 0f;
+                RuntimeData.jinxiESkill3WindowTimer = 0f;
+                RuntimeData.jinxiESkill4WindowTimer = 0f;
+                RuntimeData.jinxiFloatingTimer = 0f;
+
+                RuntimeData.jinxiIsESkill2WindowOpen = false;
+                RuntimeData.jinxiIsESkill3WindowOpen = false;
+                RuntimeData.jinxiIsESkill4WindowOpen = false;
+                RuntimeData.jinxiIsFloating = false;
+            }
         }
+
+
 
         // 通知技能 UI 刷新
         private void NotifySkillUIChanged()

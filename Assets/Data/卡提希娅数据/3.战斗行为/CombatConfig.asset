@@ -240,6 +240,17 @@ MonoBehaviour:
     timingConfig:
       executionAttackCostTime: 3
       comboWindowDuration: 1.5
+  qteSkillAttackSteps:
+  - attackId: 23
+    hitConfig:
+      damageMultiplier: 0
+      staminaCost: 0
+      attackRadius: 0
+      attackAngle: 0
+      attackOffset: {x: 0, y: 0, z: 0}
+    timingConfig:
+      executionAttackCostTime: 0.7
+      comboWindowDuration: 0
   resonanceESkillCD: 5
   resonanceESkillMagnification: 2
   resonanceQBurstCD: 10

@@ -19,6 +19,8 @@ namespace WutheringWaves
         private CharacterContext context;     // 角色共享上下文
         private CharacterAttack attackLogic;  // 共享攻击基础层
         private CombatConfigSO combatConfig;  // 卡提希娅战斗配置
+        private CharacterRuntimeData RuntimeData => context != null ? context.CharacterRuntimeData : null; // 卡提希娅运行时数据快捷入口
+
 
         [Header("=== 卡提希娅特殊机制配置 ===")]
         [Header("E 技冷却时间")]
@@ -35,10 +37,6 @@ namespace WutheringWaves
         private int currentComboCount;
         private float comboWindowTimer;
         private bool isComboWindowOpen;
-
-        // E 技 / Q 技冷却计时器
-        private float eSkillCDTimer;
-        private float qBurstCDTimer;
         #endregion
 
         #region 对外状态
@@ -55,14 +53,8 @@ namespace WutheringWaves
 
         public bool IsFloating => false; // 卡提希娅当前没有御空机制，先返回 false 兼容通用系统
 
-        public float ESkillCD => eSkillCD;
-        public float ESkillCDTimer => Mathf.Max(0f, eSkillCDTimer);
-        public float QBurstCD => qBurstCD;
-        public float QBurstCDTimer => Mathf.Max(0f, qBurstCDTimer);
-        public bool HasQBurstConfigured => QBurstAttackSteps.Count > 0;
-
-        // 当前卡提希娅只有一段 E 技，UI 固定显示第一段
-        public int CurrentESkillUIIndex => 1;
+        public float ESkillCDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.katixiyaESkillCDTimer) : 0f;
+        public float QBurstCDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.katixiyaQBurstCDTimer) : 0f;
         #endregion
 
         #region 生命周期
@@ -128,15 +120,13 @@ namespace WutheringWaves
         #endregion
 
         #region 运行时更新
-        // 更新卡提希娅专属的连击窗口、E 技冷却与 Q 技冷却
-        public bool UpdateRuntime()
+        // 更新卡提希娅专属的短命战斗状态：连击窗口切人即丢，继续保留在 Linker 本地
+        public void UpdateRuntime()
         {
             if (!IsAvailable)
             {
-                return false;
+                return;
             }
-
-            bool isDirty = false;
 
             // 地面普攻连击窗口倒计时
             if (isComboWindowOpen)
@@ -147,27 +137,6 @@ namespace WutheringWaves
                     ResetNormalCombo();
                 }
             }
-
-            // E 技冷却倒计时
-            if (eSkillCDTimer > 0f)
-            {
-                eSkillCDTimer = Mathf.Max(0f, eSkillCDTimer - Time.deltaTime);
-                isDirty = true;
-            }
-
-            // Q 技冷却倒计时
-            if (qBurstCDTimer > 0f)
-            {
-                qBurstCDTimer = Mathf.Max(0f, qBurstCDTimer - Time.deltaTime);
-                isDirty = true;
-            }
-
-            if (isDirty)
-            {
-                NotifySkillUIChanged();
-            }
-
-            return isDirty;
         }
         #endregion
 
@@ -294,10 +263,11 @@ namespace WutheringWaves
         // E 技可用性判断
         public bool CanUseESkill()
         {
-            bool isCDOver = eSkillCDTimer <= 0f;
+            bool isCDOver = ESkillCDTimer <= 0f;
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
             return isCDOver && isGrounded;
         }
+
 
         // 初始化战技攻击段：卡提希娅当前只有一段 E 技
         public AttackStep InitializeESkillStep()
@@ -326,10 +296,11 @@ namespace WutheringWaves
         public bool IsQBurstable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-            bool isCDOver = qBurstCDTimer <= 0f;
+            bool isCDOver = QBurstCDTimer <= 0f;
             //return isCanInterrupt && HasQBurstConfigured && isCDOver;
             return false;//还没做，防止误进入
         }
+
         #endregion
 
         #region 延奏QTE
@@ -348,8 +319,17 @@ namespace WutheringWaves
                 Debug.LogError("QteSkillAttackSteps 配置为空！");
                 return null;
             }
+            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
+            AttackStep step;
 
-            AttackStep step = GetAttackStepAt(QteSkillAttackSteps, 0);
+            if (isGrounded)
+            {
+                step = GetAttackStepAt(QteSkillAttackSteps, 0);
+            }
+            else
+            {
+                step = GetAttackStepAt(HeavyAttackSteps, 1);
+            }
             if (step == null)
             {
                 Debug.LogError("QteSkillAttackSteps 缺少延奏QTE攻击段配置！");
@@ -366,16 +346,29 @@ namespace WutheringWaves
         // E 技使用后：进入冷却
         public void OnESkillUsed()
         {
-            eSkillCDTimer = eSkillCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.katixiyaESkillCDTimer = eSkillCD;
             NotifySkillUIChanged();
         }
+
 
         // Q 爆发使用后：进入冷却
         public void OnQBurstUsed()
         {
-            qBurstCDTimer = qBurstCD;
+            if (RuntimeData == null)
+            {
+                return;
+            }
+
+            RuntimeData.katixiyaQBurstCDTimer = qBurstCD;
             NotifySkillUIChanged();
         }
+
+
         #endregion
 
         #region 内部工具
@@ -429,9 +422,13 @@ namespace WutheringWaves
             comboWindowTimer = 0f;
             isComboWindowOpen = false;
 
-            eSkillCDTimer = 0f;
-            qBurstCDTimer = 0f;
+            if (RuntimeData != null)
+            {
+                RuntimeData.katixiyaESkillCDTimer = 0f;
+                RuntimeData.katixiyaQBurstCDTimer = 0f;
+            }
         }
+
 
 
         // 通知技能 UI 刷新

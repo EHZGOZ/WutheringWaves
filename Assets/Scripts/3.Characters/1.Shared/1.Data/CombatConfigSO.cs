@@ -73,12 +73,8 @@ namespace WutheringWaves
         [SerializeField] internal List<AttackStep> qteSkillAttackSteps = new List<AttackStep>();
 
         [Header(" ===技能倍率===")]
-        [Header("共鸣技能CD")]
-        [SerializeField] internal float resonanceESkillCD = 5;
         [Header("共鸣技能倍率")]
-        [SerializeField] internal float resonanceESkillMagnification = 2f;
-        [Header("共鸣解放CD")]
-        [SerializeField] internal float resonanceQBurstCD = 10f;
+        [SerializeField] internal float resonanceESkillMagnification = 2f;       
         [Header("共鸣技能倍率")]
         [SerializeField] internal float resonanceQBurstMagnification = 5f;
     }

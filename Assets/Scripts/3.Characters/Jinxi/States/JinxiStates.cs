@@ -1758,13 +1758,13 @@ using System.Collections;
             if (stateMachine.movementLogic.CustomCheckGrounded())
             {
                 //御空攻击(地面模组)
-                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeAirAttackStep(stateMachine.JinxiSpecialSkillLinker.SkillAttackSteps);
+                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeAirAttackStep();
                 _isGrouded = isGrouded.T;
             }
             else
             {
                 //御空攻击(空中模组)
-                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeAirAttackStep(stateMachine.JinxiSpecialSkillLinker.SkillAirAttackSteps);
+                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeAirAttackStep();
                 _isGrouded = isGrouded.F;
             }
 
@@ -2328,6 +2328,12 @@ using System.Collections;
                 SwitchState(CharacterState.JinxiFall);
                 return;
             }
+            // 着地状态
+            if (stateMachine.movementLogic.CustomCheckGrounded())
+            {
+                SwitchState(CharacterState.JinxiLand);
+                return;
+            }
         }
     }
     #endregion
@@ -2564,7 +2570,7 @@ using System.Collections;
         {
             ESkill1,//普通战技（无前置，CD好了就能用）流光夕影
             ESkill2,//普攻第四段解锁的战技（地面空中都能用，进御空状态）神霓飞芒
-            ESkill3,//御空战技（Skill2后窗口内可用）逐天取月
+            ESkill3,//御空战技（ESkill2后窗口内可用）逐天取月
             ESkill4//御空强化战技（御空普攻第四段后窗口内可用）惊龙破空
         }
         private enum ESkillStatePhase
@@ -2602,19 +2608,19 @@ using System.Collections;
             {
                 case AttackId.ESkill04:
                     _eSkillType = ESkillType.ESkill4;
-                    stateMachine.JinxiSpecialSkillLinker.OnSkill4Used();
+                    stateMachine.JinxiSpecialSkillLinker.OnESkill4Used();
                     return;
                 case AttackId.ESkill03:
                     _eSkillType = ESkillType.ESkill3;
-                    stateMachine.JinxiSpecialSkillLinker.OnSkill3Used();
+                    stateMachine.JinxiSpecialSkillLinker.OnESkill3Used();
                     return;
                 case AttackId.ESkill02:
                     _eSkillType = ESkillType.ESkill2;
-                    stateMachine.JinxiSpecialSkillLinker.OnSkill2Used();
+                    stateMachine.JinxiSpecialSkillLinker.OnESkill2Used();
                     return;
                 default:
                     _eSkillType = ESkillType.ESkill1;
-                    stateMachine.JinxiSpecialSkillLinker.OnSkill1Used();
+                    stateMachine.JinxiSpecialSkillLinker.OnESkill1Used();
                     return;
             }
         }
@@ -2816,6 +2822,12 @@ using System.Collections;
                     SwitchState(CharacterState.JinxiESkill);
                     return;
                 }
+                //延奏状态
+                if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+                {
+                    SwitchState(CharacterState.JinxiQteSkill);
+                    return;
+                }
                 //御空冲刺状态
                 if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsFloatDashAvailable() && _statePhase == ESkillStatePhase.Recovery)
                 {
@@ -2883,6 +2895,12 @@ using System.Collections;
                     SwitchState(CharacterState.JinxiESkill);
                     return;
                 }
+                //延奏状态
+                if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+                {
+                    SwitchState(CharacterState.JinxiQteSkill);
+                    return;
+                }
                 //御空冲刺状态
                 if (stateMachine.CheckAndConsumeDashRequest() && stateMachine.movementLogic.IsFloatDashAvailable() && _statePhase == ESkillStatePhase.Recovery)
                 {
@@ -2948,6 +2966,12 @@ using System.Collections;
                 if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsESkillable() && _statePhase == ESkillStatePhase.Recovery)
                 {
                     SwitchState(CharacterState.JinxiESkill);
+                    return;
+                }
+                //延奏状态
+                if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.JinxiSpecialSkillLinker.IsQteSkillable())
+                {
+                    SwitchState(CharacterState.JinxiQteSkill);
                     return;
                 }
                 // 冲刺状态

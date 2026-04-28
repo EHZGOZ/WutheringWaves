@@ -25,14 +25,28 @@ namespace WutheringWaves
         [SerializeField] private GameObject hudPanel; // HUD根节点
         [Header("角色上下文")]
         [SerializeField] private CharacterContext context; // 当前绑定的角色上下文
+        [Header("玩家共享体力逻辑")]
+        [SerializeField] private PlayerStamina playerStamina; // 玩家共享体力逻辑
+        [Header("角色UI图标")]
+        [SerializeField] private CharacterUIConfigSO uiConfig;//角色UI图标
+        [Header("玩家相机逻辑")]
+        [SerializeField] private PlayerCamera playerCamera; // 玩家相机逻辑
+
 
         #region 技能UI引用
-        [Header("=== 队伍头像UI ===")]
-        [SerializeField] private TeamAvatarSlotUI[] teamAvatarSlots = new TeamAvatarSlotUI[3]; // 三人队伍头像槽位
-
         [Header("=== 技能图标 ===")]
-        [SerializeField] private Image eSkillIcon; // 当前E技能图标
-        [SerializeField] private Image qBurstIcon; // 当前Q技能图标
+        [Header("队伍头像图标配置缓存")]
+        private UIIconLayoutData[] teamAvatarIconLayouts = new UIIconLayoutData[3];
+        [Header("E技能图标")]
+        public UIIconLayoutData[] eSkillIcons;
+        [Header("Q技能未充能图标")]
+        public UIIconLayoutData qBurstLockedIcon;
+        [Header("Q技能可释放图标")]
+        public UIIconLayoutData[] qBurstReadyIcons;
+        [Header("共鸣条装饰UI")]
+        public UIIconLayoutData resonanceDecor;
+        [Header("延奏值装饰UI")]
+        public UIIconLayoutData concertoDecor;
 
         [Header("=== 冷却显示 ===")]
         [SerializeField] private Image eSkillCooldownMask; // E技能冷却遮罩
@@ -65,26 +79,39 @@ namespace WutheringWaves
         [SerializeField] private CanvasGroup staminaCanvasGroup; // 体力槽透明度控制
 
         [Header("=== 体力槽显示配置 ===")]
-        [SerializeField] private Camera uiFollowCamera; // 体力槽跟随使用的相机
         [SerializeField] private Vector3 staminaWorldOffset = Vector3.zero; // 体力槽世界偏移
         [SerializeField] private Vector2 staminaScreenOffset = new Vector2(40f, 0f); // 体力槽屏幕偏移
         [SerializeField] [Min(0f)] private float staminaFollowSmooth = 18f; // 体力槽跟随平滑
         [SerializeField] [Range(0f, 1f)] private float staminaHiddenAlpha = 0f; // 体力槽隐藏透明度
         [SerializeField] [Min(0f)] private float staminaFadeSpeed = 8f; // 体力槽淡入淡出速度
+        [Header("=== 体力槽缩放配置 ===")]
+        [SerializeField] private Vector2 staminaBaseSize = new Vector2(100f, 100f); // 体力槽基础尺寸
+        [SerializeField][Min(0f)] private float staminaMinScale = 0.8f; // 镜头最远时体力槽缩放
+        [SerializeField][Min(0f)] private float staminaMaxScale = 1.2f; // 镜头最近时体力槽缩放
+        [SerializeField][Min(0f)] private float staminaScaleSmooth = 18f; // 体力槽缩放平滑速度
+
         #endregion
 
         private UIRoot uiRoot; // UI根节点引用
-        private CharacterAttack attackLogic; // 当前角色攻击逻辑
         private JinxiSpecialSkillLinker jinxiSpecialSkillLinker; // 今汐专属技能逻辑
-        private PlayerStamina playerStamina; // 玩家共享体力逻辑
+
         private bool hasSubscribedAttackEvent; // 是否已经订阅技能刷新事件
         private bool hasSubscribedStaminaEvent; // 是否已经订阅体力刷新事件
         private bool hasSubscribedHealthEvent; // 是否已经订阅生命值刷新事件
+        private float targetStaminaAlpha; // 体力条目标透明度
 
         #region 生命周期
+        private void LateUpdate()
+        {
+            UpdateStaminaScreenPosition();
+            UpdateStaminaScaleByCameraZoom();
+            UpdateStaminaFade();
+        }
+
         private void OnDestroy()
         {
             UnsubscribeHealthEvent();
+            UnsubscribeStaminaEvent();
         }
 
         #endregion
@@ -99,16 +126,23 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.缓存当前角色上下文
-            context = injectedContext;
+            // 2.绑定数据集
+            BindData(injectedContext);
 
-            // 3.刷新HUD静态显示
-            RefreshHUD();
+            // 3.解析并缓存当前角色的技能UI配置
+            ResolveSkillUIConfig();
 
-            // 4.主动刷新当前角色生命值，避免刚绑定时UI还是旧角色血量
-            context.ForceRefreshHealth();
+            // 4.刷新UI
+            RefreshUI();
+
+
+            // 5,LOG
+            //Debug.Log($"[CharacterHUDController] 当前角色UI配置: {(uiConfig != null ? uiConfig.name : "null")}", this);
+
         }
+        
 
+        
         #endregion
 
         #region 初始化
@@ -119,11 +153,16 @@ namespace WutheringWaves
 
             // HUD初始化时订阅生命值变化事件
             SubscribeHealthEvent();
+
+            // HUD初始化时订阅体力变化事件
+            SubscribeStaminaEvent();
         }
 
         #endregion
 
         #region 事件订阅
+
+        #region 生命值变化事件
         // 订阅生命值变化事件
         private void SubscribeHealthEvent()
         {
@@ -149,7 +188,217 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 生命值UI刷新
+        #region 体力变化事件
+        // 订阅体力变化事件
+        private void SubscribeStaminaEvent()
+        {
+            // 1.已经订阅过时直接返回，避免重复绑定事件
+            if (hasSubscribedStaminaEvent)
+            {
+                return;
+            }
+
+            // 2.订阅体力数值变化事件
+            GameEvents.OnStaminaChanged += HandleStaminaChanged;
+
+            // 3.订阅体力条显隐事件
+            GameEvents.OnStaminaVisibilityChanged += HandleStaminaVisibilityChanged;
+
+            // 4.标记体力事件已订阅
+            hasSubscribedStaminaEvent = true;
+        }
+
+
+        // 解绑体力变化事件
+        private void UnsubscribeStaminaEvent()
+        {
+            // 1.没有订阅过时直接返回
+            if (!hasSubscribedStaminaEvent)
+            {
+                return;
+            }
+
+            // 2.解绑体力数值变化事件
+            GameEvents.OnStaminaChanged -= HandleStaminaChanged;
+
+            // 3.解绑体力条显隐事件
+            GameEvents.OnStaminaVisibilityChanged -= HandleStaminaVisibilityChanged;
+
+            // 4.标记体力事件已解绑
+            hasSubscribedStaminaEvent = false;
+        }
+
+        #endregion
+
+        #region 技能UI变化事件
+
+        #endregion
+
+        #endregion
+
+        #region 绑定数据集
+        // 绑定数据集
+        public void BindData(CharacterContext injectedContext)
+        {
+            // 1.绑定当前角色上下文
+            context = injectedContext;
+
+            // 2.绑定玩家共享体力逻辑
+            playerStamina = context != null ? context.PlayerStamina : null;
+
+            // 3.绑定玩家相机逻辑
+            playerCamera = context != null && context.PlayerController != null
+                ? context.PlayerController.CurrentPlayerCamera
+                : null;
+
+            // 4.绑定角色UI图标配置
+            uiConfig = context != null && context.CharacterDataSO != null
+                ? context.CharacterDataSO.characterUIConfigSO
+                : null;
+        }
+
+        #endregion
+
+        #region 解析技能UI配置
+        // 清空技能UI配置缓存
+        private void ClearSkillUIConfigCache()
+        {
+            // 1.清空队伍头像配置缓存
+            if (teamAvatarIconLayouts == null || teamAvatarIconLayouts.Length != 3)
+            {
+                teamAvatarIconLayouts = new UIIconLayoutData[3];
+            }
+
+            for (int i = 0; i < teamAvatarIconLayouts.Length; i++)
+            {
+                teamAvatarIconLayouts[i] = null;
+            }
+
+            // 2.清空E技能图标配置缓存
+            eSkillIcons = null;
+
+            // 3.清空Q技能图标配置缓存
+            qBurstLockedIcon = null;
+            qBurstReadyIcons = null;
+
+            // 4.清空角色装饰UI配置缓存
+            resonanceDecor = null;
+            concertoDecor = null;
+        }
+
+        // 解析技能UI配置
+        private void ResolveSkillUIConfig()
+        {
+            // 1.先清空上一名角色残留的技能UI配置缓存
+            ClearSkillUIConfigCache();
+
+            // 2.解析队伍头像图标配置
+            ResolveTeamAvatarIcons();
+
+            // 3.解析当前角色E技能图标配置
+            ResolveESkillIcons();
+
+            // 4.解析当前角色Q技能图标配置
+            ResolveQBurstIcons();
+
+            // 5.解析当前角色共鸣条装饰UI配置
+            ResolveResonanceDecor();
+
+            // 6.解析当前角色延奏值装饰UI配置
+            ResolveConcertoDecor();
+        }
+
+        // 解析队伍头像图标配置
+        private void ResolveTeamAvatarIcons()
+        {
+            // 1.空值检查：没有当前角色或玩家控制器时无法读取队伍数据
+            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            {
+                return;
+            }
+
+            PlayerRuntimeData playerRuntimeData = context.PlayerController.PlayerRuntimeData;
+            if (playerRuntimeData.teamSlots == null)
+            {
+                return;
+            }
+
+            // 2.逐个槽位解析角色头像配置
+            for (int i = 0; i < teamAvatarIconLayouts.Length; i++)
+            {
+                if (i >= playerRuntimeData.teamSlots.Count)
+                {
+                    continue;
+                }
+
+                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
+                if (slotData == null)
+                {
+                    continue;
+                }
+
+                CharacterUIConfigSO slotUIConfig = ResolveCharacterUIConfig(slotData.characterName);
+                teamAvatarIconLayouts[i] = slotUIConfig != null ? slotUIConfig.avatarIcon : null;
+            }
+        }
+        // 根据角色名称解析角色UI配置
+        private CharacterUIConfigSO ResolveCharacterUIConfig(CharacterName characterName)
+        {
+            if (GameBootstrap.Instance == null)
+            {
+                return null;
+            }
+
+            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
+            {
+                return null;
+            }
+
+            CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
+            if (prefabContext == null || prefabContext.CharacterDataSO == null)
+            {
+                return null;
+            }
+
+            return prefabContext.CharacterDataSO.characterUIConfigSO;
+        }
+
+        // 解析E技能图标配置
+        private void ResolveESkillIcons()
+        {
+            eSkillIcons = uiConfig.eSkillIcons;
+        }
+
+        // 解析Q技能图标配置
+        private void ResolveQBurstIcons()
+        {
+            qBurstLockedIcon = uiConfig.qBurstLockedIcon;
+            qBurstReadyIcons = uiConfig.qBurstReadyIcons;
+        }
+
+        // 解析共鸣条装饰UI配置
+        private void ResolveResonanceDecor()
+        {
+            resonanceDecor = uiConfig.resonanceDecor;
+        }
+
+        // 解析延奏值装饰UI配置
+        private void ResolveConcertoDecor()
+        {
+            concertoDecor = uiConfig.concertoDecor;
+        }
+        #endregion
+
+        #region 刷新UI
+        //刷新UI
+        public void RefreshUI()
+        {
+            // 强制刷新当前角色生命值，避免切人后生命值UI停留在上一名角色
+            context.ForceRefreshHealth();
+
+        }
+
+        #region 刷新生命值UI
         // 处理生命值变化事件
         private void HandleHealthChanged(CharacterContext source, float current, float max, float normalized)
         {
@@ -178,154 +427,185 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 刷新HUD图标
-        // 刷新HUD显示：用于切人、队伍变化或运行时数据变化后调用
-        public void RefreshHUD()
-        {
-            RefreshHUDStaticIcons();
-        }
-        // 刷新HUD静态图标：队伍头像、E技能图标、Q爆发图标
-        private void RefreshHUDStaticIcons()
-        {
-            RefreshTeamAvatarIcons();
-            RefreshESkillIcon();
-            RefreshQBurstIcon();
-        }
+        #region 刷新技能UI
 
-        // 刷新队伍头像：根据PlayerRuntimeData中的队伍槽位显示三人头像
-        private void RefreshTeamAvatarIcons()
+
+
+        #endregion
+
+        #region 刷新体力UI
+        // 处理体力变化事件
+        private void HandleStaminaChanged(PlayerStamina source, float current, float max, float normalized)
         {
-            // 1.头像槽位为空时直接返回
-            if (teamAvatarSlots == null || teamAvatarSlots.Length == 0)
+            // 1.只刷新当前HUD绑定的玩家体力
+            if (source == null || source != playerStamina)
             {
                 return;
             }
 
-            // 2.获取玩家运行时数据
-            PlayerRuntimeData playerRuntimeData = context != null && context.PlayerController != null
-                ? context.PlayerController.PlayerRuntimeData
-                : null;
-
-            // 3.没有队伍数据时，隐藏全部头像槽位
-            if (playerRuntimeData == null || playerRuntimeData.teamSlots == null)
+            // 2.刷新体力槽填充
+            RefreshStaminaUI(current, max, normalized);
+        }
+        // 处理体力条显隐事件
+        private void HandleStaminaVisibilityChanged(PlayerStamina source, bool visible)
+        {
+            // 1.只处理当前HUD绑定的玩家体力
+            if (source == null || source != playerStamina)
             {
-                SetAllAvatarSlotsVisible(false);
                 return;
             }
 
-            // 4.逐个刷新头像槽位
-            for (int i = 0; i < teamAvatarSlots.Length; i++)
+            // 2.刷新体力条显隐
+            RefreshStaminaVisibility(visible);
+        }
+        // 刷新体力条显隐
+        private void RefreshStaminaVisibility(bool visible)
+        {
+            // 1.确保体力条根节点处于激活状态，显隐交给透明度控制
+            if (staminaRoot != null && !staminaRoot.gameObject.activeSelf)
             {
-                TeamAvatarSlotUI slotUI = teamAvatarSlots[i];
-                if (slotUI == null)
-                {
-                    continue;
-                }
+                staminaRoot.gameObject.SetActive(true);
+            }
 
-                // 5.队伍没有这个槽位，隐藏
-                if (i >= playerRuntimeData.teamSlots.Count)
-                {
-                    SetAvatarSlotVisible(slotUI, false);
-                    continue;
-                }
+            // 2.优先使用CanvasGroup控制透明度，避免关闭物体后位置和缩放逻辑被打断
+            if (staminaCanvasGroup != null)
+            {
+                targetStaminaAlpha = visible ? 1f : staminaHiddenAlpha;
+                return;
+            }
 
-                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
-                if (slotData == null)
-                {
-                    SetAvatarSlotVisible(slotUI, false);
-                    continue;
-                }
 
-                // 6.根据角色名解析角色配置
-                CharacterDataSO characterDataSO = ResolveCharacterDataSO(slotData.characterName);
-                if (characterDataSO == null || characterDataSO.avatarIcon == null)
-                {
-                    SetAvatarSlotVisible(slotUI, false);
-                    continue;
-                }
-
-                // 7.显示头像槽位并设置头像
-                SetAvatarSlotVisible(slotUI, true);
-
-                if (slotUI.avatarIcon != null)
-                {
-                    slotUI.avatarIcon.sprite = characterDataSO.avatarIcon;
-                    slotUI.avatarIcon.color = normalColor;
-                }
-
-                // 8.显示当前受控角色底框
-                if (slotUI.selectedFrame != null)
-                {
-                    slotUI.selectedFrame.SetActive(i == playerRuntimeData.currentCharacterIndex);
-                }
+            // 3.没有CanvasGroup时兜底控制根节点显隐
+            if (staminaRoot != null)
+            {
+                staminaRoot.gameObject.SetActive(visible);
             }
         }
 
-        // 刷新E技能默认图标：切换角色或绑定角色时调用
-        private void RefreshESkillIcon()
+
+        // 刷新体力UI
+        private void RefreshStaminaUI(float current, float max, float normalized)
         {
-            // 1.空值检查
-            if (context == null || context.CharacterDataSO == null || eSkillIcon == null)
+            // 1.刷新体力环填充比例
+            if (staminaRingFill != null)
             {
-                return;
+                staminaRingFill.fillAmount = Mathf.Clamp01(normalized);
             }
-
-            // 2.读取角色E技能图标列表
-            Sprite[] icons = context.CharacterDataSO.eSkillIcons;
-            if (icons == null || icons.Length == 0 || icons[0] == null)
-            {
-                return;
-            }
-
-            // 3.默认先显示第0张E技能图标
-            eSkillIcon.sprite = icons[0];
-            eSkillIcon.color = normalColor;
         }
 
-        // 刷新Q爆发默认图标：切换角色或绑定角色时调用
-        private void RefreshQBurstIcon()
+        #endregion
+
+        #endregion
+
+        #region 更新体力条屏幕位置
+        // 更新体力条屏幕位置
+        private void UpdateStaminaScreenPosition()
         {
-            // 1.空值检查
-            if (context == null || context.CharacterDataSO == null || qBurstIcon == null)
+            // 1.空值检查：缺少当前角色或体力条根节点时不更新
+            if (context == null || staminaRoot == null)
             {
                 return;
             }
 
-            // 2.优先读取Q技能可释放图标列表
-            Sprite[] readyIcons = context.CharacterDataSO.qBurstReadyIcons;
-            if (readyIcons != null && readyIcons.Length > 0 && readyIcons[0] != null)
+            // 2.获取主相机，世界坐标转屏幕坐标需要使用真实渲染相机
+            Camera mainCamera = Camera.main;
+            if (mainCamera == null)
             {
-                qBurstIcon.sprite = readyIcons[0];
-                qBurstIcon.color = normalColor;
                 return;
             }
 
-            // 3.没有可释放图标时，兜底显示未充能图标
-            Sprite lockedIcon = context.CharacterDataSO.qBurstLockedIcon;
-            if (lockedIcon != null)
+            // 3.优先使用角色相机观察点作为体力条跟随点，避免镜头缩放时根节点投影漂移太明显
+            Transform followTarget = context.CameraTarget != null ? context.CameraTarget : context.transform;
+            Vector3 worldPosition = followTarget.position + staminaWorldOffset;
+
+
+            // 4.把世界坐标转换成屏幕坐标
+            Vector3 screenPosition = mainCamera.WorldToScreenPoint(worldPosition);
+
+
+            // 6.叠加屏幕偏移，得到目标屏幕位置
+            Vector2 targetScreenPosition = new Vector2(screenPosition.x, screenPosition.y) + staminaScreenOffset;
+
+            // 7.根据平滑配置更新体力条位置
+            if (staminaFollowSmooth <= 0f)
             {
-                qBurstIcon.sprite = lockedIcon;
-                qBurstIcon.color = disableColor;
+                staminaRoot.position = targetScreenPosition;
+            }
+            else
+            {
+                staminaRoot.position = Vector3.Lerp(
+                    staminaRoot.position,
+                    targetScreenPosition,
+                    staminaFollowSmooth * Time.unscaledDeltaTime
+                );
             }
         }
         #endregion
 
-        #region 根据角色数据更换角色技能图片
-        // 根据角色名称解析角色配置
-        private CharacterDataSO ResolveCharacterDataSO(CharacterName characterName)
+        #region 更新体力条大小
+        // 根据相机缩放距离更新体力条大小
+        private void UpdateStaminaScaleByCameraZoom()
         {
-            if (GameBootstrap.Instance == null)
+            // 1.空值检查：缺少体力条根节点或玩家相机时不更新
+            if (staminaRoot == null || playerCamera == null)
             {
-                return null;
+                return;
             }
 
-            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
+            // 2.根据相机当前缩放距离计算0到1的归一化值
+            float zoomNormalized = Mathf.InverseLerp(
+                playerCamera.MinZoomDistance,
+                playerCamera.MaxZoomDistance,
+                playerCamera.CurrentZoomDistance
+            );
+
+            // 3.镜头越近体力条越大，镜头越远体力条越小
+            float targetScale = Mathf.Lerp(staminaMinScale, staminaMaxScale, zoomNormalized);
+
+
+            // 4.根据缩放比例计算目标缩放
+            Vector3 targetLocalScale = Vector3.one * targetScale;
+
+            // 5.根据平滑配置更新体力条整体缩放
+            if (staminaScaleSmooth <= 0f)
             {
-                return null;
+                staminaRoot.localScale = targetLocalScale;
+            }
+            else
+            {
+                staminaRoot.localScale = Vector3.Lerp(
+                    staminaRoot.localScale,
+                    targetLocalScale,
+                    staminaScaleSmooth * Time.unscaledDeltaTime
+                );
             }
 
-            CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
-            return prefabContext != null ? prefabContext.CharacterDataSO : null;
+        }
+        #endregion
+
+        #region 更新体力条透明度
+        // 更新体力条透明度
+        private void UpdateStaminaFade()
+        {
+            // 1.空值检查：没有CanvasGroup时不处理淡入淡出
+            if (staminaCanvasGroup == null)
+            {
+                return;
+            }
+
+            // 2.速度为0时直接设置目标透明度
+            if (staminaFadeSpeed <= 0f)
+            {
+                staminaCanvasGroup.alpha = targetStaminaAlpha;
+                return;
+            }
+
+            // 3.逐帧向目标透明度移动，实现淡入淡出
+            staminaCanvasGroup.alpha = Mathf.MoveTowards(
+                staminaCanvasGroup.alpha,
+                targetStaminaAlpha,
+                staminaFadeSpeed * Time.unscaledDeltaTime
+            );
         }
         #endregion
 
@@ -338,46 +618,6 @@ namespace WutheringWaves
                 hudPanel.SetActive(visible);
             }
         }
-        // 隐藏或显示所有头像槽位
-        private void SetAllAvatarSlotsVisible(bool visible)
-        {
-            if (teamAvatarSlots == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < teamAvatarSlots.Length; i++)
-            {
-                TeamAvatarSlotUI slotUI = teamAvatarSlots[i];
-                if (slotUI == null)
-                {
-                    continue;
-                }
-
-                SetAvatarSlotVisible(slotUI, visible);
-            }
-        }
-
-        // 设置单个头像槽位显隐
-        private void SetAvatarSlotVisible(TeamAvatarSlotUI slotUI, bool visible)
-        {
-            if (slotUI == null)
-            {
-                return;
-            }
-
-            if (slotUI.root != null)
-            {
-                slotUI.root.SetActive(visible);
-            }
-
-            if (!visible && slotUI.selectedFrame != null)
-            {
-                slotUI.selectedFrame.SetActive(false);
-            }
-        }
-
-
         #endregion
     }
 }

@@ -38,7 +38,9 @@ namespace WutheringWaves
         private float _cinemachineTargetPitch; // 垂直旋转角
 
         private Cinemachine3rdPersonFollow _thirdPersonFollow; // 第三人称相机组件
-        internal float _currentZoomDistance; // 当前缩放距离
+        private float _currentZoomDistance; // 当前缩放距离
+        public float CurrentZoomDistance => _currentZoomDistance;
+
         #endregion
 
         #region 角色绑定

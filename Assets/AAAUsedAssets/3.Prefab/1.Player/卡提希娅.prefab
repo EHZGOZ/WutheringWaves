@@ -95,7 +95,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.45
-  m_Radius: 0.18
+  m_Radius: 0.15
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.05
@@ -119,6 +119,18 @@ MonoBehaviour:
     characterName: 0
     maxHealth: 0
     currentHealth: 0
+    jinxiESkill1CDTimer: 0
+    jinxiQBurstCDTimer: 0
+    jinxiESkill2WindowTimer: 0
+    jinxiESkill3WindowTimer: 0
+    jinxiESkill4WindowTimer: 0
+    jinxiFloatingTimer: 0
+    jinxiIsESkill2WindowOpen: 0
+    jinxiIsESkill3WindowOpen: 0
+    jinxiIsESkill4WindowOpen: 0
+    jinxiIsFloating: 0
+    katixiyaESkillCDTimer: 0
+    katixiyaQBurstCDTimer: 0
   playerController: {fileID: 0}
   playerInputReader: {fileID: 0}
   playerStamina: {fileID: 0}
@@ -156,6 +168,18 @@ MonoBehaviour:
     characterName: 0
     maxHealth: 0
     currentHealth: 0
+    jinxiESkill1CDTimer: 0
+    jinxiQBurstCDTimer: 0
+    jinxiESkill2WindowTimer: 0
+    jinxiESkill3WindowTimer: 0
+    jinxiESkill4WindowTimer: 0
+    jinxiFloatingTimer: 0
+    jinxiIsESkill2WindowOpen: 0
+    jinxiIsESkill3WindowOpen: 0
+    jinxiIsESkill4WindowOpen: 0
+    jinxiIsFloating: 0
+    katixiyaESkillCDTimer: 0
+    katixiyaQBurstCDTimer: 0
   Animator: {fileID: 0}
   PlayerInputReader: {fileID: 0}
   InputBuffer: {fileID: 0}
