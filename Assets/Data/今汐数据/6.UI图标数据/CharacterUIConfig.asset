@@ -13,24 +13,44 @@ MonoBehaviour:
   m_Name: CharacterUIConfig
   m_EditorClassIdentifier: 
   avatarIcon:
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: b7aa0066bf5b30a41ad6d356cb726d2b, type: 3}
+    size: {x: 96, y: 96}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  eSkillIcons:
+  - sprite: {fileID: 21300000, guid: 07562d4f53d6e054eb2533b04cab88f9, type: 3}
     size: {x: 100, y: 100}
     anchoredPosition: {x: 0, y: 0}
     preserveAspect: 1
-  eSkillIcons: []
+  - sprite: {fileID: 21300000, guid: dae30587de12c5441ab8a5930a688aa0, type: 3}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  - sprite: {fileID: 21300000, guid: 7ff2157f056ff3a4da4e532a1072d998, type: 3}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  - sprite: {fileID: 21300000, guid: 60ce956e3cfb7ff44854d37c96fce7f1, type: 3}
+    size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
   qBurstLockedIcon:
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: f369cf98900521345b3c917a6bb3e72f, type: 3}
     size: {x: 100, y: 100}
     anchoredPosition: {x: 0, y: 0}
     preserveAspect: 1
-  qBurstReadyIcons: []
-  resonanceDecor:
-    sprite: {fileID: 0}
+  qBurstReadyIcons:
+  - sprite: {fileID: 21300000, guid: fbb0d0a3444d76445ac9c526ac69bc99, type: 3}
     size: {x: 100, y: 100}
+    anchoredPosition: {x: 0, y: 0}
+    preserveAspect: 1
+  resonanceDecor:
+    sprite: {fileID: 21300000, guid: 632dcbe50af0cc74bb373701cb3c2468, type: 3}
+    size: {x: 800, y: 200}
     anchoredPosition: {x: 0, y: 0}
     preserveAspect: 1
   concertoDecor:
-    sprite: {fileID: 0}
-    size: {x: 100, y: 100}
+    sprite: {fileID: 21300000, guid: b09303ebef79a2846bd7e3d1945e0181, type: 3}
+    size: {x: 150, y: 150}
     anchoredPosition: {x: 0, y: 0}
     preserveAspect: 1

@@ -5,17 +5,6 @@ using UnityEngine.UI;
 namespace WutheringWaves
 {
     [System.Serializable]
-    public class TeamAvatarSlotUI
-    {
-        [Header("头像根节点")]
-        public GameObject root; // 整个头像槽位，没角色时隐藏
-
-        [Header("头像图片")]
-        public Image avatarIcon; // 角色头像图片
-
-        [Header("当前角色底框")]
-        public GameObject selectedFrame; // 当前受控角色底框
-    }
 
     [DisallowMultipleComponent]
     // 角色HUD控制器：负责玩家HUD、技能UI、Q爆发UI和共享体力UI的显示与刷新
@@ -33,33 +22,58 @@ namespace WutheringWaves
         [SerializeField] private PlayerCamera playerCamera; // 玩家相机逻辑
 
 
-        #region 技能UI引用
-        [Header("=== 技能图标 ===")]
-        [Header("队伍头像图标配置缓存")]
-        private UIIconLayoutData[] teamAvatarIconLayouts = new UIIconLayoutData[3];
-        [Header("E技能图标")]
-        public UIIconLayoutData[] eSkillIcons;
-        [Header("Q技能未充能图标")]
-        public UIIconLayoutData qBurstLockedIcon;
-        [Header("Q技能可释放图标")]
-        public UIIconLayoutData[] qBurstReadyIcons;
-        [Header("共鸣条装饰UI")]
-        public UIIconLayoutData resonanceDecor;
-        [Header("延奏值装饰UI")]
-        public UIIconLayoutData concertoDecor;
+        #region 头像UI引用
+        [Header("=== 队伍头像UI ===")]
+        [SerializeField] private Image[] teamAvatarIconImages = new Image[3]; // 队伍头像真实图片组件
+        [Header("头像选中颜色")]
+        [SerializeField] private Color selectedAvatarColor = Color.white; // 当前角色头像颜色
+        [Header("头像未选中颜色")]
+        [SerializeField] private Color unselectedAvatarColor = new Color(0.7f, 0.7f, 0.7f, 1f); // 非当前角色头像颜色
 
-        [Header("=== 冷却显示 ===")]
-        [SerializeField] private Image eSkillCooldownMask; // E技能冷却遮罩
-        [SerializeField] private Image qBurstCooldownMask; // Q爆发冷却遮罩
+        private Vector2[] teamAvatarBaseAnchoredPositions = new Vector2[3]; // 队伍头像Scene原始位置缓存
+        #endregion
+
+        #region 共鸣与延奏UI引用
+        [Header("=== 共鸣与延奏UI ===")]
+        [SerializeField] private Image resonanceDecorImage; // 共鸣条装饰真实图片组件
+        [SerializeField] private Image concertoDecorImage; // 延奏值装饰真实图片组件
+
+        [Header("共鸣条装饰UI配置缓存")]
+        private UIIconLayoutData resonanceDecor; // 当前角色共鸣条装饰配置缓存
+        [Header("延奏值装饰UI配置缓存")]
+        private UIIconLayoutData concertoDecor; // 当前角色延奏值装饰配置缓存
+
+        private Vector2 resonanceDecorBaseAnchoredPosition; // 共鸣条装饰Scene原始位置缓存
+        private Vector2 concertoDecorBaseAnchoredPosition; // 延奏值装饰Scene原始位置缓存
+
+        #endregion
+
+        #region 技能UI引用
+        [Header("=== 技能图标UI ===")]
+        [SerializeField] private Image eSkillIconImage; // E技能真实图片组件
+        [SerializeField] private Image qBurstIconImage; // Q技能真实图片组件
+        private Vector2 eSkillIconBaseAnchoredPosition; // E技能图标Scene原始位置缓存
+        private Vector2 qBurstIconBaseAnchoredPosition; // Q技能图标Scene原始位置缓存
+
+
+        [Header("E技能图标配置缓存")]
+        private UIIconLayoutData[] eSkillIcons; // 当前角色全部E技能候选图标配置
+
+        [Header("Q技能未充能图标配置缓存")]
+        private UIIconLayoutData qBurstLockedIcon; // 当前角色Q技能未充能图标配置
+
+        [Header("Q技能可释放图标配置缓存")]
+        private UIIconLayoutData[] qBurstReadyIcons; // 当前角色全部Q技能可释放候选图标配置
+
+        [Header("冷却显示")]
         [SerializeField] private TextMeshProUGUI eSkillCooldownText; // E技能冷却数字
         [SerializeField] private TextMeshProUGUI qBurstCooldownText; // Q爆发冷却数字
-
-        [Header("技能冷却/禁用状态的UI颜色")]
         [SerializeField] private Color disableColor = new Color(0.45f, 0.45f, 0.45f, 1f); // 禁用颜色
         [SerializeField] private Color normalColor = Color.white; // 正常颜色
 
         [Header("E技能键盘按键提示")]
         [SerializeField] private Image eKeyImage; // E技能键盘按键提示
+
         [Header("Q爆发键盘按键提示")]
         [SerializeField] private Image qKeyImage; // Q爆发键盘按键提示
         #endregion
@@ -98,19 +112,25 @@ namespace WutheringWaves
         private bool hasSubscribedAttackEvent; // 是否已经订阅技能刷新事件
         private bool hasSubscribedStaminaEvent; // 是否已经订阅体力刷新事件
         private bool hasSubscribedHealthEvent; // 是否已经订阅生命值刷新事件
+
         private float targetStaminaAlpha; // 体力条目标透明度
 
         #region 生命周期
         private void LateUpdate()
         {
+            // 更新耐力条UI在屏幕上的跟随位置
             UpdateStaminaScreenPosition();
+            // 根据相机的缩放比例，动态调整耐力条UI的大小
             UpdateStaminaScaleByCameraZoom();
+            // 更新耐力条UI的淡入淡出效果
             UpdateStaminaFade();
         }
 
         private void OnDestroy()
         {
+            // 取消订阅生命值相关的事件
             UnsubscribeHealthEvent();
+            // 取消订阅耐力值相关的事件
             UnsubscribeStaminaEvent();
         }
 
@@ -126,23 +146,196 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.绑定数据集
+            // 2.先清空上一名角色残留的技能UI配置缓存
+            ClearUICache();
+
+            // 3.绑定数据集
             BindData(injectedContext);
 
-            // 3.解析并缓存当前角色的技能UI配置
+            // 4.解析并缓存当前角色的技能UI配置
             ResolveSkillUIConfig();
 
-            // 4.刷新UI
-            RefreshUI();
-
-
-            // 5,LOG
-            //Debug.Log($"[CharacterHUDController] 当前角色UI配置: {(uiConfig != null ? uiConfig.name : "null")}", this);
+            //刷新当前角色生命值
+            RefreshHealth();
 
         }
-        
 
-        
+
+
+        #endregion
+
+        #region 清空上一名角色残留的技能UI配置缓存
+        // 清空UI配置缓存和真实UI显示
+        private void ClearUICache()
+        {
+            // 1.清空头像UI配置和真实头像显示
+            ClearTeamAvatarUIConfigCache();
+
+            // 2.清空共鸣与延奏UI配置和真实装饰显示
+            ClearResonanceAndConcertoUIConfigCache();
+
+            // 3.清空技能UI配置和真实技能显示
+            ClearSkillIconUIConfigCache();
+
+            // 4.清空生命值槽UI显示
+            ClearHealthSlotUIConfigCache();
+
+            // 5.清空体力槽UI显示
+            ClearStaminaSlotUIConfigCache();
+        }
+        #endregion
+
+        #region 绑定数据集
+        // 绑定数据集
+        public void BindData(CharacterContext injectedContext)
+        {
+            // 1.绑定当前角色上下文
+            context = injectedContext;
+
+            // 2.绑定玩家共享体力逻辑
+            playerStamina = context != null ? context.PlayerStamina : null;
+
+            // 3.绑定玩家相机逻辑
+            playerCamera = context != null && context.PlayerController != null
+                ? context.PlayerController.CurrentPlayerCamera
+                : null;
+
+            // 4.绑定角色UI图标配置
+            uiConfig = context != null && context.CharacterDataSO != null
+                ? context.CharacterDataSO.characterUIConfigSO
+                : null;
+        }
+
+        #endregion
+
+        #region 解析技能UI配置
+        // 解析技能UI配置
+        private void ResolveSkillUIConfig()
+        {
+            // 1.解析队伍头像图标配置
+            ResolveTeamAvatarIcons();
+
+            // 2.解析当前角色共鸣条装饰UI配置
+            ResolveResonanceDecor();
+
+            // 3.解析当前角色延奏值装饰UI配置
+            ResolveConcertoDecor();
+
+            // 4.解析当前角色E技能图标配置
+            ResolveESkillIcons();
+
+            // 5.解析当前角色Q技能图标配置
+            ResolveQBurstIcons();
+        }
+
+        // 1.解析并应用队伍头像图标配置
+        private void ResolveTeamAvatarIcons()
+        {
+            // 1.空值检查：没有当前角色或玩家控制器时无法读取队伍数据
+            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            {
+                return;
+            }
+
+            // 2.空值检查：没有头像图片数组时无法刷新头像
+            if (teamAvatarIconImages == null || teamAvatarIconImages.Length == 0)
+            {
+                return;
+            }
+
+            PlayerRuntimeData playerRuntimeData = context.PlayerController.PlayerRuntimeData;
+            if (playerRuntimeData.teamSlots == null)
+            {
+                return;
+            }
+
+            // 3.获取当前受控角色索引，用于刷新头像颜色
+            int currentAvatarIndex = ResolveCurrentTeamAvatarIndex();
+
+            // 4.逐个槽位解析角色头像配置，并直接应用到真实头像图片
+            for (int i = 0; i < teamAvatarIconImages.Length; i++)
+            {
+                Image avatarIconImage = teamAvatarIconImages[i];
+                if (avatarIconImage == null)
+                {
+                    continue;
+                }
+
+                if (i >= playerRuntimeData.teamSlots.Count)
+                {
+                    ApplyAvatarIconLayout(i, avatarIconImage, null);
+                    continue;
+                }
+
+                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
+                if (slotData == null)
+                {
+                    ApplyAvatarIconLayout(i, avatarIconImage, null);
+                    continue;
+                }
+
+                CharacterUIConfigSO slotUIConfig = ResolveCharacterUIConfig(slotData.characterName);
+                UIIconLayoutData avatarLayout = slotUIConfig != null ? slotUIConfig.avatarIcon : null;
+
+                // 5.把队伍头像配置直接应用到真实头像图片
+                ApplyAvatarIconLayout(i, avatarIconImage, avatarLayout);
+
+                // 6.根据当前受控角色索引刷新头像颜色
+                RefreshTeamAvatarState(avatarIconImage, i == currentAvatarIndex);
+            }
+        }
+
+        // 2.解析共鸣条装饰UI配置
+        private void ResolveResonanceDecor()
+        {
+            // 1.读取当前角色共鸣条装饰配置缓存
+            resonanceDecor = uiConfig != null ? uiConfig.resonanceDecor : null;
+
+            // 2.把共鸣条装饰配置应用到真实图片
+            ApplyDecorIconLayout(resonanceDecorImage, resonanceDecor, resonanceDecorBaseAnchoredPosition);
+        }
+
+        // 3.解析延奏值装饰UI配置
+        private void ResolveConcertoDecor()
+        {
+            // 1.读取当前角色延奏值装饰配置缓存
+            concertoDecor = uiConfig != null ? uiConfig.concertoDecor : null;
+
+            // 2.把延奏值装饰配置应用到真实图片
+            ApplyDecorIconLayout(concertoDecorImage, concertoDecor, concertoDecorBaseAnchoredPosition);
+        }
+
+        // 解析E技能图标配置
+        private void ResolveESkillIcons()
+        {
+            // 1.读取当前角色E技能图标配置缓存
+            eSkillIcons = uiConfig != null ? uiConfig.eSkillIcons : null;
+
+            // 2.默认显示第一个E技能图标
+            UIIconLayoutData defaultESkillIcon = eSkillIcons != null && eSkillIcons.Length > 0
+                ? eSkillIcons[0]
+                : null;
+
+            // 3.把E技能默认图标应用到真实图片
+            ApplySkillIconLayout(eSkillIconImage, defaultESkillIcon, eSkillIconBaseAnchoredPosition);
+        }
+
+        // 解析Q技能图标配置
+        private void ResolveQBurstIcons()
+        {
+            // 1.读取当前角色Q技能图标配置缓存
+            qBurstLockedIcon = uiConfig != null ? uiConfig.qBurstLockedIcon : null;
+            qBurstReadyIcons = uiConfig != null ? uiConfig.qBurstReadyIcons : null;
+
+            // 2.默认显示Q技能已充能图标
+            UIIconLayoutData defaultQBurstIcon = qBurstReadyIcons != null && qBurstReadyIcons.Length > 0
+                ? qBurstReadyIcons[0]
+                : qBurstLockedIcon;
+
+            // 3.把Q技能默认图标应用到真实图片
+            ApplySkillIconLayout(qBurstIconImage, defaultQBurstIcon, qBurstIconBaseAnchoredPosition);
+        }
+
         #endregion
 
         #region 初始化
@@ -150,6 +343,13 @@ namespace WutheringWaves
         public void Initialize(UIRoot uiRoot)
         {
             this.uiRoot = uiRoot;
+
+            //记录初始头像位置
+            CacheTeamAvatarBaseAnchoredPositions();
+            //记录共鸣条和延奏位置
+            CacheResonanceAndConcertoBaseAnchoredPositions();
+            //记录技能图标位置
+            CacheSkillIconBaseAnchoredPositions();
 
             // HUD初始化时订阅生命值变化事件
             SubscribeHealthEvent();
@@ -236,109 +436,20 @@ namespace WutheringWaves
 
         #endregion
 
-        #region 绑定数据集
-        // 绑定数据集
-        public void BindData(CharacterContext injectedContext)
+        #region 头像
+        // 清空头像UI显示
+        private void ClearTeamAvatarUIConfigCache()
         {
-            // 1.绑定当前角色上下文
-            context = injectedContext;
-
-            // 2.绑定玩家共享体力逻辑
-            playerStamina = context != null ? context.PlayerStamina : null;
-
-            // 3.绑定玩家相机逻辑
-            playerCamera = context != null && context.PlayerController != null
-                ? context.PlayerController.CurrentPlayerCamera
-                : null;
-
-            // 4.绑定角色UI图标配置
-            uiConfig = context != null && context.CharacterDataSO != null
-                ? context.CharacterDataSO.characterUIConfigSO
-                : null;
-        }
-
-        #endregion
-
-        #region 解析技能UI配置
-        // 清空技能UI配置缓存
-        private void ClearSkillUIConfigCache()
-        {
-            // 1.清空队伍头像配置缓存
-            if (teamAvatarIconLayouts == null || teamAvatarIconLayouts.Length != 3)
-            {
-                teamAvatarIconLayouts = new UIIconLayoutData[3];
-            }
-
-            for (int i = 0; i < teamAvatarIconLayouts.Length; i++)
-            {
-                teamAvatarIconLayouts[i] = null;
-            }
-
-            // 2.清空E技能图标配置缓存
-            eSkillIcons = null;
-
-            // 3.清空Q技能图标配置缓存
-            qBurstLockedIcon = null;
-            qBurstReadyIcons = null;
-
-            // 4.清空角色装饰UI配置缓存
-            resonanceDecor = null;
-            concertoDecor = null;
-        }
-
-        // 解析技能UI配置
-        private void ResolveSkillUIConfig()
-        {
-            // 1.先清空上一名角色残留的技能UI配置缓存
-            ClearSkillUIConfigCache();
-
-            // 2.解析队伍头像图标配置
-            ResolveTeamAvatarIcons();
-
-            // 3.解析当前角色E技能图标配置
-            ResolveESkillIcons();
-
-            // 4.解析当前角色Q技能图标配置
-            ResolveQBurstIcons();
-
-            // 5.解析当前角色共鸣条装饰UI配置
-            ResolveResonanceDecor();
-
-            // 6.解析当前角色延奏值装饰UI配置
-            ResolveConcertoDecor();
-        }
-
-        // 解析队伍头像图标配置
-        private void ResolveTeamAvatarIcons()
-        {
-            // 1.空值检查：没有当前角色或玩家控制器时无法读取队伍数据
-            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            // 1.空值检查：没有头像图片时无需清理
+            if (teamAvatarIconImages == null)
             {
                 return;
             }
 
-            PlayerRuntimeData playerRuntimeData = context.PlayerController.PlayerRuntimeData;
-            if (playerRuntimeData.teamSlots == null)
+            // 2.逐个清空真实头像图片显示
+            for (int i = 0; i < teamAvatarIconImages.Length; i++)
             {
-                return;
-            }
-
-            // 2.逐个槽位解析角色头像配置
-            for (int i = 0; i < teamAvatarIconLayouts.Length; i++)
-            {
-                if (i >= playerRuntimeData.teamSlots.Count)
-                {
-                    continue;
-                }
-
-                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
-                if (slotData == null)
-                {
-                    continue;
-                }
-
-                CharacterUIConfigSO slotUIConfig = ResolveCharacterUIConfig(slotData.characterName);
-                teamAvatarIconLayouts[i] = slotUIConfig != null ? slotUIConfig.avatarIcon : null;
+                ApplyAvatarIconLayout(i, teamAvatarIconImages[i], null);
             }
         }
         // 根据角色名称解析角色UI配置
@@ -363,42 +474,283 @@ namespace WutheringWaves
             return prefabContext.CharacterDataSO.characterUIConfigSO;
         }
 
-        // 解析E技能图标配置
-        private void ResolveESkillIcons()
+        // 解析当前受控角色头像槽位索引
+        private int ResolveCurrentTeamAvatarIndex()
         {
-            eSkillIcons = uiConfig.eSkillIcons;
+            // 1.空值检查：没有玩家运行时数据时无法解析当前角色槽位
+            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            {
+                return -1;
+            }
+
+            // 2.直接读取玩家运行时数据中的当前受控角色索引
+            return context.PlayerController.PlayerRuntimeData.currentCharacterIndex;
+        }
+        // 刷新头像状态
+        private void RefreshTeamAvatarState(Image avatarIconImage, bool selected)
+        {
+            // 1.空值检查：没有头像图片时无法刷新状态
+            if (avatarIconImage == null)
+            {
+                return;
+            }
+
+            // 2.根据是否为当前受控角色，应用不同颜色
+            avatarIconImage.color = selected ? selectedAvatarColor : unselectedAvatarColor;
         }
 
-        // 解析Q技能图标配置
-        private void ResolveQBurstIcons()
+        // 缓存队伍头像原始锚点位置
+        private void CacheTeamAvatarBaseAnchoredPositions()
         {
-            qBurstLockedIcon = uiConfig.qBurstLockedIcon;
-            qBurstReadyIcons = uiConfig.qBurstReadyIcons;
+            // 1.空值检查：没有头像图片时无法缓存
+            if (teamAvatarIconImages == null)
+            {
+                return;
+            }
+
+            // 2.保证缓存数组长度和头像图片数组一致
+            if (teamAvatarBaseAnchoredPositions == null || teamAvatarBaseAnchoredPositions.Length != teamAvatarIconImages.Length)
+            {
+                teamAvatarBaseAnchoredPositions = new Vector2[teamAvatarIconImages.Length];
+            }
+
+            // 3.逐个记录Scene中摆好的头像原始位置
+            for (int i = 0; i < teamAvatarIconImages.Length; i++)
+            {
+                Image avatarIconImage = teamAvatarIconImages[i];
+                if (avatarIconImage == null || avatarIconImage.rectTransform == null)
+                {
+                    continue;
+                }
+
+                teamAvatarBaseAnchoredPositions[i] = avatarIconImage.rectTransform.anchoredPosition;
+            }
+        }
+        // 应用头像图标配置
+        private void ApplyAvatarIconLayout(int avatarIndex, Image targetImage, UIIconLayoutData layoutData)
+        {
+            // 1.目标图片为空时无法刷新
+            if (targetImage == null)
+            {
+                return;
+            }
+
+            // 2.配置为空或图标为空时，清空当前头像，避免残留上一名角色的图标
+            if (layoutData == null || layoutData.sprite == null)
+            {
+                targetImage.sprite = null;
+                targetImage.enabled = false;
+                return;
+            }
+
+            // 3.应用头像图标和显示配置
+            targetImage.enabled = true;
+            targetImage.sprite = layoutData.sprite;
+            targetImage.preserveAspect = layoutData.preserveAspect;
+            targetImage.color = normalColor;
+
+            // 4.应用尺寸，并把配置位置当作基于Scene原始位置的偏移
+            RectTransform rectTransform = targetImage.rectTransform;
+            if (rectTransform != null)
+            {
+                rectTransform.sizeDelta = layoutData.size;
+
+                Vector2 basePosition = avatarIndex >= 0
+                    && teamAvatarBaseAnchoredPositions != null
+                    && avatarIndex < teamAvatarBaseAnchoredPositions.Length
+                    ? teamAvatarBaseAnchoredPositions[avatarIndex]
+                    : rectTransform.anchoredPosition;
+
+                rectTransform.anchoredPosition = basePosition + layoutData.anchoredPosition;
+            }
         }
 
-        // 解析共鸣条装饰UI配置
-        private void ResolveResonanceDecor()
+        #endregion
+
+        #region 共鸣与延奏
+        // 清空共鸣与延奏UI配置和真实装饰显示
+        private void ClearResonanceAndConcertoUIConfigCache()
         {
-            resonanceDecor = uiConfig.resonanceDecor;
+            // 1.清空共鸣条装饰配置缓存
+            resonanceDecor = null;
+
+            // 2.清空延奏值装饰配置缓存
+            concertoDecor = null;
+
+            // 3.清空真实共鸣条装饰显示
+            ApplyDecorIconLayout(resonanceDecorImage, null, resonanceDecorBaseAnchoredPosition);
+
+            // 4.清空真实延奏值装饰显示
+            ApplyDecorIconLayout(concertoDecorImage, null, concertoDecorBaseAnchoredPosition);
         }
 
-        // 解析延奏值装饰UI配置
-        private void ResolveConcertoDecor()
+        // 缓存共鸣与延奏装饰原始锚点位置
+        private void CacheResonanceAndConcertoBaseAnchoredPositions()
         {
-            concertoDecor = uiConfig.concertoDecor;
+            // 1.记录共鸣条装饰Scene原始位置
+            if (resonanceDecorImage != null && resonanceDecorImage.rectTransform != null)
+            {
+                resonanceDecorBaseAnchoredPosition = resonanceDecorImage.rectTransform.anchoredPosition;
+            }
+
+            // 2.记录延奏值装饰Scene原始位置
+            if (concertoDecorImage != null && concertoDecorImage.rectTransform != null)
+            {
+                concertoDecorBaseAnchoredPosition = concertoDecorImage.rectTransform.anchoredPosition;
+            }
+        }
+        // 应用装饰图标配置
+        private void ApplyDecorIconLayout(Image targetImage, UIIconLayoutData layoutData, Vector2 baseAnchoredPosition)
+        {
+            // 1.目标图片为空时无法刷新
+            if (targetImage == null)
+            {
+                return;
+            }
+
+            // 2.配置为空或图标为空时，清空当前装饰图标
+            if (layoutData == null || layoutData.sprite == null)
+            {
+                targetImage.sprite = null;
+                targetImage.enabled = false;
+                return;
+            }
+
+            // 3.应用图标和显示配置
+            targetImage.enabled = true;
+            targetImage.sprite = layoutData.sprite;
+            targetImage.preserveAspect = layoutData.preserveAspect;
+            targetImage.color = normalColor;
+
+            // 4.应用尺寸，并把配置位置当作基于Scene原始位置的偏移
+            RectTransform rectTransform = targetImage.rectTransform;
+            if (rectTransform != null)
+            {
+                rectTransform.sizeDelta = layoutData.size;
+                rectTransform.anchoredPosition = baseAnchoredPosition + layoutData.anchoredPosition;
+            }
         }
         #endregion
 
-        #region 刷新UI
-        //刷新UI
-        public void RefreshUI()
+        #region 技能
+        // 清空技能UI配置和真实技能显示
+        private void ClearSkillIconUIConfigCache()
         {
-            // 强制刷新当前角色生命值，避免切人后生命值UI停留在上一名角色
-            context.ForceRefreshHealth();
+            // 1.清空E技能图标配置缓存
+            eSkillIcons = null;
 
+            // 2.清空Q技能图标配置缓存
+            qBurstLockedIcon = null;
+            qBurstReadyIcons = null;
+
+            // 3.清空真实E技能图标显示
+            ApplySkillIconLayout(eSkillIconImage, null, eSkillIconBaseAnchoredPosition);
+
+            // 4.清空真实Q技能图标显示
+            ApplySkillIconLayout(qBurstIconImage, null, qBurstIconBaseAnchoredPosition);
+
+
+            // 5.清空E技能冷却文本
+            if (eSkillCooldownText != null)
+            {
+                eSkillCooldownText.text = string.Empty;
+                eSkillCooldownText.enabled = false;
+            }
+
+            // 6.清空Q技能冷却文本
+            if (qBurstCooldownText != null)
+            {
+                qBurstCooldownText.text = string.Empty;
+                qBurstCooldownText.enabled = false;
+            }
+
+            // 7.恢复按键提示颜色
+            if (eKeyImage != null)
+            {
+                eKeyImage.color = normalColor;
+            }
+
+            if (qKeyImage != null)
+            {
+                qKeyImage.color = normalColor;
+            }
+        }
+        // 缓存技能图标原始锚点位置
+        private void CacheSkillIconBaseAnchoredPositions()
+        {
+            // 1.记录E技能图标Scene原始位置
+            if (eSkillIconImage != null && eSkillIconImage.rectTransform != null)
+            {
+                eSkillIconBaseAnchoredPosition = eSkillIconImage.rectTransform.anchoredPosition;
+            }
+
+            // 2.记录Q技能图标Scene原始位置
+            if (qBurstIconImage != null && qBurstIconImage.rectTransform != null)
+            {
+                qBurstIconBaseAnchoredPosition = qBurstIconImage.rectTransform.anchoredPosition;
+            }
         }
 
-        #region 刷新生命值UI
+        // 应用技能图标配置
+        private void ApplySkillIconLayout(Image targetImage, UIIconLayoutData layoutData, Vector2 baseAnchoredPosition)
+        {
+            // 1.目标图片为空时无法刷新
+            if (targetImage == null)
+            {
+                return;
+            }
+
+            // 2.配置为空或图标为空时，清空当前技能图标，避免残留上一名角色的图标
+            if (layoutData == null || layoutData.sprite == null)
+            {
+                targetImage.sprite = null;
+                targetImage.enabled = false;
+                return;
+            }
+
+            // 3.应用技能图标和显示配置
+            targetImage.enabled = true;
+            targetImage.sprite = layoutData.sprite;
+            targetImage.preserveAspect = layoutData.preserveAspect;
+            targetImage.color = normalColor;
+
+            // 4.应用尺寸，并把配置位置当作基于Scene原始位置的偏移
+            RectTransform rectTransform = targetImage.rectTransform;
+            if (rectTransform != null)
+            {
+                rectTransform.sizeDelta = layoutData.size;
+                rectTransform.anchoredPosition = baseAnchoredPosition + layoutData.anchoredPosition;
+            }
+        }
+
+        #region 刷新技能UI
+
+
+        #endregion
+
+        #endregion
+
+        #region 生命
+        // 清空生命值槽UI显示
+        private void ClearHealthSlotUIConfigCache()
+        {
+            // 1.重置生命值填充
+            if (healthFillImage != null)
+            {
+                healthFillImage.fillAmount = 0f;
+            }
+
+            // 2.清空生命值文本
+            if (healthText != null)
+            {
+                healthText.text = string.Empty;
+            }
+        }
+
+        public void RefreshHealth()
+        {
+            context.ForceRefreshHealth();
+        }
         // 处理生命值变化事件
         private void HandleHealthChanged(CharacterContext source, float current, float max, float normalized)
         {
@@ -424,16 +776,33 @@ namespace WutheringWaves
             {
                 healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
             }
+            if (healthSlotImage != null)
+            {
+                healthSlotImage.enabled = true;
+            }
+
+            if (healthFillImage != null)
+            {
+                healthFillImage.enabled = true;
+                healthFillImage.fillAmount = Mathf.Clamp01(normalized);
+            }
+
+            if (healthText != null)
+            {
+                healthText.enabled = true;
+                healthText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+            }
+
         }
-        #endregion
-
-        #region 刷新技能UI
-
-
 
         #endregion
 
-        #region 刷新体力UI
+        #region 体力
+        // 清空体力槽UI显示
+        private void ClearStaminaSlotUIConfigCache()
+        {
+            // 不用清空体力槽
+        }
         // 处理体力变化事件
         private void HandleStaminaChanged(PlayerStamina source, float current, float max, float normalized)
         {
@@ -482,7 +851,6 @@ namespace WutheringWaves
             }
         }
 
-
         // 刷新体力UI
         private void RefreshStaminaUI(float current, float max, float normalized)
         {
@@ -493,9 +861,6 @@ namespace WutheringWaves
             }
         }
 
-        #endregion
-
-        #endregion
 
         #region 更新体力条屏幕位置
         // 更新体力条屏幕位置
@@ -607,6 +972,8 @@ namespace WutheringWaves
                 staminaFadeSpeed * Time.unscaledDeltaTime
             );
         }
+        #endregion
+
         #endregion
 
         #region 工具方法

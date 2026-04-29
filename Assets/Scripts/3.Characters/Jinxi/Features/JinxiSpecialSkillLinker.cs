@@ -74,10 +74,8 @@ namespace WutheringWaves
 
         public float ESkill1CD => eSkill1CD;
         
-
         public float QBurstCD => qBurstCD;
         
-
         public float ESkill1CDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.jinxiESkill1CDTimer) : 0f;
         public float QBurstCDTimer => RuntimeData != null ? Mathf.Max(0f, RuntimeData.jinxiQBurstCDTimer) : 0f;
 
@@ -246,8 +244,17 @@ namespace WutheringWaves
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCanInterrupt && isGrounded && !IsFloating;
+            bool hasEnoughStamina = context == null || context.PlayerStamina == null || context.PlayerStamina.CanHeavyAttack();
+            return isCanInterrupt && isGrounded && !IsFloating && hasEnoughStamina;
         }
+        // 消耗地面重击体力
+        public bool TryConsumeHeavyAttackStamina()
+        {
+            // 没有体力系统时默认允许，避免测试场景被体力组件阻塞
+            bool hasStaminaSystem = context != null && context.PlayerStamina != null;
+            return !hasStaminaSystem || context.PlayerStamina.TryConsumeHeavyAttack();
+        }
+
 
         // 初始化重击攻击段：今汐当前只有一段重击
         public AttackStep InitializeHeavyAttackStep()

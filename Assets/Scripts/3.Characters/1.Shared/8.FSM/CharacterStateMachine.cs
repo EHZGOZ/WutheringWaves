@@ -327,7 +327,6 @@ namespace WutheringWaves
             SwitchState(GetDefaultState());
         }
 
-
         // 判断当前状态是否可被打断
         public bool IsInterruptible()
         {

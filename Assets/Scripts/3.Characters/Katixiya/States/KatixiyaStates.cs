@@ -1196,19 +1196,19 @@
             //1.初始化重击数据
             InitializeHeavyAttackData();
 
-            //重击数据为空时直接回待机，防止后续空引用
-            if (_heavyAttackStep == null)
-            {
-                stateMachine.IsStateLocked = false;
-                SwitchState(CharacterState.KatixiyaIdle);
-                return;
-            }
-
             //2.初始化重击状态
             InitializeHeavyAttackState();
 
             //3.进入重击状态动画
             HeavyAttackEnterAnimation();
+
+            //4.消耗重击体力
+            if (!stateMachine.KatixiyaSpecialSkillLinker.TryConsumeHeavyAttackStamina())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.KatixiyaIdle);
+                return;
+            }
         }
 
         #region EnterState子方法
@@ -1712,7 +1712,7 @@
             Displacement, // 位移阶段：代码驱动移动，仅再次冲刺可打断
             Stopping       // 急停阶段：纯动画表演，任意动作可打断
         }
-        private DashPhase _phase;//冲刺状态的两个阶段
+        //private DashPhase _phase;//冲刺状态的两个阶段
         private float DashLockTime;//冲刺方向锁定时间
         private bool _dashDirection;//冲刺方向
         private float _stateTimer;//已处于冲刺状态的时间
@@ -1744,8 +1744,8 @@
         {
             // 清理冲刺输入缓存
             stateMachine.CleanWantsToDashRequest();
-            //初始化阶段
-            _phase = DashPhase.Displacement;
+            ////初始化阶段
+            //_phase = DashPhase.Displacement;
             //冲刺阶段状态锁定
             stateMachine.IsStateLocked = true;
             //冲刺时长
@@ -1789,7 +1789,7 @@
             if (_stateTimer >= DashLockTime)
             {
                 stateMachine.IsStateLocked = false;
-                _phase = DashPhase.Stopping;
+                //_phase = DashPhase.Stopping;
             }
         }
         //2.更新冲刺状态动画
@@ -1907,7 +1907,13 @@
             InitializeAirDashingState();
             //3.进入空中冲刺状态动画
             AirDashingEnterAnimation();
-
+            //4.消耗重击体力
+            if (!stateMachine.movementLogic.TryConsumeAirDashStamina())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.KatixiyaIdle);
+                return;
+            }
         }
 
         #region EnterState子方法

@@ -9,13 +9,19 @@ namespace WutheringWaves
         [Header("=== 体力基础配置 ===")]
         [Tooltip("最大体力值")]
         [SerializeField] private float maxStamina = 100f;
+
         [Tooltip("奔跑每秒消耗的体力")]
         [SerializeField] private float runDrainPerSecond = 2.5f;
+        [Tooltip("单次重击消耗的体力")]
+        [SerializeField] private float heavyAttackCost = 25f;
         [Tooltip("单次冲刺消耗的体力")]
         [FormerlySerializedAs("sprintCost")]
         [SerializeField] private float dashCost = 15f;
+        [Tooltip("单次空中冲刺消耗的体力")]
+        [SerializeField] private float airDashCost = 15f;
         [Tooltip("单次御空冲刺消耗的体力")]
         [SerializeField] private float floatDashCost = 15f;
+
         [Tooltip("体力每秒恢复速度")]
         [SerializeField] private float regenPerSecond = 10f;
         [Tooltip("消耗体力后，延迟多久开始恢复")]
@@ -36,9 +42,13 @@ namespace WutheringWaves
         public float MaxStamina => maxStamina;
         public float CurrentStamina => currentStamina;
         public float NormalizedStamina => maxStamina <= 0f ? 0f : currentStamina / maxStamina;
+
         public float RunDrainPerSecond => runDrainPerSecond;
+        public float HeavyAttackCost => heavyAttackCost;
         public float DashCost => dashCost;
+        public float AirDashCost => airDashCost;
         public float FloatDashCost => floatDashCost;
+
         public float RegenPerSecond => regenPerSecond;
         public float RegenDelay => regenDelay;
         public bool IsRecoveringStamina => isRecoveringStamina;
@@ -90,10 +100,18 @@ namespace WutheringWaves
         {
             return currentStamina > 0.01f;
         }
+        public bool CanHeavyAttack()
+        {
+            return currentStamina >= heavyAttackCost;
+        }
 
         public bool CanDash()
         {
             return currentStamina >= dashCost;
+        }
+        public bool CanAirDash()
+        {
+            return currentStamina >= airDashCost;
         }
 
         public bool CanFloatDash()
@@ -103,16 +121,6 @@ namespace WutheringWaves
         #endregion
 
         #region 动作体力消耗
-        public bool TryConsumeDash()
-        {
-            return TryConsume(dashCost);
-        }
-
-        public bool TryConsumeFloatDash()
-        {
-            return TryConsume(floatDashCost);
-        }
-
         public bool ConsumeRun(float deltaTime)
         {
             // 时间无效时，直接返回当前是否还能继续奔跑。
@@ -140,6 +148,22 @@ namespace WutheringWaves
             }
 
             return before > 0.01f;
+        }
+        public bool TryConsumeHeavyAttack()
+        {
+            return TryConsume(heavyAttackCost);
+        }
+        public bool TryConsumeDash()
+        {
+            return TryConsume(dashCost);
+        }
+        public bool TryConsumeAirDash()
+        {
+            return TryConsume(airDashCost);
+        }
+        public bool TryConsumeFloatDash()
+        {
+            return TryConsume(floatDashCost);
         }
 
         public bool TryConsume(float amount)

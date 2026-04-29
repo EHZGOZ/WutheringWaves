@@ -175,11 +175,6 @@ namespace WutheringWaves
                 animator = GetComponentInChildren<Animator>(true);
             }
 
-
-            // 禁用角色时保留所有Animator状态，避免重新启用时动画重置导致颤动
-            SetAllAnimatorsKeepStateOnDisable();
-
-
             if (characterController == null)
             {
                 characterController = GetComponent<CharacterController>();
@@ -327,11 +322,6 @@ namespace WutheringWaves
             //4.通知外部刷新生命值表现
             NotifyHealthChanged();
 
-            //5.仍然存活时，请求进入受击状态；死亡状态由状态机已有血量判断处理
-            if (wasAlive && !runtimeData.IsDead)
-            {
-                //stateMachine?.RequestHit();
-            }
         }
 
         // 恢复生命值：角色生命值统一入口
@@ -404,21 +394,6 @@ namespace WutheringWaves
         }
         #endregion
 
-        // 设置所有子Animator禁用时保留状态，避免角色启用时动画状态重置导致颤动
-        private void SetAllAnimatorsKeepStateOnDisable()
-        {
-            Animator[] animators = GetComponentsInChildren<Animator>(true);
-
-            for (int i = 0; i < animators.Length; i++)
-            {
-                if (animators[i] == null)
-                {
-                    continue;
-                }
-
-                animators[i].keepAnimatorStateOnDisable = true;
-            }
-        }
 
     }
 }

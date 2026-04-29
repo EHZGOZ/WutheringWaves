@@ -175,13 +175,22 @@ namespace WutheringWaves
         #endregion
 
         #region 重击
-        // 地面重击可用性判断
+        // 重击可用性判断
         public bool IsHeavyAttackable()
         {
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
-
-            return isCanInterrupt;
+            bool hasEnoughStamina = context == null || context.PlayerStamina == null || context.PlayerStamina.CanHeavyAttack();
+            return isCanInterrupt && hasEnoughStamina;
         }
+
+        // 消耗地面重击体力
+        public bool TryConsumeHeavyAttackStamina()
+        {
+            // 没有体力系统时默认允许，避免测试场景被体力组件阻塞
+            bool hasStaminaSystem = context != null && context.PlayerStamina != null;
+            return !hasStaminaSystem || context.PlayerStamina.TryConsumeHeavyAttack();
+        }
+
 
         // 初始化重击攻击段：卡提希娅当前只有一段重击但是会根据情况判断是空中重击还是地面重击
         public AttackStep InitializeHeavyAttackStep()

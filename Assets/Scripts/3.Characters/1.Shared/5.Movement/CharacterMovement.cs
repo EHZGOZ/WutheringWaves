@@ -455,9 +455,16 @@ namespace WutheringWaves
             bool isCanInterrupt = context != null && context.StateMachine != null && context.StateMachine.IsInterruptible();
             bool isInAir = !CustomCheckGrounded();
             bool hasNotUsed = !HasAirDashed;
+            bool hasEnoughStamina = playerStamina == null || playerStamina.CanAirDash();
 
-            return isCanInterrupt && isInAir && hasNotUsed;
+            return isCanInterrupt && isInAir && hasNotUsed && hasEnoughStamina;
         }
+        // 消耗空中冲刺体力
+        public bool TryConsumeAirDashStamina()
+        {
+            return playerStamina == null || playerStamina.TryConsumeAirDash();
+        }
+
         // 计算空中冲刺方向（无输入时向前，后冲刺）
 
         public Vector3 CalculateAirDashDirection(Vector2 move, out bool Direction)

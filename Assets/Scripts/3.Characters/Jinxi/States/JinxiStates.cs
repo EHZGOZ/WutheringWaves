@@ -182,7 +182,6 @@ using System.Collections;
             InitlizeMovingState();
             //2. 进入移动状态动画
             MovingEnterAnimation();
-            //3.重置连招
         }
 
         #region EnterState子方法
@@ -1240,19 +1239,19 @@ using System.Collections;
             //1.初始化重击数据
             InitializeHeavyAttackData();
 
-            //重击数据为空时直接回待机，防止后续空引用
-            if (_heavyAttackStep == null)
-            {
-                stateMachine.IsStateLocked = false;
-                SwitchState(CharacterState.JinxiIdle);
-                return;
-            }
-
             //2.初始化重击状态
             InitializeHeavyAttackState();
 
             //3.进入重击状态动画
             HeavyAttackEnterAnimation();
+
+            //4.消耗重击体力
+            if (!stateMachine.JinxiSpecialSkillLinker.TryConsumeHeavyAttackStamina())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiIdle);
+                return;
+            }
         }
 
         #region EnterState子方法
@@ -1261,14 +1260,6 @@ using System.Collections;
         {
             //1.获取当前重击攻击段
             _heavyAttackStep = stateMachine.JinxiSpecialSkillLinker.InitializeHeavyAttackStep();
-
-            //重击数据为空时直接返回，防止后续空引用
-            if (_heavyAttackStep == null)
-            {
-                _executionDuration = 0f;
-                _animationLength = 0f;
-                return;
-            }
 
             //2.同步攻击阶段信息
             stateMachine.currentStep = _heavyAttackStep;
@@ -2014,7 +2005,7 @@ using System.Collections;
             Displacement, // 位移阶段：代码驱动移动，仅再次冲刺可打断
             Stopping       // 急停阶段：纯动画表演，任意动作可打断
         }
-        private DashPhase _phase;//冲刺状态的两个阶段
+        //private DashPhase _phase;//冲刺状态的两个阶段
         private float DashLockTime;//冲刺方向锁定时间
         private bool _dashDirection;//冲刺方向
         private float _stateTimer;//已处于冲刺状态的时间
@@ -2022,13 +2013,7 @@ using System.Collections;
         public override void EnterState()
         {
             //1.初始化阶段 时长 时间 清理冲刺输入缓存 方向 
-            InitializeDashData();
-            if (!stateMachine.movementLogic.TryConsumeDashStamina())
-            {
-                stateMachine.IsStateLocked = false;
-                SwitchState(stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold ? CharacterState.JinxiMove : CharacterState.JinxiIdle);
-                return;
-            }
+            InitializeDashData();  
             //2.计算方向（调用CharacterMovement）
             _dashDirection = stateMachine.movementLogic.CalculateDirection(stateMachine.MoveInput);
             //3.计算上次冲刺间隔  重置连冲资格 消耗1次冲刺次数 启动内置 CD 并更新时间戳（调用CharacterMovement）
@@ -2037,7 +2022,13 @@ using System.Collections;
             stateMachine.movementLogic.ApplyPenaltyIfNecessary();
             //5.进入冲刺状态动画
             DashingEnterAnimation();
-            //6.重置连招
+            //6.消耗体力
+            if (!stateMachine.movementLogic.TryConsumeDashStamina())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold ? CharacterState.JinxiMove : CharacterState.JinxiIdle);
+                return;
+            }
         }
 
         #region EnterState子方法  
@@ -2046,8 +2037,8 @@ using System.Collections;
         {
             // 清理冲刺输入缓存
             stateMachine.CleanWantsToDashRequest();
-            //初始化阶段
-            _phase = DashPhase.Displacement;
+            ////初始化阶段
+            //_phase = DashPhase.Displacement;
             //冲刺阶段状态锁定
             stateMachine.IsStateLocked = true;
             //冲刺时长
@@ -2085,7 +2076,7 @@ using System.Collections;
             if (_stateTimer >= DashLockTime)
             {
                 stateMachine.IsStateLocked = false;
-                _phase = DashPhase.Stopping;
+                //_phase = DashPhase.Stopping;
             }
         }
         //2.更新冲刺状态动画
@@ -2209,7 +2200,13 @@ using System.Collections;
             InitializeAirDashingState();
             //3.进入空中冲刺状态动画
             AirDashingEnterAnimation();
-            //4.重置连招
+            //4.消耗空中冲刺体力
+            if (!stateMachine.movementLogic.TryConsumeAirDashStamina())
+            {
+                stateMachine.IsStateLocked = false;
+                SwitchState(CharacterState.JinxiFall);
+                return;
+            }
         }
 
         #region EnterState子方法
@@ -2352,16 +2349,15 @@ using System.Collections;
             InitializeFloatDashingData();
             //2.初始化御空冲刺状态
             InitializeFloatDashingState();
-            //3.消耗体力
+            //3.进入御空冲刺状态动画
+            FloatDashingEnterAnimation();
+            //4.消耗体力
             if (!stateMachine.movementLogic.TryConsumeFloatDashStamina())
             {
                 stateMachine.IsStateLocked = false;
                 SwitchState(CharacterState.JinxiFall);
                 return;
             }
-            //4.进入御空冲刺状态动画
-            FloatDashingEnterAnimation();
-            //5.重置连招
         }
 
         #region EnterState子方法

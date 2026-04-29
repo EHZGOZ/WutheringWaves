@@ -22,8 +22,6 @@ namespace WutheringWaves
         [Header("=== 攻击伤害配置 ===")]
         [Header("伤害倍率")]
         public float damageMultiplier = 1f;
-        [Header("体力消耗")]
-        public float staminaCost = 0f;
 
         [Header("=== 攻击判定配置 ===")]
         [Header("伤害球形判定半径")]

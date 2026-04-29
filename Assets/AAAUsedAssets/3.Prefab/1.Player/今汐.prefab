@@ -5605,7 +5605,7 @@ MonoBehaviour:
   effectController: {fileID: 0}
   jinxiFeatureRoot: {fileID: 0}
   katixiyaFeatureRoot: {fileID: 0}
-  enableHealthTest: 0
+  enableHealthTest: 1
   testDamage: 100
   enableHealthDrainTest: 0
   healthDrainPerSecond: 10
