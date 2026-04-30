@@ -17,7 +17,6 @@ MonoBehaviour:
   - attackId: 1
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -27,7 +26,6 @@ MonoBehaviour:
   - attackId: 2
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -37,7 +35,6 @@ MonoBehaviour:
   - attackId: 3
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -47,7 +44,6 @@ MonoBehaviour:
   - attackId: 4
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -58,7 +54,6 @@ MonoBehaviour:
   - attackId: 5
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -68,7 +63,6 @@ MonoBehaviour:
   - attackId: 6
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -78,7 +72,6 @@ MonoBehaviour:
   - attackId: 7
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -89,7 +82,6 @@ MonoBehaviour:
   - attackId: 21
     hitConfig:
       damageMultiplier: 0
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 0, z: 0}
@@ -99,141 +91,28 @@ MonoBehaviour:
   - attackId: 22
     hitConfig:
       damageMultiplier: 0
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 0, z: 0}
     timingConfig:
       executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
-  skillAirAttackSteps:
-  - attackId: 12
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 13
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 14
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 15
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  skillAttackSteps:
-  - attackId: 8
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 9
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 10
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 11
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
+  skillAirAttackSteps: []
+  skillAttackSteps: []
   eSkillAttackSteps:
   - attackId: 16
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 17
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 18
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
-      comboWindowDuration: 1.5
-  - attackId: 19
-    hitConfig:
-      damageMultiplier: 1
-      staminaCost: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
-    timingConfig:
-      executionAttackCostTime: 0
+      executionAttackCostTime: 0.75
       comboWindowDuration: 1.5
   qBurstAttackSteps:
   - attackId: 20
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -244,14 +123,11 @@ MonoBehaviour:
   - attackId: 23
     hitConfig:
       damageMultiplier: 0
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 0, z: 0}
     timingConfig:
       executionAttackCostTime: 0.7
       comboWindowDuration: 0
-  resonanceESkillCD: 5
   resonanceESkillMagnification: 2
-  resonanceQBurstCD: 10
   resonanceQBurstMagnification: 5

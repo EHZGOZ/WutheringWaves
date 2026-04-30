@@ -443,11 +443,22 @@ namespace WutheringWaves
         // 通知技能 UI 刷新
         private void NotifySkillUIChanged()
         {
-            if (attackLogic != null)
+            // 1.空值检查：没有上下文时无法通知HUD
+            if (context == null)
             {
-                GameEvents.RaiseSkillUIStateChanged(attackLogic);
+                return;
             }
+
+            // 2.派发E技能图标刷新事件
+            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.ESkill, 0, ESkillCDTimer);
+
+            // 3.Q爆发冷却中显示未充能图标，冷却结束显示已充能图标
+            int qBurstIconIndex = QBurstCDTimer > 0f ? -1 : 0;
+
+            // 4.派发Q爆发图标刷新事件
+            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.QBurst, qBurstIconIndex, QBurstCDTimer);
         }
+
         #endregion
     }
 }

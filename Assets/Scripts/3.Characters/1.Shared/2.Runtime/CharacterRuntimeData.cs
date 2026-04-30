@@ -209,7 +209,60 @@ namespace WutheringWaves
                     jinxiIsFloating = false;
                 }
             }
+            // 持续通知今汐技能UI刷新
+            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill,  ResolveJinxiESkillIconIndex(), ResolveJinxiESkillCooldown());
+            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, jinxiQBurstCDTimer > 0f ? -1 : 0, jinxiQBurstCDTimer);
+
         }
+        // 解析今汐当前E技能图标索引
+        private int ResolveJinxiESkillIconIndex()
+        {
+            // 1.E4窗口优先级最高
+            if (jinxiIsESkill4WindowOpen && jinxiESkill4WindowTimer > 0f)
+            {
+                return 3;
+            }
+
+            // 2.E3窗口优先级其次
+            if (jinxiIsESkill3WindowOpen && jinxiESkill3WindowTimer > 0f)
+            {
+                return 2;
+            }
+
+            // 3.E2窗口优先级再次
+            if (jinxiIsESkill2WindowOpen && jinxiESkill2WindowTimer > 0f)
+            {
+                return 1;
+            }
+
+            // 4.默认显示E1图标
+            return 0;
+        }
+
+        // 解析今汐当前E技能冷却时间
+        private float ResolveJinxiESkillCooldown()
+        {
+            // 1.派生战技窗口打开时，只切换图标，不显示上一层战技冷却
+            if (jinxiIsESkill4WindowOpen && jinxiESkill4WindowTimer > 0f)
+            {
+                return 0f;
+            }
+
+            if (jinxiIsESkill3WindowOpen && jinxiESkill3WindowTimer > 0f)
+            {
+                return 0f;
+            }
+
+            if (jinxiIsESkill2WindowOpen && jinxiESkill2WindowTimer > 0f)
+            {
+                return 0f;
+            }
+
+            // 2.没有派生窗口时，才显示E1冷却
+            return jinxiESkill1CDTimer;
+        }
+
+
         #endregion
 
         #region 卡提希娅
@@ -231,8 +284,16 @@ namespace WutheringWaves
             {
                 katixiyaQBurstCDTimer = Mathf.Max(0f, katixiyaQBurstCDTimer - deltaTime);
             }
+            // 持续通知卡提希娅技能UI刷新
+            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill, 0, katixiyaESkillCDTimer);
+            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, katixiyaQBurstCDTimer > 0f ? -1 : 0, katixiyaQBurstCDTimer);
+
         }
         #endregion
+
+        #endregion
+
+        #region 事件通知
 
         #endregion
 

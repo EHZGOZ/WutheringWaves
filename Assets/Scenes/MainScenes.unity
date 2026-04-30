@@ -822,7 +822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -150, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &182689363
@@ -9693,7 +9693,7 @@ MonoBehaviour:
   qBurstIconImage: {fileID: 254760707}
   eSkillCooldownText: {fileID: 1415202385}
   qBurstCooldownText: {fileID: 182689363}
-  disableColor: {r: 0, g: 0, b: 0, a: 0.3882353}
+  disableColor: {r: 1, g: 1, b: 1, a: 0.33333334}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   eKeyImage: {fileID: 443107655}
   qKeyImage: {fileID: 1279475898}
@@ -9723,7 +9723,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
-      value: 6.971896
+      value: 6.99998
       objectReference: {fileID: 0}
     - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: heavyAttackCost

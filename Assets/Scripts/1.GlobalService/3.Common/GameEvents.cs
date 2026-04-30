@@ -2,6 +2,13 @@
 
 namespace WutheringWaves
 {
+    // 技能UI类型：用于告诉HUD当前刷新的是哪个技能槽
+    public enum SkillUIType
+    {
+        ESkill, // E技能
+        QBurst  // Q爆发
+    }
+
     // 全局事件总线：用于模块间低耦合通信，避免系统之间直接硬引用
     public static class GameEvents
     {
@@ -18,8 +25,12 @@ namespace WutheringWaves
         public static event Action<CharacterContext, float, float, float> OnHealthChanged;
 
 
-        // 技能 UI 刷新事件：参数为当前角色攻击逻辑
-        public static event Action<CharacterAttack> OnSkillUIStateChanged;
+        // 技能图标UI刷新事件：参数为角色上下文、技能类型、图标索引、剩余冷却时间
+        public static event Action<CharacterContext, SkillUIType, int, float> OnSkillIconUIChanged;
+
+        // 技能图标UI运行时刷新事件：参数为角色运行时数据、技能类型、图标索引、剩余冷却时间
+        public static event Action<CharacterRuntimeData, SkillUIType, int, float> OnSkillIconUIRuntimeChanged;
+
 
         // 体力变化事件：参数为体力组件、当前值、最大值、归一化值
         public static event Action<PlayerStamina, float, float, float> OnStaminaChanged;
@@ -55,11 +66,18 @@ namespace WutheringWaves
         }
 
 
-        // 派发技能 UI 刷新事件
-        public static void RaiseSkillUIStateChanged(CharacterAttack source)
+        // 派发技能图标UI刷新事件
+        public static void RaiseSkillIconUIChanged(CharacterContext source, SkillUIType skillType, int iconIndex, float cooldownRemaining)
         {
-            OnSkillUIStateChanged?.Invoke(source);
+            OnSkillIconUIChanged?.Invoke(source, skillType, iconIndex, cooldownRemaining);
         }
+        // 派发技能图标UI运行时刷新事件
+        public static void RaiseSkillIconUIRuntimeChanged(CharacterRuntimeData source, SkillUIType skillType, int iconIndex, float cooldownRemaining)
+        {
+            OnSkillIconUIRuntimeChanged?.Invoke(source, skillType, iconIndex, cooldownRemaining);
+        }
+
+
 
         // 派发体力变化事件
         public static void RaiseStaminaChanged(PlayerStamina source, float current, float max, float normalized)

@@ -378,8 +378,8 @@ namespace WutheringWaves
         public bool CanUseESkill1()
         {
             bool isCDOver = ESkill1CDTimer <= 0f;
-            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCDOver && isGrounded;
+            //bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
+            return isCDOver;
         }
         // 初始化战技攻击段：优先按 ESkill4 → ESkill3 → ESkill2 → ESkill1 顺序选择
         public AttackStep InitializeESkillStep()
@@ -686,11 +686,76 @@ namespace WutheringWaves
         // 通知技能 UI 刷新
         private void NotifySkillUIChanged()
         {
-            if (attackLogic != null)
+            // 1.空值检查：没有上下文时无法通知HUD
+            if (context == null)
             {
-                GameEvents.RaiseSkillUIStateChanged(attackLogic);
+                return;
             }
+
+            // 2.解析当前E技能应该显示的图标索引
+            int eSkillIconIndex = ResolveESkillIconIndex();
+
+            // 3.解析当前E技能剩余显示时间
+            float eSkillCooldown = ResolveESkillCooldown();
+
+            // 4.派发E技能图标刷新事件
+            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.ESkill, eSkillIconIndex, eSkillCooldown);
+
+            // 5.Q爆发冷却中显示未充能图标，冷却结束显示已充能图标
+            int qBurstIconIndex = QBurstCDTimer > 0f ? -1 : 0;
+
+            // 6.派发Q爆发图标刷新事件
+            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.QBurst, qBurstIconIndex, QBurstCDTimer);
         }
+        // 解析当前E技能图标索引
+        private int ResolveESkillIconIndex()
+        {
+            // 1.E4窗口优先级最高
+            if (IsESkill4WindowOpen)
+            {
+                return 3;
+            }
+
+            // 2.E3窗口优先级其次
+            if (IsESkill3WindowOpen)
+            {
+                return 2;
+            }
+
+            // 3.E2窗口优先级再次
+            if (IsESkill2WindowOpen)
+            {
+                return 1;
+            }
+
+            // 4.默认显示E1图标
+            return 0;
+        }
+
+        // 解析当前E技能冷却时间
+        private float ResolveESkillCooldown()
+        {
+            // 1.派生战技窗口打开时，只切换图标，不显示上一层战技冷却
+            if (IsESkill4WindowOpen)
+            {
+                return 0f;
+            }
+
+            if (IsESkill3WindowOpen)
+            {
+                return 0f;
+            }
+
+            if (IsESkill2WindowOpen)
+            {
+                return 0f;
+            }
+
+            // 2.没有派生窗口时，才显示E1冷却
+            return ESkill1CDTimer;
+        }
+
+
         #endregion
     }
 }

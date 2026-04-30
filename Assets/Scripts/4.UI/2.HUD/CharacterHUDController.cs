@@ -132,6 +132,9 @@ namespace WutheringWaves
             UnsubscribeHealthEvent();
             // 取消订阅耐力值相关的事件
             UnsubscribeStaminaEvent();
+            // 取消订阅技能UI变化事件
+            UnsubscribeSkillUIEvent();
+
         }
 
         #endregion
@@ -356,6 +359,10 @@ namespace WutheringWaves
 
             // HUD初始化时订阅体力变化事件
             SubscribeStaminaEvent();
+
+            // HUD初始化时订阅技能UI变化事件
+            SubscribeSkillUIEvent();
+
         }
 
         #endregion
@@ -431,7 +438,46 @@ namespace WutheringWaves
         #endregion
 
         #region 技能UI变化事件
+        // 订阅技能UI变化事件
+        private void SubscribeSkillUIEvent()
+        {
+            // 1.已经订阅过时直接返回，避免重复绑定事件
+            if (hasSubscribedAttackEvent)
+            {
+                return;
+            }
 
+            // 2.订阅技能图标UI刷新事件
+            GameEvents.OnSkillIconUIChanged += HandleSkillIconUIChanged;
+
+            // 3.订阅技能图标UI运行时刷新事件
+            GameEvents.OnSkillIconUIRuntimeChanged += HandleSkillIconUIRuntimeChanged;
+
+            // 4.标记技能UI事件已订阅
+            hasSubscribedAttackEvent = true;
+
+        }
+
+        // 解绑技能UI变化事件
+        private void UnsubscribeSkillUIEvent()
+        {
+            // 1.没有订阅过时直接返回
+            if (!hasSubscribedAttackEvent)
+            {
+                return;
+            }
+
+            // 2.解绑技能图标UI刷新事件
+            GameEvents.OnSkillIconUIChanged -= HandleSkillIconUIChanged;
+
+            // 3.解绑技能图标UI运行时刷新事件
+            GameEvents.OnSkillIconUIRuntimeChanged -= HandleSkillIconUIRuntimeChanged;
+
+            // 4.标记技能UI事件已解绑
+            hasSubscribedAttackEvent = false;
+
+
+        }
         #endregion
 
         #endregion
@@ -720,6 +766,121 @@ namespace WutheringWaves
             {
                 rectTransform.sizeDelta = layoutData.size;
                 rectTransform.anchoredPosition = baseAnchoredPosition + layoutData.anchoredPosition;
+            }
+        }
+
+
+        // 处理技能图标UI变化事件
+        private void HandleSkillIconUIChanged(CharacterContext source, SkillUIType skillType, int iconIndex, float cooldownRemaining)
+        {
+            // 1.只刷新当前HUD绑定的角色
+            if (source == null || source != context)
+            {
+                return;
+            }
+
+            // 2.根据技能类型刷新对应技能槽
+            switch (skillType)
+            {
+                case SkillUIType.ESkill:
+                    RefreshESkillUI(iconIndex, cooldownRemaining);
+                    break;
+
+                case SkillUIType.QBurst:
+                    RefreshQBurstUI(iconIndex, cooldownRemaining);
+                    break;
+            }
+        }
+
+        // 刷新E技能UI
+        private void RefreshESkillUI(int iconIndex, float cooldownRemaining)
+        {
+            // 1.根据索引读取E技能图标配置
+            UIIconLayoutData eSkillLayout = eSkillIcons != null
+                && iconIndex >= 0
+                && iconIndex < eSkillIcons.Length
+                ? eSkillIcons[iconIndex]
+                : null;
+
+            // 2.应用E技能图标配置
+            ApplySkillIconLayout(eSkillIconImage, eSkillLayout, eSkillIconBaseAnchoredPosition);
+
+            // 3.刷新E技能冷却文本
+            RefreshSkillCooldownText(eSkillCooldownText, cooldownRemaining);
+
+            // 4.刷新E技能图标颜色
+            if (eSkillIconImage != null && eSkillIconImage.enabled)
+            {
+                eSkillIconImage.color = cooldownRemaining > 0f ? disableColor : normalColor;
+            }
+        }
+
+
+        // 刷新Q爆发UI
+        private void RefreshQBurstUI(int iconIndex, float cooldownRemaining)
+        {
+            // 1.根据索引读取Q技能图标配置：-1表示未充能图标
+            UIIconLayoutData qBurstLayout = iconIndex < 0
+                ? qBurstLockedIcon
+                : qBurstReadyIcons != null && iconIndex < qBurstReadyIcons.Length
+                    ? qBurstReadyIcons[iconIndex]
+                    : null;
+
+            // 2.应用Q技能图标配置
+            ApplySkillIconLayout(qBurstIconImage, qBurstLayout, qBurstIconBaseAnchoredPosition);
+
+            // 3.刷新Q技能冷却文本
+            RefreshSkillCooldownText(qBurstCooldownText, cooldownRemaining);
+
+            // 4.刷新Q技能图标颜色
+            if (qBurstIconImage != null && qBurstIconImage.enabled)
+            {
+                qBurstIconImage.color = cooldownRemaining > 0f ? disableColor : normalColor;
+            }
+        }
+
+
+        // 刷新技能冷却文本
+        private void RefreshSkillCooldownText(TextMeshProUGUI cooldownText, float cooldownRemaining)
+        {
+            // 1.空值检查：没有文本组件时无法刷新
+            if (cooldownText == null)
+            {
+                return;
+            }
+
+            // 2.没有冷却时隐藏文本
+            if (cooldownRemaining <= 0f)
+            {
+                cooldownText.text = string.Empty;
+                cooldownText.enabled = false;
+                return;
+            }
+
+            // 3.有冷却时显示保留一位小数的剩余时间
+            cooldownText.enabled = true;
+            cooldownText.text = cooldownRemaining.ToString("F1");
+        }
+
+        // 处理技能图标UI运行时变化事件
+        private void HandleSkillIconUIRuntimeChanged(CharacterRuntimeData source, SkillUIType skillType, int iconIndex, float cooldownRemaining)
+        {
+            // 1.只刷新当前HUD绑定角色的运行时数据
+            if (source == null || context == null || source != context.CharacterRuntimeData)
+            {
+                return;
+            }
+
+            // 2.根据技能类型刷新对应技能槽
+            switch (skillType)
+            {
+                case SkillUIType.ESkill:
+                    RefreshESkillUI(iconIndex, cooldownRemaining);
+                    break;
+
+                case SkillUIType.QBurst:
+                    RefreshQBurstUI(iconIndex, cooldownRemaining);
+                    break;
             }
         }
 
