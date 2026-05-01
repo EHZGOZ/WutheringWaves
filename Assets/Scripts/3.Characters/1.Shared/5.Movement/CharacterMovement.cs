@@ -165,14 +165,18 @@ namespace WutheringWaves
             // 根据是否奔跑确定最终目标值
             float finalTargetY = actualRun ? 2 * targetAxisY : targetAxisY;
 
-            // 统一插值到最终目标值，过渡更平滑
-            float axisY = Mathf.MoveTowards(animator.GetFloat("AxisY"), finalTargetY, 5f * Time.deltaTime);
+            float currentAxisY = animator.GetFloat("AxisY");
+            // AxisY增加时加快过渡，减少时放慢回落
+            float axisYSpeed = currentAxisY < finalTargetY ? 5f : 2.5f;
+
+            float axisY = Mathf.MoveTowards(currentAxisY, finalTargetY, axisYSpeed * Time.deltaTime);
             float axisX = Mathf.MoveTowards(animator.GetFloat("AxisX"), 0, 5f * Time.deltaTime);
 
             animator.SetFloat("AxisY", axisY);
             animator.SetFloat("AxisX", axisX);
         }
-      
+
+
         #endregion
 
         #region 移动逻辑

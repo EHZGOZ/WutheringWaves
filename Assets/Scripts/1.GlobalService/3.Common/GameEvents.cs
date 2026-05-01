@@ -8,6 +8,23 @@ namespace WutheringWaves
         ESkill, // E技能
         QBurst  // Q爆发
     }
+    // 外观事件类型：用于描述这次表现操作的类型
+    public enum VisualEventType
+    {
+        ShowFade,        // 淡入显示
+        HideFade,        // 淡出隐藏
+        ShowInstantly,   // 立即显示
+        HideInstantly    // 立即隐藏
+    }
+
+    // 外观目标类型：用于区分这次事件要作用到哪个表现对象
+    public enum VisualTargetType
+    {
+        DecorationSword, // 装饰剑
+        BattleWeapon,    // 战斗武器
+        DragonHorn       // 龙角
+    }
+
 
     // 全局事件总线：用于模块间低耦合通信，避免系统之间直接硬引用
     public static class GameEvents
@@ -37,10 +54,13 @@ namespace WutheringWaves
 
         // 体力条显隐事件：参数为体力组件、是否显示
         public static event Action<PlayerStamina, bool> OnStaminaVisibilityChanged;
+        //// 外观变化事件：参数为角色上下文、外观目标类型、外观事件类型
+        //public static event Action<CharacterContext, VisualTargetType, VisualEventType> OnVisualChanged;
+
 
         // 角色专属：今汐
         // 御空状态变化事件：参数为攻击逻辑、是否处于御空
-        public static event Action<CharacterAttack, bool> OnFloatingChanged;
+        public static event Action<bool> OnFloatingChanged;
         #endregion
 
         #region 事件派发
@@ -76,9 +96,6 @@ namespace WutheringWaves
         {
             OnSkillIconUIRuntimeChanged?.Invoke(source, skillType, iconIndex, cooldownRemaining);
         }
-
-
-
         // 派发体力变化事件
         public static void RaiseStaminaChanged(PlayerStamina source, float current, float max, float normalized)
         {
@@ -90,13 +107,19 @@ namespace WutheringWaves
         {
             OnStaminaVisibilityChanged?.Invoke(source, visible);
         }
+        //// 派发外观变化事件
+        //public static void RaiseVisualChanged(CharacterContext source, VisualTargetType targetType, VisualEventType eventType)
+        //{
+        //    OnVisualChanged?.Invoke(source, targetType, eventType);
+        //}
+
         #endregion
 
         #region 角色专属：今汐
         // 派发御空状态变化事件
-        public static void RaiseFloatingChanged(CharacterAttack source, bool isFloating)
+        public static void RaiseFloatingChanged(bool isFloating)
         {
-            OnFloatingChanged?.Invoke(source, isFloating);
+            OnFloatingChanged?.Invoke(isFloating);
         }
         #endregion
 

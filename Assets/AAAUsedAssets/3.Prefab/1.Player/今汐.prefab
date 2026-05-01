@@ -5503,7 +5503,6 @@ GameObject:
   - component: {fileID: 3300267513092516600}
   - component: {fileID: 835155524208434842}
   - component: {fileID: 7924030378407790058}
-  - component: {fileID: 2299549549930669084}
   - component: {fileID: 993532154813573047}
   - component: {fileID: 6713123179756236654}
   - component: {fileID: 5903209562093961374}
@@ -5651,7 +5650,6 @@ MonoBehaviour:
     attackId: 0
     hitConfig:
       damageMultiplier: 1
-      staminaCost: 0
       attackRadius: 0
       attackAngle: 0
       attackOffset: {x: 0, y: 1, z: 0.5}
@@ -5769,24 +5767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2d6b7a1e9f4a3fb2d58c6e4a7b9d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2299549549930669084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2358975735509947904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b275a99d75e40bb4b8342cf851e9fd4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useDecorationSword: 1
-  DecorationSword: {fileID: 1931414995442569416}
-  decorationSwordFadeSpeed: 1
-  useDragonHorn: 1
-  DragonHorn: {fileID: 7991953453001196835}
-  dragonHornFadeSpeed: 1
 --- !u!114 &993532154813573047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28761,6 +28741,80 @@ Transform:
   - {fileID: 8327419032402806181}
   m_Father: {fileID: 3924795975258954828}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &3322578243107251527
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4993356580216204791}
+    m_Modifications:
+    - target: {fileID: 1332116969100072355, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_RootBone
+      value: 
+      objectReference: {fileID: 1088100712591775078}
+    - target: {fileID: 1332116969100072355, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_UpdateWhenOffscreen
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6136498
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6017172679052917787, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_Name
+      value: R2T1JinxiDragonHornMd10011
+      objectReference: {fileID: 0}
+    - target: {fileID: 6017172679052917787, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+--- !u!4 &1392880600069180355 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4415967211872677508, guid: 02ea4451761efe04690d16b9329bf5e8, type: 3}
+  m_PrefabInstance: {fileID: 3322578243107251527}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4810211810413644316
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28819,12 +28873,23 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: f574691d2496f2447a728936039568e4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1392880600069180355}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3986336279488791475}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5843440270275926120}
   m_SourcePrefab: {fileID: 100100000, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
+--- !u!4 &1088100712591775078 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5609510355575889786, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
+  m_PrefabInstance: {fileID: 4810211810413644316}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4993356580216204791 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ecf6afe7aedcfc46a3b01b1c41daa62, type: 3}
@@ -28849,3 +28914,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableRootMotionDebug: 0
   onlyLogWhenMoved: 0
+--- !u!114 &5843440270275926120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5620536272642979661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b275a99d75e40bb4b8342cf851e9fd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useDecorationSword: 1
+  DecorationSword: {fileID: 1931414995442569416}
+  decorationSwordFadeSpeed: 1
+  useBattleWeapon: 1
+  BattleWeapon: {fileID: 0}
+  battleWeaponFadeSpeed: 1
+  useBattleWeapon2: 1
+  BattleWeapon2: {fileID: 0}
+  battleWeapon2FadeSpeed: 1
+  useDragonHorn: 1
+  DragonHorn: {fileID: 7991953453001196835}
+  dragonHornFadeSpeed: 1

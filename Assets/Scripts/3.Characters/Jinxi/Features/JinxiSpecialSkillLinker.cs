@@ -586,7 +586,7 @@ namespace WutheringWaves
 
             if (attackLogic != null)
             {
-                GameEvents.RaiseFloatingChanged(attackLogic, RuntimeData.jinxiIsFloating);
+                GameEvents.RaiseFloatingChanged(RuntimeData.jinxiIsFloating);
             }
         }
         #endregion

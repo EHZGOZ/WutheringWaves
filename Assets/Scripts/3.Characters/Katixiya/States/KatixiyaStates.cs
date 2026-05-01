@@ -28,8 +28,6 @@
             //1.切换到 Locomotion 混合树
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.3f, 0, 0);
 
-            //2.展示背负装饰剑
-            stateMachine.manifestation.ShowDecorationSwordFade();
         }
 
         //2.初始化待机状态
@@ -332,10 +330,10 @@
             {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Stop_Run), 0.1f, 0, 0);
             }
-            else
-            {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.1f, 0, 0);
-            }
+            //else
+            //{
+            //    stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0f, 0, 0);
+            //}
         }
 
         //3.初始化收步滑行
@@ -1065,12 +1063,7 @@
             //同步移动混合树参数，防止退出攻击时动画参数突变
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
 
-            //攻击动画播到一定阶段后显示装饰剑
-            if (_stateTime * 1.5f > _animationLength && !hasUpataAttackingUpdateAnimation)
-            {
-                hasUpataAttackingUpdateAnimation = true;
-                stateMachine.manifestation.ShowDecorationSwordFade();
-            }
+           
         }
         #endregion
 
@@ -1271,8 +1264,6 @@
             //播放特效表现
             stateMachine.effectController?.PlayEffectAction(_heavyAttackStep);
 
-            //隐藏装饰剑
-            stateMachine.manifestation.HideDecorationSwordFade();
         }
         #endregion
 
@@ -1329,8 +1320,6 @@
             //结束特效表现
             stateMachine.context?.EffectController?.EndEffectAction();
 
-            //显示装饰剑
-            stateMachine.manifestation.ShowDecorationSwordFade();
         }
         #endregion
 
@@ -1487,8 +1476,6 @@
         {
             //下落攻击开始动画
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepStart.attackId), 0f, 0, 0);
-            //装饰剑隐藏
-            stateMachine.manifestation.HideDecorationSwordFade();
             //御剑
             stateMachine.context?.WeaponController?.PlayWeaponAction(_fallattackStepStart);
         }
@@ -1573,12 +1560,7 @@
         // 3. 更新下落攻击状态动画
         private void FallAttackingUpdateAnimation()
         {
-            if (_stateTime * 1.5f > stateMachine.GetCombatAnimationLength(_fallattackStepEnd.attackId) && !hasUpdateFallAttackingAnimation)
-            {
-                hasUpdateFallAttackingAnimation = true;
-                //显示装饰剑
-                stateMachine.manifestation.ShowDecorationSwordFade();
-            }
+           
         }
         #endregion
 
@@ -2237,7 +2219,7 @@
             }
 
             //坠落状态
-            if (!stateMachine.movementLogic.CustomCheckGrounded())
+            if (!stateMachine.movementLogic.CustomCheckGrounded()&& stateMachine.MoveInput.magnitude > stateMachine.movementLogic.moveThreshold)
             {
                 SwitchState(CharacterState.KatixiyaFall);
                 return;

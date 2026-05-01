@@ -1,9 +1,34 @@
 fileFormatVersion: 2
-guid: d634a884b3f75d04f856f542a4350f21
+guid: b0f5dcc787b18ca4085747006378e8a6
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MI_R5Sword505Md20001
+    second: {fileID: 2100000, guid: 92f99a381526e6745b46134b1e8275a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MI_R5Sword505Md20001_01
+    second: {fileID: 2100000, guid: 68c9b22a4f9a0234dbe0e2793954421b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MI_R5Sword505Md20001_01_Effect
+    second: {fileID: 2100000, guid: 48b3f0b63517d1640bc1bc5bb8444a5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MI_R5Sword505Md20001_Effect
+    second: {fileID: 2100000, guid: ec3e00f43700e4c42904a01eb8fb386e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: e5ae4cc7a7700854d88e882ccc20ffcd, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

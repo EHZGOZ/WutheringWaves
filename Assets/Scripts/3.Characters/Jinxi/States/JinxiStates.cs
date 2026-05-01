@@ -27,8 +27,6 @@ using System.Collections;
         {
             //1.切换到 Locomotion 混合树
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.3f, 0, 0);
-            //2.展示背负装饰剑
-            stateMachine.manifestation.ShowDecorationSwordFade();
         }
         //2.初始化待机状态
         private void InitializeIdleState()
@@ -362,10 +360,10 @@ using System.Collections;
             {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Stop_Run), 0.1f, 0, 0);
             }
-            else
-            {
-                stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.1f, 0, 0);
-            }
+            //else
+            //{
+            //    stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0f, 0, 0);
+            //}
         }
 
         //3.初始化收步滑行
@@ -1062,8 +1060,6 @@ using System.Collections;
         // 3. 进入攻击状态动画
         private void AttackingEnterAnimation()
         {
-            //装饰剑隐藏
-            stateMachine.manifestation.HideDecorationSwordFade();
             //龙隐藏
             stateMachine.JinxiSpecialSkillLinker.HideDragonInstantly();
             //攻击动画
@@ -1109,11 +1105,7 @@ using System.Collections;
         {
             //防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-            if (_stateTime * 1.5f > stateMachine.GetCombatAnimationLength(_attackStep.attackId) && !hasUpataAttackingUpdateAnimation)
-            {
-                hasUpataAttackingUpdateAnimation = true;
-                stateMachine.manifestation.ShowDecorationSwordFade();
-            }
+            
         }
         #endregion
 
@@ -1299,8 +1291,6 @@ using System.Collections;
             //播放重击特效
             stateMachine.effectController?.PlayEffectAction(_heavyAttackStep);
 
-            //隐藏装饰剑
-            stateMachine.manifestation.HideDecorationSwordFade();
         }
         #endregion
 
@@ -1357,8 +1347,6 @@ using System.Collections;
             //结束重击特效
             stateMachine.context?.EffectController?.EndEffectAction();
 
-            //显示装饰剑
-            stateMachine.manifestation.ShowDecorationSwordFade();
         }
         #endregion
 
@@ -1516,8 +1504,6 @@ using System.Collections;
         {
             //下落攻击开始动画
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepStart.attackId), 0f, 0, 0);
-            //装饰剑隐藏
-            stateMachine.manifestation.HideDecorationSwordFade();
             //御剑
             stateMachine.context?.WeaponController?.PlayWeaponAction(_fallattackStepStart);
         }
@@ -1602,12 +1588,7 @@ using System.Collections;
         // 3. 更新下落攻击状态动画
         private void FallAttackingUpdateAnimation()
         {
-            if (_stateTime * 1.5f > stateMachine.GetCombatAnimationLength(_fallattackStepEnd.attackId) && !hasUpdateFallAttackingAnimation)
-            {
-                hasUpdateFallAttackingAnimation = true;
-                //显示装饰剑
-                stateMachine.manifestation.ShowDecorationSwordFade();
-            }
+ 
         }
         #endregion
 
@@ -1776,8 +1757,6 @@ using System.Collections;
         //3. 播放攻击动画与表现
         private void AirAttackingEnterAnimation()
         {
-            // 装饰剑隐藏
-            stateMachine.manifestation.HideDecorationSwordFade();
             // 播放攻击动画
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_attackStep.attackId), 0f, 0, 0);
             // 御剑/龙/特效表现
@@ -1815,12 +1794,7 @@ using System.Collections;
         {
             // 防止动画出错
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
-            // 动画快结束时显示装饰剑
-            if (_stateTime * 1.2f > stateMachine.GetCombatAnimationLength(_attackStep.attackId) && !_hasUpdatedExitAnimation)
-            {
-                _hasUpdatedExitAnimation = true;
-                stateMachine.manifestation.ShowDecorationSwordFade();
-            }
+           
         }
         #endregion
 
@@ -2640,8 +2614,7 @@ using System.Collections;
             stateMachine.context?.WeaponController?.PlayWeaponAction(_currentSkillStep);
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_currentSkillStep);
             stateMachine.effectController?.PlayEffectAction(_currentSkillStep);
-            // 隐藏装饰剑
-            stateMachine.manifestation.HideDecorationSwordFade();
+
         }
         #endregion
 
@@ -3124,9 +3097,6 @@ using System.Collections;
             //播放龙动画
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_currentQBurstStep);
 
-            //隐藏装饰剑
-            stateMachine.manifestation.HideDecorationSwordFade();
-
             //播放爆发特效
             stateMachine.effectController?.PlayEffectAction(_currentQBurstStep);
         }
@@ -3379,9 +3349,6 @@ using System.Collections;
 
             //播放延奏技能特效
             stateMachine.effectController?.PlayEffectAction(_currentQteStep);
-
-            //隐藏装饰剑
-            stateMachine.manifestation.HideDecorationSwordFade();
         }
         #endregion
 
@@ -3437,8 +3404,6 @@ using System.Collections;
             //结束延奏技能特效
             stateMachine.context?.EffectController?.EndEffectAction();
 
-            //显示装饰剑
-            stateMachine.manifestation.ShowDecorationSwordFade();
         }
         #endregion
 

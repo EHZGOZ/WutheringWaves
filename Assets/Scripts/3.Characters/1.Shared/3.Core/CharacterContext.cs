@@ -216,7 +216,7 @@ namespace WutheringWaves
             }
             if (manifestation == null)
             {
-                manifestation = GetComponent<CharacterManifestation>();
+                manifestation = GetComponentInChildren<CharacterManifestation>();
             }
         }
         #endregion
@@ -230,8 +230,9 @@ namespace WutheringWaves
             rootMotion.Initialize(this);
             weaponController.Initialize(this);
             effectController.Initialize(this);
+            manifestation.Initialize(this);
         }
-        
+
         #endregion
 
         #region 初始化角色专属模块

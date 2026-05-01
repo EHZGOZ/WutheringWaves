@@ -22,6 +22,22 @@ namespace WutheringWaves
         [Tooltip("装饰剑渐变速度，值越大越快")]
         public float decorationSwordFadeSpeed = 1f;
 
+        [Header("=== 武器剑淡入淡出配置 ===")]
+        [Header("是否启用武器剑")]
+        [SerializeField] private bool useBattleWeapon = true; // 当前角色是否拥有武器剑
+        [Header("武器剑")]
+        public GameObject BattleWeapon; // 武器剑对象
+        [Tooltip("武器剑渐变速度，值越大越快")]
+        public float battleWeaponFadeSpeed = 1f;
+
+        [Header("=== 武器剑2淡入淡出配置 ===")]
+        [Header("是否启用武器剑2")]
+        [SerializeField] private bool useBattleWeapon2 = true; // 当前角色是否拥有武器剑2
+        [Header("武器剑2")]
+        public GameObject BattleWeapon2; // 武器剑2对象
+        [Tooltip("武器剑2渐变速度，值越大越快")]
+        public float battleWeapon2FadeSpeed = 1f;
+
         [Header("=== 龙角淡入淡出配置 ===")]
         [Header("是否启用龙角")]
         [SerializeField] private bool useDragonHorn = true; // 当前角色是否拥有龙角
@@ -40,42 +56,21 @@ namespace WutheringWaves
         private Material _decorationSwordMaterial;
         private Coroutine _decorationSwordFadeCoroutine;
 
+        private MeshRenderer _battleWeaponRenderer;
+        private Material[] _battleWeaponMaterials;
+        private Coroutine _battleWeaponFadeCoroutine;
+
+        private MeshRenderer _battleWeapon2Renderer;
+        private Material[] _battleWeapon2Materials;
+        private Coroutine _battleWeapon2FadeCoroutine;
+
         private readonly string _unlitColorProperty = "_BaseColor";
         #endregion
 
-        #region 角色特殊状态读取
-        // 统一读取当前角色是否处于御空状态，避免表现层只绑定到今汐专属驱动
-        private bool IsCharacterFloating()
+        #region 生命周期
+        private void OnDestroy()
         {
-            if (context == null || context.StateMachine == null)
-            {
-                return false;
-            }
-
-            if (context.StateMachine.JinxiSpecialSkillLinker != null)
-            {
-                return context.StateMachine.JinxiSpecialSkillLinker.IsFloating;
-            }
-
-            if (context.StateMachine.KatixiyaSpecialSkillLinker != null)
-            {
-                return context.StateMachine.KatixiyaSpecialSkillLinker.IsFloating;
-            }
-
-            return false;
-        }
-
-        // 统一读取当前角色是否处于爆发状态，避免表现层继续写死到单个角色状态枚举
-        private bool IsBursting()
-        {
-            if (context == null || context.StateMachine == null)
-            {
-                return false;
-            }
-
-            CharacterState currentState = context.StateMachine.CurrentStateType;
-            return currentState == CharacterState.JinxiQBurst
-                || currentState == CharacterState.KatixiyaQBurst;
+            UnsubscribeGameEvents();
         }
         #endregion
 
@@ -90,14 +85,8 @@ namespace WutheringWaves
             // 2.订阅角色表现相关事件
             SubscribeGameEvents();
 
-            // 3.根据当前角色状态刷新外观表现
-            RefreshDragonHorn();
         }
 
-        private void OnDestroy()
-        {
-            UnsubscribeGameEvents();
-        }
 
         private void RendererInitialize()
         {
@@ -123,23 +112,208 @@ namespace WutheringWaves
                     SetDecorationSwordAlpha(1f);
                 }
             }
+
+            // ========== 武器剑初始化 ==========
+            if (useBattleWeapon && BattleWeapon != null)
+            {
+                _battleWeaponRenderer = BattleWeapon.GetComponent<MeshRenderer>();
+                if (_battleWeaponRenderer == null)
+                {
+                    _battleWeaponRenderer = BattleWeapon.GetComponentInChildren<MeshRenderer>(true);
+                }
+
+                if (_battleWeaponRenderer != null)
+                {
+                    _battleWeaponMaterials = _battleWeaponRenderer.materials;
+
+                    for (int i = 0; i < _battleWeaponMaterials.Length; i++)
+                    {
+                        _battleWeaponMaterials[i] = new Material(_battleWeaponMaterials[i]);
+                    }
+
+                    _battleWeaponRenderer.materials = _battleWeaponMaterials;
+                    SetBattleWeaponAlpha(1f);
+                }
+            }
+
+            // ========== 武器剑2初始化 ==========
+            if (useBattleWeapon2 && BattleWeapon2 != null)
+            {
+                _battleWeapon2Renderer = BattleWeapon2.GetComponent<MeshRenderer>();
+                if (_battleWeapon2Renderer == null)
+                {
+                    _battleWeapon2Renderer = BattleWeapon2.GetComponentInChildren<MeshRenderer>(true);
+                }
+
+                if (_battleWeapon2Renderer != null)
+                {
+                    _battleWeapon2Materials = _battleWeapon2Renderer.materials;
+
+                    for (int i = 0; i < _battleWeapon2Materials.Length; i++)
+                    {
+                        _battleWeapon2Materials[i] = new Material(_battleWeapon2Materials[i]);
+                    }
+
+                    _battleWeapon2Renderer.materials = _battleWeapon2Materials;
+                    SetBattleWeapon2Alpha(1f);
+                }
+            }
         }
         #endregion
 
-        #region 装饰剑 透明控制
-        private void SetDecorationSwordAlpha(float alpha)
+        #region 事件订阅
+        private void SubscribeGameEvents()
         {
-            if (_decorationSwordMaterial == null)
+            if (_subscribedGameEvents)
             {
                 return;
             }
 
-            alpha = Mathf.Clamp01(alpha);
-            Color currentColor = _decorationSwordMaterial.GetColor(_unlitColorProperty);
-            currentColor.a = alpha;
-            _decorationSwordMaterial.SetColor(_unlitColorProperty, currentColor);
+            GameEvents.OnFloatingChanged += HandleFloatingChanged;
+            _subscribedGameEvents = true;
         }
 
+        private void UnsubscribeGameEvents()
+        {
+            if (!_subscribedGameEvents)
+            {
+                return;
+            }
+
+
+            GameEvents.OnFloatingChanged -= HandleFloatingChanged;
+            _subscribedGameEvents = false;
+        }
+
+        private void HandleFloatingChanged(bool isFloating)
+        {
+            if (context == null)
+            {
+                return;
+            }
+        }
+        #endregion
+
+        #region 判断当前角色是否可以使用对应表现
+        // 判断当前角色是否可以使用装饰剑表现
+        private bool CanUseDecorationSword()
+        {
+            // 1.当前角色没有装饰剑时，直接跳过
+            if (!useDecorationSword)
+            {
+                return false;
+            }
+
+            // 2.启用了装饰剑但没有拖引用，说明Inspector配置缺失
+            if (DecorationSword == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 当前角色启用了装饰剑表现，但DecorationSword未赋值。", this);
+                return false;
+            }
+
+            return true;
+        }
+        // 判断当前角色是否可以使用武器剑表现
+        private bool CanUseBattleWeapon()
+        {
+            // 1.当前角色没有武器剑时，直接跳过
+            if (!useBattleWeapon)
+            {
+                return false;
+            }
+
+            // 2.启用了武器剑但没有拖引用，说明Inspector配置缺失
+            if (BattleWeapon == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 当前角色启用了武器剑表现，但BattleWeapon未赋值。", this);
+                return false;
+            }
+
+            return true;
+        }
+        // 判断当前角色是否可以使用武器剑2表现
+        private bool CanUseBattleWeapon2()
+        {
+            // 1.当前角色没有武器剑2时，直接跳过
+            if (!useBattleWeapon2)
+            {
+                return false;
+            }
+
+            // 2.启用了武器剑2但没有拖引用，说明Inspector配置缺失
+            if (BattleWeapon2 == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 当前角色启用了武器剑2表现，但BattleWeapon2未赋值。", this);
+                return false;
+            }
+
+            return true;
+        }
+        // 判断当前角色是否可以使用龙角表现
+        private bool CanUseDragonHorn()
+        {
+            // 1.当前角色没有龙角时，直接跳过
+            if (!useDragonHorn)
+            {
+                return false;
+            }
+
+            // 2.启用了龙角但没有拖引用，说明Inspector配置缺失
+            if (DragonHorn == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 当前角色启用了龙角表现，但DragonHorn未赋值。", this);
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
+
+        #region 攻击行为判断两把剑的隐显
+        public void EnterJudgmentSwordShoworHide()
+        {
+            HideDecorationSwordInstantly();
+            HideBattleWeapon2Instantly();
+            ShowBattleWeaponInstantly();
+        }
+        public void EnterJudgmentSwordShoworHide2()
+        {
+            HideDecorationSwordInstantly();
+            HideBattleWeaponInstantly();
+            ShowBattleWeapon2Instantly();
+        }
+        public void ExitJudgmentSwordShoworHide()
+        {
+            HideBattleWeaponInstantly();
+            HideBattleWeapon2Instantly();
+            ShowDecorationSwordInstantly();
+        }
+        #endregion
+
+        #region 装饰剑 透明控制
+        //立刻显现
+        public void ShowDecorationSwordInstantly()
+        {
+            if (!CanUseDecorationSword())
+            {
+                return;
+            }
+
+            DecorationSword.SetActive(true);
+            SetDecorationSwordAlpha(1f);
+        }
+        //立刻隐藏
+        public void HideDecorationSwordInstantly()
+        {
+            if (!CanUseDecorationSword())
+            {
+                return;
+            }
+
+            SetDecorationSwordAlpha(0f);
+            DecorationSword.SetActive(false);
+        }
+        //缓慢显现
         public void ShowDecorationSwordFade()
         {
             if (!CanUseDecorationSword())
@@ -160,7 +334,7 @@ namespace WutheringWaves
 
             _decorationSwordFadeCoroutine = StartCoroutine(DecorationSwordFadeCoroutine(startAlpha, 1f));
         }
-
+        //缓慢隐藏
         public void HideDecorationSwordFade()
         {
             if (!CanUseDecorationSword())
@@ -179,7 +353,20 @@ namespace WutheringWaves
 
             _decorationSwordFadeCoroutine = StartCoroutine(DecorationSwordFadeCoroutine(startAlpha, 0f));
         }
+        //设置透明度
+        private void SetDecorationSwordAlpha(float alpha)
+        {
+            if (_decorationSwordMaterial == null)
+            {
+                return;
+            }
 
+            alpha = Mathf.Clamp01(alpha);
+            Color currentColor = _decorationSwordMaterial.GetColor(_unlitColorProperty);
+            currentColor.a = alpha;
+            _decorationSwordMaterial.SetColor(_unlitColorProperty, currentColor);
+        }
+        //相关协程
         private IEnumerator DecorationSwordFadeCoroutine(float startAlpha, float targetAlpha)
         {
             float currentAlpha = startAlpha;
@@ -200,63 +387,272 @@ namespace WutheringWaves
 
             _decorationSwordFadeCoroutine = null;
         }
-
-        public void ShowDecorationSwordInstantly()
-        {
-            if (!CanUseDecorationSword())
-            {
-                return;
-            }
-
-            DecorationSword.SetActive(true);
-            SetDecorationSwordAlpha(1f);
-        }
-
-        public void HideDecorationSwordInstantly()
-        {
-            if (!CanUseDecorationSword())
-            {
-                return;
-            }
-
-            SetDecorationSwordAlpha(0f);
-            DecorationSword.SetActive(false);
-        }
-
-        // 判断当前角色是否可以使用装饰剑表现
-        private bool CanUseDecorationSword()
-        {
-            // 1.当前角色没有装饰剑时，直接跳过
-            if (!useDecorationSword)
-            {
-                return false;
-            }
-
-            // 2.启用了装饰剑但没有拖引用，说明Inspector配置缺失
-            if (DecorationSword == null)
-            {
-                Debug.LogWarning("[CharacterManifestation] 当前角色启用了装饰剑表现，但DecorationSword未赋值。", this);
-                return false;
-            }
-
-            return true;
-        }
         #endregion
 
-        #region 龙角 透明控制
-        private void SetDragonHornAlpha(float alpha)
+        #region 武器剑 透明控制
+        //立刻显现
+        public void ShowBattleWeaponInstantly()
         {
-            if (_dragonHornMaterial == null)
+            if (!CanUseBattleWeapon())
+            {
+                return;
+            }
+
+            BattleWeapon.SetActive(true);
+            SetBattleWeaponAlpha(1f);
+            
+        }
+        //立刻隐藏
+        public void HideBattleWeaponInstantly()
+        {
+            if (!CanUseBattleWeapon())
+            {
+                return;
+            }
+
+            SetBattleWeaponAlpha(0f);
+            BattleWeapon.SetActive(false);
+        }
+        //缓慢显现
+        public void ShowBattleWeaponFade()
+        {
+            if (!CanUseBattleWeapon())
+            {
+                return;
+            }
+
+            if (_battleWeaponRenderer == null || _battleWeaponMaterials == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 武器剑缺少MeshRenderer或材质初始化失败。", this);
+                return;
+            }
+
+            if (_battleWeaponFadeCoroutine != null)
+            {
+                StopCoroutine(_battleWeaponFadeCoroutine);
+            }
+
+            BattleWeapon.SetActive(true);
+
+            float startAlpha = GetBattleWeaponAlpha();
+
+            _battleWeaponFadeCoroutine = StartCoroutine(BattleWeaponFadeCoroutine(startAlpha, 1f));
+        }
+        //缓慢隐藏
+        public void HideBattleWeaponFade()
+        {
+            if (!CanUseBattleWeapon())
+            {
+                return;
+            }
+
+            if (_battleWeaponRenderer == null || _battleWeaponMaterials == null)
+            {
+                return;
+            }
+
+            if (_battleWeaponFadeCoroutine != null)
+            {
+                StopCoroutine(_battleWeaponFadeCoroutine);
+            }
+
+            float startAlpha = GetBattleWeaponAlpha();
+
+            _battleWeaponFadeCoroutine = StartCoroutine(BattleWeaponFadeCoroutine(startAlpha, 0f));
+        }
+        //获取当前透明度
+        private float GetBattleWeaponAlpha()
+        {
+            if (_battleWeaponMaterials == null || _battleWeaponMaterials.Length == 0)
+            {
+                return 1f;
+            }
+
+            if (!_battleWeaponMaterials[0].HasProperty(_unlitColorProperty))
+            {
+                return 1f;
+            }
+
+            return _battleWeaponMaterials[0].GetColor(_unlitColorProperty).a;
+        }
+        //设置透明度
+        private void SetBattleWeaponAlpha(float alpha)
+        {
+            if (_battleWeaponMaterials == null)
             {
                 return;
             }
 
             alpha = Mathf.Clamp01(alpha);
-            Color currentColor = _dragonHornMaterial.GetColor(_unlitColorProperty);
-            currentColor.a = alpha;
-            _dragonHornMaterial.SetColor(_unlitColorProperty, currentColor);
-        }
 
+            for (int i = 0; i < _battleWeaponMaterials.Length; i++)
+            {
+                if (_battleWeaponMaterials[i] == null || !_battleWeaponMaterials[i].HasProperty(_unlitColorProperty))
+                {
+                    continue;
+                }
+
+                Color currentColor = _battleWeaponMaterials[i].GetColor(_unlitColorProperty);
+                currentColor.a = alpha;
+                _battleWeaponMaterials[i].SetColor(_unlitColorProperty, currentColor);
+            }
+        }
+        //相关协程
+        private IEnumerator BattleWeaponFadeCoroutine(float startAlpha, float targetAlpha)
+        {
+            float currentAlpha = startAlpha;
+
+            while (Mathf.Abs(currentAlpha - targetAlpha) > 0.01f)
+            {
+                currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, battleWeaponFadeSpeed * Time.deltaTime);
+                SetBattleWeaponAlpha(currentAlpha);
+                yield return null;
+            }
+
+            SetBattleWeaponAlpha(targetAlpha);
+
+            if (targetAlpha == 0f && BattleWeapon != null)
+            {
+                BattleWeapon.SetActive(false);
+            }
+
+            _battleWeaponFadeCoroutine = null;
+        }
+        #endregion
+
+        #region 武器剑2 透明控制
+        //立刻显现
+        public void ShowBattleWeapon2Instantly()
+        {
+            if (!CanUseBattleWeapon2())
+            {
+                return;
+            }
+
+            BattleWeapon2.SetActive(true);
+            SetBattleWeapon2Alpha(1f);
+        }
+        //立刻隐藏
+        public void HideBattleWeapon2Instantly()
+        {
+            if (!CanUseBattleWeapon2())
+            {
+                return;
+            }
+
+            SetBattleWeapon2Alpha(0f);
+            BattleWeapon2.SetActive(false);
+        }
+        //缓慢显现
+        public void ShowBattleWeapon2Fade()
+        {
+            if (!CanUseBattleWeapon2())
+            {
+                return;
+            }
+
+            if (_battleWeapon2Renderer == null || _battleWeapon2Materials == null)
+            {
+                Debug.LogWarning("[CharacterManifestation] 武器剑2缺少MeshRenderer或材质初始化失败。", this);
+                return;
+            }
+
+            if (_battleWeapon2FadeCoroutine != null)
+            {
+                StopCoroutine(_battleWeapon2FadeCoroutine);
+            }
+
+            BattleWeapon2.SetActive(true);
+
+            float startAlpha = GetBattleWeapon2Alpha();
+
+            _battleWeapon2FadeCoroutine = StartCoroutine(BattleWeapon2FadeCoroutine(startAlpha, 1f));
+        }
+        //缓慢隐藏
+        public void HideBattleWeapon2Fade()
+        {
+            if (!CanUseBattleWeapon2())
+            {
+                return;
+            }
+
+            if (_battleWeapon2Renderer == null || _battleWeapon2Materials == null)
+            {
+                return;
+            }
+
+            if (_battleWeapon2FadeCoroutine != null)
+            {
+                StopCoroutine(_battleWeapon2FadeCoroutine);
+            }
+
+            float startAlpha = GetBattleWeapon2Alpha();
+
+            _battleWeapon2FadeCoroutine = StartCoroutine(BattleWeapon2FadeCoroutine(startAlpha, 0f));
+        }
+        //获取当前透明度
+        private float GetBattleWeapon2Alpha()
+        {
+            if (_battleWeapon2Materials == null || _battleWeapon2Materials.Length == 0)
+            {
+                return 1f;
+            }
+
+            if (!_battleWeapon2Materials[0].HasProperty(_unlitColorProperty))
+            {
+                return 1f;
+            }
+
+            return _battleWeapon2Materials[0].GetColor(_unlitColorProperty).a;
+        }
+        //设置透明度
+        private void SetBattleWeapon2Alpha(float alpha)
+        {
+            if (_battleWeapon2Materials == null)
+            {
+                return;
+            }
+
+            alpha = Mathf.Clamp01(alpha);
+
+            for (int i = 0; i < _battleWeapon2Materials.Length; i++)
+            {
+                if (_battleWeapon2Materials[i] == null || !_battleWeapon2Materials[i].HasProperty(_unlitColorProperty))
+                {
+                    continue;
+                }
+
+                Color currentColor = _battleWeapon2Materials[i].GetColor(_unlitColorProperty);
+                currentColor.a = alpha;
+                _battleWeapon2Materials[i].SetColor(_unlitColorProperty, currentColor);
+            }
+        }
+        //相关协程
+        private IEnumerator BattleWeapon2FadeCoroutine(float startAlpha, float targetAlpha)
+        {
+            float currentAlpha = startAlpha;
+
+            while (Mathf.Abs(currentAlpha - targetAlpha) > 0.01f)
+            {
+                currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, battleWeapon2FadeSpeed * Time.deltaTime);
+                SetBattleWeapon2Alpha(currentAlpha);
+                yield return null;
+            }
+
+            SetBattleWeapon2Alpha(targetAlpha);
+
+            if (targetAlpha == 0f && BattleWeapon2 != null)
+            {
+                BattleWeapon2.SetActive(false);
+            }
+
+            _battleWeapon2FadeCoroutine = null;
+        }
+        #endregion
+
+        #region 龙角 透明控制
+
+        //缓慢显现
         public void ShowDragonHornFade()
         {
             if (!CanUseDragonHorn())
@@ -280,7 +676,7 @@ namespace WutheringWaves
             Color currentColor = _dragonHornMaterial.GetColor(_unlitColorProperty);
             _dragonHornFadeCoroutine = StartCoroutine(DragonHornFadeCoroutine(currentColor.a, 1f));
         }
-
+        //缓慢隐藏
         public void HideDragonHornFade()
         {
             if (!CanUseDragonHorn())
@@ -301,7 +697,20 @@ namespace WutheringWaves
             Color currentColor = _dragonHornMaterial.GetColor(_unlitColorProperty);
             _dragonHornFadeCoroutine = StartCoroutine(DragonHornFadeCoroutine(currentColor.a, 0f));
         }
+        //设置透明度
+        private void SetDragonHornAlpha(float alpha)
+        {
+            if (_dragonHornMaterial == null)
+            {
+                return;
+            }
 
+            alpha = Mathf.Clamp01(alpha);
+            Color currentColor = _dragonHornMaterial.GetColor(_unlitColorProperty);
+            currentColor.a = alpha;
+            _dragonHornMaterial.SetColor(_unlitColorProperty, currentColor);
+        }
+        //相关协程
         private IEnumerator DragonHornFadeCoroutine(float startAlpha, float targetAlpha)
         {
             float currentAlpha = startAlpha;
@@ -322,93 +731,9 @@ namespace WutheringWaves
 
             _dragonHornFadeCoroutine = null;
         }
-
-        // 判断当前角色是否可以使用龙角表现
-        private bool CanUseDragonHorn()
-        {
-            // 1.当前角色没有龙角时，直接跳过
-            if (!useDragonHorn)
-            {
-                return false;
-            }
-
-            // 2.启用了龙角但没有拖引用，说明Inspector配置缺失
-            if (DragonHorn == null)
-            {
-                Debug.LogWarning("[CharacterManifestation] 当前角色启用了龙角表现，但DragonHorn未赋值。", this);
-                return false;
-            }
-
-            return true;
-        }
         #endregion
 
-        #region 外观刷新
-        private void RefreshDragonHorn()
-        {
-            if (!CanUseDragonHorn())
-            {
-                return;
-            }
 
-            bool isFloating = IsCharacterFloating();
-            bool isQBurst = IsBursting();
-
-            if (isFloating || isQBurst)
-            {
-                ShowDragonHornFade();
-            }
-            else
-            {
-                HideDragonHornFade();
-            }
-        }
-        #endregion
-
-        #region 事件订阅
-        private void SubscribeGameEvents()
-        {
-            if (_subscribedGameEvents)
-            {
-                return;
-            }
-
-            GameEvents.OnCharacterStateChanged += HandleCharacterStateChanged;
-            GameEvents.OnFloatingChanged += HandleFloatingChanged;
-            _subscribedGameEvents = true;
-        }
-
-        private void UnsubscribeGameEvents()
-        {
-            if (!_subscribedGameEvents)
-            {
-                return;
-            }
-
-            GameEvents.OnCharacterStateChanged -= HandleCharacterStateChanged;
-            GameEvents.OnFloatingChanged -= HandleFloatingChanged;
-            _subscribedGameEvents = false;
-        }
-
-        private void HandleCharacterStateChanged(CharacterStateMachine source, CharacterState oldState, CharacterState newState)
-        {
-            if (context == null || source != context.StateMachine)
-            {
-                return;
-            }
-
-            RefreshDragonHorn();
-        }
-
-        private void HandleFloatingChanged(CharacterAttack source, bool isFloating)
-        {
-            if (context == null || source != context.AttackLogic)
-            {
-                return;
-            }
-
-            RefreshDragonHorn();
-        }
-        #endregion
+        
     }
 }
