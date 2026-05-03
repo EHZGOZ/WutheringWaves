@@ -110,6 +110,7 @@
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\7.Visual\CharaterManifestation.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSwordController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\2.Runtime\CharacterRuntimeData.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.Effects\EffectConfigSO.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerController.cs" />

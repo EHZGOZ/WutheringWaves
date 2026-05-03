@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 302e796fc334d43458012b7155d4fceb, type: 3}
   m_Name: MovementConfig
   m_EditorClassIdentifier: 
+  characterName: 0
   rotationSmoothTime: 0.1
   speedSmoothSpeed: 5
   moveThreshold: 0.1
@@ -26,4 +27,4 @@ MonoBehaviour:
   airDashDistance: 5
   airDashUpDistance: 2
   airDashCostTime: 0.3
-  floatDashCostTime: 1.9
+  floatDashCostTime: 0.8

@@ -25,14 +25,78 @@ using System.Collections;
         //1. 进入待机状态动画
         private void IdleEnterAnimation()
         {
-            //1.切换到 Locomotion 混合树
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle), 0.3f, 0, 0);
+            // 根据最近一次攻击段，决定进入普通Locomotion待机还是御刀Pose待机
+            string idleAnimationName = GetIdleAnimationNameByCurrentStep();
+
+            // 进入待机时清掉移动混合参数，避免Locomotion残留移动参数
+            stateMachine.Animator.SetFloat("AxisX", 0f);
+            stateMachine.Animator.SetFloat("AxisY", 0f);
+
+            // 直接切到对应待机状态
+            stateMachine.Animator.CrossFadeInFixedTime(idleAnimationName, 0.3f, 0, 0);
         }
+
         //2.初始化待机状态
         private void InitializeIdleState()
         {
             _stateTime = 0f;
         }
+        // 根据上一状态和最近一次攻击段获取待机动画名
+        private string GetIdleAnimationNameByCurrentStep()
+        {
+            // 不是从攻击类状态进入待机时，统一回普通Locomotion待机
+            if (!IsPreviousStateAttackState())
+            {
+                return stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle);
+            }
+
+            // 从攻击类状态进入待机，但没有攻击段数据时，也回普通Locomotion待机
+            if (stateMachine.currentStep == null)
+            {
+                return stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle);
+            }
+
+            switch (stateMachine.currentStep.attackId)
+            {
+                // 普通待机姿势
+                case AttackId.None:
+                case AttackId.Attack02:
+                case AttackId.Attack04:
+                case AttackId.FallAttackStart:
+                case AttackId.FallAttackLoop:
+                case AttackId.FallAttackEnd:
+                case AttackId.FloatAttackGround04:
+                case AttackId.FloatAttackAir01:
+                case AttackId.FloatAttackAir02:
+                case AttackId.FloatAttackAir03:
+                case AttackId.FloatAttackAir04:
+                case AttackId.ESkill02:
+                case AttackId.ESkill03:
+                case AttackId.ESkill04:
+                case AttackId.QBurst:
+                case AttackId.HAttack01:
+                case AttackId.HAttack02:
+                case AttackId.QteSkill:
+                    return stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Idle);
+
+                // 其余攻击段默认接御刀Pose待机
+                default:
+                    return "Idle_Pose";
+            }
+        }
+
+        // 判断上一个状态是否是攻击类状态
+        private bool IsPreviousStateAttackState()
+        {
+            return stateMachine.PreviousStateType == CharacterState.JinxiAttack
+                || stateMachine.PreviousStateType == CharacterState.JinxiHeavyAttack
+                || stateMachine.PreviousStateType == CharacterState.JinxiFallAttack
+                || stateMachine.PreviousStateType == CharacterState.JinxiAirAttack
+                || stateMachine.PreviousStateType == CharacterState.JinxiESkill
+                || stateMachine.PreviousStateType == CharacterState.JinxiQBurst
+                || stateMachine.PreviousStateType == CharacterState.JinxiQteSkill;
+        }
+
         #endregion
 
         public override void UpdateState()
@@ -1060,12 +1124,12 @@ using System.Collections;
         // 3. 进入攻击状态动画
         private void AttackingEnterAnimation()
         {
-            //龙隐藏
-            stateMachine.JinxiSpecialSkillLinker.HideDragonInstantly();
             //攻击动画
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_attackStep.attackId), 0f, 0, 0);
             //御剑动画
             stateMachine.context?.WeaponController?.PlayWeaponAction(_attackStep);
+            //龙隐藏
+            stateMachine.JinxiSpecialSkillLinker.HideDragonInstantly();
             //龙动画
             stateMachine.JinxiSpecialSkillLinker.PlayDragonAction(_attackStep);
             //特效动画
@@ -1730,7 +1794,7 @@ using System.Collections;
             if (stateMachine.movementLogic.CustomCheckGrounded())
             {
                 //御空攻击(地面模组)
-                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeAirAttackStep();
+                _attackStep = stateMachine.JinxiSpecialSkillLinker.InitializeSkillAirAttackStep();
                 _isGrouded = isGrouded.T;
             }
             else
@@ -1757,6 +1821,9 @@ using System.Collections;
         //3. 播放攻击动画与表现
         private void AirAttackingEnterAnimation()
         {
+            // 播放今汐专用御剑表现
+            stateMachine.JinxiSpecialSkillLinker.PlaySpecialSwordAction(_attackStep);
+
             // 播放攻击动画
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_attackStep.attackId), 0f, 0, 0);
             // 御剑/龙/特效表现
@@ -1811,6 +1878,8 @@ using System.Collections;
         private void AirAttackingExitAnimation()
         {
             // CrossFade 直切动画后无需再清理 Trigger
+            //结束今汐专用御剑表现
+            stateMachine.JinxiSpecialSkillLinker.EndSpecialSwordAction();
             //结束御剑表现
             stateMachine.context?.WeaponController?.EndWeaponAction();
             //隐藏龙
@@ -2571,6 +2640,8 @@ using System.Collections;
         {
             //初始化攻击阶段
             _currentSkillStep = stateMachine.JinxiSpecialSkillLinker.InitializeESkillStep();
+            //同步当前攻击段，方便待机状态根据上一段动作决定待机姿势
+            stateMachine.currentStep = _currentSkillStep;
             // 初始化执行阶段时长
             _executionDuration = stateMachine.attackLogic.GetExecutionDuration(_currentSkillStep);
             //初始化战技类型
@@ -3086,6 +3157,8 @@ using System.Collections;
 
             //4.锁定状态，执行阶段不能随意切走
             stateMachine.IsStateLocked = true;
+
+            GameEvents.RaiseBrustChanged(true);
         }
 
         //3.进入爆发状态动画
@@ -3143,6 +3216,8 @@ using System.Collections;
 
             //2.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
+
+            GameEvents.RaiseBrustChanged(false);
         }
 
         #region ExitState子方法

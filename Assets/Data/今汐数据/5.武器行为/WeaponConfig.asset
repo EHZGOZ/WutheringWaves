@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e53d1a462244be4bf3c6892804ad1b4, type: 3}
   m_Name: WeaponConfig
   m_EditorClassIdentifier: 
+  characterName: 0
   floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
   swordLength: 1
   swordPositionOffset: {x: 0, y: 0, z: 0}
@@ -158,3 +159,15 @@ MonoBehaviour:
       initSwordHandlePos: {x: 0, y: 1.1, z: 1}
       initSwordRotationEuler: {x: 0, y: 0, z: 0}
       swordTrajectory: []
+  - attackId: 8
+    swordAnimation:
+      swordAnimationCostTime: 1
+      DelayTime: 0.5
+      hasSwordAnimation: 1
+      floatingSword: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
+      initSwordHandlePos: {x: 0, y: 1.1, z: 1}
+      initSwordRotationEuler: {x: 0, y: 0, z: 0}
+      swordTrajectory:
+      - targeSwordHandlelPos: {x: 0, y: 0, z: 0}
+        targetSwordRotationEuler: {x: 0, y: 0, z: 0}
+        timeWeight: 0

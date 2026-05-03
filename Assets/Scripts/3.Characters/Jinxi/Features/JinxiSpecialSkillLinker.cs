@@ -21,6 +21,8 @@ namespace WutheringWaves
         private CharacterAttack attackLogic;  // 共享攻击基础层（仅用于查询通用战斗数据）
         private CombatConfigSO combatConfig;  // 今汐战斗配置
         private JinxiDragonController jinxiDragonController; // 今汐龙表现控制器
+        private JinxiSpecialSwordController jinxiSpecialSwordController; // 今汐专用御剑控制器
+
         private CharacterRuntimeData RuntimeData => context != null ? context.CharacterRuntimeData : null; // 今汐运行时数据快捷入口
 
 
@@ -128,6 +130,12 @@ namespace WutheringWaves
         {
             jinxiDragonController = controller;
         }
+        // 由外部装配入口注入今汐专用御剑控制器，后续统一由今汐驱动层编排专用御剑表现
+        public void SetSpecialSwordController(JinxiSpecialSwordController controller)
+        {
+            jinxiSpecialSwordController = controller;
+        }
+
         #endregion
 
         #region 状态注册
@@ -321,6 +329,13 @@ namespace WutheringWaves
         public AttackStep InitializeAirAttackStep()
         {
             AttackStep step = InitializeComboStep(SkillAirAttackSteps, ref currentAirComboCount, ref isAirComboWindowOpen);
+            currentStep = step;
+            attackLogic?.SetCurrentStep(step);
+            return step;
+        }
+        public AttackStep InitializeSkillAirAttackStep()
+        {
+            AttackStep step = InitializeComboStep(SkillAttackSteps, ref currentAirComboCount, ref isAirComboWindowOpen);
             currentStep = step;
             attackLogic?.SetCurrentStep(step);
             return step;
@@ -604,6 +619,21 @@ namespace WutheringWaves
             jinxiDragonController?.HideDragonInstantly();
         }
         #endregion
+
+        #region 专用御剑表现转发
+        // 今汐状态通过今汐驱动层播放专用御剑表现，避免状态类直接耦合专用表现控制器
+        public void PlaySpecialSwordAction(AttackStep step)
+        {
+            jinxiSpecialSwordController?.PlaySpecialSwordAction(step);
+        }
+
+        // 今汐状态退出时统一关闭专用御剑表现，避免切状态或切人后残留飞剑
+        public void EndSpecialSwordAction()
+        {
+            jinxiSpecialSwordController?.EndSpecialSwordAction();
+        }
+        #endregion
+
 
         #region 内部工具
         // 初始化连段攻击步骤：窗口开启时进入下一段，否则回到第一段

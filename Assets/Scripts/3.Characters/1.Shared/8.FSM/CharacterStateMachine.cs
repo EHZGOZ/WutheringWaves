@@ -323,9 +323,18 @@ namespace WutheringWaves
             //// 3.清空当前角色输入状态，避免切人瞬间把旧输入带进新角色
             //ResetInputState();先别清
 
-            // 4.切回当前角色默认状态
+            // 4.切人时清空最近攻击段，避免切回来后继续进入攻击后Pose待机
+            currentStep = null;
+
+            // 5.切回当前角色默认状态
             SwitchState(GetDefaultState());
+
+            // 6.强制重置上一状态记录，避免切人后待机逻辑误认为来自攻击状态
+            CharacterState defaultStateType = ResolveDefaultStateType();
+            PreviousStateType = defaultStateType;
+            PreviousPreviousStateType = defaultStateType;
         }
+
 
         // 判断当前状态是否可被打断
         public bool IsInterruptible()

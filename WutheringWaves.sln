@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.PlayableGraphVisualiz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTween.Modules", "DOTween.Modules.csproj", "{5E70A60E-0C05-5872-D9BF-B021F992D66A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.PlayableGraphVisualizer", "Unity.PlayableGraphVisualizer.csproj", "{CFB81265-50A6-4307-AC70-24457F9F2731}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{BA688FF0-2BC1-951D-5BB3-4E5A68E9DCD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.PlayableGraphVisualizer", "Unity.PlayableGraphVisualizer.csproj", "{CFB81265-50A6-4307-AC70-24457F9F2731}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,14 +47,14 @@ Global
 		{5E70A60E-0C05-5872-D9BF-B021F992D66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E70A60E-0C05-5872-D9BF-B021F992D66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E70A60E-0C05-5872-D9BF-B021F992D66A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFB81265-50A6-4307-AC70-24457F9F2731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFB81265-50A6-4307-AC70-24457F9F2731}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFB81265-50A6-4307-AC70-24457F9F2731}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFB81265-50A6-4307-AC70-24457F9F2731}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA688FF0-2BC1-951D-5BB3-4E5A68E9DCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA688FF0-2BC1-951D-5BB3-4E5A68E9DCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA688FF0-2BC1-951D-5BB3-4E5A68E9DCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA688FF0-2BC1-951D-5BB3-4E5A68E9DCD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB81265-50A6-4307-AC70-24457F9F2731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB81265-50A6-4307-AC70-24457F9F2731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB81265-50A6-4307-AC70-24457F9F2731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB81265-50A6-4307-AC70-24457F9F2731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

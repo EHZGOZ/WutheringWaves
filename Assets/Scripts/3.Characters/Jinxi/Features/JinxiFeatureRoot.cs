@@ -11,8 +11,14 @@ namespace WutheringWaves
         [Header("今汐御龙控制器")]
         [SerializeField] private JinxiDragonController dragonController;
 
+        [Header("今汐专用御剑控制器")]
+        [SerializeField] private JinxiSpecialSwordController specialSwordController;
+
+
         public JinxiSpecialSkillLinker SpecialSkillLinker => specialSkillLinker;
         public JinxiDragonController DragonController => dragonController;
+        public JinxiSpecialSwordController SpecialSwordController => specialSwordController;
+
         public bool IsInitialized { get; private set; }
 
         public void Initialize(CharacterContext context)
@@ -26,6 +32,8 @@ namespace WutheringWaves
 
             specialSkillLinker?.Initialize(context);
             dragonController?.Initialize(context);
+            specialSwordController?.Initialize(context);
+
 
             IsInitialized = true;
         }
@@ -41,6 +49,11 @@ namespace WutheringWaves
             {
                 dragonController = GetComponent<JinxiDragonController>();
             }
+            if (specialSwordController == null)
+            {
+                specialSwordController = GetComponent<JinxiSpecialSwordController>();
+            }
+
 
         }
     }

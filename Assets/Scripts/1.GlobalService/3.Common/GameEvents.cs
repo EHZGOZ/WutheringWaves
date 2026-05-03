@@ -54,13 +54,13 @@ namespace WutheringWaves
 
         // 体力条显隐事件：参数为体力组件、是否显示
         public static event Action<PlayerStamina, bool> OnStaminaVisibilityChanged;
-        //// 外观变化事件：参数为角色上下文、外观目标类型、外观事件类型
-        //public static event Action<CharacterContext, VisualTargetType, VisualEventType> OnVisualChanged;
 
 
         // 角色专属：今汐
         // 御空状态变化事件：参数为攻击逻辑、是否处于御空
         public static event Action<bool> OnFloatingChanged;
+        // 爆发状态变化事件
+        public static event Action<bool> OnBrustChanged;
         #endregion
 
         #region 事件派发
@@ -120,6 +120,11 @@ namespace WutheringWaves
         public static void RaiseFloatingChanged(bool isFloating)
         {
             OnFloatingChanged?.Invoke(isFloating);
+        }
+        // 派发爆发状态变化事件
+        public static void RaiseBrustChanged(bool isBrust)
+        {
+            OnBrustChanged?.Invoke(isBrust);
         }
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -13,13 +14,25 @@ namespace WutheringWaves
         private Coroutine weaponCoroutine; // 当前武器表现协程
         private GameObject currentWeapon; // 当前实例化的武器对象
 
+
+        #region 生命周期
+        private void OnDisable()
+        {
+            EndWeaponAction();
+        }
+
+        #endregion
+
+        #region 初始化
         //初始化：由 CharacterContext 统一调用，绑定角色上下文与配置
         public void Initialize(CharacterContext context)
         {
             this.context = context;
             weaponConfig = context != null && context.CharacterDataSO != null ? context.CharacterDataSO.weaponConfigSO : null;
         }
+        #endregion
 
+        #region 通用武器控制
         //根据攻击步骤播放对应武器表现
         public void PlayWeaponAction(AttackStep attackStep)
         {
@@ -70,7 +83,6 @@ namespace WutheringWaves
                 currentWeapon = null;
             }
         }
-
 
         //播放单次武器表现：按配置生成武器并沿轨迹推进
         private IEnumerator PlayWeaponActionCoroutine(SwordAnimation swordAnimation)
@@ -164,5 +176,10 @@ namespace WutheringWaves
 
             weaponCoroutine = null;
         }
+        #endregion
+
+
+
+
     }
 }

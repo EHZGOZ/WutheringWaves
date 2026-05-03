@@ -19,26 +19,39 @@ namespace WutheringWaves
         [SerializeField] private Vector3 skillAttackSteps3DragonLocalOffset = new Vector3(0f, 0f, 3f);
         [SerializeField] private Vector3 skillAttackSteps4DragonLocalOffset = new Vector3(0f, 0f, 3f);
 
-        private Animator characterAnimator;
-        private AnimationConfigSO animationConfig;
-        private Coroutine dragonHideCoroutine;
-        private Coroutine dragonShowCoroutine;
-        private Vector3 currentDragonLocalOffset = Vector3.zero;
+        private Animator characterAnimator; // 角色动画控制器，用于兜底查询动画长度
+        private AnimationConfigSO animationConfig; // 今汐动画配置
+        private Coroutine dragonShowCoroutine; // 龙延迟显示协程
+        private Coroutine dragonHideCoroutine; // 龙自动隐藏协程
+        private Vector3 currentDragonLocalOffset = Vector3.zero; // 当前龙位置偏移
 
+        #region 初始化
         public void Initialize(CharacterContext context)
         {
             characterAnimator = context != null ? context.Animator : null;
             animationConfig = context != null && context.CharacterDataSO != null
                 ? context.CharacterDataSO.animationConfigSO
                 : null;
-            currentDragonLocalOffset = defaultDragonLocalOffset;
-        }
 
+            currentDragonLocalOffset = defaultDragonLocalOffset;
+            HideDragonInstantly();
+        }
+        #endregion
+
+        #region 生命周期
         private void Update()
         {
             UpdateDragonPosition();
         }
 
+        private void OnDisable()
+        {
+            StopDragonCoroutines();
+        }
+        #endregion
+
+        #region 对外接口
+        // 播放龙表现：由攻击段入口调用
         public void PlayDragonAction(AttackStep step)
         {
             if (step == null)
@@ -49,24 +62,16 @@ namespace WutheringWaves
             PlayDragonAction(step.attackId, step);
         }
 
+        // 播放龙表现：由攻击ID入口调用
         public void PlayDragonAction(AttackId attackId)
         {
             PlayDragonAction(attackId, null);
         }
 
+        // 立即隐藏龙表现
         public void HideDragonInstantly()
         {
-            if (dragonShowCoroutine != null)
-            {
-                StopCoroutine(dragonShowCoroutine);
-                dragonShowCoroutine = null;
-            }
-
-            if (dragonHideCoroutine != null)
-            {
-                StopCoroutine(dragonHideCoroutine);
-                dragonHideCoroutine = null;
-            }
+            StopDragonCoroutines();
 
             if (dragon == null)
             {
@@ -77,6 +82,7 @@ namespace WutheringWaves
             dragon.SetActive(false);
         }
 
+        // 立即显示龙表现
         public void ShowDragonInstantly()
         {
             if (dragon == null)
@@ -85,44 +91,56 @@ namespace WutheringWaves
             }
 
             dragon.SetActive(true);
+            UpdateDragonPosition();
         }
+        #endregion
 
+        #region 龙表现主流程
+        // 播放龙表现核心逻辑
         private void PlayDragonAction(AttackId attackId, AttackStep step)
         {
-            //if (!CanPlayDragonAction(attackId))
-            //{
-            //    return;
-            //}
-
-            ApplyDragonOffset(attackId);
-
-            if (dragonShowCoroutine != null)
+            // 非龙表现攻击段不处理，避免普通攻击误触发龙
+            if (!CanPlayDragonAction(attackId))
             {
-                StopCoroutine(dragonShowCoroutine);
-                dragonShowCoroutine = null;
+                return;
             }
+
+            // 当前对象未激活时不启动协程，避免 inactive 物体开启协程报错
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
+            StopDragonCoroutines();
+            ApplyDragonOffset(attackId);
 
             switch (attackId)
             {
                 case AttackId.Attack03:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0.2f, 0f, attackId, step));
                     return;
+
                 case AttackId.QBurst:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 0f, attackId, step));
                     return;
+
                 case AttackId.QteSkill:
-                    dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 0f, attackId, step));
+                    dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 1.5f, attackId, step));
                     return;
+
                 case AttackId.ESkill03:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0.7f, 0f, attackId, step));
                     return;
+
                 case AttackId.ESkill04:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 1f, attackId, step));
                     return;
+
                 case AttackId.FloatAttackGround03:
                 case AttackId.FloatAttackAir03:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0.2f, 0f, attackId, step));
                     return;
+
                 case AttackId.FloatAttackGround04:
                 case AttackId.FloatAttackAir04:
                     dragonShowCoroutine = StartCoroutine(DelayShowDragon(0f, 0.3f, attackId, step));
@@ -130,6 +148,29 @@ namespace WutheringWaves
             }
         }
 
+        // 判断当前攻击段是否需要播放龙表现
+        private bool CanPlayDragonAction(AttackId attackId)
+        {
+            switch (attackId)
+            {
+                case AttackId.Attack03:
+                case AttackId.QBurst:
+                case AttackId.QteSkill:
+                case AttackId.ESkill03:
+                case AttackId.ESkill04:
+                case AttackId.FloatAttackGround03:
+                case AttackId.FloatAttackAir03:
+                case AttackId.FloatAttackGround04:
+                case AttackId.FloatAttackAir04:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        #endregion
+
+        #region 龙位置
+        // 根据攻击段应用龙位置偏移
         private void ApplyDragonOffset(AttackId attackId)
         {
             currentDragonLocalOffset = defaultDragonLocalOffset;
@@ -152,26 +193,7 @@ namespace WutheringWaves
             }
         }
 
-        //private bool CanPlayDragonAction(AttackId attackId)
-        //{
-        //    switch (attackId)
-        //    {
-        //        case AttackId.Attack03:
-        //        case AttackId.QBurst:
-        //        case AttackId.QteSkill:
-        //        case AttackId.ESkill03:
-        //        case AttackId.ESkill04:
-        //        case AttackId.FloatAttackGround03:
-        //        case AttackId.FloatAttackAir03:
-        //        case AttackId.FloatAttackGround04:
-        //        case AttackId.FloatAttackAir04:
-        //            return true;
-        //        default:
-        //            return false;
-        //    }
-        //}
-
-
+        // 每帧同步龙位置到角色身边
         private void UpdateDragonPosition()
         {
             if (dragon == null)
@@ -181,42 +203,86 @@ namespace WutheringWaves
 
             dragon.transform.position = transform.TransformPoint(currentDragonLocalOffset);
         }
+        #endregion
 
+        #region 协程控制
+        // 延迟显示龙，并播放对应动画
         private IEnumerator DelayShowDragon(float delay, float earlyHideOffset, AttackId attackId, AttackStep step)
         {
             yield return new WaitForSeconds(delay);
 
             ShowDragonInstantly();
-
-            if (dragonAnimator != null)
-            {
-                string dragonTriggerName = GetDragonTriggerName(attackId);
-                if (!string.IsNullOrWhiteSpace(dragonTriggerName))
-                {
-                    dragonAnimator.SetTrigger(dragonTriggerName);
-                }
-            }
-
+            PlayDragonAnimation(attackId);
             StartDragonAutoHide(attackId, step, earlyHideOffset);
+
             dragonShowCoroutine = null;
         }
 
-        private void StartDragonAutoHide(AttackId attackId, AttackStep step, float earlyHideOffset = 0f)
+        // 开始龙自动隐藏计时
+        private void StartDragonAutoHide(AttackId attackId, AttackStep step, float earlyHideOffset)
         {
             if (dragonHideCoroutine != null)
             {
                 StopCoroutine(dragonHideCoroutine);
+                dragonHideCoroutine = null;
             }
 
             dragonHideCoroutine = StartCoroutine(DelayHideDragon(attackId, step, earlyHideOffset));
         }
 
+        // 延迟隐藏龙
+        private IEnumerator DelayHideDragon(AttackId attackId, AttackStep step, float earlyHideOffset)
+        {
+            yield return null;
+
+            float hideTime = GetDragonAnimationLength(attackId, step) - earlyHideOffset;
+            yield return new WaitForSeconds(Mathf.Max(0f, hideTime));
+
+            HideDragonInstantly();
+        }
+
+        // 停止龙表现相关协程
+        private void StopDragonCoroutines()
+        {
+            if (dragonShowCoroutine != null)
+            {
+                StopCoroutine(dragonShowCoroutine);
+                dragonShowCoroutine = null;
+            }
+
+            if (dragonHideCoroutine != null)
+            {
+                StopCoroutine(dragonHideCoroutine);
+                dragonHideCoroutine = null;
+            }
+        }
+        #endregion
+
+        #region 动画控制
+        // 播放龙动画
+        private void PlayDragonAnimation(AttackId attackId)
+        {
+            if (dragonAnimator == null)
+            {
+                return;
+            }
+
+            string dragonTriggerName = GetDragonAnimationName(attackId);
+            if (string.IsNullOrWhiteSpace(dragonTriggerName))
+            {
+                return;
+            }
+
+            dragonAnimator.SetTrigger(dragonTriggerName);
+        }
+
+        // 获取龙表现动画时长
         private float GetDragonAnimationLength(AttackId attackId, AttackStep step)
         {
             Animator targetAnimator = dragonAnimator != null ? dragonAnimator : characterAnimator;
             if (targetAnimator == null)
             {
-                return step != null && step.timingConfig != null ? step.timingConfig.executionAttackCostTime : 0f;
+                return GetAttackStepDuration(step);
             }
 
             AnimatorClipInfo[] currentClips = targetAnimator.GetCurrentAnimatorClipInfo(0);
@@ -233,37 +299,31 @@ namespace WutheringWaves
 
             if (targetAnimator.runtimeAnimatorController == null)
             {
-                return step != null && step.timingConfig != null ? step.timingConfig.executionAttackCostTime : 0f;
+                return GetAttackStepDuration(step);
             }
 
-            string dragonClipName = GetDragonClipName(attackId);
+            string dragonClipName = GetDragonAnimationName(attackId);
             if (string.IsNullOrWhiteSpace(dragonClipName))
             {
-                return step != null && step.timingConfig != null ? step.timingConfig.executionAttackCostTime : 0f;
+                return GetAttackStepDuration(step);
             }
 
             AnimationClip clip = targetAnimator.runtimeAnimatorController.animationClips
                 .FirstOrDefault(currentClip => currentClip != null && currentClip.name == dragonClipName);
 
-            if (clip != null)
-            {
-                return clip.length;
-            }
-
-            return step != null && step.timingConfig != null ? step.timingConfig.executionAttackCostTime : 0f;
+            return clip != null ? clip.length : GetAttackStepDuration(step);
         }
 
-        private IEnumerator DelayHideDragon(AttackId attackId, AttackStep step, float earlyHideOffset = 0f)
+        // 获取攻击段配置时长，用于动画长度兜底
+        private float GetAttackStepDuration(AttackStep step)
         {
-            yield return null;
-
-            float time = GetDragonAnimationLength(attackId, step) - earlyHideOffset;
-            yield return new WaitForSeconds(Mathf.Max(0f, time));
-
-            HideDragonInstantly();
+            return step != null && step.timingConfig != null
+                ? step.timingConfig.executionAttackCostTime
+                : 0f;
         }
 
-        private string GetDragonTriggerName(AttackId attackId)
+        // 根据攻击ID获取龙动画名
+        private string GetDragonAnimationName(AttackId attackId)
         {
             if (animationConfig == null)
             {
@@ -273,17 +333,6 @@ namespace WutheringWaves
             AnimationClip clip = animationConfig.GetCombatClip(attackId);
             return clip != null ? clip.name : string.Empty;
         }
-
-        private string GetDragonClipName(AttackId attackId)
-        {
-            if (animationConfig == null)
-            {
-                return string.Empty;
-            }
-
-            AnimationClip clip = animationConfig.GetCombatClip(attackId);
-            return clip != null ? clip.name : string.Empty;
-        }
+        #endregion
     }
 }
-

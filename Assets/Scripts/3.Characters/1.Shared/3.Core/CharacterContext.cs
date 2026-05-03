@@ -267,9 +267,15 @@ namespace WutheringWaves
             JinxiDragonController jinxiDragonController = jinxiFeatureRoot != null
                 ? jinxiFeatureRoot.DragonController
                 : GetComponent<JinxiDragonController>();
+            JinxiSpecialSwordController jinxiSpecialSwordController = jinxiFeatureRoot != null
+                ? jinxiFeatureRoot.SpecialSwordController
+                : GetComponent<JinxiSpecialSwordController>();
+
 
             // 今汐龙表现由今汐驱动层统一编排，避免继续由状态机直接持有今汐表现细节
             jinxiSpecialSkillLinker?.SetDragonController(jinxiDragonController);
+            jinxiSpecialSkillLinker?.SetSpecialSwordController(jinxiSpecialSwordController);
+
 
             stateMachine?.SetStateMachineDriver(jinxiSpecialSkillLinker);
             stateMachine?.SetJinxiSpecialSkillLinker(jinxiSpecialSkillLinker);

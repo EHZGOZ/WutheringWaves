@@ -20,6 +20,30 @@ namespace WutheringWaves
             if (animator == null) animator = context != null ? context.Animator : GetComponent<Animator>();
             if (characterController == null) characterController = context != null ? context.CharacterController : GetComponentInParent<CharacterController>();
         }
+        // 递归查找子物体
+        private Transform FindChildByName(Transform parent, string childName)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            foreach (Transform child in parent)
+            {
+                if (child.name == childName)
+                {
+                    return child;
+                }
+
+                Transform result = FindChildByName(child, childName);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
 
 
         private void OnAnimatorMove()
@@ -44,6 +68,9 @@ namespace WutheringWaves
             // 1. 获取动画输出的根运动数据（位移 + 旋转）
             Vector3 rootMotionDeltaMove = animator.deltaPosition;   // 位移增量
             Quaternion rootMotionDeltaRot = animator.deltaRotation; // 旋转增量
+
+
+
 
             // 2.输出根运动调试信息
             LogRootMotionDebug(stateMachine, rootMotionDeltaMove, rootMotionDeltaRot);

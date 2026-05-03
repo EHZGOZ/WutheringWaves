@@ -207,6 +207,9 @@ namespace WutheringWaves
                 {
                     jinxiFloatingTimer = 0f;
                     jinxiIsFloating = false;
+
+                    // 御空自然结束时，通知表现层刷新龙角显隐
+                    GameEvents.RaiseFloatingChanged(false);
                 }
             }
             // 持续通知今汐技能UI刷新
