@@ -53,6 +53,7 @@ namespace WutheringWaves
         private void HandleStartClicked()
         {
             onStartRequested?.Invoke();
+
         }
 
         private void HandleQuitClicked()

@@ -18,6 +18,7 @@ namespace WutheringWaves
         [SerializeField] private Vector3 eSkillStep3DragonLocalOffset = Vector3.zero;
         [SerializeField] private Vector3 skillAttackSteps3DragonLocalOffset = new Vector3(0f, 0f, 3f);
         [SerializeField] private Vector3 skillAttackSteps4DragonLocalOffset = new Vector3(0f, 0f, 3f);
+        [SerializeField] private Vector3 QteSkillDragonLocalOffset = new Vector3(0f, -2f, 0f);
 
         private Animator characterAnimator; // 角色动画控制器，用于兜底查询动画长度
         private AnimationConfigSO animationConfig; // 今汐动画配置
@@ -190,6 +191,10 @@ namespace WutheringWaves
             if (attackId == AttackId.FloatAttackGround04 || attackId == AttackId.FloatAttackAir04)
             {
                 currentDragonLocalOffset = skillAttackSteps4DragonLocalOffset;
+            }
+            if (attackId == AttackId.QteSkill )
+            {
+                currentDragonLocalOffset = QteSkillDragonLocalOffset;
             }
         }
 

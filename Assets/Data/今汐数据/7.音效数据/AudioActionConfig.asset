@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb01eb8c161fe64d969c780f8016b3d, type: 3}
+  m_Name: AudioActionConfig
+  m_EditorClassIdentifier: 
+  characterName: 0
+  attackAudioActions:
+  - attackId: 1
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 514380d8af4288d439cfbd0808a6f9c5, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.2
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 2
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: cc85b867c9c924046b51c5a38fc97a32, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 3
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: e9f4f972a0b696d4aaab73a16f40c3b8, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 4
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 04163459c34c1424dbe14b16a1bfc746, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  locomotionAudioActions:
+  - locomotionAnimationId: 2
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3e5261b118f21b744b01baa637645f9e, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.1
+      isLoop: 1
+      spatialBlend: 0
+  - locomotionAnimationId: 9
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3106030439723fd4380168667fd662d3, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 10
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3106030439723fd4380168667fd662d3, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 3
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: bcbef4f0955c9b8408d9e8d55d92b85e, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 1
+      spatialBlend: 0
+  - locomotionAnimationId: 4
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 1c85e467c3af0a84b85a146370c416bb, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0

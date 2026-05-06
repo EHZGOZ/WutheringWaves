@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e894965ebbe764e4ab21a1ac72684fe5, type: 3}
+  m_Name: "\u5361\u63D0\u5E0C\u5A05SO"
+  m_EditorClassIdentifier: 
+  characterName: 1
+  baseAttack: 10
+  maxHealth: 20000
+  characterUIConfigSO: {fileID: 11400000, guid: 5cbf34f8d00ef8942833343b80c7142f, type: 2}
+  animationConfigSO: {fileID: 11400000, guid: e0ad08af1939635419e10e7ebe9d9a39, type: 2}
+  combatConfig: {fileID: 11400000, guid: 77ceb74679711464a9b7ed77f8abdbfb, type: 2}
+  movementConfigSO: {fileID: 11400000, guid: 3c983241b9d66c749bb93620d0db2c48, type: 2}
+  weaponConfigSO: {fileID: 11400000, guid: 247181f180f1a25438dfa0952584d02e, type: 2}
+  effectActionConfigSO: {fileID: 11400000, guid: ccc035a30c6dab64d92a2e7a43a70504, type: 2}
+  audioActionConfigSO: {fileID: 11400000, guid: bf3b7b20e92cf4f4d8b6d39fe1653d42, type: 2}
+  moveStoppingDistance: 0.7
+  moveStoppingTime: 1
+  runStoppingDistance: 1
+  runStoppingTime: 1
+  dashStoppingDistance: 1
+  dashStoppingTime: 0.66
+  gravity: -30
+  fallCheckDelay: 0.3
+  groundCheckRadius: 0.2
+  groundCheckOriginOffset: 0.2
+  groundCheckDistance: 0.2

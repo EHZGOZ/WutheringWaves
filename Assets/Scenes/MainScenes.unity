@@ -3357,7 +3357,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f914b181f92df51429211009a27e4826, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8527a6fdb8eb78b4bb4a28576f896e12, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6735,6 +6735,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultTimeScale: 1
+  enableTimeScaleTest: 1
+  testTimeScaleA: 1
+  testTimeScaleB: 0.3
 --- !u!1 &1257517200
 GameObject:
   m_ObjectHideFlags: 0
@@ -9749,7 +9752,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
-      value: 6.999974
+      value: 8.499917
       objectReference: {fileID: 0}
     - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: heavyAttackCost
@@ -9809,7 +9812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8292550580018359768, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: MaxZoomDistance
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8292550580018359768, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: DefaultZoomDistance
@@ -9978,7 +9981,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 10f92b8242f6d644f85bb1eec00a6804, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8527a6fdb8eb78b4bb4a28576f896e12, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

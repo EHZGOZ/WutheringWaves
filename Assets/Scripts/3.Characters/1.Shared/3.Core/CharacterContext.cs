@@ -48,7 +48,10 @@ namespace WutheringWaves
         [SerializeField] private WeaponController weaponController; // 武器控制器
         [Header("特效控制器")]
         [SerializeField] private EffectController effectController; // 特效控制器
-        
+        [Header("音效控制器")]
+        [SerializeField] private AudioController audioController; // 音效控制器
+
+
         [Header("=== 角色独属（自动获取） ===")]
         [SerializeField] private JinxiFeatureRoot jinxiFeatureRoot;
         [SerializeField] private KatixiyaFeatureRoot katixiyaFeatureRoot;
@@ -74,6 +77,8 @@ namespace WutheringWaves
         public CharacterManifestation Manifestation => manifestation; // 角色表现逻辑
         public WeaponController WeaponController => weaponController; // 武器控制器
         public EffectController EffectController => effectController; // 特效控制器
+        public AudioController AudioController => audioController; // 音效控制器
+
 
         public JinxiFeatureRoot JinxiFeatureRoot => jinxiFeatureRoot; // 今汐独属模块根节点
         public KatixiyaFeatureRoot KatixiyaFeatureRoot => katixiyaFeatureRoot; // 卡提希娅独属模块根节点
@@ -214,6 +219,11 @@ namespace WutheringWaves
             {
                 effectController = GetComponent<EffectController>();
             }
+            if (audioController == null)
+            {
+                audioController = GetComponent<AudioController>();
+            }
+
             if (manifestation == null)
             {
                 manifestation = GetComponentInChildren<CharacterManifestation>();
@@ -230,6 +240,7 @@ namespace WutheringWaves
             rootMotion.Initialize(this);
             weaponController.Initialize(this);
             effectController.Initialize(this);
+            audioController.Initialize(this);
             manifestation.Initialize(this);
         }
 

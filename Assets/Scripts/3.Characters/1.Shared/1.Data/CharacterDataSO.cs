@@ -49,6 +49,12 @@ namespace WutheringWaves
         [SerializeField] public EffectActionConfigSO effectActionConfigSO;
         #endregion
 
+        #region 音效相关
+        [Header("=== 音效配置 ===")]
+        [Tooltip("角色音效配置（AttackId / LocomotionAnimationId 到音效表现映射）")]
+        [SerializeField] public AudioActionConfigSO audioActionConfigSO;
+        #endregion
+
         #region 缓冲相关
         [Header("=== 急停缓冲配置 ===")]
         [Header("移动缓冲的总滑行距离（米）")]

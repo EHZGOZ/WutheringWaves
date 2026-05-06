@@ -273,8 +273,8 @@ namespace WutheringWaves
         public bool CanUseESkill()
         {
             bool isCDOver = ESkillCDTimer <= 0f;
-            bool isGrounded = context != null && context.MovementLogic != null && context.MovementLogic.CustomCheckGrounded();
-            return isCDOver && isGrounded;
+         
+            return isCDOver ;
         }
 
 

@@ -707,6 +707,12 @@ namespace WutheringWaves
         }
 
         #endregion
+        // 判断当前外观控制器是否可以启动协程
+        private bool CanStartFadeCoroutine()
+        {
+            return isActiveAndEnabled && gameObject.activeInHierarchy;
+        }
+
         private void ReflashDragonHornFade()
         {
             if(isFloating|| isBrust)
@@ -732,6 +738,14 @@ namespace WutheringWaves
                 Debug.LogWarning("[CharacterManifestation] 龙角缺少Renderer或材质初始化失败。", this);
                 return;
             }
+            // 当前物体未激活时不能启动协程，直接设置最终显示状态
+            if (!CanStartFadeCoroutine())
+            {
+                SetDragonHornAlpha(1f);
+                DragonHorn.SetActive(true);
+                _dragonHornFadeCoroutine = null;
+                return;
+            }
 
             if (_dragonHornFadeCoroutine != null)
             {
@@ -752,6 +766,14 @@ namespace WutheringWaves
 
             if (_dragonHornRenderer == null || _dragonHornMaterials == null || _dragonHornMaterials.Length == 0)
             {
+                return;
+            }
+            // 当前物体未激活时不能启动协程，直接设置最终隐藏状态
+            if (!CanStartFadeCoroutine())
+            {
+                SetDragonHornAlpha(0f);
+                DragonHorn.SetActive(false);
+                _dragonHornFadeCoroutine = null;
                 return;
             }
 

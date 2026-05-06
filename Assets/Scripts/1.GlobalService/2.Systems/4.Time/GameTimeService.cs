@@ -9,6 +9,11 @@ namespace WutheringWaves
         public static GameTimeService Instance { get; private set; }
 
         [SerializeField] private float defaultTimeScale = 1f; // 默认时间缩放系数，1为正常游戏速度   
+        [Header("=== 时间流速测试 ===")]
+        [SerializeField] private bool enableTimeScaleTest = true; // 是否启用Tab切换时间流速测试
+        [SerializeField] private float testTimeScaleA = 1f; // 正常速度
+        [SerializeField] private float testTimeScaleB = 0.3f; // 慢动作速度
+
         private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏
         public bool IsPaused => Time.timeScale <= 0f; // 判断游戏是否暂停（时间缩放小于等于0即为暂停）
         public float CurrentTimeScale => Time.timeScale; // 获取当前的时间缩放值
@@ -30,6 +35,11 @@ namespace WutheringWaves
             // 3.时间服务跨场景保留
             DontDestroyOnLoad(gameObject);
         }
+        private void Update()
+        {
+            UpdateTimeScaleTest();
+        }
+
         #endregion
 
         #region 初始化
@@ -126,5 +136,20 @@ namespace WutheringWaves
             // 应用切换后的时间缩放
             SetTimeScale(target);
         }
+        // 测试时间流速切换
+        private void UpdateTimeScaleTest()
+        {
+            if (!enableTimeScaleTest)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                ToggleBetweenScales(testTimeScaleA, testTimeScaleB);
+                //Debug.Log($"当前时间流速：{CurrentTimeScale}");
+            }
+        }
+
     }
 }

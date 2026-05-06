@@ -175,7 +175,7 @@
         private void MovingEnterAnimation()
         {
             //1.切换到 Locomotion 混合树
-            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Move), 0.3f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Move), 0.1f, 0, 0);
         }
 
         #endregion
@@ -2206,11 +2206,12 @@
                 return;
             }
             //战技状态
-            if (stateMachine.CheckAndConsumeESkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsESkillable())
+            if (stateMachine.KatixiyaSpecialSkillLinker.IsESkillable() && stateMachine.CheckAndConsumeESkillRequest())
             {
                 SwitchState(CharacterState.KatixiyaESkill);
                 return;
             }
+
             //延奏状态
             if (stateMachine.CheckAndConsumeQteSkillRequest() && stateMachine.KatixiyaSpecialSkillLinker.IsQteSkillable())
             {

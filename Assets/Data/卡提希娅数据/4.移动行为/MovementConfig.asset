@@ -17,7 +17,7 @@ MonoBehaviour:
   speedSmoothSpeed: 5
   moveThreshold: 0.1
   moveSpeed: 4
-  runSpeed: 6
+  runSpeed: 7
   jumpAirControlMultiplier: 1
   fallingAirControlMultiplier: 1
   dashCostTime: 0.33

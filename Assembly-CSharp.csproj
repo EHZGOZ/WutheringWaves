@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\6.Combat\CharacterAttack.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\6.Combat\WeaponController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.Audio\AudioConfigSO.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\1.Shared\9.Audio\AudioActionConfigSO.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterName.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\8.FSM\CharacterStateMachine.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterDataSO.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.Audio\AudioService.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\1.Bootstrap\GameBootstrap.cs" />
+    <Compile Include="Assets\GameAssets\codex制作的特效\01_卡提希娅_风刃测试\特效\Scripts\CodexSkill01VfxPlayer.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\MainMenuController.cs" />
@@ -113,8 +115,10 @@
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSwordController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\2.Runtime\CharacterRuntimeData.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.Effects\EffectConfigSO.cs" />
+    <Compile Include="Assets\GameAssets\codex制作的特效\卡提希娅\Skill01_Burst_4_5\Scripts\KatixiyaSkill01BurstVfxPlayer.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SettingsMenuController.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\1.Shared\9.Audio\AudioController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -1013,6 +1017,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.Recorder.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
       <Private>False</Private>
@@ -1055,6 +1063,10 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow">

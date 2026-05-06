@@ -5502,8 +5502,9 @@ GameObject:
   - component: {fileID: 7204937119498083337}
   - component: {fileID: 3300267513092516600}
   - component: {fileID: 835155524208434842}
-  - component: {fileID: 7924030378407790058}
   - component: {fileID: 993532154813573047}
+  - component: {fileID: 7924030378407790058}
+  - component: {fileID: 9206053377891629644}
   - component: {fileID: 6713123179756236654}
   - component: {fileID: 5903209562093961374}
   - component: {fileID: 7213049149897216718}
@@ -5603,6 +5604,7 @@ MonoBehaviour:
   manifestation: {fileID: 0}
   weaponController: {fileID: 0}
   effectController: {fileID: 0}
+  audioController: {fileID: 0}
   jinxiFeatureRoot: {fileID: 0}
   katixiyaFeatureRoot: {fileID: 0}
   enableHealthTest: 1
@@ -5756,18 +5758,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 464ceff097cf4e3da0cc77cf64ce3d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7924030378407790058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2358975735509947904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c2d6b7a1e9f4a3fb2d58c6e4a7b9d21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &993532154813573047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5782,6 +5772,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputBufferTime: 0.2
   longPressThreshold: 0.15
+--- !u!114 &7924030378407790058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358975735509947904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2d6b7a1e9f4a3fb2d58c6e4a7b9d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9206053377891629644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358975735509947904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56440a50c0e9974f9cc8bdb315b62d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVolume: 1
 --- !u!114 &6713123179756236654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5809,12 +5824,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c708e6d3294de0b564e09672dfe3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eSkill1CD: 5
+  eSkill1CD: 4
   qBurstCD: 15
-  eSkill2WindowDuration: 5
-  eSkill3WindowDuration: 5
-  eSkill4WindowDuration: 5
-  floatingDuration: 100
+  eSkill2WindowDuration: 4
+  eSkill3WindowDuration: 4
+  eSkill4WindowDuration: 4
+  floatingDuration: 12
 --- !u!114 &7213049149897216718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5833,6 +5848,7 @@ MonoBehaviour:
   eSkillStep3DragonLocalOffset: {x: 0, y: 0, z: 5}
   skillAttackSteps3DragonLocalOffset: {x: 0, y: 0, z: 3}
   skillAttackSteps4DragonLocalOffset: {x: 0, y: 0, z: 3}
+  QteSkillDragonLocalOffset: {x: 0, y: -2, z: 0}
 --- !u!114 &-4916209109528021578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5863,6 +5879,12 @@ MonoBehaviour:
     scaleMultiplier: 1.5
     rotationOffsetEuler: {x: 0, y: 90, z: 0}
     stageOffset: {x: 0, y: 1, z: 1}
+    isFollowCharacter: 0
+    isSelfRotate: 0
+    selfRotatePivotNodeName: 
+    selfRotatePivot: {x: 0, y: 0, z: 0}
+    selfRotateAxis: {x: 0, y: 0, z: 1}
+    selfRotateSpeed: 360
   secondStage:
     swordPrefab: {fileID: 4428387476252333486, guid: c0135cf27b6fbb2418215c17a781f16b, type: 3}
     startDelay: 0
@@ -5871,6 +5893,12 @@ MonoBehaviour:
     scaleMultiplier: 1.5
     rotationOffsetEuler: {x: 0, y: 90, z: 0}
     stageOffset: {x: 0, y: 1, z: 1}
+    isFollowCharacter: 0
+    isSelfRotate: 0
+    selfRotatePivotNodeName: 
+    selfRotatePivot: {x: 0, y: 0, z: 0}
+    selfRotateAxis: {x: 0, y: 0, z: 1}
+    selfRotateSpeed: 360
   thirdStage:
     swordPrefab: {fileID: 2897500282316276736, guid: 4c41de80ec685d6478ccf5848bda4b08, type: 3}
     startDelay: 0.2
@@ -5879,6 +5907,26 @@ MonoBehaviour:
     scaleMultiplier: 0.8
     rotationOffsetEuler: {x: 90, y: 90, z: 0}
     stageOffset: {x: 0, y: 1, z: 1}
+    isFollowCharacter: 0
+    isSelfRotate: 0
+    selfRotatePivotNodeName: 
+    selfRotatePivot: {x: 0, y: 0, z: 0}
+    selfRotateAxis: {x: 0, y: 0, z: 1}
+    selfRotateSpeed: 360
+  heavyAttackStage:
+    swordPrefab: {fileID: 4428387476252333486, guid: 7311435c34bffb74dae22223944bc70d, type: 3}
+    startDelay: 0
+    flightDuration: 0.8
+    destroyDelay: 0
+    scaleMultiplier: 1
+    rotationOffsetEuler: {x: 0, y: 0, z: 0}
+    stageOffset: {x: 0, y: 1, z: -4}
+    isFollowCharacter: 1
+    isSelfRotate: 1
+    selfRotatePivotNodeName: RotatePivot
+    selfRotatePivot: {x: 0, y: 0, z: 0}
+    selfRotateAxis: {x: 0, y: 1, z: 0}
+    selfRotateSpeed: 1800
 --- !u!1 &2375310590164811747
 GameObject:
   m_ObjectHideFlags: 0
