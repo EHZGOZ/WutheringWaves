@@ -19,6 +19,8 @@ namespace WutheringWaves
         [SerializeField] private SavedGameMenuController savedGameMenuController;
         [Tooltip("设置菜单控制器")]
         [SerializeField] private SettingsMenuController settingsMenuController;
+        [Tooltip("音量菜单控制器")]
+        [SerializeField] private VolumeMenuController volumeMenuController;
         [Tooltip("角色HUD控制器")]
         [SerializeField] private CharacterHUDController characterHUDController;
         [Tooltip("小地图控制器")]
@@ -138,14 +140,19 @@ namespace WutheringWaves
             {
                 settingsMenuController = GetComponentInChildren<SettingsMenuController>(true);
             }
+            // 4.音量菜单控制器：优先Inspector，其次子节点
+            if (volumeMenuController == null)
+            {
+                volumeMenuController = GetComponentInChildren<VolumeMenuController>(true);
+            }
 
-            // 4.HUD控制器：
+            // 5.HUD控制器：
             if (characterHUDController == null)
             {
                 characterHUDController = GetComponentInChildren<CharacterHUDController>(true);
             }
 
-            // 5.按配置自动查找小地图控制器
+            // 6.按配置自动查找小地图控制器
             if (miniMapController == null)
             {
                 miniMapController = FindObjectOfType<MiniMapController>(true);
@@ -170,7 +177,9 @@ namespace WutheringWaves
             );
 
             // 设置菜单：进入存档菜单，或者返回游戏
-            settingsMenuController?.Initialize(ShowSavedGameMenuFromSettings, ShowGameplayUI);
+            settingsMenuController?.Initialize(ShowSavedGameMenuFromSettings, ShowGameplayUI, ShowVolumeMenu);
+
+            volumeMenuController?.Initialize(ShowSettingsMenu);
 
 
             // HUD和小地图先初始化，但启动时隐藏
@@ -189,11 +198,19 @@ namespace WutheringWaves
             // 2.隐藏其他菜单和玩法UI
             savedGameMenuController?.SetVisible(false);
             settingsMenuController?.SetVisible(false);
+            volumeMenuController?.SetVisible(false);
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
 
-            // 3.菜单界面暂停游戏，并显示鼠标
+            // 3.菜单界面停止背景音乐
+            AudioService.Instance?.PauseBackgroundMusic();
+
+            // 4.菜单界面禁用玩家输入
+            SetPlayerInputEnabled(false);
+
+            // 5.菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
+
         }
 
         // 显示存档菜单：点击“开始游戏”后调用
@@ -212,9 +229,17 @@ namespace WutheringWaves
             settingsMenuController?.SetVisible(false);
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
+            volumeMenuController?.SetVisible(false);
 
-            // 5.存档菜单界面暂停游戏，并显示鼠标
+            // 5.存档菜单界面停止背景音乐
+            AudioService.Instance?.PauseBackgroundMusic();
+
+            // 6.存档菜单界面禁用玩家输入
+            SetPlayerInputEnabled(false);
+
+            // 7.存档菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
+
         }
 
         // 从设置菜单进入存档菜单：用于游戏中读档和主动存档
@@ -226,6 +251,7 @@ namespace WutheringWaves
             // 2.隐藏主菜单和设置菜单
             mainMenuController?.SetVisible(false);
             settingsMenuController?.SetVisible(false);
+            volumeMenuController?.SetVisible(false);
 
             // 3.设置为主动存档模式：游戏中进入时允许保存到任意槽位
             savedGameMenuController?.SetCanManualSave(true);
@@ -237,8 +263,15 @@ namespace WutheringWaves
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
 
-            // 6.存档菜单界面暂停游戏，并显示鼠标
+            // 6.存档菜单界面停止背景音乐
+            AudioService.Instance?.PauseBackgroundMusic();
+
+            // 7.存档菜单界面禁用玩家输入
+            SetPlayerInputEnabled(false);
+
+            // 8.存档菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
+
         }
 
         // 显示设置菜单：当前设置功能还没做，先保留页面切换入口
@@ -250,7 +283,7 @@ namespace WutheringWaves
             // 2.隐藏主菜单和存档菜单
             mainMenuController?.SetVisible(false);
             savedGameMenuController?.SetVisible(false);
-
+            volumeMenuController?.SetVisible(false);
             // 3.显示设置菜单
             settingsMenuController?.SetVisible(true);
 
@@ -258,7 +291,38 @@ namespace WutheringWaves
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
 
-            // 5.设置菜单界面暂停游戏，并显示鼠标
+            // 5.设置菜单界面停止背景音乐
+            AudioService.Instance?.PauseBackgroundMusic();
+
+            // 6.设置菜单界面禁用玩家输入
+            SetPlayerInputEnabled(false);
+
+            // 7.设置菜单界面暂停游戏，并显示鼠标
+            SetPauseAndCursor(true);
+
+        }
+        // 显示音量菜单：从设置菜单进入
+        public void ShowVolumeMenu()
+        {
+            // 1.记录设置菜单仍处于打开状态
+            isSettingsMenuOpen = true;
+
+            // 2.隐藏主菜单、存档菜单、设置菜单
+            mainMenuController?.SetVisible(false);
+            savedGameMenuController?.SetVisible(false);
+            settingsMenuController?.SetVisible(false);
+
+            // 3.显示音量菜单
+            volumeMenuController?.SetVisible(true);
+
+            // 4.隐藏玩法UI
+            characterHUDController?.SetVisible(false);
+            miniMapController?.SetVisible(false);
+
+            // 5.音量菜单界面禁用玩家输入
+            SetPlayerInputEnabled(false);
+
+            // 6.音量菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
         }
 
@@ -272,15 +336,22 @@ namespace WutheringWaves
             mainMenuController?.SetVisible(false);
             savedGameMenuController?.SetVisible(false);
             settingsMenuController?.SetVisible(false);
+            volumeMenuController?.SetVisible(false);
 
             // 3.显示玩法UI
             characterHUDController?.SetVisible(true);
             miniMapController?.SetVisible(true);
 
-            // 4.恢复游戏时间，并隐藏锁定鼠标
-            SetPauseAndCursor(false);
-        }
+            // 4.非菜单界面播放背景音乐
+            AudioService.Instance?.ResumeBackgroundMusic();
 
+            // 5.恢复玩家输入
+            SetPlayerInputEnabled(true);
+
+            // 6.恢复游戏时间，并隐藏锁定鼠标
+            SetPauseAndCursor(false);
+
+        }
 
         // 隐藏全部UI：用于过场、加载界面或特殊状态
         public void HideAllUI()
@@ -289,11 +360,12 @@ namespace WutheringWaves
             mainMenuController?.SetVisible(false);
             savedGameMenuController?.SetVisible(false);
             settingsMenuController?.SetVisible(false);
-
+            volumeMenuController?.SetVisible(false);
             // 2.隐藏玩法UI
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
         }
+
         // 切换设置菜单：Esc打开设置菜单，再按一次Esc返回玩法UI
         private void ToggleSettingsMenu()
         {
@@ -306,7 +378,6 @@ namespace WutheringWaves
                 ShowSettingsMenu();
             }
         }
-
 
         #endregion
 
@@ -417,6 +488,28 @@ namespace WutheringWaves
     Application.Quit();
 #endif
         }
+        // 设置玩家输入是否启用
+        private void SetPlayerInputEnabled(bool enabled)
+        {
+            PlayerInputReader inputReader = playerController != null
+                ? playerController.CurrentPlayerInputReader
+                : null;
+
+            if (inputReader == null)
+            {
+                return;
+            }
+
+            if (enabled)
+            {
+                inputReader.EnablePlayerInput();
+            }
+            else
+            {
+                inputReader.DisablePlayerInput();
+            }
+        }
+
         #endregion
 
     }

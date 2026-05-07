@@ -174,6 +174,81 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 事件订阅
+        private void SubscribeGameEvents()
+        {
+            if (_subscribedGameEvents)
+            {
+                return;
+            }
+
+            GameEvents.OnFloatingChanged += HandleFloatingChanged;
+            GameEvents.OnBrustChanged += HandleBrustChanged;
+            GameEvents.OnCharacterSwitched += HandleCharacterSwitched;
+            _subscribedGameEvents = true;
+        }
+
+        private void UnsubscribeGameEvents()
+        {
+            if (!_subscribedGameEvents)
+            {
+                return;
+            }
+
+
+            GameEvents.OnFloatingChanged -= HandleFloatingChanged;
+            GameEvents.OnBrustChanged -= HandleBrustChanged;
+            GameEvents.OnCharacterSwitched -= HandleCharacterSwitched;
+            _subscribedGameEvents = false;
+        }
+
+        private void HandleFloatingChanged(bool isFloating)
+        {
+            if (context == null)
+            {
+                return;
+            }
+            this.isFloating = isFloating;
+            ReflashDragonHornFade();
+        }
+        private void HandleBrustChanged(bool isBrust)
+        {
+            if (context == null)
+            {
+                return;
+            }
+            this.isBrust = isBrust;
+            ReflashDragonHornFade();
+        }
+        private void HandleCharacterSwitched(CharacterContext previousContext, CharacterContext currentContext)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            // 当前角色被切出去时，只做安全隐藏，不走渐变协程
+            if (previousContext == context)
+            {
+                HideDragonHornInstantly();
+                return;
+            }
+
+            // 当前角色被切回来时，重新同步今汐当前状态，再刷新龙角表现
+            if (currentContext == context)
+            {
+                isFloating = context.CharacterRuntimeData != null && context.CharacterRuntimeData.jinxiIsFloating;
+
+                // 如果爆发状态没有存在RuntimeData里，这里先保持false，避免切回来误显示
+                isBrust = false;
+
+                ReflashDragonHornFade();
+                EnterJudgmentSwordShoworHide();
+            }
+        }
+
+        #endregion
+
         #region 判断当前角色是否可以使用对应表现
         // 判断当前角色是否可以使用装饰剑表现
         private bool CanUseDecorationSword()
@@ -634,79 +709,6 @@ namespace WutheringWaves
         private bool isFloating = false;
         private bool isBrust = false;
 
-        #region 事件订阅
-        private void SubscribeGameEvents()
-        {
-            if (_subscribedGameEvents)
-            {
-                return;
-            }
-
-            GameEvents.OnFloatingChanged += HandleFloatingChanged;
-            GameEvents.OnBrustChanged += HandleBrustChanged;
-            GameEvents.OnCharacterSwitched += HandleCharacterSwitched;
-            _subscribedGameEvents = true;
-        }
-
-        private void UnsubscribeGameEvents()
-        {
-            if (!_subscribedGameEvents)
-            {
-                return;
-            }
-
-
-            GameEvents.OnFloatingChanged -= HandleFloatingChanged;
-            GameEvents.OnBrustChanged -= HandleBrustChanged;
-            GameEvents.OnCharacterSwitched -= HandleCharacterSwitched;
-            _subscribedGameEvents = false;
-        }
-
-        private void HandleFloatingChanged(bool isFloating)
-        {
-            if (context == null)
-            {
-                return;
-            }
-            this.isFloating = isFloating;
-            ReflashDragonHornFade();
-        }
-        private void HandleBrustChanged(bool isBrust)
-        {
-            if (context == null)
-            {
-                return;
-            }
-            this.isBrust = isBrust;
-            ReflashDragonHornFade();
-        }
-        private void HandleCharacterSwitched(CharacterContext previousContext, CharacterContext currentContext)
-        {
-            if (context == null)
-            {
-                return;
-            }
-
-            // 当前角色被切出去时，只做安全隐藏，不走渐变协程
-            if (previousContext == context)
-            {
-                HideDragonHornInstantly();
-                return;
-            }
-
-            // 当前角色被切回来时，重新同步今汐当前状态，再刷新龙角表现
-            if (currentContext == context)
-            {
-                isFloating = context.CharacterRuntimeData != null && context.CharacterRuntimeData.jinxiIsFloating;
-
-                // 如果爆发状态没有存在RuntimeData里，这里先保持false，避免切回来误显示
-                isBrust = false;
-
-                ReflashDragonHornFade();
-            }
-        }
-
-        #endregion
         // 判断当前外观控制器是否可以启动协程
         private bool CanStartFadeCoroutine()
         {

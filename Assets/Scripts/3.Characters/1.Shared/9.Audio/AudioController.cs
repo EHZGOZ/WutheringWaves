@@ -198,7 +198,13 @@ namespace WutheringWaves
 
             AudioSource audioSource = audioObject.AddComponent<AudioSource>();
             audioSource.clip = spawnConfig.audioClip;
-            audioSource.volume = Mathf.Clamp01(masterVolume * spawnConfig.volume);
+
+            float serviceSfxVolume = AudioService.Instance != null ? AudioService.Instance.EffectiveSfxVolume : masterVolume;
+   
+            // 最终音效音量 = AudioService总音效音量 * 单条音效音量
+            audioSource.volume = Mathf.Clamp01(serviceSfxVolume * spawnConfig.volume);
+
+
             audioSource.loop = spawnConfig.isLoop;
             audioSource.spatialBlend = Mathf.Clamp01(spawnConfig.spatialBlend);
             audioSource.playOnAwake = false;

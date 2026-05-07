@@ -3,7 +3,47 @@
   "WorkspaceRootPath": "D:\\Unity\\UnityProject\\WutheringWaves\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\katixiya\\states\\katixiyastates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\3.menu\\settingsmenucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\3.menu\\settingsmenucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\1.shared\\9.audio\\audiocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\9.audio\\audiocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\7.visual\\charatermanifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\7.visual\\charatermanifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\1.save\\playerprefssettingsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\1.save\\playerprefssettingsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\9.audio\\audioactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\9.audio\\audioactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\katixiya\\states\\katixiyastates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\katixiya\\states\\katixiyastates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -15,16 +55,8 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\animationconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\combatconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\combatconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\4.time\\gametimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,14 +71,6 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\2.hud\\characterhudcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\9.audio\\audioactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\9.audio\\audioactionconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\9.audio\\audiocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\9.audio\\audiocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -59,10 +83,6 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\7.visual\\effectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\2.audio\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\jinxi\\features\\jinxidragoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -73,14 +93,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\katixiya\\features\\katixiyaspecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\katixiya\\features\\katixiyaspecialskilllinker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\7.visual\\charatermanifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\7.visual\\charatermanifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.shared\\1.data\\weaponconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -127,10 +139,6 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.shared\\1.data\\characteruiconfigso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\3.menu\\settingsmenucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\3.menu\\settingsmenucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\katixiya\\features\\katixiyafeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\katixiya\\features\\katixiyafeatureroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -163,10 +171,6 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\1.save\\saveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\4.minimap\\minimapcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\4.minimap\\minimapcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -194,11 +198,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 22,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "GameBootstrap.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
@@ -211,20 +215,21 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 0,
               "Title": "UIRoot.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "RelativeToolTip": "Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAUwF4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAkwBYAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-19T12:11:27.422Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerController.cs",
@@ -237,7 +242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 35,
               "Title": "PlayerRuntimeData.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
@@ -250,7 +255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 16,
               "Title": "CharacterHUDController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\2.HUD\\CharacterHUDController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\2.HUD\\CharacterHUDController.cs",
@@ -263,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 41,
               "Title": "SaveService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\SaveService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\SaveService.cs",
@@ -276,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "SaveData.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\SaveData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\SaveData.cs",
@@ -289,7 +294,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "JsonSaveRepository.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\JsonSaveRepository.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\JsonSaveRepository.cs",
@@ -302,20 +307,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 3,
               "Title": "AudioService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.Audio\\AudioService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.Audio\\AudioService.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.Audio\\AudioService.cs",
               "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.Audio\\AudioService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAALAAAAAAAAAAAAAQwMIAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-22T09:24:55.448Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "EffectService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.Effects\\EffectService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\3.Effects\\EffectService.cs",
@@ -328,7 +333,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
               "Title": "GameTimeService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.Time\\GameTimeService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.Time\\GameTimeService.cs",
@@ -341,7 +346,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "CharacterRuntimeData.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
@@ -354,7 +359,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "CharacterContext.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\3.Core\\CharacterContext.cs",
@@ -367,7 +372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 37,
               "Title": "PlayerInputReader.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerInputReader.cs",
@@ -380,7 +385,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "PlayerStamina.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerStamina.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerStamina.cs",
@@ -393,7 +398,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "PlayerCamera.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerCamera.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerCamera.cs",
@@ -406,7 +411,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "CharacterDataSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterDataSO.cs",
@@ -419,7 +424,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 40,
               "Title": "CharacterStateFactory.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateFactory.cs",
@@ -432,7 +437,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 39,
               "Title": "CharacterStateBase.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateBase.cs",
@@ -445,7 +450,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "CharacterStateMachine.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\8.FSM\\CharacterStateMachine.cs",
@@ -458,7 +463,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
               "Title": "JinxiStates.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
@@ -471,7 +476,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 25,
               "Title": "JinxiSpecialSkillLinker.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSkillLinker.cs",
@@ -484,21 +489,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 10,
               "Title": "KatixiyaStates.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\Katixiya\\States\\KatixiyaStates.cs",
-              "ViewState": "AgIAABMFAAAAAAAAAAAkwAoFAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAoFAAAAAAAAAAAUwAoFAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-19T10:33:01.581Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 22,
               "Title": "KatixiyaSpecialSkillLinker.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\Features\\KatixiyaSpecialSkillLinker.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Katixiya\\Features\\KatixiyaSpecialSkillLinker.cs",
@@ -511,7 +515,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 34,
               "Title": "KatixiyaFeatureRoot.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Katixiya\\Features\\KatixiyaFeatureRoot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Katixiya\\Features\\KatixiyaFeatureRoot.cs",
@@ -524,7 +528,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "JinxiFeatureRoot.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiFeatureRoot.cs",
@@ -537,7 +541,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 36,
               "Title": "InputBuffer.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\4.Input\\InputBuffer.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\4.Input\\InputBuffer.cs",
@@ -550,7 +554,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 38,
               "Title": "CharacterAttack.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\CharacterAttack.cs",
@@ -563,7 +567,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "CharacterMovement.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterMovement.cs",
@@ -576,7 +580,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 15,
               "Title": "MainMenuController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
@@ -589,7 +593,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "SavedGameMenuController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SavedGameMenuController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\SavedGameMenuController.cs",
@@ -602,20 +606,21 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 1,
               "Title": "SettingsMenuController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
               "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAuwIEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-20T06:26:18.834Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "MiniMapController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\4.Minimap\\MiniMapController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\4.Minimap\\MiniMapController.cs",
@@ -628,33 +633,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 4,
               "Title": "CharaterManifestation.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
-              "ViewState": "AgIAAPMCAAAAAAAAAABUwPYCAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAiwMMCAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-21T07:05:57.209Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "GameEvents.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
-              "ViewState": "AgIAADwAAAAAAAAAAAAowHwAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAywEcAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-22T08:16:59.454Z",
               "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 6,
               "Title": "CharacterRootMotion.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterRootMotion.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\5.Movement\\CharacterRootMotion.cs",
@@ -667,7 +672,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 12,
               "Title": "AnimationConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\AnimationConfigSO.cs",
@@ -680,7 +685,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "CombatConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CombatConfigSO.cs",
@@ -693,7 +698,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 33,
               "Title": "CharacterUIConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterUIConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\CharacterUIConfigSO.cs",
@@ -706,7 +711,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "WeaponController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\6.Combat\\WeaponController.cs",
@@ -719,7 +724,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "EffectController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\EffectController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\EffectController.cs",
@@ -732,7 +737,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 23,
               "Title": "WeaponConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\1.Data\\WeaponConfigSO.cs",
@@ -745,7 +750,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 21,
               "Title": "JinxiSpecialSwordController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSwordController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiSpecialSwordController.cs",
@@ -758,7 +763,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "JinxiDragonController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\Features\\JinxiDragonController.cs",
@@ -771,7 +776,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "AudioActionConfigSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioActionConfigSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioActionConfigSO.cs",
@@ -784,15 +789,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 2,
               "Title": "AudioController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioController.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioController.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\9.Audio\\AudioController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAywLkAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-06T11:39:28.807Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PlayerPrefsSettingsRepository.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\PlayerPrefsSettingsRepository.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\PlayerPrefsSettingsRepository.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\PlayerPrefsSettingsRepository.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.Save\\PlayerPrefsSettingsRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T10:55:20.352Z",
               "IsPinned": true
             },
             {

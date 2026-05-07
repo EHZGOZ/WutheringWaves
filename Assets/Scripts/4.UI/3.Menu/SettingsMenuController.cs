@@ -16,10 +16,14 @@ namespace WutheringWaves
         [Header("进入读档界面按钮")]
         [SerializeField] private Button savedGameButton; // 进入读档界面按钮
 
+        [Header("音量设置按钮")]
+        [SerializeField] private Button volumeButton; // 打开音量设置按钮
+
         [Header("返回游戏按钮")]
         [SerializeField] private Button backToGameButton; // 返回游戏按钮
 
         private Action onSavedGameRequested; // 进入读档界面请求
+        private Action onVolumeRequested; // 打开音量菜单请求
         private Action onBackToGameRequested; // 返回游戏请求
 
         private bool initialized; // 是否已初始化
@@ -47,21 +51,17 @@ namespace WutheringWaves
 
         #region 初始化
         // 初始化设置菜单：由UIRoot传入页面切换回调
-        public void Initialize(Action savedGameRequested, Action backToGameRequested)
+        public void Initialize(Action savedGameRequested, Action backToGameRequested, Action volumeRequested)
         {
-            // 1.缓存外部流程回调
             onSavedGameRequested = savedGameRequested;
             onBackToGameRequested = backToGameRequested;
+            onVolumeRequested = volumeRequested;
 
-            // 2.绑定按钮事件
             BindListeners();
-
-            // 3.启动时隐藏设置菜单
             SetVisible(false);
-
-            // 4.标记初始化完成
             initialized = true;
         }
+
 
         // 绑定按钮事件
         private void BindListeners()
@@ -75,6 +75,11 @@ namespace WutheringWaves
             {
                 savedGameButton.onClick.AddListener(HandleSavedGameClicked);
             }
+            if (volumeButton != null)
+            {
+                volumeButton.onClick.AddListener(HandleVolumeClicked);
+            }
+
 
             if (backToGameButton != null)
             {
@@ -96,6 +101,11 @@ namespace WutheringWaves
             {
                 savedGameButton.onClick.RemoveListener(HandleSavedGameClicked);
             }
+            if (volumeButton != null)
+            {
+                volumeButton.onClick.RemoveListener(HandleVolumeClicked);
+            }
+
 
             if (backToGameButton != null)
             {
@@ -109,6 +119,11 @@ namespace WutheringWaves
         private void HandleSavedGameClicked()
         {
             onSavedGameRequested?.Invoke();
+        }
+        // 点击音量设置按钮
+        private void HandleVolumeClicked()
+        {
+            onVolumeRequested?.Invoke();
         }
 
         // 点击返回游戏按钮
@@ -125,11 +140,6 @@ namespace WutheringWaves
             if (settingsPanel != null)
             {
                 settingsPanel.SetActive(visible);
-            }
-
-            if (volumePanel != null)
-            {
-                volumePanel.SetActive(visible);
             }
         }
         #endregion

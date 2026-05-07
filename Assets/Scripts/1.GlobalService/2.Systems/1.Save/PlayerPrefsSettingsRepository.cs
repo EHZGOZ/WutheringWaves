@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace WutheringWaves
 {
@@ -7,7 +7,10 @@ namespace WutheringWaves
     {
         private const string MasterVolumeKey = "Volume"; // 总音量键
         private const string BgmVolumeKey = "BackgroundVolume"; // 背景音量键
+        private const string SfxVolumeKey = "SfxVolume"; // 总音效音量键
 
+
+        #region 总音量键
         public float GetMasterVolume(float defaultValue = 1f)
         {
             return PlayerPrefs.GetFloat(MasterVolumeKey, defaultValue);
@@ -19,7 +22,9 @@ namespace WutheringWaves
             PlayerPrefs.SetFloat(MasterVolumeKey, Mathf.Clamp01(value));
             PlayerPrefs.Save();
         }
+        #endregion
 
+        #region 背景音量键
         public float GetBackgroundVolume(float defaultValue = 1f)
         {
             return PlayerPrefs.GetFloat(BgmVolumeKey, defaultValue);
@@ -31,5 +36,25 @@ namespace WutheringWaves
             PlayerPrefs.SetFloat(BgmVolumeKey, Mathf.Clamp01(value));
             PlayerPrefs.Save();
         }
+        #endregion
+
+        #region 总音效音量键
+        public float GetSfxVolume(float defaultValue = 1f)
+        {
+            return PlayerPrefs.GetFloat(SfxVolumeKey, defaultValue);
+        }
+
+        public void SetSfxVolume(float value)
+        {
+            // 保存前统一限制到 0-1 区间
+            PlayerPrefs.SetFloat(SfxVolumeKey, Mathf.Clamp01(value));
+            PlayerPrefs.Save();
+        }
+        #endregion
+
+
+
+
+
     }
 }

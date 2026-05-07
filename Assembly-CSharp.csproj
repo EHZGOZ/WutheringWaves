@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\6.Combat\WeaponController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.Audio\AudioConfigSO.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\9.Audio\AudioActionConfigSO.cs" />
+    <Compile Include="Assets\Scripts\4.UI\3.Menu\VolumeMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterName.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\8.FSM\CharacterStateMachine.cs" />
@@ -149,7 +150,6 @@
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\BlendDistort.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Scroll.shader" />
-    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Add_CenterGlow.shader" />
