@@ -155,6 +155,7 @@
     public class KatixiyaMoveState : CharacterBaseState
     {
         private float _stateTimer;//已处于移动状态的时间
+        private LocomotionAnimationId _currentMoveAudioId = LocomotionAnimationId.None; // 当前正在播放的移动音效类型
         public KatixiyaMoveState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
 
         public override void EnterState()
@@ -163,6 +164,8 @@
             InitlizeMovingState();
             //2. 进入移动状态动画
             MovingEnterAnimation();
+            //3.进入移动状态音效
+            MovingEnterAudio();
         }
 
         #region EnterState子方法
@@ -177,6 +180,13 @@
             //1.切换到 Locomotion 混合树
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Move), 0.1f, 0, 0);
         }
+        //3.进入移动状态音效
+        private void MovingEnterAudio()
+        {
+            // 每次进入移动状态时重置音效记录，确保走路/奔跑能正确切换
+            _currentMoveAudioId = LocomotionAnimationId.None;
+            MovingUpdateAudio();
+        }
 
         #endregion
 
@@ -188,9 +198,11 @@
             stateMachine.movementLogic.UpdateMovement(stateMachine.MoveInput, stateMachine.IsHoldingRun);
             //3.移动动画
             MovingUpdateAnimation();
-            //4.状态更新
+            //4.更新移动状态音效
+            MovingUpdateAudio();
+            //5.状态更新
             UpdateMovingState();
-            //5.状态转换判断
+            //6.状态转换判断
             CheckStateTransitions();
         }
 
@@ -201,7 +213,24 @@
             //移动动画
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
         }
-        //4.状态更新
+        //4.更新移动状态音效
+        private void MovingUpdateAudio()
+        {
+            // 根据是否按住奔跑键，选择走路或奔跑音效
+            LocomotionAnimationId moveAudioId = stateMachine.IsHoldingRun
+                ? LocomotionAnimationId.Run
+                : LocomotionAnimationId.Move;
+
+            // 如果音效类型没变，就不重复播放，避免循环音效被不断重置
+            if (_currentMoveAudioId == moveAudioId)
+            {
+                return;
+            }
+
+            _currentMoveAudioId = moveAudioId;
+            stateMachine.context?.AudioController?.PlayAudioAction(moveAudioId);
+        }
+        //5.状态更新
         private void UpdateMovingState()
         {
             _stateTimer += Time.deltaTime;
@@ -213,7 +242,10 @@
             //1.清除移动动画残存
             MovingExitAnimation();
 
-            //2. 重置垂直速度
+            //2.退出移动状态音效
+            MovingExitAudio();
+
+            //3. 重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -222,6 +254,13 @@
         private void MovingExitAnimation()
         {
 
+        }
+        //2.退出移动状态音效
+        private void MovingExitAudio()
+        {
+            // 退出移动状态时停止走路/奔跑循环音效
+            _currentMoveAudioId = LocomotionAnimationId.None;
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
 
         #endregion
@@ -311,7 +350,10 @@
             //2.播放收步动画
             StopEnterAnimation();
 
-            //3.初始化收步滑行
+            //3.进入收步状态音效
+            StopEnterAudio();
+
+            //4.初始化收步滑行
             InitializeStopMovement();
         }
 
@@ -336,7 +378,19 @@
             //}
         }
 
-        //3.初始化收步滑行
+        //3.进入收步状态音效
+        private void StopEnterAudio()
+        {
+            // 只有奔跑收步才播放收步音效，普通停步暂时不额外播放
+            if (!_isRunStop)
+            {
+                return;
+            }
+
+            stateMachine.context?.AudioController?.PlayAudioAction(LocomotionAnimationId.Stop_Run);
+        }
+
+        //4.初始化收步滑行
         private void InitializeStopMovement()
         {
             if (_isRunStop)
@@ -406,7 +460,10 @@
             //1.退出收步状态动画
             StopExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出收步状态音效
+            StopExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -416,6 +473,12 @@
         {
             //防止动画参数残留
             stateMachine.movementLogic.UpdateFreeMoveAnimation(stateMachine.MoveInput, stateMachine.IsHoldingRun);
+        }
+        //2.退出收步状态音效
+        private void StopExitAudio()
+        {
+            // 退出收步状态时清理当前音效，避免收步音效残留
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -499,6 +562,7 @@
     {
         private const float JumpLockTime = 0.33f;
         private float _stateTimer;//已处于跳跃状态的时间
+        private LocomotionAnimationId _jumpAudioId = LocomotionAnimationId.None; // 当前跳跃音效ID
 
         public KatixiyaJumpState(CharacterStateMachine stateMachine, CharacterStateFactory factory) : base(stateMachine, factory) { }
 
@@ -506,7 +570,9 @@
         {
             //1.进入跳跃状态动画
             JumpingEnterAnimation();
-            //2.初始化跳跃状态
+            //2.进入跳跃状态音效
+            JumpingEnterAudio();
+            //3.初始化跳跃状态
             InitializeJumpingState();
         }
 
@@ -519,7 +585,17 @@
                 : LocomotionAnimationId.Jump_Walk;
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(jumpAnimationId), 0f, 0, 0);
         }
-        //2.初始化跳跃状态
+        //2.进入跳跃状态音效
+        private void JumpingEnterAudio()
+        {
+            // 根据当前是否奔跑，播放对应跳跃音效
+            _jumpAudioId = stateMachine.IsHoldingRun
+                ? LocomotionAnimationId.Jump_Run
+                : LocomotionAnimationId.Jump_Walk;
+
+            stateMachine.context?.AudioController?.PlayAudioAction(_jumpAudioId);
+        }
+        //3.初始化跳跃状态
         private void InitializeJumpingState()
         {
             //1.消费跳跃请求
@@ -554,7 +630,9 @@
         {
             // 1. 退出跳跃状态动画
             JumpingExitAnimation();
-            //2. 重置垂直速度
+            //2.退出跳跃状态音效
+            JumpingExitAudio();
+            //3. 重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -563,6 +641,13 @@
         private void JumpingExitAnimation()
         {
             // CrossFade 直切动画后无需再清理 Trigger
+        }
+        //2.退出跳跃状态音效
+        private void JumpingExitAudio()
+        {
+            // 退出跳跃状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            _jumpAudioId = LocomotionAnimationId.None;
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -772,6 +857,9 @@
 
             //2.播放着地动画
             LandEnterAnimation();
+
+            //3.进入着地状态音效
+            LandEnterAudio();
         }
 
         #region EnterState子方法
@@ -785,6 +873,12 @@
         private void LandEnterAnimation()
         {
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.Land), 0.1f, 0, 0);
+        }
+        //3.进入着地状态音效
+        private void LandEnterAudio()
+        {
+            // 播放着地音效
+            stateMachine.context?.AudioController?.PlayAudioAction(LocomotionAnimationId.Land);
         }
         #endregion
 
@@ -835,7 +929,10 @@
             //1.退出着地状态动画
             LandExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出着地状态音效
+            LandExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -844,6 +941,12 @@
         private void LandExitAnimation()
         {
             // CrossFade 直切动画后无需再清理 Trigger
+        }
+        //2.退出着地状态音效
+        private void LandExitAudio()
+        {
+            // 退出着地状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -953,6 +1056,9 @@
 
             //3.进入攻击状态动画
             AttackingEnterAnimation();
+
+            //4.进入攻击状态音效
+            AttackingEnterAudio();
         }
 
         #region EnterState子方法
@@ -1021,6 +1127,12 @@
             //播放攻击特效
             stateMachine.effectController?.PlayEffectAction(_attackStep);
         }
+        //4.进入攻击状态音效
+        private void AttackingEnterAudio()
+        {
+            // 根据当前攻击段播放对应音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_attackStep);
+        }
         #endregion
 
         public override void UpdateState()
@@ -1072,7 +1184,10 @@
             //1.退出攻击状态动画
             AttackingExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出攻击状态音效
+            AttackingExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -1082,6 +1197,12 @@
         {
             //结束攻击特效
             stateMachine.context?.EffectController?.EndEffectAction();
+        }
+        //2.退出攻击状态音效
+        private void AttackingExitAudio()
+        {
+            // 退出攻击状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -1195,7 +1316,10 @@
             //3.进入重击状态动画
             HeavyAttackEnterAnimation();
 
-            //4.消耗重击体力
+            //4.进入重击状态音效
+            HeavyAttackEnterAudio();
+
+            //5.消耗重击体力
             if (!stateMachine.KatixiyaSpecialSkillLinker.TryConsumeHeavyAttackStamina())
             {
                 stateMachine.IsStateLocked = false;
@@ -1265,6 +1389,12 @@
             stateMachine.effectController?.PlayEffectAction(_heavyAttackStep);
 
         }
+        //4.进入重击状态音效
+        private void HeavyAttackEnterAudio()
+        {
+            // 根据当前重击段播放对应音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_heavyAttackStep);
+        }
         #endregion
 
         public override void UpdateState()
@@ -1306,7 +1436,10 @@
             //1.退出重击状态动画
             HeavyAttackExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出重击状态音效
+            HeavyAttackExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -1320,6 +1453,12 @@
             //结束特效表现
             stateMachine.context?.EffectController?.EndEffectAction();
 
+        }
+        //2.退出重击状态音效
+        private void HeavyAttackExitAudio()
+        {
+            // 退出重击状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -1437,7 +1576,8 @@
             InitliazeFallAttackingState();
             //3.进入下落攻击状态动画
             FallAttackingEnterAnimation();
-            //4.重置连招
+            //4.进入下落攻击状态音效
+            FallAttackingEnterAudio();
         }
 
         #region EnterState子状态
@@ -1478,6 +1618,12 @@
             stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepStart.attackId), 0f, 0, 0);
             //御剑
             stateMachine.context?.WeaponController?.PlayWeaponAction(_fallattackStepStart);
+        }
+        //4.进入下落攻击状态音效
+        private void FallAttackingEnterAudio()
+        {
+            // 播放下落攻击开始音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_fallattackStepStart);
         }
         #endregion
 
@@ -1524,6 +1670,8 @@
                     stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetCombatAnimationName(_fallattackStepEnd.attackId), 0f, 0, 0);
                     //同步攻击阶段信息
                     stateMachine.currentStep = _fallattackStepEnd;
+                    //进入下落攻击结束音效
+                    FallAttackingEndAudio();
                     _phase = FallAttackPhase.end;
                 }
             }  // 4. 状态：end -> over (计时)
@@ -1562,13 +1710,21 @@
         {
            
         }
+        //进入下落攻击结束音效
+        private void FallAttackingEndAudio()
+        {
+            // 播放下落攻击落地/收刀音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_fallattackStepEnd);
+        }
         #endregion
 
         public override void ExitState()
         {
             //1.退出下落攻击状态动画
             FallAttackingExitAnimation();
-            //2.确保退出时重置垂直速度
+            //2.退出下落攻击状态音效
+            FallAttackingExitAudio();
+            //3.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -1579,6 +1735,12 @@
             // CrossFade 直切动画后无需再清理 Trigger
             //隐藏特效
             stateMachine.context?.EffectController?.EndEffectAction();
+        }
+        //2.退出下落攻击状态音效
+        private void FallAttackingExitAudio()
+        {
+            // 退出下落攻击状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -1717,7 +1879,8 @@
             stateMachine.movementLogic.ApplyPenaltyIfNecessary();
             //5.进入冲刺状态动画
             DashingEnterAnimation();
-            //6.重置连招
+            //6.进入冲刺状态音效
+            DashingEnterAudio();
         }
 
         #region EnterState子方法  
@@ -1747,7 +1910,17 @@
             {
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.DashBackward), 0f, 0, 0);
             }
-               
+
+        }
+        //6.进入冲刺状态音效
+        private void DashingEnterAudio()
+        {
+            // 根据冲刺方向播放对应音效
+            LocomotionAnimationId dashAudioId = _dashDirection
+                ? LocomotionAnimationId.DashForward
+                : LocomotionAnimationId.DashBackward;
+
+            stateMachine.context?.AudioController?.PlayAudioAction(dashAudioId);
         }
         #endregion
 
@@ -1786,7 +1959,9 @@
         {
             //1.退出冲刺状态动画
             DashingExitAnimation();
-            //2.确保退出时重置垂直速度
+            //2.退出冲刺状态音效
+            DashingExitAudio();
+            //3.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -1795,6 +1970,12 @@
         private void DashingExitAnimation()
         {
             // CrossFade 直切动画后无需再清理 Trigger
+        }
+        //2.退出冲刺状态音效
+        private void DashingExitAudio()
+        {
+            // 退出冲刺状态时停止当前冲刺音效，避免音效残留
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -1889,7 +2070,9 @@
             InitializeAirDashingState();
             //3.进入空中冲刺状态动画
             AirDashingEnterAnimation();
-            //4.消耗重击体力
+            //4.进入空中冲刺状态音效
+            AirDashingEnterAudio();
+            //5.消耗空中冲刺体力
             if (!stateMachine.movementLogic.TryConsumeAirDashStamina())
             {
                 stateMachine.IsStateLocked = false;
@@ -1931,6 +2114,16 @@
                 stateMachine.Animator.CrossFadeInFixedTime(stateMachine.GetLocomotionAnimationName(LocomotionAnimationId.AirDashBackward), 0f, 0, 0);
             }
         }
+        //4.进入空中冲刺状态音效
+        private void AirDashingEnterAudio()
+        {
+            // 根据空中冲刺方向播放对应音效
+            LocomotionAnimationId airDashAudioId = _airDashDirection
+                ? LocomotionAnimationId.AirDashForward
+                : LocomotionAnimationId.AirDashBackward;
+
+            stateMachine.context?.AudioController?.PlayAudioAction(airDashAudioId);
+        }
         #endregion
 
         public override void UpdateState()
@@ -1955,7 +2148,9 @@
         {
             //1.退出空中冲刺状态动画
             AirDashingExitAnimation();
-            //2.确保退出时重置垂直速度
+            //2.退出空中冲刺状态音效
+            AirDashingExitAudio();
+            //3.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -1964,6 +2159,12 @@
         private void AirDashingExitAnimation()
         {
 
+        }
+        //2.退出空中冲刺状态音效
+        private void AirDashingExitAudio()
+        {
+            // 退出空中冲刺状态时停止当前冲刺音效，避免音效残留
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -2093,6 +2294,9 @@
 
             //3.进入战技状态动画
             ESkillEnterAnimation();
+
+            //4.进入战技状态音效
+            ESkillEnterAudio();
         }
 
         #region EnterState子方法
@@ -2137,6 +2341,12 @@
             //播放战技特效
             stateMachine.effectController?.PlayEffectAction(_currentSkillStep);
         }
+        //4.进入战技状态音效
+        private void ESkillEnterAudio()
+        {
+            // 根据当前战技段播放对应音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_currentSkillStep);
+        }
         #endregion
 
         public override void UpdateState()
@@ -2177,7 +2387,10 @@
             //1.退出战技状态动画
             ESkillExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出战技状态音效
+            ESkillExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -2187,6 +2400,12 @@
         {
             //结束战技特效
             stateMachine.context?.EffectController?.EndEffectAction();
+        }
+        //2.退出战技状态音效
+        private void ESkillExitAudio()
+        {
+            // 退出战技状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 
@@ -2324,6 +2543,9 @@
 
             //3.进入延奏技能状态动画
             QteSkillEnterAnimation();
+
+            //4.进入延奏技能状态音效
+            QteSkillEnterAudio();
         }
 
         #region EnterState子方法
@@ -2379,6 +2601,12 @@
             //播放延奏技能特效
             stateMachine.effectController?.PlayEffectAction(_currentQteStep);
         }
+        //4.进入延奏技能状态音效
+        private void QteSkillEnterAudio()
+        {
+            // 根据当前延奏技能段播放对应音效
+            stateMachine.context?.AudioController?.PlayAudioAction(_currentQteStep);
+        }
         #endregion
 
         public override void UpdateState()
@@ -2419,7 +2647,10 @@
             //1.退出延奏技能状态动画
             QteSkillExitAnimation();
 
-            //2.重置垂直速度
+            //2.退出延奏技能状态音效
+            QteSkillExitAudio();
+
+            //3.重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
         }
 
@@ -2432,6 +2663,12 @@
 
             //结束延奏技能特效
             stateMachine.context?.EffectController?.EndEffectAction();
+        }
+        //2.退出延奏技能状态音效
+        private void QteSkillExitAudio()
+        {
+            // 退出延奏技能状态时清理当前音效，非循环音效会根据 destroyDelay 延迟销毁
+            stateMachine.context?.AudioController?.EndAudioAction();
         }
         #endregion
 

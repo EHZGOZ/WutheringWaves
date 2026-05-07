@@ -32,4 +32,4 @@ MonoBehaviour:
   fallCheckDelay: 0.3
   groundCheckRadius: 0.2
   groundCheckOriginOffset: 0.2
-  groundCheckDistance: 0.3
+  groundCheckDistance: 0.2

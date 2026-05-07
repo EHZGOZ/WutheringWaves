@@ -46,13 +46,149 @@ MonoBehaviour:
       volume: 0.5
       isLoop: 0
       spatialBlend: 0
+  - attackId: 5
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3b441b7c80f9162429a47fe229346b5a, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 7
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: c7311b0b82125b3438095a0f79f8006f, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 21
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 7bfc73518ec6c9f47a6c10701369149c, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.76
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 16
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 7b56ff2ac89c9e24d808f788e81510bf, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 17
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: e4d5923bd337a8e47b2ad6530924b2aa, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 18
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 971ef29b0ec46ba47bb6ebf3a65c9e54, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 19
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: ad967042923da434bba8d81cb9b14bbd, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 8
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 007d2125e7f08d545a693a167dc81fcc, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 9
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: e4d5923bd337a8e47b2ad6530924b2aa, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 10
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 4a5181445e269c5498bad70ae8c1d0f1, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 11
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 106c36e4817669043b811520f00bc150, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 12
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 007d2125e7f08d545a693a167dc81fcc, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 13
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: e4d5923bd337a8e47b2ad6530924b2aa, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 14
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 4a5181445e269c5498bad70ae8c1d0f1, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 15
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 106c36e4817669043b811520f00bc150, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 20
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 9b451a0c6739b864094cc140e8951940, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.5
+      isLoop: 0
+      spatialBlend: 0
+  - attackId: 23
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 7faa2ff08be0529428f390ee3f203370, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
   locomotionAudioActions:
   - locomotionAnimationId: 2
     audioSpawns:
     - audioClip: {fileID: 8300000, guid: 3e5261b118f21b744b01baa637645f9e, type: 3}
       delayTime: 0
       destroyDelay: 0
-      volume: 0.1
+      volume: 0.07
       isLoop: 1
       spatialBlend: 0
   - locomotionAnimationId: 9
@@ -76,7 +212,7 @@ MonoBehaviour:
     - audioClip: {fileID: 8300000, guid: bcbef4f0955c9b8408d9e8d55d92b85e, type: 3}
       delayTime: 0
       destroyDelay: 0
-      volume: 1
+      volume: 0.7
       isLoop: 1
       spatialBlend: 0
   - locomotionAnimationId: 4
@@ -87,3 +223,45 @@ MonoBehaviour:
       volume: 1
       isLoop: 0
       spatialBlend: 0
+  - locomotionAnimationId: 11
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3106030439723fd4380168667fd662d3, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 12
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 3106030439723fd4380168667fd662d3, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 13
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 6f3650d48ca259a46a25ff6a568ca93e, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 14
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: 6615b3a76057add44a51b2ad927fa1b6, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 1
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 8
+    audioSpawns:
+    - audioClip: {fileID: 8300000, guid: ce599a0255f40204783472be74b70343, type: 3}
+      delayTime: 0
+      destroyDelay: 0
+      volume: 0.509
+      isLoop: 0
+      spatialBlend: 0
+  - locomotionAnimationId: 5
+    audioSpawns: []

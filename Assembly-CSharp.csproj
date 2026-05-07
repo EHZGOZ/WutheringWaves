@@ -149,6 +149,7 @@
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\BlendDistort.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Scroll.shader" />
+    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\Add_CenterGlow.shader" />
