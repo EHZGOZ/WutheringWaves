@@ -90,13 +90,24 @@ namespace WutheringWaves
             // 4.创建默认存档数据
             CurrentData = SaveData.CreateDefault();
 
-            // 5.确保默认存档里有默认队伍，避免新存档没有角色
+            // 5.新建游戏时，使用场景中PlayerController挂载物体的位置作为默认出生点
+            PlayerController playerController = GameBootstrap.Instance != null
+                ? GameBootstrap.Instance.PlayerController
+                : null;
+
+            if (playerController != null)
+            {
+                CurrentData.playerPosition = playerController.transform.position;
+                CurrentData.playerEulerAngles = playerController.transform.eulerAngles;
+            }
+
+            // 6.确保默认存档里有默认队伍，避免新存档没有角色
             GameBootstrap.Instance?.EnsureDefaultTeam(CurrentData);
 
-            // 6.记录当前场景名
+            // 8.记录当前场景名
             CurrentData.sceneName = SceneManager.GetActiveScene().name;
 
-            // 7.保存默认存档到本地
+            // 9.保存默认存档到本地
             if (_jsonRepository.Save(CurrentData))
             {
                 if (verboseLog)
@@ -107,7 +118,7 @@ namespace WutheringWaves
                 return CurrentData;
             }
 
-            // 8.保存失败时清空当前数据，避免内存里保留无效存档
+            // 10.保存失败时清空当前数据，避免内存里保留无效存档
             CurrentData = null;
             CurrentSlotIndex = -1;
 

@@ -243,7 +243,7 @@ namespace WutheringWaves
                 isBrust = false;
 
                 ReflashDragonHornFade();
-                EnterJudgmentSwordShoworHide();
+                ExitJudgmentSwordShoworHide();
             }
         }
 

@@ -32,6 +32,8 @@ namespace WutheringWaves
 
         #region 私有字段
         private bool isInitialized; // 是否已完成初始化
+        private bool hasBoundCameraPivot; // 是否已经绑定过相机观察点，用于区分进游戏和切换角色
+
 
         private const float _threshold = 0.01f; // 输入阈值
         private float _cinemachineTargetYaw; // 水平旋转角
@@ -77,9 +79,15 @@ namespace WutheringWaves
                 virtualCamera2.PreviousStateIsValid = false;
             }
 
-            //// 5.根据当前观察点刷新旋转角度
-            //_cinemachineTargetYaw = cameraPivot.rotation.eulerAngles.y;
-            //_cinemachineTargetPitch = cameraPivot.rotation.eulerAngles.x;
+            // 5.只有第一次绑定观察点时，才读取默认视角；切换角色时保持当前视角不变
+            if (!hasBoundCameraPivot)
+            {
+                Vector3 pivotEulerAngles = cameraPivot.rotation.eulerAngles;
+                _cinemachineTargetYaw = NormalizeAngle(pivotEulerAngles.y);
+                _cinemachineTargetPitch = NormalizeAngle(pivotEulerAngles.x);
+                hasBoundCameraPivot = true;
+            }
+
 
             // 6.同步当前缩放距离，不强制重置玩家缩放习惯
             if (_thirdPersonFollow != null)
@@ -112,6 +120,7 @@ namespace WutheringWaves
             {
                 _thirdPersonFollow.CameraDistance = _currentZoomDistance;
             }
+
             isInitialized = true;
         }
 
@@ -170,6 +179,20 @@ namespace WutheringWaves
             if (angle > 360f) angle -= 360f;
             return Mathf.Clamp(angle, min, max);
         }
+        #endregion
+
+        #region 工具方法
+        // 把Unity的0~360角度转换成-180~180，避免初始俯仰角被错误夹到最大值
+        private static float NormalizeAngle(float angle)
+        {
+            if (angle > 180f)
+            {
+                angle -= 360f;
+            }
+
+            return angle;
+        }
+
         #endregion
     }
 }

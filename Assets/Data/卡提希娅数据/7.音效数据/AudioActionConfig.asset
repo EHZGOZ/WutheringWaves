@@ -101,7 +101,7 @@ MonoBehaviour:
       delayTime: 0
       destroyDelay: 0
       volume: 0.07
-      isLoop: 0
+      isLoop: 1
       spatialBlend: 0
   - locomotionAnimationId: 3
     audioSpawns:
@@ -109,7 +109,7 @@ MonoBehaviour:
       delayTime: 0
       destroyDelay: 0
       volume: 0.7
-      isLoop: 0
+      isLoop: 1
       spatialBlend: 0
   - locomotionAnimationId: 4
     audioSpawns:

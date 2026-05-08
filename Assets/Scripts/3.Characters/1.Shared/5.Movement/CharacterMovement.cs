@@ -193,6 +193,8 @@ namespace WutheringWaves
         private float _targetRot; // 目标旋转角度
         private float _rotationVelocity; // 旋转平滑速度
         private bool _isRunning;
+        // 当前是否真的处于奔跑状态：由体力、输入、移动阈值共同决定
+        public bool IsRunning => _isRunning;
 
         //核心执行入口
         // 帧更新移动逻辑 由状态机传入（由状态机Update调用）

@@ -216,10 +216,13 @@
         //4.更新移动状态音效
         private void MovingUpdateAudio()
         {
-            // 根据是否按住奔跑键，选择走路或奔跑音效
-            LocomotionAnimationId moveAudioId = stateMachine.IsHoldingRun
+            // 不能只看是否按住奔跑键，体力耗尽时按键还在，但角色已经不是真奔跑
+            bool isActualRunning = stateMachine.movementLogic != null && stateMachine.movementLogic.IsRunning;
+
+            LocomotionAnimationId moveAudioId = isActualRunning
                 ? LocomotionAnimationId.Run
                 : LocomotionAnimationId.Move;
+
 
             // 如果音效类型没变，就不重复播放，避免循环音效被不断重置
             if (_currentMoveAudioId == moveAudioId)
@@ -1697,9 +1700,10 @@
             }
             else if (_phase == FallAttackPhase.end)
             {
-
-                stateMachine.movementLogic.ResetVerticalVelocity();// 落地垂直速度重置
+                // 落地收招阶段仍然保持向下贴地，避免Root Motion把角色轻微抬离地面
+                stateMachine.movementLogic.ApplyGroundingForce();
             }
+
             else if (_phase == FallAttackPhase.over)
             {
                 stateMachine.movementLogic.ApplyGroundingForce();
