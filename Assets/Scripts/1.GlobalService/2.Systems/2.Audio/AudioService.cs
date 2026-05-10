@@ -8,9 +8,9 @@ namespace WutheringWaves
         public static AudioService Instance { get; private set; } // 音频服务单例入口
 
         [Header("=== 默认音量 ===")]
-        private const float DefaultMasterVolume = 0.8f; // 默认总音量
-        private const float DefaultBackgroundVolume = 0.5f; // 默认背景音乐音量
-        private const float DefaultSfxVolume = 0.8f; // 默认总音效音量
+        private const float DefaultMasterVolume = 1f; // 默认总音量
+        private const float DefaultBackgroundVolume = 0.2f; // 默认背景音乐音量
+        private const float DefaultSfxVolume = 1f; // 默认总音效音量
 
 
         [Header("背景音乐 ")]

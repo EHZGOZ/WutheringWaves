@@ -25,7 +25,7 @@ MonoBehaviour:
   - animationId: 5
     clip: {fileID: -623603649343465320, guid: f6ad25873d084334eb97fc5e95413bdb, type: 3}
   - animationId: 6
-    clip: {fileID: -623603649343465320, guid: 44780ac1651d4e3498e27ce22e2db5bd, type: 3}
+    clip: {fileID: -623603649343465320, guid: eff3f6ee118d3804e9c7e0f04fc4879d, type: 3}
   - animationId: 7
     clip: {fileID: -623603649343465320, guid: f663f15ea83e6ee428017dbb3b9b26e3, type: 3}
   - animationId: 8

@@ -308,6 +308,7 @@ namespace WutheringWaves
         #endregion
 
         #region 7. 公共方法判断方法
+
         // 强制回到当前角色默认状态（当前今汐/卡提希娅都是待机）
         public void ForceResetToDefaultState()
         {
@@ -581,6 +582,26 @@ namespace WutheringWaves
 
 
         #endregion
+
+        #region 攻击辅助方法
+        // 攻击起手时自动朝向最近敌人
+        public void TrySnapTowardsNearestEnemyForAttack()
+        {
+            if (attackLogic == null || movementLogic == null)
+            {
+                return;
+            }
+
+            Transform attackTarget = attackLogic.FindNearestEnemyForAttack();
+            if (attackTarget == null)
+            {
+                return;
+            }
+
+            movementLogic.SnapTowardsAttackTarget(attackTarget.position);
+        }
+        #endregion
+
 
     }
     #endregion

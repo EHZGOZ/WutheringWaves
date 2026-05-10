@@ -1210,6 +1210,8 @@ using System.Collections;
             AttackingEnterAnimation();
             //4.进入攻击状态音效
             AttackingEnterAudio();
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
         }
 
 
@@ -1443,6 +1445,8 @@ using System.Collections;
                 SwitchState(CharacterState.JinxiIdle);
                 return;
             }
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
         }
 
         #region EnterState子方法
@@ -1971,6 +1975,8 @@ using System.Collections;
             AirAttackingEnterAnimation();
             //4.进入御空攻击状态音效
             AirAttackingEnterAudio();
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
         }
 
         #region EnterState子方法
@@ -2907,6 +2913,8 @@ using System.Collections;
             ESkillEnterAnimation();
             //4.进入战技状态音效
             ESkillEnterAudio();
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
         }
 
 
@@ -3391,6 +3399,9 @@ using System.Collections;
             //4.进入爆发状态音效
             QBurstEnterAudio();
 
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
+
         }
 
         #region EnterState子方法
@@ -3667,6 +3678,9 @@ using System.Collections;
 
             //4.进入延奏技能状态音效
             QteSkillEnterAudio();
+
+            // 攻击起手时自动朝向最近敌人
+            stateMachine.TrySnapTowardsNearestEnemyForAttack();
 
         }
 

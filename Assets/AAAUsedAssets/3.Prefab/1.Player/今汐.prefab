@@ -5745,7 +5745,9 @@ MonoBehaviour:
   comboWindowDuration: 1
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  attackTurnSearchRadius: 10
+  attackTurnMaxAngle: 270
 --- !u!114 &835155524208434842
 MonoBehaviour:
   m_ObjectHideFlags: 0

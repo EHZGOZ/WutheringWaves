@@ -21,10 +21,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        public void SetCurrentStep(AttackStep step)
-        {
-            currentStep = step;
-        }
+        
 
         #region 命中检测
         public void CheckAttackHit()
@@ -78,7 +75,62 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 工具方法
+        public void SetCurrentStep(AttackStep step)
+        {
+            currentStep = step;
+        }
+        #endregion
 
+        #region 攻击转向
+        [Header("=== 攻击转向配置 ===")]
+        [Header("攻击自动转向搜索半径")]
+        public float attackTurnSearchRadius = 8f;
+
+        [Header("攻击自动转向最大角度")]
+        public float attackTurnMaxAngle = 120f;
+
+        // 查找最近的敌人：只负责找目标，不负责旋转
+        public Transform FindNearestEnemyForAttack()
+        {
+            Collider[] enemies = Physics.OverlapSphere(transform.position, attackTurnSearchRadius, enemyLayer);
+
+            Transform nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+
+            foreach (Collider enemy in enemies)
+            {
+                if (enemy == null)
+                {
+                    continue;
+                }
+
+                Vector3 direction = enemy.transform.position - transform.position;
+                direction.y = 0f;
+
+                if (direction.sqrMagnitude <= 0.001f)
+                {
+                    continue;
+                }
+
+                // 限制角度，避免角色攻击时突然180度转身打背后的怪
+                float angle = Vector3.Angle(transform.forward, direction.normalized);
+                if (angle > attackTurnMaxAngle * 0.5f)
+                {
+                    continue;
+                }
+
+                float distance = direction.sqrMagnitude;
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestEnemy = enemy.transform;
+                }
+            }
+
+            return nearestEnemy;
+        }
+        #endregion
 
 
     }

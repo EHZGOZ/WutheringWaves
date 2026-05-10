@@ -852,6 +852,42 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 攻击转向
+        // 攻击时朝向目标方向
+        public void RotateTowardsAttackTarget(Vector3 targetPosition, float turnSpeed = 720f)
+        {
+            Vector3 direction = targetPosition - transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                turnSpeed * Time.deltaTime
+            );
+        }
+
+        // 攻击起手瞬间朝向目标
+        public void SnapTowardsAttackTarget(Vector3 targetPosition)
+        {
+            Vector3 direction = targetPosition - transform.position;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            transform.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+        }
+        #endregion
+
         #region 地面检测：使用 SphereCast（自定义球体射线）
         [Header("=== 自定义地面检测配置 ===")]
         [Header("地面物体所在的层级（请在Unity中创建名为 Ground 的Layer并赋值）")]
