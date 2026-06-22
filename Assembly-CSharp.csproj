@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\4.Time\GameTimeService.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerCamera.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapMarker.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\InventoryData.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\3.Core\CharacterContext.cs" />
     <Compile Include="Assets\Scripts\4.UI\2.HUD\CharacterHUDController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiDragonController.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\2.Runtime\CharacterRuntimeData.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.Effects\EffectConfigSO.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\AccountData.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SettingsMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\9.Audio\AudioController.cs" />
   </ItemGroup>

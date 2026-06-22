@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 namespace WutheringWaves
 {
     [System.Serializable]
+    //队伍中角色信息
     public class TeamCharacterSlotData
     {
         [Header("角色名称")]
@@ -27,13 +28,19 @@ namespace WutheringWaves
     [Serializable]
     public class SaveData
     {
+        //场景
         public string sceneName = string.Empty; // 当前场景名
 
+        //角色
         public List<TeamCharacterSlotData> teamSlots = new(); // 队伍槽位数据
         public int currentCharacterIndex = 0; // 当前受控角色槽位
         
+        //位置
         public Vector3 playerPosition = Vector3.zero; // 玩家位置
         public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转（欧拉角）
+
+        //背包
+        public InventoryData inventory = new InventoryData();
 
         public static SaveData CreateDefault()
         {
