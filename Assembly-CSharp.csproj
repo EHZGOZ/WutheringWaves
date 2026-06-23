@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\2.Player\PlayerCamera.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapMarker.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\InventoryData.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\AccountManager.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\3.Core\CharacterContext.cs" />
     <Compile Include="Assets\Scripts\4.UI\2.HUD\CharacterHUDController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiDragonController.cs" />
