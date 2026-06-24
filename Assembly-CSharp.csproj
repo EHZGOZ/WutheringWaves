@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\7.Visual\EffectController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\1.Save\SaveService.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\codex制作的特效\01_卡提希娅_风刃测试\特效\Scripts\CodexSkill01VfxPlayer.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\IAccountRepository.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\5.Movement\CharacterRootMotion.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\8.FSM\ICharacterStateMachineDriver.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\codex制作的特效\卡提希娅\Skill01_Burst_4_5\Scripts\KatixiyaSkill01BurstVfxPlayer.cs" />
@@ -110,8 +111,10 @@
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SaveSlotUI.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Scripts\For demo scenes\HS_CameraHolder.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\1.Data\CharacterDataSO.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\AccountCrypto.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.Audio\AudioService.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\1.Bootstrap\GameBootstrap.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.Account\JsonAccountRepository.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\MainMenuController.cs" />

@@ -1,28 +1,27 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using UnityEngine;
 
 namespace WutheringWaves
 {
-    // 账号管理器：负责注册、登录、切换、注销、密码加密
+    // 账号管理器：负责注册、登录、注销，通过仓储接口存取账号数据
     public class AccountManager : MonoBehaviour
     {
         public static AccountManager Instance { get; private set; }
 
         [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true; // 是否输出详细日志
+        [SerializeField] private bool verboseLog = true;
 
         [Header(" 账号索引文件名")]
-        [SerializeField] private string indexFileName = "index.json"; // 存到 accounts/index.json
+        [SerializeField] private string indexFileName = "index.json";
 
-        public bool IsInitialized { get; private set; } // 是否已初始化
-        public bool IsLoggedIn { get; private set; } // 当前是否已登录
-        public AccountInfo CurrentAccount { get; private set; } // 当前登录的账号信息
+        public bool IsInitialized { get; private set; }
+        public bool IsLoggedIn { get; private set; }
+        public AccountInfo CurrentAccount { get; private set; }
 
-        private string IndexFilePath => Path.Combine(Application.persistentDataPath, "accounts", indexFileName);
+        // 抽象仓储接口，不关心底层是 JSON 还是 SQLite
+        private IAccountRepository _repository;
 
         #region 生命周期
 
@@ -52,21 +51,18 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.确保 accounts 目录存在
-            string accountsDir = Path.Combine(Application.persistentDataPath, "accounts");
-            if (!Directory.Exists(accountsDir))
-            {
-                Directory.CreateDirectory(accountsDir);
-            }
+            // 2.创建 JSON 仓储（将来切 SQLite 只改这一行）
+            _repository = new JsonAccountRepository(Application.persistentDataPath, indexFileName);
 
-            // 3.如果 index.json 不存在，创建空索引
-            if (!File.Exists(IndexFilePath))
+            // 3.如果数据文件不存在，写一个空索引
+            if (!_repository.Exists())
             {
-                SaveIndex(new AccountIndexData());
+                _repository.Save(new AccountIndexData());
             }
 
             // 4.标记初始化完成
             IsInitialized = true;
+
             if (verboseLog)
             {
                 Debug.Log("[账号管理器] 初始化完成。");
@@ -95,7 +91,7 @@ namespace WutheringWaves
             }
 
             // 3.加载已有账号列表
-            AccountIndexData index = LoadIndex();
+            AccountIndexData index = _repository.Load();
 
             // 4.检查用户名是否已存在
             if (index.accounts.Any(a => a.username == username))
@@ -103,9 +99,9 @@ namespace WutheringWaves
                 return new AccountRegisterResult(false, "用户名已存在。");
             }
 
-            // 5.生成加盐哈希
-            string salt = GenerateSalt();
-            string passwordHash = HashPassword(password, salt);
+            // 5.用加密工具生成盐和哈希
+            string salt = AccountCrypto.GenerateSalt();
+            string passwordHash = AccountCrypto.HashPassword(password, salt);
 
             // 6.创建账号信息
             AccountInfo newAccount = new AccountInfo
@@ -122,7 +118,7 @@ namespace WutheringWaves
             Array.Copy(index.accounts, newAccounts, index.accounts.Length);
             newAccounts[index.accounts.Length] = newAccount;
             index.accounts = newAccounts;
-            SaveIndex(index);
+            _repository.Save(index);
 
             // 8.创建该账号的存档目录（预留，SaveService会在这里写入save.json）
             string accountDir = Path.Combine(Application.persistentDataPath, "accounts", username);
@@ -143,7 +139,7 @@ namespace WutheringWaves
         public AccountLoginResult Login(string username, string password)
         {
             // 1.加载账号列表
-            AccountIndexData index = LoadIndex();
+            AccountIndexData index = _repository.Load();
 
             // 2.查找用户
             AccountInfo account = index.accounts.FirstOrDefault(a => a.username == username);
@@ -153,17 +149,15 @@ namespace WutheringWaves
                 return new AccountLoginResult(false, "账号不存在。", null);
             }
 
-            // 3.验证密码
-            string expectedHash = HashPassword(password, account.salt);
-
-            if (account.passwordHash != expectedHash)
+            // 3.用加密工具验证密码
+            if (!AccountCrypto.VerifyPassword(password, account.salt, account.passwordHash))
             {
                 return new AccountLoginResult(false, "密码错误。", null);
             }
 
             // 4.更新最近登录时间
             account.lastLoginAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            SaveIndex(index);
+            _repository.Save(index);
 
             // 5.设置当前登录状态
             CurrentAccount = account;
@@ -203,7 +197,7 @@ namespace WutheringWaves
         // 获取所有已注册的账号名
         public string[] GetAllUsernames()
         {
-            AccountIndexData index = LoadIndex();
+            AccountIndexData index = _repository.Load();
             return index.accounts.Select(a => a.username).ToArray();
         }
 
@@ -215,81 +209,8 @@ namespace WutheringWaves
                 return false;
             }
 
-            AccountIndexData index = LoadIndex();
+            AccountIndexData index = _repository.Load();
             return index.accounts.Any(a => a.username == username);
-        }
-
-        #endregion
-
-        #region 文件读写
-        // 从硬盘加载账号索引
-        private AccountIndexData LoadIndex()
-        {
-            if (!File.Exists(IndexFilePath))
-            {
-                return new AccountIndexData();
-            }
-
-            try
-            {
-                string json = File.ReadAllText(IndexFilePath);
-                return JsonUtility.FromJson<AccountIndexData>(json) ?? new AccountIndexData();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[AccountManager] 读取账号索引失败：{e.Message}");
-                return new AccountIndexData();
-            }
-        }
-
-        // 保存账号索引到硬盘
-        private void SaveIndex(AccountIndexData index)
-        {
-            if (index == null)
-            {
-                return;
-            }
-
-            try
-            {
-                // 确保 accounts 目录存在
-                string accountsDir = Path.Combine(Application.persistentDataPath, "accounts");
-                if (!Directory.Exists(accountsDir))
-                {
-                    Directory.CreateDirectory(accountsDir);
-                }
-
-                string json = JsonUtility.ToJson(index, true);
-                File.WriteAllText(IndexFilePath, json);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[AccountManager] 保存账号索引失败：{e.Message}");
-            }
-        }
-
-        #endregion
-
-        #region 加密工具
-
-        // 生成随机盐值
-        private string GenerateSalt()
-        {
-            byte[] saltBytes = new byte[16];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(saltBytes);
-            }
-
-            return Convert.ToBase64String(saltBytes);
-        }
-
-        // 密码加盐哈希（SHA256）
-        private string HashPassword(string password, string salt)
-        {
-            string saltedPassword = salt + password;
-            byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(saltedPassword));
-            return Convert.ToBase64String(bytes);
         }
 
         #endregion
@@ -326,6 +247,4 @@ namespace WutheringWaves
 
         #endregion
     }
-
-
 }
