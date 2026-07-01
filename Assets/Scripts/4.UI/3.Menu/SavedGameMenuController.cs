@@ -203,8 +203,15 @@ namespace WutheringWaves
                     continue;
                 }
 
-                // 根据真实本地存档文件刷新槽位状态
-                bool hasSave = SaveService.Instance != null && SaveService.Instance.HasSave(i);
+                // 根据当前登录账号刷新存档状态：账号存档阶段暂时不再按槽位查询
+                string username = AccountManager.Instance != null && AccountManager.Instance.IsLoggedIn && AccountManager.Instance.CurrentAccount != null
+                    ? AccountManager.Instance.CurrentAccount.username
+                    : string.Empty;
+
+                bool hasSave = i == 0
+                && SaveService.Instance != null
+                && !string.IsNullOrWhiteSpace(username)
+                && SaveService.Instance.HasSave(username);
 
                 slotUI.Refresh(hasSave, canManualSave);
 

@@ -7804,10 +7804,13 @@ GameObject:
   - component: {fileID: 1107106150}
   - component: {fileID: 1107106149}
   - component: {fileID: 1107106148}
-  - component: {fileID: 1107106151}
   - component: {fileID: 1107106152}
+  - component: {fileID: 1107106151}
+  - component: {fileID: 1107106153}
+  - component: {fileID: 1107106155}
+  - component: {fileID: 1107106154}
   m_Layer: 0
-  m_Name: 3.Systems
+  m_Name: 2.Systems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7840,9 +7843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b21c249097d0f74cb5b89e840968309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveFilePrefix: save_slot_
-  saveFileExtension: .json
-  saveSlotCount: 3
+  saveFileName: save.json
   verboseLog: 0
 --- !u!4 &1107106150
 Transform:
@@ -7968,6 +7969,49 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1107106153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107106146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7f2035fd77b6647a3314be517c4d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultTimeScale: 1
+  enableTimeScaleTest: 1
+  testTimeScaleA: 1
+  testTimeScaleB: 0.3
+--- !u!114 &1107106154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107106146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 837b66b580184474ebb4d8691315419c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verboseLog: 1
+--- !u!114 &1107106155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107106146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb613873f13cf3d4697973ae9d0aa0b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verboseLog: 1
+  indexFileName: index.json
 --- !u!1 &1110331836
 GameObject:
   m_ObjectHideFlags: 0
@@ -8907,7 +8951,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1248533549}
   - component: {fileID: 1248533550}
-  - component: {fileID: 1248533551}
   m_Layer: 0
   m_Name: 1.GlobalService
   m_TagString: Untagged
@@ -8945,7 +8988,9 @@ MonoBehaviour:
   saveService: {fileID: 1107106149}
   audioService: {fileID: 1107106148}
   effectService: {fileID: 1107106151}
-  gameTimeService: {fileID: 1248533551}
+  gameTimeService: {fileID: 1107106153}
+  accountManager: {fileID: 1107106155}
+  inventoryService: {fileID: 1107106154}
   uiRoot: {fileID: 1962735625}
   playerController: {fileID: 1796824563}
   playerRuntimeData: {fileID: 1796824562}
@@ -8956,22 +9001,6 @@ MonoBehaviour:
     character: {fileID: 2358975735509947904, guid: c4833b76efd16044babbcb77ad69bb4a, type: 3}
   - characterName: 1
     character: {fileID: 7690567687467272026, guid: c536f3bba4b935e48a67ee3485b45fd1, type: 3}
---- !u!114 &1248533551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248533548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a7f2035fd77b6647a3314be517c4d2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultTimeScale: 1
-  enableTimeScaleTest: 1
-  testTimeScaleA: 1
-  testTimeScaleB: 0.3
 --- !u!1 &1257517200
 GameObject:
   m_ObjectHideFlags: 0
@@ -12091,7 +12120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4361222149857307356, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: m_Name
-      value: 2.Player
+      value: 3.Player
       objectReference: {fileID: 0}
     - target: {fileID: 5311199842627346400, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -21399,7 +21428,7 @@ SceneRoots:
   - {fileID: 8105305162136770314}
   - {fileID: 776617533}
   - {fileID: 1248533549}
-  - {fileID: 1796824561}
   - {fileID: 1107106150}
+  - {fileID: 1796824561}
   - {fileID: 1962735626}
   - {fileID: 5576973110023021736}
