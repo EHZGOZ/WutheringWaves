@@ -120,6 +120,7 @@
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\7.EffectService\EffectService.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\MainMenuController.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\0.Root\GlobalServiceRoot.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\7.Visual\CharaterManifestation.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSwordController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.Shared\2.Runtime\CharacterRuntimeData.cs" />
@@ -534,16 +535,16 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Codely.Newtonsoft.Json">
+      <HintPath>Library\PackageCache\cn.tuanjie.codely.bridge@1.0.66\Plugins\Codely.Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@1.11.5\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Library\PackageCache\com.unity.collections@2.5.7\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Codely.Newtonsoft.Json">
-      <HintPath>Library\PackageCache\cn.tuanjie.codely.bridge@1.0.66\Plugins\Codely.Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
@@ -1238,8 +1239,8 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Addressables.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
+    <Reference Include="UnityTcp.Editor">
+      <HintPath>Library\ScriptAssemblies\UnityTcp.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model">
@@ -1250,8 +1251,8 @@
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityTcp.Editor">
-      <HintPath>Library\ScriptAssemblies\UnityTcp.Editor.dll</HintPath>
+    <Reference Include="Unity.Addressables.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Addressables.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
