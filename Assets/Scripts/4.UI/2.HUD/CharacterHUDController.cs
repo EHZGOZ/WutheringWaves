@@ -501,22 +501,26 @@ namespace WutheringWaves
         // 根据角色名称解析角色UI配置
         private CharacterUIConfigSO ResolveCharacterUIConfig(CharacterName characterName)
         {
-            if (GameBootstrap.Instance == null)
+            // 1.角色生成服务为空时，无法通过角色名称查找角色预制体
+            if (CharacterSpawnService.Instance == null)
             {
                 return null;
             }
 
-            if (!GameBootstrap.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
+            // 2.从角色生成服务中查询角色预制体
+            if (!CharacterSpawnService.Instance.TryGetCharacterPrefab(characterName, out GameObject prefab) || prefab == null)
             {
                 return null;
             }
 
+            // 3.从角色预制体上获取角色上下文
             CharacterContext prefabContext = prefab.GetComponent<CharacterContext>();
             if (prefabContext == null || prefabContext.CharacterDataSO == null)
             {
                 return null;
             }
 
+            // 4.返回角色UI配置，用于刷新头像等HUD显示
             return prefabContext.CharacterDataSO.characterUIConfigSO;
         }
 

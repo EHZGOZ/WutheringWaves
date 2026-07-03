@@ -1,4 +1,4 @@
-namespace WutheringWaves
+﻿namespace WutheringWaves
 {
     public enum CharacterName
     {

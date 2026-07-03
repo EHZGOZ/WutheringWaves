@@ -36,7 +36,14 @@ namespace WutheringWaves
         {
             UpdateTimeScaleTest();
         }
-
+        private void OnDestroy()
+        {
+            // 1.如果销毁的是当前单例，清空单例引用
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
         #endregion
 
         #region 初始化
@@ -94,31 +101,6 @@ namespace WutheringWaves
             if (clampedScale > 0f)
             {
                 _resumeTimeScale = clampedScale;
-            }
-        }
-
-        // 设置鼠标光标可见性和锁定状态
-        public void SetCursorVisible(bool visible)
-        {
-            Cursor.visible = visible;
-            // 可见则解锁光标，不可见则锁定光标
-            Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
-        }
-
-        // 统一控制游戏暂停/继续和光标显示状态
-        public void SetPauseAndCursor(bool pause, bool cursorVisibleWhenPaused = true)
-        {
-            if (pause)
-            {
-                // 暂停游戏并设置光标显示
-                Pause();
-                SetCursorVisible(cursorVisibleWhenPaused);
-            }
-            else
-            {
-                // 恢复游戏并设置光标隐藏
-                Resume();
-                SetCursorVisible(!cursorVisibleWhenPaused);
             }
         }
 

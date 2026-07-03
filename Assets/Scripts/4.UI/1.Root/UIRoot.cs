@@ -385,71 +385,73 @@ namespace WutheringWaves
         //新建
         private void HandleCreateSaveRequested(int slotIndex)
         {
-            //Debug.Log($"[UIRoot] 请求新建存档：槽位 {slotIndex + 1}");
-
-            // 1.GameBootstrap缺失时不进入游戏
-            if (GameBootstrap.Instance == null)
+            // 1.游戏会话服务缺失时不进入游戏
+            if (GameSessionService.Instance == null)
             {
-                Debug.LogError("[UIRoot] 新建存档失败：GameBootstrap为空。", this);
+                Debug.LogError("[UIRoot] 开始游戏失败：GameSessionService为空。", this);
                 return;
             }
 
-            // 2.交给GameBootstrap处理新建存档和进入游戏流程
-            GameBootstrap.Instance.StartNewGame(slotIndex);
+            // 2.一账号一存档阶段：点击开始游戏后，由会话服务自动读取或创建当前账号存档
+            GameSessionService.Instance.StartGameWithCurrentAccount();
         }
+
         //读取
         private void HandleLoadSaveRequested(int slotIndex)
         {
-            //Debug.Log($"[UIRoot] 请求读取存档：槽位 {slotIndex + 1}");
-
-            // 1.GameBootstrap缺失时不进入游戏
-            if (GameBootstrap.Instance == null)
+            // 1.游戏会话服务缺失时不进入游戏
+            if (GameSessionService.Instance == null)
             {
-                Debug.LogError("[UIRoot] 读取存档失败：GameBootstrap为空。", this);
+                Debug.LogError("[UIRoot] 读取当前账号存档失败：GameSessionService为空。", this);
                 return;
             }
 
-            // 2.交给GameBootstrap处理读档和进入游戏流程
-            GameBootstrap.Instance.LoadGame(slotIndex);
+            // 2.一账号一存档阶段：读取和开始游戏合并，由会话服务统一处理
+            GameSessionService.Instance.StartGameWithCurrentAccount();
         }
+
         //存档
         private void HandleSaveRequested(int slotIndex)
         {
-            //Debug.Log($"[UIRoot] 请求主动存档：槽位 {slotIndex + 1}");
-
-            // 1.GameBootstrap缺失时不保存
-            if (GameBootstrap.Instance == null)
+            // 1.游戏会话服务缺失时不保存
+            if (GameSessionService.Instance == null)
             {
-                Debug.LogError("[UIRoot] 主动存档失败：GameBootstrap为空。", this);
+                Debug.LogError("[UIRoot] 自动保存失败：GameSessionService为空。", this);
                 return;
             }
 
-            // 2.交给GameBootstrap处理场景数据收集和指定槽位保存
-            bool ok = GameBootstrap.Instance.SaveCurrentGameToSlot(slotIndex);
+            // 2.一账号一存档阶段：主动存档临时复用退出自动保存逻辑
+            bool ok = GameSessionService.Instance.SaveCurrentGameOnExit();
 
-            // 3.保存后留在存档菜单，只刷新槽位显示
+            // 3.保存后留在当前菜单，只刷新账号存档显示
             if (ok)
             {
                 savedGameMenuController?.RefreshSlots();
-                Debug.Log($"[UIRoot] 主动存档完成，已留在存档菜单。槽位：{slotIndex + 1}");
+                Debug.Log("[UIRoot] 当前账号存档保存完成。");
             }
         }
+
         //删除
         private void HandleDeleteSaveRequested(int slotIndex)
         {
-            //Debug.Log($"[UIRoot] 请求删除存档：槽位 {slotIndex + 1}");
-
-            // 1.GameBootstrap缺失时不删除
-            if (GameBootstrap.Instance == null)
+            // 1.存档服务缺失时不删除
+            if (SaveService.Instance == null)
             {
-                Debug.LogError("[UIRoot] 删除存档失败：GameBootstrap为空。", this);
+                Debug.LogError("[UIRoot] 删除当前账号存档失败：SaveService为空。", this);
                 return;
             }
 
-            // 2.交给GameBootstrap处理删除存档流程
-            GameBootstrap.Instance.DeleteGameSave(slotIndex);
+            // 2.账号服务缺失或未登录时，不允许删除当前账号存档
+            if (AccountManager.Instance == null || !AccountManager.Instance.IsLoggedIn || AccountManager.Instance.CurrentAccount == null)
+            {
+                Debug.LogWarning("[UIRoot] 删除当前账号存档失败：当前没有登录账号。", this);
+                return;
+            }
 
-            // 3.删除后刷新存档槽显示
+            // 3.删除当前登录账号的账号存档
+            SaveService.Instance.DeleteSave(AccountManager.Instance.CurrentAccount.username);
+
+            // 4.删除后刷新账号存档显示
             savedGameMenuController?.RefreshSlots();
         }
 
@@ -458,27 +460,34 @@ namespace WutheringWaves
         #region 工具方法
         private void SetPauseAndCursor(bool pause)
         {
-            // 1.优先通过时间服务统一控制暂停与鼠标状态
-
+            // 1.优先通过时间服务统一控制暂停与恢复
             if (GameTimeService.Instance != null)
             {
-                GameTimeService.Instance.SetPauseAndCursor(pause);
-                return;
-            }
-
-            // 2.兜底直接操作Time和Cursor
-            if (pause)
-            {
-                Time.timeScale = 0f;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                if (pause)
+                {
+                    GameTimeService.Instance.Pause();
+                }
+                else
+                {
+                    GameTimeService.Instance.Resume();
+                }
             }
             else
             {
-                Time.timeScale = 1f;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                // 2.兜底直接操作Time，避免时间服务缺失时UI完全失效
+                Time.timeScale = pause ? 0f : 1f;
             }
+
+            // 3.优先通过输入服务统一控制鼠标显示和锁定状态
+            if (InputService.Instance != null)
+            {
+                InputService.Instance.SetCursorByPauseState(pause);
+                return;
+            }
+
+            // 4.兜底直接操作Cursor，避免输入服务缺失时鼠标状态错误
+            Cursor.visible = pause;
+            Cursor.lockState = pause ? CursorLockMode.None : CursorLockMode.Locked;
         }
         private void QuitGame()
         {
@@ -491,6 +500,22 @@ namespace WutheringWaves
         // 设置玩家输入是否启用
         private void SetPlayerInputEnabled(bool enabled)
         {
+            // 1.优先通过输入服务统一控制玩家输入，避免UIRoot直接依赖PlayerInputReader
+            if (InputService.Instance != null)
+            {
+                if (enabled)
+                {
+                    InputService.Instance.EnablePlayerInput();
+                }
+                else
+                {
+                    InputService.Instance.DisablePlayerInput();
+                }
+
+                return;
+            }
+
+            // 2.兜底：输入服务缺失时，临时直接控制当前玩家输入读取器
             PlayerInputReader inputReader = playerController != null
                 ? playerController.CurrentPlayerInputReader
                 : null;

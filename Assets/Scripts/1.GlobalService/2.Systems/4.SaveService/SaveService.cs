@@ -69,7 +69,7 @@ namespace WutheringWaves
 
         #region 新建存档 保存存档  保存到指定槽位 读取存档 删除存档
         // 为指定账号新建存档
-        public SaveData CreateSave(string username)
+        public SaveData CreateSave(string username, SaveData saveData)
         {
             // 1.用户名为空时不创建
             if (string.IsNullOrWhiteSpace(username))
@@ -78,33 +78,23 @@ namespace WutheringWaves
                 return null;
             }
 
-            // 2.记录当前账号
-            CurrentUsername = username;
-
-            // 3.根据用户名创建对应JSON仓储
-            _jsonRepository = CreateRepository(username);
-
-            // 4.创建默认存档数据
-            CurrentData = SaveData.CreateDefault();
-
-            // 5.新建游戏时，使用场景中PlayerController的位置作为默认出生点
-            PlayerController playerController = GameBootstrap.Instance != null
-                ? GameBootstrap.Instance.PlayerController
-                : null;
-
-            if (playerController != null)
+            // 2.传入存档数据为空时不创建，避免保存无效账号存档
+            if (saveData == null)
             {
-                CurrentData.playerPosition = playerController.transform.position;
-                CurrentData.playerEulerAngles = playerController.transform.eulerAngles;
+                Debug.Log("[存档服务] 新建存档失败：存档数据为空。");
+                return null;
             }
 
-            // 6.确保默认存档里有默认队伍
-            GameBootstrap.Instance?.EnsureDefaultTeam(CurrentData);
+            // 3.记录当前账号
+            CurrentUsername = username;
 
-            // 7.记录当前场景名
-            CurrentData.sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            // 4.根据用户名创建对应JSON仓储
+            _jsonRepository = CreateRepository(username);
 
-            // 8.保存默认存档到本地
+            // 5.缓存外部创建好的默认存档数据，SaveService只负责保存和维护当前存档状态
+            CurrentData = saveData;
+
+            // 6.保存默认存档到本地
             if (_jsonRepository.Save(CurrentData))
             {
                 if (verboseLog)
@@ -115,7 +105,7 @@ namespace WutheringWaves
                 return CurrentData;
             }
 
-            // 9.保存失败时清空当前数据
+            // 7.保存失败时清空当前数据
             CurrentData = null;
             CurrentUsername = string.Empty;
 
@@ -249,6 +239,8 @@ namespace WutheringWaves
         }
         #endregion
 
+
+
         #region 存档槽查询
         // 判断指定账号是否有存档
         public bool HasSave(string username)
@@ -281,5 +273,6 @@ namespace WutheringWaves
             return new JsonSaveRepository(Path.Combine(accountDir, saveFileName));
         }
         #endregion
+
     }
 }

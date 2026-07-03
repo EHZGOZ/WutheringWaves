@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace WutheringWaves
 {
@@ -24,33 +23,65 @@ namespace WutheringWaves
             };
         }
     }
+
+
     // 存档数据：定义当前需要持久化的核心字段
     [Serializable]
     public class SaveData
     {
+        #region 存档数据
         //场景
         public string sceneName = string.Empty; // 当前场景名
-
         //角色
         public List<TeamCharacterSlotData> teamSlots = new(); // 队伍槽位数据
         public int currentCharacterIndex = 0; // 当前受控角色槽位
-        
         //位置
         public Vector3 playerPosition = Vector3.zero; // 玩家位置
         public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转（欧拉角）
-
         //背包
         public InventoryData inventory = new InventoryData();
+        #endregion
 
-        public static SaveData CreateDefault()
+        #region 默认队伍配置
+        // 默认队伍配置：只在创建默认存档时使用，不需要暴露给外部系统
+        private static readonly CharacterName[] defaultTeamCharacterIds =
         {
-            // 默认存档使用当前激活场景，避免初始数据缺少场景上下文。
-            return new SaveData
+            CharacterName.今汐,
+            CharacterName.卡提希娅
+         };
+        #endregion
+
+        #region 创建默认存档
+        public static SaveData CreateDefault(
+         string sceneName,
+         Vector3 playerPosition,
+         Vector3 playerEulerAngles)
+        {
+            // 1.创建默认存档基础数据
+            SaveData saveData = new SaveData
             {
-                sceneName = SceneManager.GetActiveScene().name,
-                playerPosition = new Vector3(0f, 0f, -5f),
-                playerEulerAngles = new Vector3(0f, 0f, 0f)
+                sceneName = sceneName,
+                playerPosition = playerPosition,
+                playerEulerAngles = playerEulerAngles,
+                currentCharacterIndex = 0,
+                inventory = new InventoryData(),
+                teamSlots = new List<TeamCharacterSlotData>()
             };
+
+            // 2.按默认角色配置写入队伍槽位
+            for (int i = 0; i < defaultTeamCharacterIds.Length; i++)
+            {
+                saveData.teamSlots.Add(new TeamCharacterSlotData
+                {
+                    characterName = defaultTeamCharacterIds[i],
+                    runtimeData = new CharacterRuntimeData()
+                });
+            }
+
+            return saveData;
         }
+        #endregion
+
+
     }
 }

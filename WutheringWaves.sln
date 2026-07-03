@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{8F24EA2A-F467-F2A8-7065-256B359E480B}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicaClothV2.Editor", "MagicaClothV2.Editor.csproj", "{CEA7A964-9D9E-61BE-8C9E-AA98876E07D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicaClothV2", "MagicaClothV2.csproj", "{E0ADD7F5-56C9-42B6-20A5-A412632A6703}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{8F24EA2A-F467-F2A8-7065-256B359E480B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.PlayableGraphVisualizer.Tests", "Unity.PlayableGraphVisualizer.Tests.csproj", "{B42742B6-0CCB-DD05-9D8A-35E29039FFBF}"
 EndProject
@@ -23,6 +23,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CEA7A964-9D9E-61BE-8C9E-AA98876E07D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CEA7A964-9D9E-61BE-8C9E-AA98876E07D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEA7A964-9D9E-61BE-8C9E-AA98876E07D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,10 +35,6 @@ Global
 		{E0ADD7F5-56C9-42B6-20A5-A412632A6703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0ADD7F5-56C9-42B6-20A5-A412632A6703}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0ADD7F5-56C9-42B6-20A5-A412632A6703}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F24EA2A-F467-F2A8-7065-256B359E480B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B42742B6-0CCB-DD05-9D8A-35E29039FFBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B42742B6-0CCB-DD05-9D8A-35E29039FFBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B42742B6-0CCB-DD05-9D8A-35E29039FFBF}.Release|Any CPU.ActiveCfg = Release|Any CPU

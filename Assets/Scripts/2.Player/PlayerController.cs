@@ -325,10 +325,17 @@ namespace WutheringWaves
                 return false;
             }
 
-            // 4.GameBootstrap为空时，无法通过角色名称生成对应预制体
-            if (GameBootstrap.Instance == null)
+            // 4.角色生成服务为空时，无法通过角色名称生成对应预制体
+            if (CharacterSpawnService.Instance == null)
             {
-                Debug.LogError("[PlayerController] 无法生成队伍角色：GameBootstrap.Instance为空。", this);
+                Debug.LogError("[PlayerController] 无法生成队伍角色：CharacterSpawnService.Instance为空。", this);
+                return false;
+            }
+
+            // 5.角色生成服务尚未初始化时，角色预制体映射可能还没有构建完成
+            if (!CharacterSpawnService.Instance.IsInitialized)
+            {
+                Debug.LogError("[PlayerController] 无法生成队伍角色：CharacterSpawnService尚未初始化。", this);
                 return false;
             }
 
@@ -344,8 +351,8 @@ namespace WutheringWaves
                 return null;
             }
 
-            // 2.根据槽位数据生成角色对象
-            GameObject character = GameBootstrap.Instance.SpawnCharacter(
+            // 2.根据槽位数据生成角色对象，实际生成逻辑交给角色生成服务
+            GameObject character = CharacterSpawnService.Instance.SpawnCharacter(
                 slotData.characterName,
                 playerRuntimeData.playerPosition,
                 Quaternion.Euler(playerRuntimeData.playerEulerAngles),
