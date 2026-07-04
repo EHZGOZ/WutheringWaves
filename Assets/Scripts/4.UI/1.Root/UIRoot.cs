@@ -15,6 +15,8 @@ namespace WutheringWaves
         [Header("=== UI控制器引用（手动拖入） ===")]
         [Tooltip("主菜单控制器")]
         [SerializeField] private MainMenuController mainMenuController;
+        [Tooltip("登录菜单控制器")]
+        [SerializeField] private LoginMenuController loginMenuController;
         [Tooltip("存档菜单控制器")]
         [SerializeField] private SavedGameMenuController savedGameMenuController;
         [Tooltip("设置菜单控制器")]

@@ -274,8 +274,8 @@ namespace WutheringWaves
             // 1.退出当前会话前先尝试保存
             SaveCurrentGameOnExit();
 
-            // 2.禁用玩家输入，避免回到菜单后角色继续响应
-            InputService.Instance?.DisablePlayerInput();
+            // 2.清理玩家输入绑定，避免回到菜单后旧玩家对象继续响应输入
+            InputService.Instance?.ClearPlayer();
 
             // 3.清理背包绑定，避免下一个账号误用旧背包引用
             InventoryService.Instance?.Clear();
