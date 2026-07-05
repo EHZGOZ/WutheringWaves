@@ -132,12 +132,15 @@ namespace WutheringWaves
         //解析角色运行时数据
         private void ResolveRuntimeData(CharacterRuntimeData runtimeData)
         {
+            // 1.确保当前角色运行时数据对象存在，避免后续CopyFrom空引用
             if (this.runtimeData == null)
             {
                 this.runtimeData = new CharacterRuntimeData();
             }
 
-            if (runtimeData != null)
+            // 2.新账号默认存档可能只记录角色名，生命值还没有被正式初始化
+            // 如果maxHealth <= 0，说明这份运行时数据不可直接使用，需要从CharacterDataSO补齐基础生命值
+            if (runtimeData != null && runtimeData.maxHealth > 0f)
             {
                 this.runtimeData.CopyFrom(runtimeData);
             }

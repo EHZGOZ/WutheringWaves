@@ -26,22 +26,36 @@ namespace WutheringWaves
         [Header("注册按钮")]
         [SerializeField] private Button registerButton; // 注册按钮
 
-        private Action onLoginSuccessRequested; // 登录成功后通知UIRoot切换页面
+        [Header("关闭按钮")]
+        [SerializeField] private Button closeButton; // 关闭按钮：关闭登录面板并回到主界面
+
+        private Action onLoginSuccessRequested; // 登录成功后通知UIRoot刷新主菜单
+        private Action onCloseRequested; // 关闭登录面板时通知UIRoot处理主界面状态
 
         private bool initialized; // 是否已初始化
         private bool listenersBound; // 是否已绑定按钮事件
 
         #region 初始化
-        // 初始化登录菜单
+        // 初始化登录菜单：兼容旧版单回调调用
         public void Initialize(Action loginSuccessRequested)
+        {
+            // 1.兼容旧流程：如果UIRoot暂时还没传关闭回调，关闭按钮会走本地隐藏兜底
+            Initialize(loginSuccessRequested, null);
+        }
+
+        // 初始化登录菜单
+        public void Initialize(Action loginSuccessRequested, Action closeRequested)
         {
             // 1.缓存登录成功回调
             onLoginSuccessRequested = loginSuccessRequested;
 
-            // 2.绑定按钮事件
+            // 2.缓存关闭面板回调
+            onCloseRequested = closeRequested;
+
+            // 3.绑定按钮事件
             BindListeners();
 
-            // 3.标记初始化完成
+            // 4.标记初始化完成
             initialized = true;
         }
         #endregion
@@ -85,6 +99,11 @@ namespace WutheringWaves
                 registerButton.onClick.AddListener(HandleRegisterClicked);
             }
 
+            if (closeButton != null)
+            {
+                closeButton.onClick.AddListener(HandleCloseClicked);
+            }
+
             listenersBound = true;
         }
 
@@ -104,6 +123,11 @@ namespace WutheringWaves
             if (registerButton != null)
             {
                 registerButton.onClick.RemoveListener(HandleRegisterClicked);
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.RemoveListener(HandleCloseClicked);
             }
 
             listenersBound = false;
@@ -135,7 +159,7 @@ namespace WutheringWaves
                 return;
             }
 
-            // 5.登录成功后清理提示并通知UIRoot进入主菜单
+            // 5.登录成功后显示提示，并通知UIRoot关闭登录面板、刷新主菜单
             SetMessage(result.message);
             onLoginSuccessRequested?.Invoke();
         }
@@ -160,6 +184,23 @@ namespace WutheringWaves
             // 4.显示注册结果
             SetMessage(result.message);
         }
+
+        // 点击关闭按钮
+        private void HandleCloseClicked()
+        {
+            // 1.关闭登录面板时清空提示，避免下次打开还残留旧提示
+            SetMessage(string.Empty);
+
+            // 2.优先通知UIRoot统一处理关闭流程
+            if (onCloseRequested != null)
+            {
+                onCloseRequested.Invoke();
+                return;
+            }
+
+            // 3.兜底隐藏登录面板，避免关闭回调还没接入时按钮无效
+            SetVisible(false);
+        }
         #endregion
 
         #region 外部调用
@@ -169,6 +210,12 @@ namespace WutheringWaves
             if (loginPanel != null)
             {
                 loginPanel.SetActive(visible);
+            }
+
+            // 打开登录面板时清空提示，避免旧错误信息影响下一次输入
+            if (visible)
+            {
+                SetMessage(string.Empty);
             }
         }
         #endregion

@@ -19,6 +19,8 @@ namespace WutheringWaves
         [SerializeField] private LoginMenuController loginMenuController;
         [Tooltip("存档菜单控制器")]
         [SerializeField] private SavedGameMenuController savedGameMenuController;
+        [Tooltip("系统菜单控制器")]
+        [SerializeField] private SystemMenuController systemMenuController;
         [Tooltip("设置菜单控制器")]
         [SerializeField] private SettingsMenuController settingsMenuController;
         [Tooltip("音量菜单控制器")]
@@ -60,7 +62,7 @@ namespace WutheringWaves
             // 按下Esc时切换设置菜单
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
             {
-                ToggleSettingsMenu();
+                ToggleSystemMenu();
             }
         }
         #endregion
@@ -110,13 +112,14 @@ namespace WutheringWaves
             {
                 return;
             }
+
             // 1.解析所有UI控制器
             ResolveControllers();
 
             // 2.初始化UI流程
             InitializeUIFlow();
 
-            // 3.启动时显示主菜单
+            // 3.启动时先显示主菜单，不直接弹出登录面板
             ShowMainMenu();
 
             IsInitialized = true;
@@ -126,35 +129,49 @@ namespace WutheringWaves
         #region 解析所有UI控制器
         private void ResolveControllers()
         {
-            // 1.主菜单控制器：优先Inspector，其次子节点，最后自动补组件
+            // 1.登录菜单控制器：优先Inspector手动绑定，其次从UIRoot子节点中自动查找
+            if (loginMenuController == null)
+            {
+                loginMenuController = GetComponentInChildren<LoginMenuController>(true);
+            }
+
+            // 2.主菜单控制器：优先Inspector，其次子节点，最后自动补组件
             if (mainMenuController == null)
             {
                 mainMenuController = GetComponentInChildren<MainMenuController>(true);
             }
-            // 2.存档菜单控制器：优先Inspector，其次子节点
+
+            // 3.存档菜单控制器：优先Inspector，其次子节点
             if (savedGameMenuController == null)
             {
                 savedGameMenuController = GetComponentInChildren<SavedGameMenuController>(true);
             }
 
-            // 3.设置菜单控制器：优先Inspector，其次子节点，最后自动补组件
+            // 4.系统菜单控制器：优先Inspector，其次子节点
+            if (systemMenuController == null)
+            {
+                systemMenuController = GetComponentInChildren<SystemMenuController>(true);
+            }
+
+            // 5.设置菜单控制器：优先Inspector，其次子节点，最后自动补组件
             if (settingsMenuController == null)
             {
                 settingsMenuController = GetComponentInChildren<SettingsMenuController>(true);
             }
-            // 4.音量菜单控制器：优先Inspector，其次子节点
+
+            // 6.音量菜单控制器：优先Inspector，其次子节点
             if (volumeMenuController == null)
             {
                 volumeMenuController = GetComponentInChildren<VolumeMenuController>(true);
             }
 
-            // 5.HUD控制器：
+            // 7.HUD控制器：优先Inspector，其次子节点
             if (characterHUDController == null)
             {
                 characterHUDController = GetComponentInChildren<CharacterHUDController>(true);
             }
 
-            // 6.按配置自动查找小地图控制器
+            // 8.按配置自动查找小地图控制器
             if (miniMapController == null)
             {
                 miniMapController = FindObjectOfType<MiniMapController>(true);
@@ -166,23 +183,30 @@ namespace WutheringWaves
         //初始化UI流程
         private void InitializeUIFlow()
         {
-            // 主菜单：开始游戏进入存档菜单，退出游戏直接退出程序
-            mainMenuController?.Initialize(ShowSavedGameMenu, QuitGame);
+            // 登录菜单：登录成功后刷新主菜单；关闭按钮只关闭登录面板并留在主界面
+            loginMenuController?.Initialize(HandleLoginSuccessRequested, HandleLoginCloseRequested);
 
-            // 存档菜单：先只初始化，具体三槽位逻辑下一步再做
-            savedGameMenuController?.Initialize(
-            HandleCreateSaveRequested,
-            HandleSaveRequested,
-            HandleLoadSaveRequested,
-            HandleDeleteSaveRequested,
-            ShowMainMenu
+            // 主菜单：开始游戏直接进入当前账号存档，不再打开旧的存档槽界面
+            mainMenuController?.Initialize(
+            HandleStartGameRequested,
+            HandleLoginRequested,
+            HandleSwitchAccountRequested,
+            ShowSettingsMenu,
+            QuitGame
             );
 
-            // 设置菜单：进入存档菜单，或者返回游戏
+            // 系统菜单：游戏中按Esc打开，负责继续游戏、打开设置、退出到主菜单
+            systemMenuController?.Initialize(
+            HandleSystemMenuExitGameRequested,
+            HandleSystemMenuCloseRequested,
+            HandleSystemMenuSettingsRequested
+            );
+
+            // 设置菜单：当前先保留设置入口，下一步再把设置菜单简化成只负责音量设置
             settingsMenuController?.Initialize(ShowSavedGameMenuFromSettings, ShowGameplayUI, ShowVolumeMenu);
 
+            // 音量菜单：从音量菜单返回设置菜单
             volumeMenuController?.Initialize(ShowSettingsMenu);
-
 
             // HUD和小地图先初始化，但启动时隐藏
             characterHUDController?.Initialize(this);
@@ -191,28 +215,57 @@ namespace WutheringWaves
         #endregion
 
         #region 页面切换
-        // 显示主菜单：游戏刚启动、从存档菜单返回主菜单时调用
+        // 显示主菜单：游戏刚启动、登录成功、从存档菜单返回主菜单时调用
         public void ShowMainMenu()
         {
             // 1.显示主菜单
             mainMenuController?.SetVisible(true);
 
-            // 2.隐藏其他菜单和玩法UI
+            // 2.主菜单默认不弹出登录面板，登录面板只由登入账号或切换账号按钮打开
+            loginMenuController?.SetVisible(false);
+
+            // 3.隐藏其他菜单和玩法UI
             savedGameMenuController?.SetVisible(false);
             settingsMenuController?.SetVisible(false);
             volumeMenuController?.SetVisible(false);
             characterHUDController?.SetVisible(false);
             miniMapController?.SetVisible(false);
 
-            // 3.菜单界面停止背景音乐
+            // 4.刷新主菜单按钮状态，未登录显示登入账号，已登录显示开始游戏和切换账号
+            mainMenuController?.RefreshLoginState();
+
+            // 5.菜单界面停止背景音乐
             AudioService.Instance?.PauseBackgroundMusic();
 
-            // 4.菜单界面禁用玩家输入
+            // 6.菜单界面禁用玩家输入
             SetPlayerInputEnabled(false);
 
-            // 5.菜单界面暂停游戏，并显示鼠标
+            // 7.菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
+        }
 
+        // 显示登录菜单：游戏刚启动、账号登出后调用
+        public void ShowLoginMenu()
+        {
+            // 1.显示登录菜单，作为当前一账号一存档流程的入口
+            loginMenuController?.SetVisible(true);
+
+            // 2.隐藏其他菜单和玩法UI，避免未登录时进入主菜单或游戏界面
+            mainMenuController?.SetVisible(false);
+            savedGameMenuController?.SetVisible(false);
+            settingsMenuController?.SetVisible(false);
+            volumeMenuController?.SetVisible(false);
+            characterHUDController?.SetVisible(false);
+            miniMapController?.SetVisible(false);
+
+            // 3.登录界面停止背景音乐，保持菜单入口状态统一
+            AudioService.Instance?.PauseBackgroundMusic();
+
+            // 4.登录界面禁用玩家输入，避免角色在后台响应移动或战斗输入
+            SetPlayerInputEnabled(false);
+
+            // 5.登录界面暂停游戏，并显示鼠标，方便输入账号和密码
+            SetPauseAndCursor(true);
         }
 
         // 显示存档菜单：点击“开始游戏”后调用
@@ -368,19 +421,167 @@ namespace WutheringWaves
             miniMapController?.SetVisible(false);
         }
 
-        // 切换设置菜单：Esc打开设置菜单，再按一次Esc返回玩法UI
-        private void ToggleSettingsMenu()
+        // 切换系统菜单：Esc打开或关闭游戏中的系统菜单
+        private void ToggleSystemMenu()
         {
+            // 1.没有进入游戏时不响应Esc，避免主菜单和登录界面误打开系统菜单
+            if (GameSessionService.Instance == null || !GameSessionService.Instance.IsInGame)
+            {
+                return;
+            }
+
+            // 2.如果设置菜单或音量菜单正在打开，Esc先回到系统菜单
             if (isSettingsMenuOpen)
             {
-                ShowGameplayUI();
+                settingsMenuController?.SetVisible(false);
+                volumeMenuController?.SetVisible(false);
+                systemMenuController?.SetVisible(true);
+
+                SetPlayerInputEnabled(false);
+                SetPauseAndCursor(true);
+                return;
             }
-            else
+
+            // 3.判断系统菜单是否显示时，必须看SystemMenuPanel本身，而不是SystemMenuController物体
+            if (systemMenuController != null && systemMenuController.IsVisible)
             {
-                ShowSettingsMenu();
+                HandleSystemMenuCloseRequested();
+                return;
             }
+
+            // 4.系统菜单未显示时，打开系统菜单并暂停游戏
+            systemMenuController?.SetVisible(true);
+            characterHUDController?.SetVisible(false);
+            miniMapController?.SetVisible(false);
+
+            SetPlayerInputEnabled(false);
+            SetPauseAndCursor(true);
         }
 
+        #endregion
+
+        #region 主菜单账号入口流程
+        // 开始游戏：由主菜单“开始游戏”按钮调用，直接读取或创建当前账号存档
+        private void HandleStartGameRequested()
+        {
+            // 1.游戏会话服务缺失时不进入游戏
+            if (GameSessionService.Instance == null)
+            {
+                Debug.LogError("[UIRoot] 开始游戏失败：GameSessionService为空。", this);
+                return;
+            }
+
+            // 2.当前没有登录账号时，不允许进入游戏，避免创建无账号存档
+            if (AccountManager.Instance == null || !AccountManager.Instance.IsLoggedIn || AccountManager.Instance.CurrentAccount == null)
+            {
+                Debug.LogWarning("[UIRoot] 开始游戏失败：当前没有登录账号。", this);
+                return;
+            }
+
+            // 3.一账号一存档流程：有存档就读取，没有存档就创建默认存档
+            GameSessionService.Instance.StartGameWithCurrentAccount();
+        }
+        // 打开登录面板：由主菜单“登入账号”按钮调用
+        private void HandleLoginRequested()
+        {
+            // 1.主界面保持显示，只弹出登录面板作为覆盖层
+            loginMenuController?.SetVisible(true);
+
+            // 2.打开登录面板时继续禁用玩家输入，并显示鼠标
+            SetPlayerInputEnabled(false);
+            SetPauseAndCursor(true);
+        }
+
+        // 登录成功：由LoginMenuController在账号登录成功后回调
+        private void HandleLoginSuccessRequested()
+        {
+            // 1.登录成功后关闭登录面板
+            loginMenuController?.SetVisible(false);
+
+            // 2.刷新主菜单按钮状态，显示开始游戏和切换账号，隐藏登入账号
+            mainMenuController?.RefreshLoginState();
+
+            // 3.保持在主菜单界面，等待玩家点击开始游戏
+            ShowMainMenu();
+        }
+
+        // 切换账号：由主菜单“切换账号”按钮调用
+        private void HandleSwitchAccountRequested()
+        {
+            // 1.切换账号前，如果当前已经有运行中的账号存档，则先尝试自动保存
+            if (GameSessionService.Instance != null
+            && SaveService.Instance != null
+            && SaveService.Instance.CurrentData != null
+            && !string.IsNullOrWhiteSpace(SaveService.Instance.CurrentUsername))
+            {
+                GameSessionService.Instance.SaveCurrentGameOnExit();
+            }
+
+            // 2.登出当前账号，清理当前账号和当前存档绑定
+            if (AccountManager.Instance != null)
+            {
+                AccountManager.Instance.Logout();
+            }
+
+            // 3.刷新主菜单按钮状态，回到未登录状态
+            mainMenuController?.RefreshLoginState();
+
+            // 4.弹出登录面板，让玩家登录新账号
+            loginMenuController?.SetVisible(true);
+
+            // 5.切换账号期间保持菜单输入状态
+            SetPlayerInputEnabled(false);
+            SetPauseAndCursor(true);
+        }
+
+        // 关闭登录面板：由LoginMenuController关闭按钮回调
+        private void HandleLoginCloseRequested()
+        {
+            // 1.关闭登录面板，回到主界面
+            loginMenuController?.SetVisible(false);
+
+            // 2.刷新主菜单按钮状态，保持未登录/已登录按钮显隐正确
+            mainMenuController?.RefreshLoginState();
+
+            // 3.保持菜单输入状态，确保鼠标可见并禁用玩家输入
+            SetPlayerInputEnabled(false);
+            SetPauseAndCursor(true);
+        }
+        #endregion
+
+        #region 系统菜单流程
+        // 系统菜单退出游戏：自动保存当前账号存档，并返回主菜单
+        private void HandleSystemMenuExitGameRequested()
+        {
+            // 1.结束当前游戏会话，内部会尝试自动保存并清理玩家输入和背包绑定
+            if (GameSessionService.Instance != null)
+            {
+                GameSessionService.Instance.EndCurrentGameSession();
+            }
+
+            // 2.回到主菜单，保留当前账号登录状态，方便玩家再次开始游戏
+            ShowMainMenu();
+        }
+
+        // 系统菜单关闭：关闭系统菜单并继续游戏
+        private void HandleSystemMenuCloseRequested()
+        {
+            // 1.隐藏系统菜单
+            systemMenuController?.SetVisible(false);
+
+            // 2.恢复玩法UI、玩家输入、游戏时间和鼠标锁定
+            ShowGameplayUI();
+        }
+
+        // 系统菜单打开设置：隐藏系统菜单，显示设置菜单
+        private void HandleSystemMenuSettingsRequested()
+        {
+            // 1.隐藏系统菜单，避免和设置菜单重叠
+            systemMenuController?.SetVisible(false);
+
+            // 2.显示设置菜单
+            ShowSettingsMenu();
+        }
         #endregion
 
         #region 新建 读取 储存 删除 存档 
