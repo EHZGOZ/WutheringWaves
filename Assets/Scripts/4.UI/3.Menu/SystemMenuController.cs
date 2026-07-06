@@ -1,14 +1,18 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace WutheringWaves
 {
-    // 系统菜单控制器：负责游戏中Esc呼出的系统菜单按钮事件转发
+    // 系统菜单控制器：负责游戏中Esc呼出的系统菜单按钮事件转发，并显示当前账号信息
     public class SystemMenuController : MonoBehaviour
     {
         [Header("系统菜单面板")]
         [SerializeField] private GameObject systemMenuPanel; // 系统菜单主面板
+
+        [Header("账号信息文本")]
+        [SerializeField] private TextMeshProUGUI usernameText; // 当前登录账号用户名文本
 
         [Header("退出游戏按钮")]
         [SerializeField] private Button exitGameButton; // 退出当前游戏并返回主界面按钮
@@ -150,10 +154,40 @@ namespace WutheringWaves
         // 设置系统菜单显隐
         public void SetVisible(bool visible)
         {
+            // 1.打开系统菜单前刷新当前账号名，确保切换账号后不会显示旧用户名
+            if (visible)
+            {
+                RefreshUsernameText();
+            }
+
+            // 2.统一控制系统菜单面板显隐
             if (systemMenuPanel != null)
             {
                 systemMenuPanel.SetActive(visible);
             }
+        }
+        #endregion
+
+        #region 账号信息
+        // 刷新当前用户名显示
+        private void RefreshUsernameText()
+        {
+            if (usernameText == null)
+            {
+                return;
+            }
+
+            // 1.账号服务不存在或未登录时，显示兜底文本，避免空引用或旧文本残留
+            if (AccountManager.Instance == null
+                || !AccountManager.Instance.IsLoggedIn
+                || AccountManager.Instance.CurrentAccount == null)
+            {
+                usernameText.text = "当前账号：未登录";
+                return;
+            }
+
+            // 2.读取当前账号用户名并显示到系统菜单
+            usernameText.text = AccountManager.Instance.CurrentAccount.username;
         }
         #endregion
     }

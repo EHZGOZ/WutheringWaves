@@ -5,8 +5,9 @@
     "\\Assets\\Scripts",
     "\\Assets\\Scripts\\1.GlobalService",
     "\\Assets\\Scripts\\1.GlobalService\\2.Systems",
-    "\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.Account"
+    "\\Assets\\Scripts\\4.UI",
+    "\\Assets\\Scripts\\4.UI\\1.Root"
   ],
-  "SelectedNode": "\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.Account\\AccountData.cs",
+  "SelectedNode": "\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
   "PreviewInSolutionExplorer": false
 }
