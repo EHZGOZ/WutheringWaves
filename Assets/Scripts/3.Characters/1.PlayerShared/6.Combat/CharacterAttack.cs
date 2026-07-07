@@ -21,29 +21,74 @@ namespace WutheringWaves
         }
         #endregion
 
-        
+
 
         #region 命中检测
         public void CheckAttackHit()
         {
+            // 1.攻击数据不完整时，不执行命中检测
             if (currentStep == null || currentStep.hitConfig == null || characterData == null)
             {
                 return;
             }
 
+            // 2.读取当前攻击段的命中配置
             AttackHitConfig hitConfig = currentStep.hitConfig;
+
+            // 3.根据角色当前位置和攻击偏移，计算本次范围判定中心点
             Vector3 attackCenter = transform.position + transform.TransformDirection(hitConfig.attackOffset);
+
+            // 4.使用范围检测查找敌人层级内的目标
             Collider[] hitEnemies = Physics.OverlapSphere(attackCenter, hitConfig.attackRadius, enemyLayer);
+
+            // 5.根据角色基础攻击力和当前攻击段倍率计算最终伤害
             float actualDamage = characterData.baseAttack * hitConfig.damageMultiplier;
 
             foreach (Collider enemy in hitEnemies)
             {
-                Vector3 dir = (enemy.transform.position - transform.position).normalized;
-                float angle = Vector3.Angle(transform.forward, dir);
-                if (angle <= hitConfig.attackAngle / 2f)
+                // 6.空值保护，避免异常Collider影响后续检测
+                if (enemy == null)
                 {
-                    Debug.Log($"命中{enemy.name} | 伤害:{actualDamage}");
+                    continue;
                 }
+
+                // 7.计算敌人相对角色的水平方向，用于扇形角度判断
+                Vector3 hitDirection = enemy.transform.position - transform.position;
+                hitDirection.y = 0f;
+
+                if (hitDirection.sqrMagnitude <= 0.001f)
+                {
+                    continue;
+                }
+
+                // 8.角度超出当前攻击扇形范围时，不算命中
+                float angle = Vector3.Angle(transform.forward, hitDirection.normalized);
+                if (angle > hitConfig.attackAngle / 2f)
+                {
+                    continue;
+                }
+
+                // 9.从被命中的目标身上查找可受伤接口
+                IDamageable damageable = enemy.GetComponentInParent<IDamageable>();
+                if (damageable == null || damageable.IsDead)
+                {
+                    continue;
+                }
+
+                // 10.创建伤害信息，后续敌人受击、击退、掉落归属都从这里读取
+                DamageInfo damageInfo = new DamageInfo(
+                    actualDamage,
+                    gameObject,
+                    enemy.transform.position,
+                    hitDirection.normalized,
+                    currentStep.attackId
+                );
+
+                // 11.调用目标自己的受伤逻辑
+                damageable.TakeDamage(damageInfo);
+
+                // 12.保留调试输出，方便确认范围伤害链路已经打通
+                Debug.Log($"命中{enemy.name} | 伤害:{actualDamage}");
             }
         }
         #endregion

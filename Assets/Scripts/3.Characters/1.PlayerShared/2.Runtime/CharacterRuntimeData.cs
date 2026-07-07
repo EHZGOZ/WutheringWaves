@@ -295,11 +295,5 @@ namespace WutheringWaves
         #endregion
 
         #endregion
-
-        #region 事件通知
-
-        #endregion
-
-
     }
 }
