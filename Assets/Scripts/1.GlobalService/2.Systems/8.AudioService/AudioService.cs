@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace WutheringWaves
 {
@@ -12,12 +13,13 @@ namespace WutheringWaves
         private const float DefaultBackgroundVolume = 0.2f; // 默认背景音乐音量
         private const float DefaultSfxVolume = 1f; // 默认总音效音量
 
+        [Header("背景音乐")]
+        [SerializeField] private AudioSource backgroundAudioSource; // 背景音乐音源，负责真正播放背景音乐
 
-        [Header("背景音乐 ")]
-        [SerializeField] private AudioSource backgroundAudioSource; // 背景音乐音源
-        [SerializeField] private AudioClip defaultBackgroundClip; // 默认背景音乐
+        [SerializeField] private AudioClip menuBackgroundClip; // 主界面和登录界面背景音乐
+        [FormerlySerializedAs("defaultBackgroundClip")]
+        [SerializeField] private AudioClip gameplayBackgroundClip; // 游戏中背景音乐，兼容原来的默认背景音乐字段
 
-       
         [SerializeField] private bool verboseLog = false; // 是否输出调试日志
 
         public bool IsInitialized { get; private set; } // 是否已初始化
@@ -25,7 +27,6 @@ namespace WutheringWaves
         public float MasterVolume { get; private set; } = DefaultMasterVolume;
         public float BackgroundVolume { get; private set; } = DefaultBackgroundVolume;
         public float SfxVolume { get; private set; } = DefaultSfxVolume;
-
 
         // 实际背景音乐音量 = 总音量 * 背景音乐音量
         public float EffectiveBackgroundVolume => MasterVolume * BackgroundVolume;
@@ -44,6 +45,23 @@ namespace WutheringWaves
             }
 
             Instance = this; // 赋值单例实例
+        }
+        private void OnDestroy()
+        {
+            // 1.如果销毁的是当前单例，清空单例引用
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
+        private void OnEnable()
+        {
+            GameEvents.OnGameSessionStateChanged += HandleGameSessionStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnGameSessionStateChanged -= HandleGameSessionStateChanged;
         }
         #endregion
 
@@ -101,9 +119,9 @@ namespace WutheringWaves
                 ? SaveService.Instance.SettingsRepository
                 : null;
 
-            MasterVolume = settingsRepository != null ? settingsRepository.GetMasterVolume(1f) : 1f;
-            BackgroundVolume = settingsRepository != null ? settingsRepository.GetBackgroundVolume(1f) : 1f;
-            SfxVolume = settingsRepository != null ? settingsRepository.GetSfxVolume(1f) : 1f;
+            MasterVolume = settingsRepository != null ? settingsRepository.GetMasterVolume(DefaultMasterVolume) : DefaultMasterVolume;
+            BackgroundVolume = settingsRepository != null ? settingsRepository.GetBackgroundVolume(DefaultBackgroundVolume) : DefaultBackgroundVolume;
+            SfxVolume = settingsRepository != null ? settingsRepository.GetSfxVolume(DefaultSfxVolume) : DefaultSfxVolume;
 
             MasterVolume = Mathf.Clamp01(MasterVolume);
             BackgroundVolume = Mathf.Clamp01(BackgroundVolume);
@@ -150,15 +168,37 @@ namespace WutheringWaves
         #endregion
 
         #region 背景音乐播放
+        // 根据游戏会话状态切换背景音乐
+        private void HandleGameSessionStateChanged(GameSessionState state)
+        {
+            switch (state)
+            {
+                case GameSessionState.InGame:
+                    PlayGameplayBackgroundMusic();
+                    break;
+
+                case GameSessionState.OutGame:
+                    PlayMenuBackgroundMusic();
+                    break;
+            }
+        }
+        // 播放默认背景音乐：兼容旧调用，优先播放主界面音乐
         public void PlayBackgroundMusic()
         {
-            // 没有默认背景音乐时不播放
-            if (defaultBackgroundClip == null)
-            {
-                return;
-            }
+            AudioClip targetClip = menuBackgroundClip != null ? menuBackgroundClip : gameplayBackgroundClip;
+            PlayBackgroundMusic(targetClip);
+        }
 
-            PlayBackgroundMusic(defaultBackgroundClip);
+        // 播放主界面 / 登录界面背景音乐
+        public void PlayMenuBackgroundMusic()
+        {
+            PlayBackgroundMusic(menuBackgroundClip);
+        }
+
+        // 播放游戏中背景音乐
+        public void PlayGameplayBackgroundMusic()
+        {
+            PlayBackgroundMusic(gameplayBackgroundClip);
         }
 
         public void PlayBackgroundMusic(AudioClip clip)
@@ -179,6 +219,7 @@ namespace WutheringWaves
             ApplyBackgroundVolume();
             backgroundAudioSource.Play();
         }
+
         public void PauseBackgroundMusic()
         {
             if (backgroundAudioSource == null)
@@ -196,17 +237,16 @@ namespace WutheringWaves
                 return;
             }
 
-            // 如果还没有指定背景音乐，就播放默认背景音乐
+            // 当前没有任何背景音乐时，不自动猜测播放哪首音乐
+            // 主菜单和游戏中应分别调用 PlayMenuBackgroundMusic / PlayGameplayBackgroundMusic
             if (backgroundAudioSource.clip == null)
             {
-                PlayBackgroundMusic();
                 return;
             }
 
             ApplyBackgroundVolume();
             backgroundAudioSource.UnPause();
         }
-
 
         public void StopBackgroundMusic()
         {

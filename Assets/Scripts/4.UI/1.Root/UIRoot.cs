@@ -223,6 +223,7 @@ namespace WutheringWaves
         #endregion
 
         #region 页面切换
+        // 显示主菜单
         public void ShowMainMenu()
         {
             // 1.回到主菜单时，设置来源清空
@@ -246,111 +247,14 @@ namespace WutheringWaves
             // 5.刷新主菜单按钮状态
             mainMenuController?.RefreshLoginState();
 
-            // 6.菜单界面停止背景音乐
-            AudioService.Instance?.PauseBackgroundMusic();
+            // 6.游戏外界面播放主界面背景音乐
+            AudioService.Instance?.PlayMenuBackgroundMusic();
 
             // 7.菜单界面禁用玩家输入
             SetPlayerInputEnabled(false);
 
             // 8.菜单界面暂停游戏，并显示鼠标
             SetPauseAndCursor(true);
-        }
-
-        // 显示登录菜单：游戏刚启动、账号登出后调用
-        public void ShowLoginMenu()
-        {
-            // 1.显示登录菜单，作为当前一账号一存档流程的入口
-            loginMenuController?.SetVisible(true);
-
-            // 2.隐藏其他菜单和玩法UI，避免登录界面和游戏界面重叠
-            mainMenuController?.SetVisible(false);
-            savedGameMenuController?.SetVisible(false);
-            settingsMenuController?.SetVisible(false);
-            volumeMenuController?.SetVisible(false);
-            systemMenuController?.SetVisible(false);
-            characterHUDController?.SetVisible(false);
-            miniMapController?.SetVisible(false);
-
-            // 3.登录界面停止背景音乐
-            AudioService.Instance?.PauseBackgroundMusic();
-
-            // 4.登录界面禁用玩家输入
-            SetPlayerInputEnabled(false);
-
-            // 5.登录界面暂停游戏，并显示鼠标
-            SetPauseAndCursor(true);
-        }
-
-        // 显示存档菜单：旧三槽位流程暂时保留
-        public void ShowSavedGameMenu()
-        {
-            // 1.隐藏主菜单
-            mainMenuController?.SetVisible(false);
-
-            // 2.设置为选档模式：主菜单进入时不显示主动存档按钮
-            savedGameMenuController?.SetCanManualSave(false);
-
-            // 3.显示存档菜单
-            savedGameMenuController?.SetVisible(true);
-
-            // 4.隐藏其他UI
-            settingsMenuController?.SetVisible(false);
-            volumeMenuController?.SetVisible(false);
-            systemMenuController?.SetVisible(false);
-            characterHUDController?.SetVisible(false);
-            miniMapController?.SetVisible(false);
-
-            // 5.记录设置菜单关闭
-            isSettingsMenuOpen = false;
-            settingsMenuSource = SettingsMenuSource.None;
-
-            // 6.存档菜单界面停止背景音乐
-            AudioService.Instance?.PauseBackgroundMusic();
-
-            // 7.存档菜单界面禁用玩家输入
-            SetPlayerInputEnabled(false);
-
-            // 8.存档菜单界面暂停游戏，并显示鼠标
-            SetPauseAndCursor(true);
-        }
-
-        // 从设置菜单进入存档菜单：旧流程暂时保留
-        private void ShowSavedGameMenuFromSettings()
-        {
-            // 1.记录设置菜单已关闭
-            isSettingsMenuOpen = false;
-            settingsMenuSource = SettingsMenuSource.None;
-
-            // 2.隐藏主菜单和设置菜单
-            mainMenuController?.SetVisible(false);
-            settingsMenuController?.SetVisible(false);
-            volumeMenuController?.SetVisible(false);
-            systemMenuController?.SetVisible(false);
-
-            // 3.设置为主动存档模式：游戏中进入时允许保存到任意槽位
-            savedGameMenuController?.SetCanManualSave(true);
-
-            // 4.显示存档菜单
-            savedGameMenuController?.SetVisible(true);
-
-            // 5.隐藏玩法UI
-            characterHUDController?.SetVisible(false);
-            miniMapController?.SetVisible(false);
-
-            // 6.存档菜单界面停止背景音乐
-            AudioService.Instance?.PauseBackgroundMusic();
-
-            // 7.存档菜单界面禁用玩家输入
-            SetPlayerInputEnabled(false);
-
-            // 8.存档菜单界面暂停游戏，并显示鼠标
-            SetPauseAndCursor(true);
-        }
-
-        // 显示设置菜单：保留公开入口，默认按游戏内设置处理
-        public void ShowSettingsMenu()
-        {
-            ShowSettingsMenuFromGameplay();
         }
 
         // 从主菜单打开设置菜单：主界面保留在后面，设置界面作为覆盖层显示
@@ -398,8 +302,8 @@ namespace WutheringWaves
             // 3.显示设置菜单
             settingsMenuController?.SetVisible(true);
 
-            // 4.设置菜单界面停止背景音乐
-            AudioService.Instance?.PauseBackgroundMusic();
+            //// 4.设置菜单界面停止背景音乐
+            //AudioService.Instance?.PauseBackgroundMusic();
 
             // 5.设置菜单界面禁用玩家输入
             SetPlayerInputEnabled(false);
@@ -434,33 +338,6 @@ namespace WutheringWaves
             SetPauseAndCursor(true);
         }
 
-        // 显示音量菜单：旧独立音量菜单入口暂时保留
-        public void ShowVolumeMenu()
-        {
-            // 1.记录设置菜单仍处于打开状态
-            isSettingsMenuOpen = true;
-
-            // 2.隐藏主菜单、存档菜单、设置菜单
-            mainMenuController?.SetVisible(false);
-            loginMenuController?.SetVisible(false);
-            savedGameMenuController?.SetVisible(false);
-            settingsMenuController?.SetVisible(false);
-            systemMenuController?.SetVisible(false);
-
-            // 3.显示音量菜单
-            volumeMenuController?.SetVisible(true);
-
-            // 4.隐藏玩法UI
-            characterHUDController?.SetVisible(false);
-            miniMapController?.SetVisible(false);
-
-            // 5.音量菜单界面禁用玩家输入
-            SetPlayerInputEnabled(false);
-
-            // 6.音量菜单界面暂停游戏，并显示鼠标
-            SetPauseAndCursor(true);
-        }
-
         // 显示玩法UI：新建存档或读档成功、真正进入游戏后调用
         public void ShowGameplayUI()
         {
@@ -488,26 +365,6 @@ namespace WutheringWaves
 
             // 6.恢复游戏时间，并隐藏锁定鼠标
             SetPauseAndCursor(false);
-        }
-
-        // 隐藏全部UI：用于过场、加载界面或特殊状态
-        public void HideAllUI()
-        {
-            // 1.隐藏菜单UI
-            mainMenuController?.SetVisible(false);
-            loginMenuController?.SetVisible(false);
-            savedGameMenuController?.SetVisible(false);
-            settingsMenuController?.SetVisible(false);
-            volumeMenuController?.SetVisible(false);
-            systemMenuController?.SetVisible(false);
-
-            // 2.隐藏玩法UI
-            characterHUDController?.SetVisible(false);
-            miniMapController?.SetVisible(false);
-
-            // 3.清空菜单状态
-            isSettingsMenuOpen = false;
-            settingsMenuSource = SettingsMenuSource.None;
         }
 
         // 切换系统菜单：Esc打开或关闭游戏中的系统菜单
@@ -592,7 +449,10 @@ namespace WutheringWaves
             isSettingsMenuOpen = false;
             settingsMenuSource = SettingsMenuSource.None;
 
-            // 4.打开登录面板时继续禁用玩家输入，并显示鼠标
+            // 4.登录面板属于游戏外界面，确保播放主界面背景音乐
+            AudioService.Instance?.PlayMenuBackgroundMusic();
+
+            // 5.打开登录面板时继续禁用玩家输入，并显示鼠标
             SetPlayerInputEnabled(false);
             SetPauseAndCursor(true);
         }
@@ -719,7 +579,6 @@ namespace WutheringWaves
                 characterHUDController?.SetVisible(false);
                 miniMapController?.SetVisible(false);
 
-                AudioService.Instance?.PauseBackgroundMusic();
 
                 SetPlayerInputEnabled(false);
                 SetPauseAndCursor(true);
@@ -831,79 +690,5 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 新建 读取 储存 删除 存档 （已废弃）
-        //新建
-        private void HandleCreateSaveRequested(int slotIndex)
-        {
-            // 1.游戏会话服务缺失时不进入游戏
-            if (GameSessionService.Instance == null)
-            {
-                Debug.LogError("[UIRoot] 开始游戏失败：GameSessionService为空。", this);
-                return;
-            }
-
-            // 2.一账号一存档阶段：点击开始游戏后，由会话服务自动读取或创建当前账号存档
-            GameSessionService.Instance.StartGameWithCurrentAccount();
-        }
-
-        //读取
-        private void HandleLoadSaveRequested(int slotIndex)
-        {
-            // 1.游戏会话服务缺失时不进入游戏
-            if (GameSessionService.Instance == null)
-            {
-                Debug.LogError("[UIRoot] 读取当前账号存档失败：GameSessionService为空。", this);
-                return;
-            }
-
-            // 2.一账号一存档阶段：读取和开始游戏合并，由会话服务统一处理
-            GameSessionService.Instance.StartGameWithCurrentAccount();
-        }
-
-        //存档
-        private void HandleSaveRequested(int slotIndex)
-        {
-            // 1.游戏会话服务缺失时不保存
-            if (GameSessionService.Instance == null)
-            {
-                Debug.LogError("[UIRoot] 自动保存失败：GameSessionService为空。", this);
-                return;
-            }
-
-            // 2.一账号一存档阶段：主动存档临时复用退出自动保存逻辑
-            bool ok = GameSessionService.Instance.SaveCurrentGameOnExit();
-
-            // 3.保存后留在当前菜单，只刷新账号存档显示
-            if (ok)
-            {
-                savedGameMenuController?.RefreshSlots();
-                Debug.Log("[UIRoot] 当前账号存档保存完成。");
-            }
-        }
-
-        //删除
-        private void HandleDeleteSaveRequested(int slotIndex)
-        {
-            // 1.存档服务缺失时不删除
-            if (SaveService.Instance == null)
-            {
-                Debug.LogError("[UIRoot] 删除当前账号存档失败：SaveService为空。", this);
-                return;
-            }
-
-            // 2.账号服务缺失或未登录时，不允许删除当前账号存档
-            if (AccountManager.Instance == null || !AccountManager.Instance.IsLoggedIn || AccountManager.Instance.CurrentAccount == null)
-            {
-                Debug.LogWarning("[UIRoot] 删除当前账号存档失败：当前没有登录账号。", this);
-                return;
-            }
-
-            // 3.删除当前登录账号的账号存档
-            SaveService.Instance.DeleteSave(AccountManager.Instance.CurrentAccount.username);
-
-            // 4.删除后刷新账号存档显示
-            savedGameMenuController?.RefreshSlots();
-        }
-        #endregion
     }
 }

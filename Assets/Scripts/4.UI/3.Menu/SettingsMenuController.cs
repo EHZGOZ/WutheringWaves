@@ -511,33 +511,69 @@ namespace WutheringWaves
             // availableResolutions 里保存的是 Unity 的 Resolution 数据，里面有 width 和 height
             Resolution resolution = availableResolutions[optionIndex];
 
-            // 3.应用新的分辨率
-            // resolution.width：目标宽度，例如 1920
-            // resolution.height：目标高度，例如 1080
-            // Screen.fullScreenMode：保留当前显示模式，不因为改分辨率而改变窗口/全屏状态
-            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
+            // 3.默认沿用当前显示模式
+            // 正常情况下，玩家只是改分辨率，不主动改变窗口/全屏状态
+            FullScreenMode targetMode = Screen.fullScreenMode;
+
+            // 4.独占全屏在部分低分辨率下容易触发黑屏或闪退
+            // 当目标分辨率低于 1920x1080 时，自动降级为无边框全屏，避免显示器真实切换到不稳定模式
+            if (targetMode == FullScreenMode.ExclusiveFullScreen
+                && (resolution.width < 1920 || resolution.height < 1080))
+            {
+                targetMode = FullScreenMode.FullScreenWindow;
+
+                // 5.同步显示模式下拉框，避免实际已经降级为无边框全屏，但界面仍显示独占全屏
+                if (displayModeDropdown != null)
+                {
+                    displayModeDropdown.SetValueWithoutNotify(ConvertDisplayModeToIndex(targetMode));
+                }
+            }
+
+            // 6.应用新的分辨率和最终显示模式
+            Screen.SetResolution(resolution.width, resolution.height, targetMode);
         }
 
         // 修改显示模式
         // 参数 optionIndex：玩家在“显示模式下拉框”中选择的选项索引
         private void HandleDisplayModeChanged(int optionIndex)
         {
-            // 1.把下拉框索引转换成 Unity 能识别的 FullScreenMode
-            // 例如：
-            // 0 -> 窗口模式
-            // 1 -> 无边框全屏
-            // 2 -> 独占全屏
+            // 1.把下拉框索引转换成 Unity 能识别的显示模式
+            // 例如：0 -> 窗口模式，1 -> 无边框全屏，2 -> 独占全屏
             FullScreenMode displayMode = ConvertIndexToDisplayMode(optionIndex);
 
-            // 2.先记录当前屏幕显示模式
-            // 这样 Unity 的 Screen.fullScreenMode 会同步为玩家选择的新模式
-            Screen.fullScreenMode = displayMode;
+            // 2.默认使用当前屏幕宽高作为兜底
+            // 避免分辨率下拉框没有绑定时无法切换显示模式
+            int targetWidth = Screen.width;
+            int targetHeight = Screen.height;
 
-            // 3.应用新的显示模式
-            // Screen.width 和 Screen.height 表示当前正在使用的分辨率
-            // 这里不改变分辨率，只改变显示模式
-            // 例如当前是 1920 x 1080，玩家从窗口模式切到无边框全屏后，仍然保持 1920 x 1080
-            Screen.SetResolution(Screen.width, Screen.height, displayMode);
+            // 3.如果分辨率下拉框可用，并且索引合法，就使用玩家当前选择的分辨率
+            // 这样切换独占全屏时，不会误用 Game 窗口当前尺寸
+            if (resolutionDropdown != null
+                && resolutionDropdown.value >= 0
+                && resolutionDropdown.value < availableResolutions.Count)
+            {
+                Resolution resolution = availableResolutions[resolutionDropdown.value];
+                targetWidth = resolution.width;
+                targetHeight = resolution.height;
+            }
+
+            // 4.独占全屏在部分低分辨率下容易触发黑屏或闪退
+            // 当目标分辨率低于 1920x1080 时，自动降级为无边框全屏，避免显示器真实切换到不稳定模式
+            if (displayMode == FullScreenMode.ExclusiveFullScreen
+                && (targetWidth < 1920 || targetHeight < 1080))
+            {
+                displayMode = FullScreenMode.FullScreenWindow;
+
+                // 5.同步显示模式下拉框，避免玩家选择独占全屏后，实际模式已经被保护逻辑降级
+                if (displayModeDropdown != null)
+                {
+                    displayModeDropdown.SetValueWithoutNotify(ConvertDisplayModeToIndex(displayMode));
+                }
+            }
+
+            // 6.统一通过 SetResolution 设置分辨率和显示模式
+            // 不需要先单独设置 Screen.fullScreenMode，避免状态切换重复
+            Screen.SetResolution(targetWidth, targetHeight, displayMode);
         }
 
         // 修改帧率上限

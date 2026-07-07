@@ -13,6 +13,8 @@ namespace WutheringWaves
         [SerializeField] private bool enableTimeScaleTest = true; // 是否启用Tab切换时间流速测试
         [SerializeField] private float testTimeScaleA = 1f; // 正常速度
         [SerializeField] private float testTimeScaleB = 0.3f; // 慢动作速度
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;
 
         private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏
         public bool IsPaused => Time.timeScale <= 0f; // 判断游戏是否暂停（时间缩放小于等于0即为暂停）
@@ -67,6 +69,11 @@ namespace WutheringWaves
 
             // 5.标记初始化完成
             IsInitialized = true;
+
+            if (verboseLog)
+            {
+                Debug.Log("[时间服务] 初始化完成。", this);
+            }
         }
         #endregion
 

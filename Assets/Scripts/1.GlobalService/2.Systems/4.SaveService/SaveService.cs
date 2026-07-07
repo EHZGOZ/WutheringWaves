@@ -67,7 +67,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 新建存档 保存存档  保存到指定槽位 读取存档 删除存档
+        #region 新建存档 保存存档  读取存档 删除存档
         // 为指定账号新建存档
         public SaveData CreateSave(string username, SaveData saveData)
         {
@@ -239,9 +239,7 @@ namespace WutheringWaves
         }
         #endregion
 
-
-
-        #region 存档槽查询
+        #region 存档查询
         // 判断指定账号是否有存档
         public bool HasSave(string username)
         {

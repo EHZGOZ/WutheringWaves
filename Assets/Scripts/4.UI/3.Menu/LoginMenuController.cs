@@ -36,13 +36,6 @@ namespace WutheringWaves
         private bool listenersBound; // 是否已绑定按钮事件
 
         #region 初始化
-        // 初始化登录菜单：兼容旧版单回调调用
-        public void Initialize(Action loginSuccessRequested)
-        {
-            // 1.兼容旧流程：如果UIRoot暂时还没传关闭回调，关闭按钮会走本地隐藏兜底
-            Initialize(loginSuccessRequested, null);
-        }
-
         // 初始化登录菜单
         public void Initialize(Action loginSuccessRequested, Action closeRequested)
         {

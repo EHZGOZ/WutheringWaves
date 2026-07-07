@@ -3,6 +3,12 @@ using UnityEngine.SceneManagement;
 
 namespace WutheringWaves
 {
+    // 游戏会话状态：只描述当前是否已经真正进入玩法
+    public enum GameSessionState
+    {
+        OutGame, // 游戏外：主菜单、登录界面、未开始游戏
+        InGame   // 游戏中：账号已登录，并且已经开始游戏
+    }
     // 游戏会话服务：负责当前账号开始游戏、进入游戏、运行时数据同步和退出自动保存
     public class GameSessionService : MonoBehaviour
     {
@@ -201,6 +207,9 @@ namespace WutheringWaves
             // 10.标记当前已经进入游戏
             IsInGame = true;
 
+            // 11.通知外部系统：当前已经进入游戏中
+            GameEvents.RaiseGameSessionStateChanged(GameSessionState.InGame);
+
             if (verboseLog)
             {
                 Debug.Log("[游戏会话服务] 当前账号已进入游戏。");
@@ -282,6 +291,9 @@ namespace WutheringWaves
 
             // 4.标记当前已经不在游戏中
             IsInGame = false;
+
+            // 5.通知外部系统：当前已经回到游戏外
+            GameEvents.RaiseGameSessionStateChanged(GameSessionState.OutGame);
         }
         #endregion
 

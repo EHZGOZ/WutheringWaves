@@ -144,7 +144,6 @@
     <None Include="Assets\GameAssets\3.Environment\Toon Fantasy Nature\Shaders\TFF_ToonFire.shader" />
     <None Include="Assets\GameAssets\3.Environment\Toon Fantasy Nature\Shaders\TFF_CustomToonOutline.shader" />
     <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\0_Script\ThirdParty\Battlehub\ThirdParty\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Shaders\DissolveNoise.shader" />

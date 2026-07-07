@@ -501,8 +501,6 @@ namespace WutheringWaves
             // 3.按槽位绑定当前受控角色：新建/读档第一次绑定时使用存档记录的位置旋转
             BindCurrentCharacter(teamCharacters[targetIndex], CharacterBindMode.FromSavedTransform);
         }
-        
-
         // 绑定受控角色
         private void BindCurrentCharacter(CharacterContext context, CharacterBindMode bindMode)
         {

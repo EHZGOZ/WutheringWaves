@@ -30,6 +30,10 @@ namespace WutheringWaves
     public static class GameEvents
     {
         #region 事件定义
+        // 游戏会话状态变化事件
+        // 参数表示当前是游戏中还是游戏外
+        public static event Action<GameSessionState> OnGameSessionStateChanged;
+
         // 玩家相关
         // 切人事件：参数为切出角色、切入角色
         public static event Action<CharacterContext, CharacterContext> OnCharacterSwitched;
@@ -64,6 +68,11 @@ namespace WutheringWaves
         #endregion
 
         #region 事件派发
+        // 派发游戏会话状态变化
+        public static void RaiseGameSessionStateChanged(GameSessionState state)
+        {
+            OnGameSessionStateChanged?.Invoke(state);
+        }
 
         #region 玩家相关
         // 派发切人事件：通知 UI、特效、小地图等外围系统同步当前角色

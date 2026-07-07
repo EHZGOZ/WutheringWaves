@@ -20,12 +20,20 @@ namespace WutheringWaves
         }
 
         // 盐 + 明文密码 → SHA256 → Base64
+        // 根据密码和盐生成哈希
         public static string HashPassword(string password, string salt)
         {
+            // 1.把盐拼到密码前面
+            // 例如：salt = "AbCd123"，password = "123456"
+            // salted = "AbCd123123456"
             string salted = salt + password;
+
+            // 2.使用SHA256计算 salted 字符串的哈希
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(salted));
+
+                // 3.把哈希字节转换成Base64字符串，方便保存到JSON里
                 return Convert.ToBase64String(hash);
             }
         }

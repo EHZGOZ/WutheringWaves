@@ -3,76 +3,60 @@
   "WorkspaceRootPath": "D:\\Unity\\UnityProject\\WutheringWaves\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\8.audioservice\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\8.audioservice\\audioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\1.gametime\\gametimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\1.gametime\\gametimeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\7.gamesessionservice\\gamesessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\7.gamesessionservice\\gamesessionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\3.common\\gameevents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\6.characterspawnservice\\characterspawnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\6.characterspawnservice\\characterspawnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\5.inventoryservice\\inventorydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\5.inventoryservice\\inventorydata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\2.player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\2.Player\\PlayerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\4.saveservice\\savedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\4.saveservice\\savedata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\4.saveservice\\saveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\4.saveservice\\saveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\3.accountmanager\\accountmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\3.accountmanager\\accountmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\2.inputservice\\inputservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\2.inputservice\\inputservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\2.systems\\5.inventoryservice\\inventoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\2.systems\\5.inventoryservice\\inventoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -82,45 +66,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 13,
               "Title": "GameBootstrap.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
               "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAowDwAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-18T06:08:52.322Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GameTimeService.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAkwBUAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-02T11:56:48.598Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "InputService.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-03T08:33:59.245Z",
               "IsPinned": true
             },
             {
@@ -131,9 +89,153 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "RelativeToolTip": "Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAADwv+AAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAOIAAAAAAAAAAAA6wB4BAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-03T10:31:55.303Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GameTimeService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\1.GameTime\\GameTimeService.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwBcAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-02T11:56:48.598Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "InputService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputService.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA7wC0AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-03T08:33:59.245Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AccountManager.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAxwEoAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-05T08:48:32.192Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SaveService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveService.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAADwv0UAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T07:59:53.432Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SaveData.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:25:25.386Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "InventoryService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryService.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAA0wDgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:24:17.198Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "InventoryData.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryData.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryData.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryData.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\5.InventoryService\\InventoryData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:23:59.362Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CharacterSpawnService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowIUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:18:10.637Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GameSessionService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAAwCcBAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-04T07:47:32.065Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AudioService.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\8.AudioService\\AudioService.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\8.AudioService\\AudioService.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\8.AudioService\\AudioService.cs",
+              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\8.AudioService\\AudioService.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAqwLcAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:30:14.061Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PlayerController.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerController.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\2.Player\\PlayerController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAIAywC8DAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-07T08:18:38.507Z",
               "IsPinned": true
             },
             {
@@ -142,171 +244,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SettingsMenuController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\SettingsMenuController.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAkwFwBAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T07:08:07.26Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "SystemMenuController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuController.cs",
-              "ViewState": "AgIAAJoAAAAAAAAAAAAswMEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T12:30:10.664Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CharaterManifestation.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\7.Visual\\CharaterManifestation.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T12:20:21.343Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "PlayerController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\2.Player\\PlayerController.cs",
-              "ViewState": "AgIAAMMCAAAAAAAAAAD4v9oCAABZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T12:19:09.878Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 4,
               "Title": "GameEvents.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
               "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\3.Common\\GameEvents.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAmwIUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAwwEYAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T12:17:01.693Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SystemMenuPanelController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\SystemMenuPanelController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAywDIAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T11:21:32.877Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "SaveData.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAgwEkAAABJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T09:25:59.777Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "CharacterRuntimeData.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.Shared\\2.Runtime\\CharacterRuntimeData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T09:24:07.14Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "PlayerRuntimeData.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
-              "RelativeToolTip": "Assets\\Scripts\\2.Player\\PlayerRuntimeData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T09:23:57.593Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "AccountManager.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\3.AccountManager\\AccountManager.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAUwEMAAABGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T08:48:32.192Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "MainMenuController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\MainMenuController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T07:59:18.857Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "LoginMenuController.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\4.UI\\3.Menu\\LoginMenuController.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAgwOkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-04T08:06:12.606Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "GameSessionService.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAgwEQBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-04T07:47:32.065Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "InputFieldInputModeBinder.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs",
-              "RelativeToolTip": "Assets\\Scripts\\1.GlobalService\\2.Systems\\2.InputService\\InputFieldInputModeBinder.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-03T10:55:11.415Z"
+              "WhenOpened": "2026-07-07T08:54:00.893Z"
             }
           ]
         }

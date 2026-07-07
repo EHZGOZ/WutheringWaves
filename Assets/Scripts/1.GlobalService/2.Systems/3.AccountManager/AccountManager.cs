@@ -36,6 +36,14 @@ namespace WutheringWaves
 
             Instance = this;
         }
+        private void OnDestroy()
+        {
+            // 1.如果销毁的是当前单例，清空单例引用
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
 
         #endregion
 
@@ -64,11 +72,9 @@ namespace WutheringWaves
 
             if (verboseLog)
             {
-                Debug.Log("[账号管理器] 初始化完成。");
-                Debug.Log("持久化数据路径" + Application.persistentDataPath);
+                Debug.Log("[账号管理器] 初始化完成。"+ "持久化数据路径" + Application.persistentDataPath);
             }
-
-            
+      
         }
 
         #endregion
@@ -94,7 +100,7 @@ namespace WutheringWaves
             AccountIndexData index = _repository.Load();
 
             // 4.检查用户名是否已存在
-            if (index.accounts.Any(a => a.username == username))
+            if (index.accounts.Any(account => account.username == username))
             {
                 return new AccountRegisterResult(false, "用户名已存在。");
             }
@@ -171,14 +177,14 @@ namespace WutheringWaves
             return new AccountLoginResult(true, "登录成功。", account);
         }
 
-        // 注销当前账号
+        // 退出当前账号登录
         public void Logout()
         {
-            // 1.清除当前登录状态
+            // 1.清除当前登录状态，但不删除账号数据
             CurrentAccount = null;
             IsLoggedIn = false;
 
-            // 2.通知存档服务清除内存数据
+            // 2.通知存档服务清除当前内存存档，避免切换账号时误用旧账号数据
             if (SaveService.Instance != null)
             {
                 SaveService.Instance.ClearCurrent();
@@ -186,7 +192,7 @@ namespace WutheringWaves
 
             if (verboseLog)
             {
-                Debug.Log("[账号管理器] 已注销当前账号。");
+                Debug.Log("[账号管理器] 已退出当前账号登录。");
             }
         }
 
