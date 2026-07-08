@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   context: {fileID: 0}
-  characterData: {fileID: 0}
+  characterData: {fileID: 11400000, guid: cc24f3e0ef7e047458c51dc2238f3511, type: 2}
   runtimeData:
     characterName: 0
     maxHealth: 0

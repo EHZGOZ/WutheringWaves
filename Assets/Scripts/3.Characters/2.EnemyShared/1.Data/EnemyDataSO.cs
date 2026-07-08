@@ -17,6 +17,12 @@ namespace WutheringWaves
         [SerializeField] public float baseAttack = 10f; // 敌人基础攻击力，后续敌人攻击玩家时使用
         #endregion
 
+        #region 动画相关
+        [Header("=== 动画配置 ===")]
+        [Tooltip("敌人动画配置（动画语义键到动画剪辑映射）")]
+        [SerializeField] public EnemyAnimationConfigSO animationConfigSO; // 敌人动画配置
+        #endregion
+
         #region 掉落相关
         [Header("=== 掉落相关 ===")]
         [Header("死亡后是否生成掉落物")]

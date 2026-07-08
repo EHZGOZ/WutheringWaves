@@ -1,0 +1,196 @@
+﻿using UnityEngine;
+
+namespace WutheringWaves
+{
+    #region 敌人状态枚举
+    // 敌人核心状态枚举：当前先做待机、追击、受击、死亡
+    public enum EnemyState
+    {
+        Idle, // 待机状态
+        Chase, // 追击状态
+        Hit,  // 受击状态
+        Dead  // 死亡状态
+    }
+    #endregion
+
+    public class EnemyStateMachine : MonoBehaviour
+    {
+        #region 核心引用
+        [Header("=== 敌人状态机核心引用 ===")]
+        [SerializeField] private EnemyContext context; // 敌人上下文
+        [SerializeField] private EnemyRuntimeData runtimeData; // 敌人运行时数据
+        [SerializeField] private Animator animator; // 敌人动画控制器
+        #endregion
+
+        #region 状态配置
+        [Header("=== 受击状态配置 ===")]
+        [SerializeField] private float hitStateDuration = 0.25f; // 受击状态持续时间，后续可替换为动画长度
+        #endregion
+
+        #region 状态数据
+        public EnemyStateFactory StateFactory { get; private set; } // 敌人状态工厂
+        public EnemyStateBase CurrentState { get; private set; } // 当前状态实例
+        public EnemyState CurrentStateType { get; private set; } // 当前状态类型
+        public EnemyState PreviousStateType { get; private set; } // 上一个状态类型
+
+        public DamageInfo LastDamageInfo { get; private set; } // 最近一次受击信息
+        #endregion
+
+        #region 对外只读属性
+        public EnemyContext Context => context; // 敌人上下文
+        public EnemyRuntimeData RuntimeData => runtimeData; // 敌人运行时数据
+        public Animator Animator => animator; // 敌人动画控制器
+        public float HitStateDuration => hitStateDuration; // 受击状态持续时间
+        #endregion
+
+        #region 生命周期
+        private void Update()
+        {
+            // 1.当前状态为空时不执行
+            if (CurrentState == null)
+            {
+                return;
+            }
+
+            // 2.死亡状态也允许自己保持空更新，避免后续死亡动画扩展时被拦截
+            CurrentState.UpdateState();
+        }
+        #endregion
+
+        #region 初始化
+        // 敌人状态机初始化：由 EnemyContext 统一调用
+        public void Initialize(EnemyContext context)
+        {
+            // 1.缓存上下文与运行时数据
+            this.context = context;
+            runtimeData = context != null ? context.RuntimeData : null;
+            animator = context != null ? context.Animator : null;
+
+            // 2.创建状态工厂
+            StateFactory = new EnemyStateFactory();
+
+            // 3.注册敌人基础状态
+            RegisterBaseStates();
+
+            // 4.初始化状态记录
+            PreviousStateType = EnemyState.Idle;
+
+            // 5.进入默认待机状态
+            SwitchState(StateFactory.GetState(EnemyState.Idle));
+        }
+
+        // 注册敌人基础状态：第一版注册待机、追击、受击、死亡
+        private void RegisterBaseStates()
+        {
+            // 1.空值保护，避免状态工厂未创建时空引用
+            if (StateFactory == null)
+            {
+                return;
+            }
+
+            // 2.注册敌人基础状态
+            StateFactory.RegisterState(EnemyState.Idle, new EnemyIdleState(this, StateFactory));
+            StateFactory.RegisterState(EnemyState.Chase, new EnemyChaseState(this, StateFactory));
+            StateFactory.RegisterState(EnemyState.Hit, new EnemyHitState(this, StateFactory));
+            StateFactory.RegisterState(EnemyState.Dead, new EnemyDeadState(this, StateFactory));
+        }
+        #endregion
+
+        #region 状态切换
+        // 状态切换统一入口
+        internal void SwitchState(EnemyStateBase newState)
+        {
+            // 1.目标状态为空时不切换
+            if (newState == null)
+            {
+                return;
+            }
+
+            // 2.死亡后不允许切回其他状态
+            if (CurrentStateType == EnemyState.Dead)
+            {
+                return;
+            }
+
+            // 3.退出旧状态
+            CurrentState?.ExitState();
+
+            // 4.记录上一状态
+            PreviousStateType = CurrentStateType;
+
+            // 5.切换当前状态
+            CurrentState = newState;
+            CurrentStateType = GetCurrentStateType(newState);
+
+            // 6.进入新状态
+            CurrentState.EnterState();
+        }
+
+        // 根据状态实例解析状态枚举
+        private EnemyState GetCurrentStateType(EnemyStateBase state)
+        {
+            return state switch
+            {
+                EnemyIdleState => EnemyState.Idle,
+                EnemyChaseState => EnemyState.Chase,
+                EnemyHitState => EnemyState.Hit,
+                EnemyDeadState => EnemyState.Dead,
+                _ => EnemyState.Idle
+            };
+        }
+        #endregion
+
+        #region 动画查询
+        // 根据敌人动画ID获取动画名称
+        public string GetEnemyAnimationName(EnemyAnimationId animationId)
+        {
+            // 1.空值检查
+            if (context == null || context.EnemyDataSO == null || context.EnemyDataSO.animationConfigSO == null)
+            {
+                return string.Empty;
+            }
+
+            // 2.从敌人动画配置中获取动画名称
+            return context.EnemyDataSO.animationConfigSO.GetEnemyAnimationName(animationId);
+        }
+
+        // 根据敌人动画ID获取动画长度
+        public float GetEnemyAnimationLength(EnemyAnimationId animationId)
+        {
+            // 1.空值检查
+            if (context == null || context.EnemyDataSO == null || context.EnemyDataSO.animationConfigSO == null)
+            {
+                return 0f;
+            }
+
+            // 2.从敌人动画配置中获取动画长度
+            return context.EnemyDataSO.animationConfigSO.GetEnemyAnimationLength(animationId);
+        }
+        #endregion
+
+        #region 受击请求
+        // 敌人受到伤害后，由 EnemyContext 调用此方法请求切换状态
+        public void RequestHit(DamageInfo damageInfo)
+        {
+            // 1.缓存最近一次受击信息，后续击退、受击朝向、仇恨都可以从这里取
+            LastDamageInfo = damageInfo;
+
+            // 2.运行时数据为空时不处理
+            if (runtimeData == null)
+            {
+                return;
+            }
+
+            // 3.死亡时进入死亡状态
+            if (runtimeData.IsDead)
+            {
+                SwitchState(StateFactory.GetState(EnemyState.Dead));
+                return;
+            }
+
+            // 4.未死亡时进入受击状态
+            SwitchState(StateFactory.GetState(EnemyState.Hit));
+        }
+        #endregion
+    }
+}

@@ -1647,7 +1647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveFileName: save.json
-  verboseLog: 1
+  verboseLog: 0
 --- !u!1 &101740577
 GameObject:
   m_ObjectHideFlags: 0
@@ -14463,7 +14463,7 @@ MonoBehaviour:
   uiRoot: {fileID: 1962735625}
   playerController: {fileID: 1796824563}
   playerRuntimeData: {fileID: 1796824562}
-  verboseLog: 1
+  verboseLog: 0
 --- !u!1 &1250074663
 GameObject:
   m_ObjectHideFlags: 0
@@ -14508,7 +14508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd88606d91fa62143b86b3f269d72f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 1
+  verboseLog: 0
   playerController: {fileID: 0}
   playerRuntimeData: {fileID: 0}
 --- !u!1 &1252659413
@@ -19608,7 +19608,7 @@ MonoBehaviour:
   enableTimeScaleTest: 1
   testTimeScaleA: 1
   testTimeScaleB: 0.3
-  verboseLog: 1
+  verboseLog: 0
 --- !u!1 &1653363269
 GameObject:
   m_ObjectHideFlags: 0
@@ -19686,7 +19686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb613873f13cf3d4697973ae9d0aa0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 1
+  verboseLog: 0
   indexFileName: index.json
 --- !u!1 &1678232560
 GameObject:
@@ -20386,7 +20386,7 @@ MonoBehaviour:
   backgroundAudioSource: {fileID: 1738787542}
   menuBackgroundClip: {fileID: 8300000, guid: 885e07695e207cc40b98b17fa68471bc, type: 3}
   gameplayBackgroundClip: {fileID: 8300000, guid: dde40d96b76aacb44ade1360f1f273a9, type: 3}
-  verboseLog: 1
+  verboseLog: 0
 --- !u!1 &1746208046
 GameObject:
   m_ObjectHideFlags: 0
@@ -21233,7 +21233,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
-      value: 9.499985
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: heavyAttackCost
@@ -21579,7 +21579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5aa4a3c3ad801444bafce7f918bd0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 1
+  verboseLog: 0
   playerInputReader: {fileID: 0}
 --- !u!1 &1818895087
 GameObject:
@@ -22341,7 +22341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacbef4f95e1b724aa3770d2fc727938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 1
+  verboseLog: 0
   characterPrefabMappings:
   - characterName: 0
     character: {fileID: 2358975735509947904, guid: c4833b76efd16044babbcb77ad69bb4a, type: 3}
@@ -31651,7 +31651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 837b66b580184474ebb4d8691315419c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 1
+  verboseLog: 0
 --- !u!1 &2120679253
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: EnemyAnimationConfig
+  m_EditorClassIdentifier: Assembly-CSharp:WutheringWaves:EnemyAnimationConfigSO
+  enemyAnimations:
+  - animationId: 1
+    clip: {fileID: -623603649343465320, guid: a0def514ede574e44813be4ee91073ee, type: 3}
+  - animationId: 2
+    clip: {fileID: -623603649343465320, guid: 1aa3f3a2bba96834792f073eeb4539af, type: 3}
+  - animationId: 3
+    clip: {fileID: -623603649343465320, guid: c2829cf95db41d84284ca999dea16282, type: 3}
+  - animationId: 4
+    clip: {fileID: -623603649343465320, guid: c1637268bb9260c498903269fc283d1a, type: 3}
+  - animationId: 5
+    clip: {fileID: -623603649343465320, guid: 30e64dc21dac7c247ac7fc0bf0ce4cc1, type: 3}
