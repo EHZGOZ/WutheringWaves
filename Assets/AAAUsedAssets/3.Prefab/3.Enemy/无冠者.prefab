@@ -106,11 +106,17 @@ MonoBehaviour:
   context: {fileID: 0}
   characterController: {fileID: 0}
   target: {fileID: 0}
-  detectRange: 8
-  stopDistance: 2
-  collisionStopPadding: 2
+  targetCharacterController: {fileID: 0}
+  detectRange: 20
+  stopDistance: 5
+  collisionStopPadding: 5
+  resumeMovePadding: 5
   moveSpeed: 2
-  rotateSpeed: 10
+  rotateSpeed: 30
+  ignoreTargetBodyCollision: 1
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &5119854799204084978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1348,7 +1354,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
-  m_Height: 1
+  m_Radius: 0.42
+  m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 1.45, z: 0}

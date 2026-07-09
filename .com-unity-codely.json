@@ -1,10 +1,10 @@
 {
-  "unity_port": 59392,
-  "stream_port": 55099,
+  "unity_port": 58176,
+  "stream_port": 58209,
   "created_date": "2026-07-01T11:21:43.6433671Z",
   "project_path": "D:/Unity/UnityProject/WutheringWaves/Assets",
   "reloading": false,
   "reason": "ready",
   "seq": 1,
-  "last_heartbeat": "2026-07-08T14:03:51.1375243Z"
+  "last_heartbeat": "2026-07-09T11:54:03.3263027Z"
 }

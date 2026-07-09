@@ -9,8 +9,8 @@ namespace WutheringWaves
         #region 核心引用
         [Header("=== 敌人属性核心引用 ===")]
         [SerializeField] private EnemyContext context; // 敌人上下文
-        [SerializeField] private EnemyRuntimeData runtimeData = new(); // 敌人运行时数据
         [SerializeField] private EnemyStateMachine stateMachine; // 敌人状态机
+        [SerializeField] private EnemyRuntimeData runtimeData = new(); // 敌人运行时数据
         #endregion
 
         #region 属性事件

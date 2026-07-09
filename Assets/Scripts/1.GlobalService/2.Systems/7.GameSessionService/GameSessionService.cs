@@ -3,11 +3,12 @@ using UnityEngine.SceneManagement;
 
 namespace WutheringWaves
 {
-    // 游戏会话状态：只描述当前是否已经真正进入玩法
+    // 游戏会话状态：描述当前处于游戏外、普通游戏中、战斗中
     public enum GameSessionState
     {
         OutGame, // 游戏外：主菜单、登录界面、未开始游戏
-        InGame   // 游戏中：账号已登录，并且已经开始游戏
+        InGame, // 游戏中：账号已登录，并且已经进入普通玩法
+        InGameBattle // 游戏战斗中：已经进入玩法，并且触发战斗流程
     }
     // 游戏会话服务：负责当前账号开始游戏、进入游戏、运行时数据同步和退出自动保存
     public class GameSessionService : MonoBehaviour
@@ -24,7 +25,10 @@ namespace WutheringWaves
         [SerializeField] private PlayerRuntimeData playerRuntimeData;
 
         public bool IsInitialized { get; private set; }
-        public bool IsInGame { get; private set; }
+        public GameSessionState CurrentState { get; private set; } = GameSessionState.OutGame; // 当前游戏会话状态
+        public bool IsInGame => CurrentState == GameSessionState.InGame || CurrentState == GameSessionState.InGameBattle; // 是否处于游戏内
+        public bool IsInBattle => CurrentState == GameSessionState.InGameBattle; // 是否处于战斗中
+
 
         #region 生命周期
         private void Awake()
@@ -61,7 +65,8 @@ namespace WutheringWaves
             }
 
             // 2.默认还没有进入游戏
-            IsInGame = false;
+  
+            CurrentState = GameSessionState.OutGame;
 
             // 3.标记初始化完成
             IsInitialized = true;
@@ -73,7 +78,44 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 当前账号开始游戏
+        #region 数据注入
+        // 解析玩家控制器和玩家运行时数据，并保持两边引用一致
+        private void ResolvePlayer()
+        {
+            // 1.优先使用PlayerController单例
+            if (playerController == null)
+            {
+                playerController = PlayerController.Instance;
+            }
+
+            // 2.兜底从场景中查找玩家控制器
+            if (playerController == null)
+            {
+                playerController = FindObjectOfType<PlayerController>();
+            }
+
+            // 3.优先从PlayerController身上获取PlayerRuntimeData
+            if (playerRuntimeData == null && playerController != null)
+            {
+                playerRuntimeData = playerController.PlayerRuntimeData;
+            }
+
+            // 4.兜底从场景中查找玩家运行时数据
+            if (playerRuntimeData == null)
+            {
+                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
+            }
+
+            // 5.互相注入，保证玩家控制器和运行时数据引用一致
+            if (playerRuntimeData != null && playerController != null)
+            {
+                playerRuntimeData.Bind(playerController);
+                playerController.Bind(playerRuntimeData);
+            }
+        }
+        #endregion
+
+        #region 新号创建存档或者老号读取数据
         // 当前账号开始游戏：有存档则读取，没有存档则新建，然后进入游戏
         public void StartGameWithCurrentAccount()
         {
@@ -160,7 +202,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 进入游戏
+        #region 进入游戏自动读取数据
         // 使用存档数据进入游戏：同步运行时数据、初始化玩家、绑定背包和UI
         private void EnterGameWithSaveData(SaveData saveData)
         {
@@ -204,8 +246,8 @@ namespace WutheringWaves
             // 9.显示玩法UI
             UIRoot.Instance?.ShowGameplayUI();
 
-            // 10.标记当前已经进入游戏
-            IsInGame = true;
+            // 10.切换当前游戏会话状态为普通游戏中
+            ChangeGameSessionState(GameSessionState.InGame);
 
             // 11.通知外部系统：当前已经进入游戏中
             GameEvents.RaiseGameSessionStateChanged(GameSessionState.InGame);
@@ -217,7 +259,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 退出自动保存
+        #region 退出游戏自动保存
         // 退出游戏时自动保存：退出程序、登出账号、返回登录前都可以调用
         public bool SaveCurrentGameOnExit()
         {
@@ -289,48 +331,55 @@ namespace WutheringWaves
             // 3.清理背包绑定，避免下一个账号误用旧背包引用
             InventoryService.Instance?.Clear();
 
-            // 4.标记当前已经不在游戏中
-            IsInGame = false;
+            // 4.切换当前游戏会话状态为游戏外
+            ChangeGameSessionState(GameSessionState.OutGame);
 
             // 5.通知外部系统：当前已经回到游戏外
             GameEvents.RaiseGameSessionStateChanged(GameSessionState.OutGame);
         }
         #endregion
 
-        #region 数据注入
-        // 解析玩家控制器和玩家运行时数据，并保持两边引用一致
-        private void ResolvePlayer()
+        #region 游戏会话状态切换
+        // 切换游戏会话状态，并通知外部系统
+        private void ChangeGameSessionState(GameSessionState targetState)
         {
-            // 1.优先使用PlayerController单例
-            if (playerController == null)
+            // 1.状态相同时不重复派发事件
+            if (CurrentState == targetState)
             {
-                playerController = PlayerController.Instance;
+                return;
             }
 
-            // 2.兜底从场景中查找玩家控制器
-            if (playerController == null)
+            // 2.记录当前游戏会话状态
+            CurrentState = targetState;
+
+            // 3.通知外部系统当前游戏会话状态发生变化
+            GameEvents.RaiseGameSessionStateChanged(CurrentState);
+        }
+
+        // 进入战斗状态：由Boss战、怪物战等玩法系统调用
+        public void EnterBattleSession()
+        {
+            // 1.只有普通游戏中才能进入战斗状态
+            if (CurrentState != GameSessionState.InGame)
             {
-                playerController = FindObjectOfType<PlayerController>();
+                return;
             }
 
-            // 3.优先从PlayerController身上获取PlayerRuntimeData
-            if (playerRuntimeData == null && playerController != null)
+            // 2.切换为战斗中
+            ChangeGameSessionState(GameSessionState.InGameBattle);
+        }
+
+        // 退出战斗状态：战斗结束后回到普通游戏中
+        public void ExitBattleSession()
+        {
+            // 1.只有战斗中才能退出战斗状态
+            if (CurrentState != GameSessionState.InGameBattle)
             {
-                playerRuntimeData = playerController.PlayerRuntimeData;
+                return;
             }
 
-            // 4.兜底从场景中查找玩家运行时数据
-            if (playerRuntimeData == null)
-            {
-                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
-            }
-
-            // 5.互相注入，保证玩家控制器和运行时数据引用一致
-            if (playerRuntimeData != null && playerController != null)
-            {
-                playerRuntimeData.Bind(playerController);
-                playerController.Bind(playerRuntimeData);
-            }
+            // 2.切回普通游戏中
+            ChangeGameSessionState(GameSessionState.InGame);
         }
         #endregion
     }

@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\4.UI\3.Menu\LoginMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\CombatConfigSO.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\3.Core\BossBattleController.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerCamera.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapMarker.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\8.AudioService\AudioConfigSO.cs" />

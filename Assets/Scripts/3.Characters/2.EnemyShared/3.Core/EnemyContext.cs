@@ -13,6 +13,7 @@ namespace WutheringWaves
         [SerializeField] private EnemyAttributes enemyAttributes; // 敌人属性组件
         [SerializeField] private EnemyStateMachine stateMachine; // 敌人状态机
         [SerializeField] private EnemyMovement movementLogic; // 敌人移动逻辑
+
         [SerializeField] private Animator animator; // 敌人动画控制器
         [SerializeField] private Collider[] enemyColliders; // 敌人碰撞体列表
         #endregion
@@ -127,7 +128,6 @@ namespace WutheringWaves
             // 2.由 EnemyMovement 接管发现目标、追击、停止和转向
             movementLogic.Initialize(this);
         }
-
         // 初始化敌人状态机
         private void InitializeStateMachine()
         {

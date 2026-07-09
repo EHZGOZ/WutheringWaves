@@ -307,7 +307,91 @@ namespace WutheringWaves
 
         #endregion
 
-        #region 7. 公共方法判断方法
+        #region 7.动画查询
+        // 根据移动动画ID获取动画名称
+        public string GetLocomotionAnimationName(LocomotionAnimationId animationId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return string.Empty;
+            }
+
+            //2.从动画配置中获取移动动画名称
+            return characterData.animationConfigSO.GetLocomotionAnimationName(animationId);
+        }
+
+        // 根据移动动画ID获取动画长度
+        public float GetLocomotionAnimationLength(LocomotionAnimationId animationId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return 0f;
+            }
+
+            //2.从动画配置中获取移动动画长度
+            return characterData.animationConfigSO.GetLocomotionAnimationLength(animationId);
+        }
+
+        // 根据攻击动画ID获取战斗动画名称
+        public string GetCombatAnimationName(AttackId attackId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return string.Empty;
+            }
+
+            //2.从动画配置中获取战斗动画名称
+            return characterData.animationConfigSO.GetCombatAnimationName(attackId);
+        }
+
+        // 根据攻击动画ID获取战斗动画长度
+        public float GetCombatAnimationLength(AttackId attackId)
+        {
+            //1.空值检查
+            if (characterData == null || characterData.animationConfigSO == null)
+            {
+                return 0f;
+            }
+
+            //2.从动画配置中获取战斗动画长度
+            return characterData.animationConfigSO.GetCombatAnimationLength(attackId);
+        }
+
+
+        #endregion
+
+        #region 8.输入判定
+        // 兼容旧状态实现的输入读取代理：后续状态迁移时统一从StateMachine访问
+        public Vector2 MoveInput => PlayerInputReader != null ? PlayerInputReader.MoveInput : Vector2.zero;
+        public bool IsHoldingRun => InputBuffer != null && InputBuffer.IsHoldingRun;
+        public bool WantsToDash => InputBuffer != null && InputBuffer.WantsToDash;
+
+        public bool CheckAndConsumeJumpRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeJumpRequest();
+        public bool CheckAndConsumeDashRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeDashRequest();
+        public bool CheckAndConsumeAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAttackRequest();
+        public bool CheckAndConsumeFallAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeFallAttackRequest();
+        public bool CheckAndConsumeHeavyAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeHeavyAttackRequest();
+        public bool CheckAndConsumeAirAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAirAttackRequest();
+        public bool CheckAndConsumeESkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeESkillRequest();
+        public bool CheckAndConsumeQBurstRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQBurstRequest();
+        public bool CheckAndConsumeQteSkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQteSkillRequest();
+
+
+        public void CleanWantsToJumpRequest() => InputBuffer?.CleanWantsToJumpRequest();
+        public void CleanWantsToDashRequest() => InputBuffer?.CleanWantsToDashRequest();
+        public void CleanWantsToAttackRequest() => InputBuffer?.CleanWantsToAttackRequest();
+        public void CleanWantsToFallAttackRequest() => InputBuffer?.CleanWantsToFallAttackRequest();
+        public void CleanWantsToHeavyAttackRequest() => InputBuffer?.CleanWantsToHeavyAttackRequest();
+        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();
+        public void CleanWantsToESkillRequest() => InputBuffer?.CleanWantsToESkillRequest();
+        public void CleanWantsToQBurstRequest() => InputBuffer?.CleanWantsToQBurstRequest();
+        public void CleanWantsToQteSkillRequest() => InputBuffer?.CleanWantsToQteSkillRequest();
+        #endregion
+
+        #region 9. 公共方法
 
         // 强制回到当前角色默认状态（当前今汐/卡提希娅都是待机）
         public void ForceResetToDefaultState()
@@ -335,8 +419,6 @@ namespace WutheringWaves
             PreviousStateType = defaultStateType;
             PreviousPreviousStateType = defaultStateType;
         }
-
-
         // 判断当前状态是否可被打断
         public bool IsInterruptible()
         {
@@ -362,35 +444,6 @@ namespace WutheringWaves
             return false;
         }
 
-   
-
-        // 兼容旧状态实现的输入读取代理：后续状态迁移时统一从StateMachine访问
-        public Vector2 MoveInput => PlayerInputReader != null ? PlayerInputReader.MoveInput : Vector2.zero;
-        public bool IsHoldingRun => InputBuffer != null && InputBuffer.IsHoldingRun;
-        public bool WantsToDash => InputBuffer != null && InputBuffer.WantsToDash;
-
-        public bool CheckAndConsumeJumpRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeJumpRequest();
-        public bool CheckAndConsumeDashRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeDashRequest();
-        public bool CheckAndConsumeAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAttackRequest();
-        public bool CheckAndConsumeFallAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeFallAttackRequest();
-        public bool CheckAndConsumeHeavyAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeHeavyAttackRequest();
-        public bool CheckAndConsumeAirAttackRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeAirAttackRequest();
-        public bool CheckAndConsumeESkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeESkillRequest();
-        public bool CheckAndConsumeQBurstRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQBurstRequest();
-        public bool CheckAndConsumeQteSkillRequest() => InputBuffer != null && InputBuffer.CheckAndConsumeQteSkillRequest();
-
-
-        public void CleanWantsToJumpRequest() => InputBuffer?.CleanWantsToJumpRequest();
-        public void CleanWantsToDashRequest() => InputBuffer?.CleanWantsToDashRequest();
-        public void CleanWantsToAttackRequest() => InputBuffer?.CleanWantsToAttackRequest();
-        public void CleanWantsToFallAttackRequest() => InputBuffer?.CleanWantsToFallAttackRequest();
-        public void CleanWantsToHeavyAttackRequest() => InputBuffer?.CleanWantsToHeavyAttackRequest();
-        public void CleanWantsToAirAttackRequest() => InputBuffer?.CleanWantsToAirAttackRequest();
-        public void CleanWantsToESkillRequest() => InputBuffer?.CleanWantsToESkillRequest();
-        public void CleanWantsToQBurstRequest() => InputBuffer?.CleanWantsToQBurstRequest();
-        public void CleanWantsToQteSkillRequest() => InputBuffer?.CleanWantsToQteSkillRequest();
-
-
         // 重置输入层状态（死亡/复活等需要清空请求时使用）
         public void ResetInputState()
         {
@@ -400,7 +453,7 @@ namespace WutheringWaves
 
         #endregion
 
-        #region 8.角色专属
+        #region 10.角色专属
         // 由外部组合入口注入角色专属状态机驱动，状态机自身不直接查找角色专属模块
         public void SetStateMachineDriver(ICharacterStateMachineDriver driver)
         {
@@ -420,7 +473,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 9. Gizmo绘制（编辑器下显示当前状态）
+        #region 11. Gizmo绘制（编辑器下显示当前状态）
         // 单个 Gizmo 文本的配置类
         [System.Serializable]
         public class GizmoLabelSettings
@@ -525,63 +578,7 @@ namespace WutheringWaves
             UnityEditor.Handles.Label(finalPos, text, style);
 #endif
         }
-        #endregion
-
-        #region 10.动画查询
-        // 根据移动动画ID获取动画名称
-        public string GetLocomotionAnimationName(LocomotionAnimationId animationId)
-        {
-            //1.空值检查
-            if (characterData == null || characterData.animationConfigSO == null)
-            {
-                return string.Empty;
-            }
-
-            //2.从动画配置中获取移动动画名称
-            return characterData.animationConfigSO.GetLocomotionAnimationName(animationId);
-        }
-
-        // 根据移动动画ID获取动画长度
-        public float GetLocomotionAnimationLength(LocomotionAnimationId animationId)
-        {
-            //1.空值检查
-            if (characterData == null || characterData.animationConfigSO == null)
-            {
-                return 0f;
-            }
-
-            //2.从动画配置中获取移动动画长度
-            return characterData.animationConfigSO.GetLocomotionAnimationLength(animationId);
-        }
-
-        // 根据攻击动画ID获取战斗动画名称
-        public string GetCombatAnimationName(AttackId attackId)
-        {
-            //1.空值检查
-            if (characterData == null || characterData.animationConfigSO == null)
-            {
-                return string.Empty;
-            }
-
-            //2.从动画配置中获取战斗动画名称
-            return characterData.animationConfigSO.GetCombatAnimationName(attackId);
-        }
-
-        // 根据攻击动画ID获取战斗动画长度
-        public float GetCombatAnimationLength(AttackId attackId)
-        {
-            //1.空值检查
-            if (characterData == null || characterData.animationConfigSO == null)
-            {
-                return 0f;
-            }
-
-            //2.从动画配置中获取战斗动画长度
-            return characterData.animationConfigSO.GetCombatAnimationLength(attackId);
-        }
-
-
-        #endregion
+        #endregion   
 
         #region 攻击辅助方法
         // 攻击起手时自动朝向最近敌人

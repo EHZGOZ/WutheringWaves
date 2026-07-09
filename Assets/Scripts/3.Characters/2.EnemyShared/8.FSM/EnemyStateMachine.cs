@@ -15,19 +15,14 @@ namespace WutheringWaves
 
     public class EnemyStateMachine : MonoBehaviour
     {
-        #region 核心引用
-        [Header("=== 敌人状态机核心引用 ===")]
+        #region 1.核心引用 (由CharacterContext自动注入)
+        [Header("=== 核心依赖（由CharacterContext自动注入，无需手动赋值）===")]
         [SerializeField] private EnemyContext context; // 敌人上下文
         [SerializeField] private EnemyRuntimeData runtimeData; // 敌人运行时数据
         [SerializeField] private Animator animator; // 敌人动画控制器
         #endregion
 
-        #region 状态配置
-        [Header("=== 受击状态配置 ===")]
-        [SerializeField] private float hitStateDuration = 0.25f; // 受击状态持续时间，后续可替换为动画长度
-        #endregion
-
-        #region 状态数据
+        #region 2. FSM核心组件
         public EnemyStateFactory StateFactory { get; private set; } // 敌人状态工厂
         public EnemyStateBase CurrentState { get; private set; } // 当前状态实例
         public EnemyState CurrentStateType { get; private set; } // 当前状态类型
@@ -36,28 +31,16 @@ namespace WutheringWaves
         public DamageInfo LastDamageInfo { get; private set; } // 最近一次受击信息
         #endregion
 
-        #region 对外只读属性
+        #region 3. 状态共享数据
+        public AttackStep currentStep;
+        //是否状态锁定
+        public bool IsStateLocked { get; set; } = false;
         public EnemyContext Context => context; // 敌人上下文
         public EnemyRuntimeData RuntimeData => runtimeData; // 敌人运行时数据
         public Animator Animator => animator; // 敌人动画控制器
-        public float HitStateDuration => hitStateDuration; // 受击状态持续时间
         #endregion
 
-        #region 生命周期
-        private void Update()
-        {
-            // 1.当前状态为空时不执行
-            if (CurrentState == null)
-            {
-                return;
-            }
-
-            // 2.死亡状态也允许自己保持空更新，避免后续死亡动画扩展时被拦截
-            CurrentState.UpdateState();
-        }
-        #endregion
-
-        #region 初始化
+        #region 4.初始化
         // 敌人状态机初始化：由 EnemyContext 统一调用
         public void Initialize(EnemyContext context)
         {
@@ -96,7 +79,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 状态切换
+        #region  5. FSM核心方法：状态切换（唯一入口，自动执行生命周期）
         // 状态切换统一入口
         internal void SwitchState(EnemyStateBase newState)
         {
@@ -140,7 +123,21 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 动画查询
+        #region 6.生命周期
+        private void Update()
+        {
+            // 1.当前状态为空时不执行
+            if (CurrentState == null)
+            {
+                return;
+            }
+
+            // 2.死亡状态也允许自己保持空更新，避免后续死亡动画扩展时被拦截
+            CurrentState.UpdateState();
+        }
+        #endregion
+
+        #region 7.动画查询
         // 根据敌人动画ID获取动画名称
         public string GetEnemyAnimationName(EnemyAnimationId animationId)
         {
@@ -166,6 +163,10 @@ namespace WutheringWaves
             // 2.从敌人动画配置中获取动画长度
             return context.EnemyDataSO.animationConfigSO.GetEnemyAnimationLength(animationId);
         }
+        #endregion
+
+        #region 8.Gizmo绘制（编辑器下显示当前状态）
+
         #endregion
 
         #region 受击请求

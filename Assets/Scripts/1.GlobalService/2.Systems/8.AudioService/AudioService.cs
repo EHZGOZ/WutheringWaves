@@ -8,17 +8,18 @@ namespace WutheringWaves
     {
         public static AudioService Instance { get; private set; } // 音频服务单例入口
 
+        [Header("背景音源")]
+        [SerializeField] private AudioSource backgroundAudioSource; // 背景音乐音源，负责真正播放背景音乐
         [Header("=== 默认音量 ===")]
         private const float DefaultMasterVolume = 1f; // 默认总音量
         private const float DefaultBackgroundVolume = 0.2f; // 默认背景音乐音量
         private const float DefaultSfxVolume = 1f; // 默认总音效音量
 
         [Header("背景音乐")]
-        [SerializeField] private AudioSource backgroundAudioSource; // 背景音乐音源，负责真正播放背景音乐
-
         [SerializeField] private AudioClip menuBackgroundClip; // 主界面和登录界面背景音乐
         [FormerlySerializedAs("defaultBackgroundClip")]
-        [SerializeField] private AudioClip gameplayBackgroundClip; // 游戏中背景音乐，兼容原来的默认背景音乐字段
+        [SerializeField] private AudioClip gameplayBackgroundClip; // 普通游戏中背景音乐，兼容原来的默认背景音乐字段
+        [SerializeField] private AudioClip battleBackgroundClip; // 战斗中背景音乐，Boss战或其他战斗触发时播放
 
         [SerializeField] private bool verboseLog = false; // 是否输出调试日志
 
@@ -177,10 +178,23 @@ namespace WutheringWaves
                     PlayGameplayBackgroundMusic();
                     break;
 
+                case GameSessionState.InGameBattle:
+                    PlayBattleBackgroundMusic();
+                    break;
+
                 case GameSessionState.OutGame:
                     PlayMenuBackgroundMusic();
                     break;
             }
+        }
+        // 播放战斗中背景音乐
+        public void PlayBattleBackgroundMusic()
+        {
+            // 1.如果战斗音乐没有配置，先兜底播放普通游戏中背景音乐
+            AudioClip targetClip = battleBackgroundClip != null ? battleBackgroundClip : gameplayBackgroundClip;
+
+            // 2.播放目标背景音乐
+            PlayBackgroundMusic(targetClip);
         }
         // 播放默认背景音乐：兼容旧调用，优先播放主界面音乐
         public void PlayBackgroundMusic()
