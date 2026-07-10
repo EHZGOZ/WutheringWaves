@@ -18,7 +18,6 @@ namespace WutheringWaves
         #region 1.核心引用 (由CharacterContext自动注入)
         [Header("=== 核心依赖（由CharacterContext自动注入，无需手动赋值）===")]
         [SerializeField] private EnemyContext context; // 敌人上下文
-        [SerializeField] private EnemyRuntimeData runtimeData; // 敌人运行时数据
         [SerializeField] private Animator animator; // 敌人动画控制器
         #endregion
 
@@ -36,7 +35,6 @@ namespace WutheringWaves
         //是否状态锁定
         public bool IsStateLocked { get; set; } = false;
         public EnemyContext Context => context; // 敌人上下文
-        public EnemyRuntimeData RuntimeData => runtimeData; // 敌人运行时数据
         public Animator Animator => animator; // 敌人动画控制器
         #endregion
 
@@ -44,21 +42,22 @@ namespace WutheringWaves
         // 敌人状态机初始化：由 EnemyContext 统一调用
         public void Initialize(EnemyContext context)
         {
-            // 1.缓存上下文与运行时数据
+            // 1.缓存敌人上下文
             this.context = context;
-            runtimeData = context != null ? context.RuntimeData : null;
+
+            // 2.通过上下文获取动画控制器，不再持有EnemyRuntimeData引用
             animator = context != null ? context.Animator : null;
 
-            // 2.创建状态工厂
+            // 3.创建状态工厂
             StateFactory = new EnemyStateFactory();
 
-            // 3.注册敌人基础状态
+            // 4.注册敌人基础状态
             RegisterBaseStates();
 
-            // 4.初始化状态记录
+            // 5.初始化状态记录
             PreviousStateType = EnemyState.Idle;
 
-            // 5.进入默认待机状态
+            // 6.进入默认待机状态
             SwitchState(StateFactory.GetState(EnemyState.Idle));
         }
 
@@ -170,26 +169,26 @@ namespace WutheringWaves
         #endregion
 
         #region 受击请求
-        // 敌人受到伤害后，由 EnemyContext 调用此方法请求切换状态
+        // 敌人受到伤害后，由 EnemyAttributes 调用此方法请求切换状态
         public void RequestHit(DamageInfo damageInfo)
         {
-            // 1.缓存最近一次受击信息，后续击退、受击朝向、仇恨都可以从这里取
+            // 1.缓存最近一次受击信息
             LastDamageInfo = damageInfo;
 
-            // 2.运行时数据为空时不处理
-            if (runtimeData == null)
+            // 2.敌人上下文为空时不能判断当前状态
+            if (context == null)
             {
                 return;
             }
 
-            // 3.死亡时进入死亡状态
-            if (runtimeData.IsDead)
+            // 3.敌人已经死亡时进入死亡状态
+            if (context.IsDead)
             {
                 SwitchState(StateFactory.GetState(EnemyState.Dead));
                 return;
             }
 
-            // 4.未死亡时进入受击状态
+            // 4.敌人仍然存活时进入受击状态
             SwitchState(StateFactory.GetState(EnemyState.Hit));
         }
         #endregion

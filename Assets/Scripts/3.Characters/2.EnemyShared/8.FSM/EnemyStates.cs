@@ -82,8 +82,8 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高
-            if (stateMachine.RuntimeData != null && stateMachine.RuntimeData.IsDead)
+            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
+            if (stateMachine.Context != null && stateMachine.Context.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;
@@ -95,9 +95,9 @@ namespace WutheringWaves
                 SwitchState(EnemyState.Chase);
                 return true;
             }
+
             // 3.没有发生状态转换
             return false;
-
         }
         #endregion
     }
@@ -191,8 +191,8 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高
-            if (stateMachine.RuntimeData != null && stateMachine.RuntimeData.IsDead)
+            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
+            if (stateMachine.Context != null && stateMachine.Context.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;
@@ -205,7 +205,7 @@ namespace WutheringWaves
                 return true;
             }
 
-            // 3.目标离开发现范围时回到待机
+            // 3.目标无效时回到待机
             if (!stateMachine.Context.MovementLogic.IsTargetInDetectRange())
             {
                 stateMachine.Context.MovementLogic.StopMove();
@@ -319,8 +319,8 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高
-            if (stateMachine.RuntimeData != null && stateMachine.RuntimeData.IsDead)
+            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
+            if (stateMachine.Context != null && stateMachine.Context.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;

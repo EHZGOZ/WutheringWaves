@@ -90,7 +90,6 @@
     <Compile Include="Assets\Scripts\4.UI\3.Menu\LoginMenuController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\CombatConfigSO.cs" />
-    <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\3.Core\BossBattleController.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerCamera.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapMarker.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\8.AudioService\AudioConfigSO.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\7.Visual\CharaterManifestation.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.InputService\InputFieldInputModeBinder.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\9.EffectService\EffectConfigSO.cs" />
+    <Compile Include="Assets\Scripts\5.Gameplay\Encounters\BossBattle\BossBattleController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\0.Common\7.Visual\Afterimage3D.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\8.FSM\EnemyStateBase.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\1.Data\EnemyDataSO.cs" />
@@ -130,6 +130,7 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.AccountManager\JsonAccountRepository.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\1.Bootstrap\GameBootstrap.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\2.Runtime\EnemyAttributes.cs" />
+    <Compile Include="Assets\Scripts\5.Gameplay\Encounters\BossBattle\BossBattleState.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\CharacterDataSO.cs" />

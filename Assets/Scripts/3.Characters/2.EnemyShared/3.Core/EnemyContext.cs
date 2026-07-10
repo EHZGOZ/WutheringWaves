@@ -2,6 +2,10 @@
 
 namespace WutheringWaves
 {
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(EnemyAttributes))]
+    [RequireComponent(typeof(EnemyStateMachine))]
+    [RequireComponent(typeof(EnemyMovement))]
     public class EnemyContext : MonoBehaviour
     {
         #region 核心引用

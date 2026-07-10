@@ -2,7 +2,9 @@
 
 namespace WutheringWaves
 {
-    // 敌人移动组件：Boss 版，只负责外部指定目标后的靠近、停止和转向
+    // 敌人移动组件只能存在一个，并要求根物体拥有CharacterController
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(CharacterController))]
     public class EnemyMovement : MonoBehaviour
     {
         #region 核心引用
@@ -48,13 +50,17 @@ namespace WutheringWaves
             // 1.缓存敌人上下文
             this.context = context;
 
-            // 2.自动获取 CharacterController
+            // 2.获取同一物体上的CharacterController
+            characterController = GetComponent<CharacterController>();
+
+            // 3.旧预制体可能是在添加RequireComponent之前创建的，因此仍然进行运行时校验
             if (characterController == null)
             {
-                characterController = GetComponent<CharacterController>();
+                Debug.LogError($"敌人 {name} 缺少 CharacterController 组件，无法正常执行移动和碰撞处理。", this);
+                return;
             }
 
-            // 3.Boss 目标由 BossBattleController 指定，这里不主动查找玩家
+            // 4.Boss目标由BossBattleController指定，初始化时清理旧目标
             ClearTarget();
         }
         #endregion
