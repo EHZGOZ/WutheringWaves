@@ -25,7 +25,9 @@ namespace WutheringWaves
         public EnemyStateFactory StateFactory { get; private set; } // 敌人状态工厂
         public EnemyStateBase CurrentState { get; private set; } // 当前状态实例
         public EnemyState CurrentStateType { get; private set; } // 当前状态类型
+
         public EnemyState PreviousStateType { get; private set; } // 上一个状态类型
+        public EnemyState PreviousPreviousStateType { get; private set; } // 上上一个状态类型
 
         public DamageInfo LastDamageInfo { get; private set; } // 最近一次受击信息
         #endregion
@@ -54,8 +56,9 @@ namespace WutheringWaves
             // 4.注册敌人基础状态
             RegisterBaseStates();
 
-            // 5.初始化状态记录
+            // 5.初始化上一状态和上上状态记录
             PreviousStateType = EnemyState.Idle;
+            PreviousPreviousStateType = EnemyState.Idle;
 
             // 6.进入默认待机状态
             SwitchState(StateFactory.GetState(EnemyState.Idle));
@@ -97,14 +100,17 @@ namespace WutheringWaves
             // 3.退出旧状态
             CurrentState?.ExitState();
 
-            // 4.记录上一状态
+            // 4.将上一状态记录为上上状态
+            PreviousPreviousStateType = PreviousStateType;
+
+            // 5.将当前状态记录为上一状态
             PreviousStateType = CurrentStateType;
 
-            // 5.切换当前状态
+            // 6.切换当前状态
             CurrentState = newState;
             CurrentStateType = GetCurrentStateType(newState);
 
-            // 6.进入新状态
+            // 7.进入新状态
             CurrentState.EnterState();
         }
 
@@ -165,8 +171,107 @@ namespace WutheringWaves
         #endregion
 
         #region 8.Gizmo绘制（编辑器下显示当前状态）
+        // 单个Gizmo文本的配置类
+        [System.Serializable]
+        public class GizmoLabelSettings
+        {
+            [Tooltip("是否显示此信息")]
+            public bool show = true;
 
-        #endregion
+            [Tooltip("文字颜色")]
+            public Color color = Color.yellow;
+
+            [Tooltip("相对于敌人根物体的Y轴偏移")]
+            public float yOffset = 0f;
+
+            [Tooltip("相对于敌人的X轴偏移")]
+            public float xOffset = 0f;
+
+            [Tooltip("字体大小")]
+            public int fontSize = 12;
+
+            [Tooltip("字体样式")]
+            public FontStyle fontStyle = FontStyle.Bold;
+        }
+
+        [Header("=== Gizmo总开关 ===")]
+        [Tooltip("是否显示所有敌人状态Gizmo文字")]
+        [SerializeField] private bool showAllGizmos = true;
+
+        [Header("=== 各个Gizmo独立配置 ===")]
+        [SerializeField]
+        private GizmoLabelSettings currentStateGizmo =
+            new GizmoLabelSettings { yOffset = 3.6f, color = Color.yellow };
+
+        [SerializeField]
+        private GizmoLabelSettings previousStateGizmo =
+            new GizmoLabelSettings { yOffset = 3.3f, color = Color.cyan };
+
+        [SerializeField]
+        private GizmoLabelSettings previousPreviousStateGizmo =
+            new GizmoLabelSettings { yOffset = 3.0f, color = Color.magenta };
+
+        // 编辑器下实时绘制敌人状态Gizmo
+        private void OnDrawGizmos()
+        {
+            // 1.总开关关闭时不绘制
+            if (!showAllGizmos)
+            {
+                return;
+            }
+
+#if UNITY_EDITOR
+            // 2.绘制当前状态
+            if (currentStateGizmo.show)
+            {
+                DrawGizmoLabel(
+                    $"当前状态：{CurrentStateType}",
+                    currentStateGizmo
+                );
+            }
+
+            // 3.绘制上一状态
+            if (previousStateGizmo.show)
+            {
+                DrawGizmoLabel(
+                    $"上一状态：{PreviousStateType}",
+                    previousStateGizmo
+                );
+            }
+
+            // 4.绘制上上状态
+            if (previousPreviousStateGizmo.show)
+            {
+                DrawGizmoLabel(
+                    $"上上状态：{PreviousPreviousStateType}",
+                    previousPreviousStateGizmo
+                );
+            }
+        }
+#endif
+
+        // 绘制单个Gizmo文字标签
+        private void DrawGizmoLabel(string text, GizmoLabelSettings settings)
+        {
+#if UNITY_EDITOR
+            // 1.计算文字绘制位置
+            Vector3 basePosition = transform.position + Vector3.up * settings.yOffset;
+            Vector3 finalPosition = basePosition + transform.right * settings.xOffset;
+
+            // 2.设置文字样式
+            GUIStyle style = new GUIStyle
+            {
+                fontSize = settings.fontSize,
+                fontStyle = settings.fontStyle,
+                normal = { textColor = settings.color }
+            };
+
+            // 3.在Scene视图绘制文字
+            UnityEditor.Handles.color = settings.color;
+            UnityEditor.Handles.Label(finalPosition, text, style);
+#endif
+        }
+    #endregion
 
         #region 受击请求
         // 敌人受到伤害后，由 EnemyAttributes 调用此方法请求切换状态

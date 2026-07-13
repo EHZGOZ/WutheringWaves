@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -4499825123611929438}
   - component: {fileID: 5448765839719725189}
   - component: {fileID: 6650128897115264932}
+  - component: {fileID: 4140055066385889134}
   m_Layer: 7
   m_Name: "\u65E0\u51A0\u8005"
   m_TagString: Untagged
@@ -53,6 +54,7 @@ MonoBehaviour:
   enemyAttributes: {fileID: 0}
   stateMachine: {fileID: 0}
   movementLogic: {fileID: 0}
+  rootMotion: {fileID: 0}
   animator: {fileID: 0}
   enemyColliders: []
   disableObjectOnDead: 0
@@ -81,6 +83,28 @@ MonoBehaviour:
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
+  showAllGizmos: 1
+  currentStateGizmo:
+    show: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    yOffset: 4
+    xOffset: 0
+    fontSize: 12
+    fontStyle: 1
+  previousStateGizmo:
+    show: 1
+    color: {r: 0, g: 1, b: 1, a: 1}
+    yOffset: 3
+    xOffset: 0
+    fontSize: 12
+    fontStyle: 1
+  previousPreviousStateGizmo:
+    show: 1
+    color: {r: 1, g: 0, b: 1, a: 1}
+    yOffset: 2
+    xOffset: 0
+    fontSize: 12
+    fontStyle: 1
 --- !u!114 &-4499825123611929438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,13 +136,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   context: {fileID: 0}
   characterController: {fileID: 0}
+  navMeshAgent: {fileID: 0}
   target: {fileID: 0}
-  targetCharacterController: {fileID: 0}
-  stopDistance: 5
-  resumeMovePadding: 5
+  stopDistance: 3
+  resumeMovePadding: 0.5
   moveSpeed: 2
-  rotateSpeed: 30
-  ignoreTargetBodyCollision: 1
+  rotateSpeed: 360
+  pathUpdateInterval: 0.025
+  navMeshSampleDistance: 2
 --- !u!143 &6650128897115264932
 CharacterController:
   m_ObjectHideFlags: 0
@@ -145,6 +170,28 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.44, z: 0}
+--- !u!195 &4140055066385889134
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7911075310875473520}
+  m_Enabled: 1
+  m_AgentTypeID: -1372625422
+  m_Radius: 0.5
+  m_Speed: 2
+  m_Acceleration: 8
+  avoidancePriority: 30
+  m_AngularSpeed: 360
+  m_StoppingDistance: 3
+  m_AutoTraverseOffMeshLink: 0
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 3
+  m_BaseOffset: 0
+  m_WalkableMask: 1
+  m_ObstacleAvoidanceType: 4
 --- !u!1001 &5119854799204084978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1073,6 +1120,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 86c85dff571208748bdb3afac51d73f4, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5945227136693877067, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -1348,10 +1399,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8704665801888284920}
   m_SourcePrefab: {fileID: 100100000, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
+--- !u!95 &1614528894359294307 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
+  m_PrefabInstance: {fileID: 5119854799204084978}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4649924478118005529 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
   m_PrefabInstance: {fileID: 5119854799204084978}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5461750351016120739 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 673d532d25769f34d981518c2e3d5a67, type: 3}
+  m_PrefabInstance: {fileID: 5119854799204084978}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8704665801888284920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5461750351016120739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53037b46fb672ae46abd9b9d90af4fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  context: {fileID: 0}
+  animator: {fileID: 1614528894359294307}
+  characterController: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  enableRootMotionDebug: 0
+  onlyLogWhenMoved: 1

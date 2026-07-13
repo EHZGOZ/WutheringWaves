@@ -1,32 +1,36 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace WutheringWaves
 {
-    // 敌人移动组件只能存在一个，并要求根物体拥有CharacterController
+    // 敌人移动组件只能存在一个，并要求根物体拥有CharacterController和NavMeshAgent
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(NavMeshAgent))]
     public class EnemyMovement : MonoBehaviour
     {
         #region 核心引用
         [Header("=== 敌人移动核心引用 ===")]
         [SerializeField] private EnemyContext context; // 敌人上下文
-        [SerializeField] private CharacterController characterController; // 敌人角色控制器
-        [SerializeField] private Transform target; // 当前追击目标，由 Boss 战控制器指定
-        [SerializeField] private CharacterController targetCharacterController; // 当前目标角色控制器
+        [SerializeField] private CharacterController characterController; // 敌人实体移动控制器
+        [SerializeField] private NavMeshAgent navMeshAgent; // 敌人导航路径计算组件
+        [SerializeField] private Transform target; // 当前追击目标，由Boss战控制器指定
         #endregion
 
         #region 移动配置
-        [Header("=== Boss 移动配置 ===")]
-        [SerializeField] private float stopDistance = 2.5f; // Boss 停止靠近距离，后续可和攻击距离分开配置
-        [SerializeField] private float resumeMovePadding = 0.35f; // 重新靠近缓冲距离，避免停止边界反复抖动
-        [SerializeField] private float moveSpeed = 2f; // Boss 靠近目标速度
-        [SerializeField] private float rotateSpeed = 10f; // Boss 转向速度
-        [SerializeField] private bool ignoreTargetBodyCollision = true; // 是否忽略 Boss 与目标的实体碰撞
+        [Header("=== Boss移动配置 ===")]
+        [SerializeField] private float stopDistance = 3f; // Boss停止靠近距离
+        [SerializeField] private float resumeMovePadding = 0.5f; // 恢复追击缓冲距离
+        [SerializeField] private float moveSpeed = 2f; // Boss最大移动速度
+        [SerializeField] private float rotateSpeed = 360f; // Boss每秒最大旋转角度
+        [SerializeField] private float pathUpdateInterval = 0.1f; // 重新计算目标路径的时间间隔
+        [SerializeField] private float navMeshSampleDistance = 2f; // Boss出生点附近的NavMesh查找距离
         #endregion
 
         #region 运行时数据
         private bool isStoppingNearTarget; // 是否已经停在目标附近
-        private CharacterController ignoredTargetCharacterController; // 当前已忽略碰撞的目标控制器
+        private float pathUpdateTimer; // 路径刷新计时器
+        private bool hasLoggedNavigationFailure; // 是否已经输出导航异常，避免每帧重复警告
         #endregion
 
         #region 对外只读属性
@@ -38,35 +42,130 @@ namespace WutheringWaves
         #region 生命周期
         private void OnDisable()
         {
-            // 1.对象禁用时恢复忽略碰撞，避免对象池或场景重开时残留
-            ClearTargetCollisionIgnore();
-        }
-        #endregion
-
-        #region 初始化
-        // 敌人移动初始化：由 EnemyContext 统一调用
-        public void Initialize(EnemyContext context)
-        {
-            // 1.缓存敌人上下文
-            this.context = context;
-
-            // 2.获取同一物体上的CharacterController
-            characterController = GetComponent<CharacterController>();
-
-            // 3.旧预制体可能是在添加RequireComponent之前创建的，因此仍然进行运行时校验
-            if (characterController == null)
-            {
-                Debug.LogError($"敌人 {name} 缺少 CharacterController 组件，无法正常执行移动和碰撞处理。", this);
-                return;
-            }
-
-            // 4.Boss目标由BossBattleController指定，初始化时清理旧目标
+            // 1.对象禁用时清空目标和路径，避免Boss重用后保留旧目标
             ClearTarget();
         }
         #endregion
 
-        #region 目标控制
-        // 设置当前目标：Boss 战开始时由 BossBattleController 调用
+        #region 初始化
+        // 敌人移动初始化：由EnemyContext统一调用
+        public void Initialize(EnemyContext context)
+        {
+            //1.验证获取组件
+            GatAndValidateComponent();
+
+            //2.配置NavMeshAgent的移动控制方式
+            InitializeNavMeshAgent();
+
+            //3.将Boss放置并绑定到附近的NavMesh
+            if (!TryPlaceOnNavMesh())
+            {
+                return;
+            }
+
+            // 4.初始化时清理旧目标和旧路径
+            ClearTarget();
+        }
+        //1.验证获取组件
+        private void  GatAndValidateComponent()
+        {
+            // 1.缓存敌人上下文
+            this.context = context;
+
+            // 2.获取根物体上的实体移动组件
+            characterController = GetComponent<CharacterController>();
+
+            // 3.获取根物体上的导航组件
+            navMeshAgent = GetComponent<NavMeshAgent>();
+
+            // 4.CharacterController为空时无法执行实体移动
+            if (characterController == null)
+            {
+                Debug.LogError($"敌人 {name} 缺少 CharacterController 组件，无法执行实体移动。", this);
+                return;
+            }
+
+            // 5.NavMeshAgent为空时无法计算导航路径
+            if (navMeshAgent == null)
+            {
+                Debug.LogError($"敌人 {name} 缺少 NavMeshAgent 组件，无法执行导航寻路。", this);
+                return;
+            }
+        }
+
+        //2.初始化NavMeshAgent配置
+        private void InitializeNavMeshAgent()
+        {
+            // 1.NavMeshAgent只负责路径计算，不直接修改Transform位置
+            navMeshAgent.updatePosition = false;
+
+            // 2.关闭自动旋转，由EnemyMovement按当前状态手动控制朝向
+            navMeshAgent.updateRotation = false;
+
+            // 3.同步移动配置，确保导航计算与实体移动使用相同参数
+            navMeshAgent.speed = moveSpeed;
+            navMeshAgent.angularSpeed = rotateSpeed;
+            navMeshAgent.stoppingDistance = stopDistance;
+            navMeshAgent.autoBraking = true;
+        }
+
+        //3.尝试将Boss放置到附近的NavMesh
+        private bool TryPlaceOnNavMesh()
+        {
+            // 1.NavMeshAgent不可用时不能查找NavMesh
+            if (navMeshAgent == null || !navMeshAgent.enabled)
+            {
+                return false;
+            }
+
+            // 2.只查找当前Agent Type可以使用的NavMesh
+            NavMeshQueryFilter queryFilter = new NavMeshQueryFilter
+            {
+                agentTypeID = navMeshAgent.agentTypeID,
+                areaMask = navMeshAgent.areaMask
+            };
+
+            // 3.查找Boss出生点附近的可行走位置
+            if (!NavMesh.SamplePosition(
+                transform.position,
+                out NavMeshHit navMeshHit,
+                navMeshSampleDistance,
+                queryFilter))
+            {
+                Debug.LogError(
+                    $"敌人 {name} 出生点附近 {navMeshSampleDistance} 米内没有可用NavMesh。",
+                    this
+                );
+                return false;
+            }
+
+            // 4.先将导航模拟位置放到有效NavMesh上
+            if (!navMeshAgent.Warp(navMeshHit.position))
+            {
+                Debug.LogError($"敌人 {name} 无法绑定到NavMesh。", this);
+                return false;
+            }
+
+            // 5.临时关闭CharacterController，安全同步Boss实体位置
+            bool wasCharacterControllerEnabled = characterController.enabled;
+            characterController.enabled = false;
+            transform.position = navMeshHit.position;
+            characterController.enabled = wasCharacterControllerEnabled;
+
+            // 6.同步导航模拟位置与Boss实体位置
+            navMeshAgent.nextPosition = transform.position;
+            hasLoggedNavigationFailure = false;
+
+            return true;
+        }
+        #endregion
+
+        #region 判断方法
+
+        #endregion
+
+        #region 当前目标
+        // 设置当前目标：Boss战开始时由BossBattleController调用
         public void SetTarget(CharacterContext characterContext)
         {
             // 1.目标为空时清空当前目标
@@ -76,36 +175,179 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.缓存目标 Transform 与 CharacterController
+            // 2.缓存玩家根节点作为当前导航目标
             target = characterContext.transform;
-            targetCharacterController = characterContext.CharacterController;
 
-            // 3.重置停止状态，避免切换目标后 Boss 不重新判断距离
+            // 3.重置停止状态和路径刷新计时
             isStoppingNearTarget = false;
-
-            // 4.忽略 Boss 与当前目标的实体碰撞，避免玩家和 Boss 互相卡住
-            ApplyTargetCollisionIgnore();
+            pathUpdateTimer = pathUpdateInterval;
+            hasLoggedNavigationFailure = false;
         }
 
-        // 清空当前目标：Boss 战结束、目标离开或目标无效时调用
+        // 清空当前目标：Boss战结束、目标离开或目标无效时调用
         public void ClearTarget()
         {
-            // 1.清空目标前恢复旧目标碰撞
-            ClearTargetCollisionIgnore();
-
-            // 2.清空目标引用
+            // 1.清空当前目标和运行时状态
             target = null;
-            targetCharacterController = null;
-
-            // 3.重置停止状态，避免下次重新追击时残留
             isStoppingNearTarget = false;
+            pathUpdateTimer = 0f;
+            hasLoggedNavigationFailure = false;
+
+            // 2.NavMeshAgent不可用时不操作路径
+            if (!CanUseNavMeshAgent())
+            {
+                return;
+            }
+
+            // 3.停止导航并清除旧路径
+            navMeshAgent.isStopped = true;
+            navMeshAgent.ResetPath();
+
+            // 4.同步导航模拟位置，避免重新追击时出现位置跳变
+            navMeshAgent.nextPosition = transform.position;
+        }
+        #endregion
+
+        #region 移动执行
+        // 靠近当前目标
+        public void MoveToTarget()
+        {
+            // 1.没有目标时不执行移动
+            if (target == null)
+            {
+                StopMove();
+                return;
+            }
+
+            // 2.NavMeshAgent不可用时不执行移动
+            if (!CanUseNavMeshAgent())
+            {
+                LogNavigationFailure();
+                return;
+            }
+
+            hasLoggedNavigationFailure = false;
+
+            // 3.同步当前实体位置，避免导航模拟位置与CharacterController分离
+            navMeshAgent.nextPosition = transform.position;
+
+            // 4.到达停止距离后停止，不在追击状态中原地旋转
+            if (IsInStopDistance())
+            {
+                StopMove();
+                return;
+            }
+
+            // 5.恢复NavMeshAgent路径计算
+            navMeshAgent.isStopped = false;
+
+            // 6.按时间间隔刷新玩家目标位置
+            UpdateTargetDestination();
+
+            // 7.路径仍在计算或不存在时暂不移动
+            if (navMeshAgent.pathPending || !navMeshAgent.hasPath)
+            {
+                return;
+            }
+
+            // 8.读取NavMeshAgent计算出的路径期望速度
+            Vector3 moveVelocity = navMeshAgent.desiredVelocity;
+
+            if (moveVelocity.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            // 9.限制实体移动速度，避免导航参数异常时突然加速
+            moveVelocity = Vector3.ClampMagnitude(moveVelocity, moveSpeed);
+
+            // 10.由CharacterController执行实体移动和碰撞处理
+            characterController.Move(moveVelocity * Time.deltaTime);
+
+            // 11.移动后同步NavMeshAgent内部位置
+            navMeshAgent.nextPosition = transform.position;
+
+            // 12.只有实际移动时才沿路径方向平滑旋转
+            RotateToDirection(moveVelocity);
         }
 
-        // 判断目标是否有效：保留这个方法，兼容 EnemyState 当前的调用
-        public bool IsTargetInDetectRange()
+        // 按固定间隔刷新导航目标位置
+        private void UpdateTargetDestination()
         {
-            // 1.Boss 版不做范围检测，只判断是否已经由外部指定目标
-            return target != null;
+            // 1.累计路径刷新计时
+            pathUpdateTimer += Time.deltaTime;
+
+            // 2.路径存在且未到刷新时间时继续沿旧路径移动
+            if (navMeshAgent.hasPath && pathUpdateTimer < pathUpdateInterval)
+            {
+                return;
+            }
+
+            // 3.重置刷新计时
+            pathUpdateTimer = 0f;
+
+            // 4.更新玩家位置并重新计算路径
+            if (navMeshAgent.SetDestination(target.position))
+            {
+                return;
+            }
+
+            // 5.路径设置失败时只输出一次警告
+            LogNavigationFailure();
+        }
+
+        // 停止移动：保留当前路径，方便目标离开恢复距离后继续追击
+        public void StopMove()
+        {
+            // 1.NavMeshAgent不可用时不处理
+            if (!CanUseNavMeshAgent())
+            {
+                return;
+            }
+
+            // 2.暂停导航模拟
+            navMeshAgent.isStopped = true;
+
+            // 3.保持导航模拟位置与实体位置一致
+            navMeshAgent.nextPosition = transform.position;
+        }
+
+        // 朝向当前目标：预留给后续攻击准备状态调用
+        public void RotateToTarget()
+        {
+            // 1.没有目标时不转向
+            if (target == null)
+            {
+                return;
+            }
+
+            // 2.计算目标水平方向
+            Vector3 direction = target.position - transform.position;
+            direction.y = 0f;
+
+            RotateToDirection(direction);
+        }
+
+        // 朝指定方向平滑转向
+        private void RotateToDirection(Vector3 direction)
+        {
+            // 1.旋转只使用水平方向
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            // 2.计算目标朝向
+            Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+
+            // 3.按每秒最大旋转角度平滑转向，避免瞬间改变朝向
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                rotateSpeed * Time.deltaTime
+            );
         }
         #endregion
 
@@ -120,25 +362,29 @@ namespace WutheringWaves
                 return false;
             }
 
-            // 2.只计算水平距离，避免高度差影响 Boss 站位判断
-            Vector3 direction = target.position - transform.position;
-            direction.y = 0f;
+            // 2.计算Boss与目标的水平直线距离
+            Vector3 targetDirection = target.position - transform.position;
+            targetDirection.y = 0f;
+            float horizontalDistance = targetDirection.magnitude;
 
-            float currentDistance = direction.magnitude;
-
-            // 3.如果已经停住，使用更大的恢复距离，避免停止边界反复抖动
+            // 3.已经停止时使用恢复缓冲，避免边界附近频繁启停
             if (isStoppingNearTarget)
             {
-                if (currentDistance <= stopDistance + resumeMovePadding)
+                if (horizontalDistance <= stopDistance + resumeMovePadding)
                 {
                     return true;
                 }
 
+                // 4.玩家离开恢复距离后重新追击，并立即刷新路径
                 isStoppingNearTarget = false;
+                pathUpdateTimer = pathUpdateInterval;
                 return false;
             }
 
-            // 4.第一次进入停止距离时停住
+            // 5.优先使用导航路径剩余距离，避免隔墙时按直线距离错误停止
+            float currentDistance = GetCurrentNavigationDistance(horizontalDistance);
+
+            // 6.第一次进入停止距离时停止
             if (currentDistance <= stopDistance)
             {
                 isStoppingNearTarget = true;
@@ -147,154 +393,50 @@ namespace WutheringWaves
 
             return false;
         }
-        #endregion
 
-        #region 移动执行
-        // 靠近当前目标
-        public void MoveToTarget()
+        // 获取当前导航距离
+        private float GetCurrentNavigationDistance(float fallbackDistance)
         {
-            // 1.没有目标时不移动
-            if (target == null)
+            // 1.路径无效或正在计算时使用水平距离兜底
+            if (!CanUseNavMeshAgent()
+                || navMeshAgent.pathPending
+                || !navMeshAgent.hasPath)
             {
-                return;
+                return fallbackDistance;
             }
 
-            // 2.到达停止距离后不继续贴近，只保持朝向
-            if (IsInStopDistance())
+            // 2.剩余距离无效时使用水平距离兜底
+            float remainingDistance = navMeshAgent.remainingDistance;
+            if (float.IsInfinity(remainingDistance) || float.IsNaN(remainingDistance))
             {
-                StopMove();
-                RotateToTarget();
-                return;
+                return fallbackDistance;
             }
 
-            // 3.计算水平移动方向
-            Vector3 moveDirection = target.position - transform.position;
-            moveDirection.y = 0f;
-
-            if (moveDirection.sqrMagnitude <= 0.001f)
-            {
-                return;
-            }
-
-            // 4.计算当前水平距离
-            float currentDistance = moveDirection.magnitude;
-            moveDirection.Normalize();
-
-            // 5.移动前先朝向目标
-            RotateToDirection(moveDirection);
-
-            // 6.限制本帧最大移动距离，避免一步移动超过停止距离
-            float moveDistance = moveSpeed * Time.deltaTime;
-            float remainDistance = currentDistance - stopDistance;
-            moveDistance = Mathf.Min(moveDistance, remainDistance);
-
-            if (moveDistance <= 0f)
-            {
-                StopMove();
-                return;
-            }
-
-            // 7.使用 CharacterController 移动；没有组件时使用 Transform 兜底
-            if (characterController != null && characterController.enabled)
-            {
-                characterController.Move(moveDirection * moveDistance);
-            }
-            else
-            {
-                transform.position += moveDirection * moveDistance;
-            }
-        }
-
-        // 停止移动：第一版先预留，后续可在这里清 Boss 移动动画参数
-        public void StopMove()
-        {
-
-        }
-
-        // 朝向当前目标
-        public void RotateToTarget()
-        {
-            // 1.没有目标时不转向
-            if (target == null)
-            {
-                return;
-            }
-
-            // 2.计算目标方向
-            Vector3 direction = target.position - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude <= 0.001f)
-            {
-                return;
-            }
-
-            RotateToDirection(direction.normalized);
-        }
-
-        // 朝指定方向平滑转向
-        private void RotateToDirection(Vector3 direction)
-        {
-            // 1.方向无效时不处理
-            if (direction.sqrMagnitude <= 0.001f)
-            {
-                return;
-            }
-
-            // 2.平滑旋转到目标方向
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+            // 3.返回沿NavMesh路径计算的剩余距离
+            return remainingDistance;
         }
         #endregion
 
-        #region 碰撞处理
-        // 忽略 Boss 与当前目标的实体碰撞
-        private void ApplyTargetCollisionIgnore()
+        #region 导航校验
+        // 判断NavMeshAgent当前是否可以正常使用
+        private bool CanUseNavMeshAgent()
         {
-            // 1.配置关闭时恢复旧忽略关系
-            if (!ignoreTargetBodyCollision)
-            {
-                ClearTargetCollisionIgnore();
-                return;
-            }
-
-            // 2.Boss 或目标控制器为空时不处理
-            if (characterController == null || targetCharacterController == null)
-            {
-                return;
-            }
-
-            // 3.目标没有变化时不重复设置
-            if (ignoredTargetCharacterController == targetCharacterController)
-            {
-                return;
-            }
-
-            // 4.目标变化时先恢复旧目标碰撞
-            ClearTargetCollisionIgnore();
-
-            // 5.忽略 Boss 与当前玩家的 CharacterController 实体碰撞
-            Physics.IgnoreCollision(characterController, targetCharacterController, true);
-            ignoredTargetCharacterController = targetCharacterController;
+            return navMeshAgent != null
+                && navMeshAgent.isActiveAndEnabled
+                && navMeshAgent.isOnNavMesh;
         }
 
-        // 恢复 Boss 与旧目标的实体碰撞
-        private void ClearTargetCollisionIgnore()
+        // 输出导航异常：防止追击状态每帧重复输出
+        private void LogNavigationFailure()
         {
-            // 1.没有旧目标时不处理
-            if (ignoredTargetCharacterController == null)
+            // 1.已经输出过时不重复输出
+            if (hasLoggedNavigationFailure)
             {
                 return;
             }
 
-            // 2.Boss 控制器存在时恢复碰撞关系
-            if (characterController != null)
-            {
-                Physics.IgnoreCollision(characterController, ignoredTargetCharacterController, false);
-            }
-
-            // 3.清空旧目标记录
-            ignoredTargetCharacterController = null;
+            hasLoggedNavigationFailure = true;
+            Debug.LogWarning($"敌人 {name} 当前无法获得有效NavMesh路径。", this);
         }
         #endregion
     }

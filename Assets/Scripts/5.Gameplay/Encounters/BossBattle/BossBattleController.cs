@@ -54,20 +54,24 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.输出进入触发器的物体名称，用于确认到底是谁触发了Boss战区域
-            Debug.Log($"Boss触发器检测到物体进入：{other.name}", other);
+            // 2.只处理Player层碰撞体，忽略Boss、特效和其他场景物体
+            int playerLayer = LayerMask.NameToLayer("Player");
+            if (playerLayer < 0 || other.gameObject.layer != playerLayer)
+            {
+                return;
+            }
 
             // 3.尝试解析当前进入触发器的玩家角色上下文
             CharacterContext characterContext = ResolveCharacterContext(other);
 
-            // 4.没有解析到玩家上下文时，说明触发器碰到的不是当前玩家角色
+            // 4.Player层物体仍然没有CharacterContext时，才属于真实配置问题
             if (characterContext == null)
             {
-                Debug.LogWarning($"Boss触发器没有从 {other.name} 获取到 CharacterContext。", other);
+                Debug.LogWarning($"Boss触发器没有从玩家物体 {other.name} 获取到 CharacterContext。", other);
                 return;
             }
 
-            // 5.启动Boss战，并把玩家设置为Boss目标
+            // 5.启动Boss战，并把玩家设置为Boss追击目标
             StartBossBattle(characterContext);
         }
 
@@ -79,16 +83,23 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.尝试获取离开触发器的玩家上下文
+            // 2.只处理Player层碰撞体，避免其他物体离开时参与Boss战判断
+            int playerLayer = LayerMask.NameToLayer("Player");
+            if (playerLayer < 0 || other.gameObject.layer != playerLayer)
+            {
+                return;
+            }
+
+            // 3.尝试获取离开触发器的玩家上下文
             CharacterContext characterContext = ResolveCharacterContext(other);
 
-            // 3.离开的不是当前目标时不处理
+            // 4.离开的不是当前目标时不处理
             if (characterContext == null || characterContext != currentTarget)
             {
                 return;
             }
 
-            // 4.结束Boss战测试流程
+            // 5.结束Boss战测试流程
             EndBossBattle();
         }
 
@@ -137,7 +148,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 玩家解析
+        #region 解析获取玩家
         // 解析进入或离开Boss触发器的玩家角色上下文
         private CharacterContext ResolveCharacterContext(Collider other)
         {

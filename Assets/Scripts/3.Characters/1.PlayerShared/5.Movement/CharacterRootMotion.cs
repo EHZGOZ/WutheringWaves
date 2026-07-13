@@ -69,9 +69,6 @@ namespace WutheringWaves
             Vector3 rootMotionDeltaMove = animator.deltaPosition;   // 位移增量
             Quaternion rootMotionDeltaRot = animator.deltaRotation; // 旋转增量
 
-
-
-
             // 2.输出根运动调试信息
             LogRootMotionDebug(stateMachine, rootMotionDeltaMove, rootMotionDeltaRot);
 

@@ -90,7 +90,7 @@ namespace WutheringWaves
             }
 
             // 2.发现玩家后进入追击状态
-            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.IsTargetInDetectRange())
+            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.HasTarget)
             {
                 SwitchState(EnemyState.Chase);
                 return true;
@@ -159,15 +159,14 @@ namespace WutheringWaves
         // 2.更新追击状态
         private void UpdateChaseState()
         {
-            // 1.进入停止距离后先停住并朝向目标，后续这里可以切攻击状态
-            if (stateMachine.Context.MovementLogic.IsInStopDistance())
+            // 1.移动组件为空时不执行，避免异常情况下产生空引用
+            if (stateMachine.Context.MovementLogic == null)
             {
-                stateMachine.Context.MovementLogic.StopMove();
-                stateMachine.Context.MovementLogic.RotateToTarget();
                 return;
             }
 
-            // 2.未到停止距离时继续追击目标
+            // 2.追击状态只下达靠近目标命令
+            // 路径计算、停止距离、实体移动和移动转向统一由EnemyMovement处理
             stateMachine.Context.MovementLogic.MoveToTarget();
         }
         #endregion
@@ -206,7 +205,7 @@ namespace WutheringWaves
             }
 
             // 3.目标无效时回到待机
-            if (!stateMachine.Context.MovementLogic.IsTargetInDetectRange())
+            if (!stateMachine.Context.MovementLogic.HasTarget)
             {
                 stateMachine.Context.MovementLogic.StopMove();
                 SwitchState(EnemyState.Idle);
@@ -290,7 +289,7 @@ namespace WutheringWaves
             }
 
             // 2.受击结束后，如果玩家仍在发现范围内，继续追击
-            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.IsTargetInDetectRange())
+            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.HasTarget)
             {
                 SwitchState(EnemyState.Chase);
                 return;

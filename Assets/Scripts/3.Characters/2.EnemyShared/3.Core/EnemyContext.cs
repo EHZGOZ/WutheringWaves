@@ -17,6 +17,7 @@ namespace WutheringWaves
         [SerializeField] private EnemyAttributes enemyAttributes; // 敌人属性组件
         [SerializeField] private EnemyStateMachine stateMachine; // 敌人状态机
         [SerializeField] private EnemyMovement movementLogic; // 敌人移动逻辑
+        [SerializeField] private EnemyRootMotion rootMotion; // 敌人根移动逻辑
 
         [SerializeField] private Animator animator; // 敌人动画控制器
         [SerializeField] private Collider[] enemyColliders; // 敌人碰撞体列表
@@ -38,6 +39,7 @@ namespace WutheringWaves
         public EnemyRuntimeData RuntimeData => enemyAttributes != null ? enemyAttributes.RuntimeData : null; // 敌人运行时数据
         public EnemyStateMachine StateMachine => stateMachine; // 敌人状态机
         public EnemyMovement MovementLogic => movementLogic; // 敌人移动逻辑
+        public EnemyRootMotion RootMotion => rootMotion; // 敌人根运动组件
         public Animator Animator => animator; // 敌人动画控制器
         public Collider[] EnemyColliders => enemyColliders; // 敌人碰撞体列表
 
@@ -53,7 +55,7 @@ namespace WutheringWaves
         #endregion
 
         #region 初始化
-        // 敌人初始化入口：统一初始化组件、属性、移动和状态机
+        // 敌人初始化入口：统一初始化组件、属性、移动、根运动和状态机
         public void Initialize()
         {
             // 1.重置死亡流程标记，避免对象池复用时状态残留
@@ -68,7 +70,10 @@ namespace WutheringWaves
             // 4.初始化敌人移动组件
             InitializeEnemyMovement();
 
-            // 5.初始化敌人状态机
+            // 5.初始化敌人根运动组件
+            InitializeEnemyRootMotion();
+
+            // 6.初始化敌人状态机
             InitializeStateMachine();
         }
 
@@ -99,7 +104,13 @@ namespace WutheringWaves
                 animator = GetComponentInChildren<Animator>(true);
             }
 
-            // 5.获取敌人所有碰撞体，死亡时统一关闭
+            // 5.从Animator子物体中获取敌人根运动组件
+            if (rootMotion == null)
+            {
+                rootMotion = GetComponentInChildren<EnemyRootMotion>(true);
+            }
+
+            // 6.获取敌人所有碰撞体，死亡时统一关闭
             if (enemyColliders == null || enemyColliders.Length == 0)
             {
                 enemyColliders = GetComponentsInChildren<Collider>(true);
@@ -109,16 +120,17 @@ namespace WutheringWaves
         // 初始化敌人属性组件
         private void InitializeEnemyAttributes()
         {
-            // 1.属性组件为空时提示，敌人将无法被 IDamageable 正常命中
+            // 1.属性组件为空时提示，敌人将无法被IDamageable正常命中
             if (enemyAttributes == null)
             {
                 Debug.LogError($"敌人 {name} 缺少 EnemyAttributes 组件。", this);
                 return;
             }
 
-            // 2.由 EnemyAttributes 接管生命值、受伤、恢复和死亡判定
+            // 2.由EnemyAttributes接管生命值、受伤、恢复和死亡判定
             enemyAttributes.Initialize(this);
         }
+
         // 初始化敌人移动组件
         private void InitializeEnemyMovement()
         {
@@ -129,9 +141,24 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.由 EnemyMovement 接管发现目标、追击、停止和转向
+            // 2.由EnemyMovement接管追击、停止和转向
             movementLogic.Initialize(this);
         }
+
+        // 初始化敌人根运动组件
+        private void InitializeEnemyRootMotion()
+        {
+            // 1.根运动组件为空时提示，受击等动作无法推动敌人根物体
+            if (rootMotion == null)
+            {
+                Debug.LogError($"敌人 {name} 缺少 EnemyRootMotion 组件。", this);
+                return;
+            }
+
+            // 2.由EnemyRootMotion接管指定状态下的动画根运动
+            rootMotion.Initialize(this);
+        }
+
         // 初始化敌人状态机
         private void InitializeStateMachine()
         {

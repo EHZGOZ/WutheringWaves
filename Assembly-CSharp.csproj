@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiDragonController.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SystemMenuController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\5.InventoryService\InventoryData.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\5.Movement\EnemyRootMotion.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SavedGameMenuController.cs" />
     <Compile Include="Assets\Scripts\4.UI\4.Minimap\MiniMapController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\6.Combat\EnemyAttack.cs" />
