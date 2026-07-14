@@ -161,7 +161,38 @@ namespace WutheringWaves
         #endregion
 
         #region 判断方法
+        // 判断当前是否允许进入追击状态
+        public bool IsChaseAvailable()
+        {
+            // 条件1：必须存在有效追击目标
+            bool hasValidTarget = target != null;
 
+            // 条件2：NavMeshAgent必须处于可用状态
+            bool canUseNavigation = CanUseNavMeshAgent();
+
+            // 目标或导航不可用时，无法继续计算追击距离
+            if (!hasValidTarget || !canUseNavigation)
+            {
+                return false;
+            }
+
+            // 条件3：目标必须离开停止距离与恢复缓冲范围
+            Vector3 targetDirection = target.position - transform.position;
+            targetDirection.y = 0f;
+            float horizontalDistance = targetDirection.magnitude;
+            float resumeMoveDistance = stopDistance + resumeMovePadding;
+
+            // 已经停近目标时使用实时水平距离
+            // Idle状态不会更新导航终点，不能继续依赖可能已经过期的路径剩余距离
+            float currentDistance = isStoppingNearTarget
+                ? horizontalDistance
+                : GetCurrentNavigationDistance(horizontalDistance);
+
+            bool isOutsideResumeDistance = currentDistance > resumeMoveDistance;
+
+            // 只有目标、导航和恢复距离条件全部满足时，才允许进入追击状态
+            return hasValidTarget && canUseNavigation && isOutsideResumeDistance;
+        }
         #endregion
 
         #region 当前目标
@@ -210,6 +241,7 @@ namespace WutheringWaves
 
         #region 移动执行
         // 靠近当前目标
+        // 靠近当前目标
         public void MoveToTarget()
         {
             // 1.没有目标时不执行移动
@@ -231,28 +263,24 @@ namespace WutheringWaves
             // 3.同步当前实体位置，避免导航模拟位置与CharacterController分离
             navMeshAgent.nextPosition = transform.position;
 
-            // 4.到达停止距离后停止，不在追击状态中原地旋转
-            if (IsInStopDistance())
-            {
-                StopMove();
-                return;
-            }
-
-            // 5.恢复NavMeshAgent路径计算
+            // 4.恢复NavMeshAgent路径计算
+            // 停止距离已经由EnemyChaseState在调用移动前统一判断
             navMeshAgent.isStopped = false;
 
-            // 6.按时间间隔刷新玩家目标位置
+            // 5.按时间间隔刷新玩家目标位置
+            // 恢复追击时会在这里提交玩家的最新位置，替换旧导航终点
             UpdateTargetDestination();
 
-            // 7.路径仍在计算或不存在时暂不移动
+            // 6.路径仍在计算或不存在时暂不移动
             if (navMeshAgent.pathPending || !navMeshAgent.hasPath)
             {
                 return;
             }
 
-            // 8.读取NavMeshAgent计算出的路径期望速度
+            // 7.读取NavMeshAgent根据当前路径计算出的期望速度
             Vector3 moveVelocity = navMeshAgent.desiredVelocity;
 
+            // 8.没有有效移动速度时暂不移动和旋转
             if (moveVelocity.sqrMagnitude <= 0.001f)
             {
                 return;

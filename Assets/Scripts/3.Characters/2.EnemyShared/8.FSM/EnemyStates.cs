@@ -82,15 +82,15 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
-            if (stateMachine.Context != null && stateMachine.Context.IsDead)
+            // 1.死亡优先级最高，由EnemyStateMachine统一提供死亡状态
+            if (stateMachine.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;
             }
 
-            // 2.发现玩家后进入追击状态
-            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.HasTarget)
+            // 2.移动组件统一判断目标、导航状态和恢复追击距离
+            if (stateMachine.MovementLogic.IsChaseAvailable())
             {
                 SwitchState(EnemyState.Chase);
                 return true;
@@ -159,15 +159,9 @@ namespace WutheringWaves
         // 2.更新追击状态
         private void UpdateChaseState()
         {
-            // 1.移动组件为空时不执行，避免异常情况下产生空引用
-            if (stateMachine.Context.MovementLogic == null)
-            {
-                return;
-            }
-
-            // 2.追击状态只下达靠近目标命令
+            // 1.追击状态只下达靠近目标命令
             // 路径计算、停止距离、实体移动和移动转向统一由EnemyMovement处理
-            stateMachine.Context.MovementLogic.MoveToTarget();
+            stateMachine.MovementLogic.MoveToTarget();
         }
         #endregion
 
@@ -182,7 +176,7 @@ namespace WutheringWaves
         private void ChaseExitState()
         {
             // 1.离开追击状态时停止移动，避免残留移动表现
-            stateMachine.Context.MovementLogic?.StopMove();
+            stateMachine.MovementLogic.StopMove();
         }
         #endregion
 
@@ -190,24 +184,25 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
-            if (stateMachine.Context != null && stateMachine.Context.IsDead)
+            // 1.死亡优先级最高，由EnemyStateMachine统一提供死亡状态
+            if (stateMachine.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;
             }
 
-            // 2.移动组件为空时回到待机，避免空引用
-            if (stateMachine.Context.MovementLogic == null)
+            // 2.目标无效时停止移动并回到待机
+            if (!stateMachine.MovementLogic.HasTarget)
             {
+                stateMachine.MovementLogic.StopMove();
                 SwitchState(EnemyState.Idle);
                 return true;
             }
 
-            // 3.目标无效时回到待机
-            if (!stateMachine.Context.MovementLogic.HasTarget)
+            // 3.到达停止距离时停止移动并回到待机
+            if (stateMachine.MovementLogic.IsInStopDistance())
             {
-                stateMachine.Context.MovementLogic.StopMove();
+                stateMachine.MovementLogic.StopMove();
                 SwitchState(EnemyState.Idle);
                 return true;
             }
@@ -289,7 +284,7 @@ namespace WutheringWaves
             }
 
             // 2.受击结束后，如果玩家仍在发现范围内，继续追击
-            if (stateMachine.Context.MovementLogic != null && stateMachine.Context.MovementLogic.HasTarget)
+            if (stateMachine.MovementLogic.HasTarget)
             {
                 SwitchState(EnemyState.Chase);
                 return;
@@ -318,8 +313,8 @@ namespace WutheringWaves
         // 状态转换判断
         private bool CheckStateTransitions()
         {
-            // 1.死亡优先级最高，通过EnemyContext查询，不直接读取运行时数据
-            if (stateMachine.Context != null && stateMachine.Context.IsDead)
+            // 1.死亡优先级最高，由EnemyStateMachine统一提供死亡状态
+            if (stateMachine.IsDead)
             {
                 SwitchState(EnemyState.Dead);
                 return true;

@@ -15,10 +15,11 @@ namespace WutheringWaves
 
     public class EnemyStateMachine : MonoBehaviour
     {
-        #region 1.核心引用 (由CharacterContext自动注入)
-        [Header("=== 核心依赖（由CharacterContext自动注入，无需手动赋值）===")]
-        [SerializeField] private EnemyContext context; // 敌人上下文
+        #region 1.核心依赖配置（由EnemyContext自动注入）
+        [Header("=== 核心依赖（由EnemyContext自动注入，无需手动赋值）===")]
+        [SerializeField] private EnemyContext context; // 敌人共享上下文
         [SerializeField] private Animator animator; // 敌人动画控制器
+        [SerializeField] private EnemyMovement movementLogic; // 敌人移动逻辑
         #endregion
 
         #region 2. FSM核心组件
@@ -34,33 +35,40 @@ namespace WutheringWaves
 
         #region 3. 状态共享数据
         public AttackStep currentStep;
+
         //是否状态锁定
         public bool IsStateLocked { get; set; } = false;
-        public EnemyContext Context => context; // 敌人上下文
+
+        public EnemyContext Context => context; // 敌人共享上下文
         public Animator Animator => animator; // 敌人动画控制器
+        public EnemyMovement MovementLogic => movementLogic; // 敌人移动逻辑
+        public bool IsDead => context.IsDead; // 是否已经死亡，由EnemyContext统一查询
         #endregion
 
         #region 4.初始化
-        // 敌人状态机初始化：由 EnemyContext 统一调用
+        // 敌人状态机初始化：由EnemyContext统一调用
         public void Initialize(EnemyContext context)
         {
-            // 1.缓存敌人上下文
+            // 1.缓存敌人共享上下文
             this.context = context;
 
-            // 2.通过上下文获取动画控制器，不再持有EnemyRuntimeData引用
-            animator = context != null ? context.Animator : null;
+            // 2.通过上下文注入敌人动画控制器
+            animator = context.Animator;
 
-            // 3.创建状态工厂
+            // 3.通过上下文注入敌人移动逻辑
+            movementLogic = context.MovementLogic;
+
+            // 4.创建状态工厂
             StateFactory = new EnemyStateFactory();
 
-            // 4.注册敌人基础状态
+            // 5.注册敌人基础状态
             RegisterBaseStates();
 
-            // 5.初始化上一状态和上上状态记录
+            // 6.初始化上一状态和上上状态记录
             PreviousStateType = EnemyState.Idle;
             PreviousPreviousStateType = EnemyState.Idle;
 
-            // 6.进入默认待机状态
+            // 7.进入默认待机状态
             SwitchState(StateFactory.GetState(EnemyState.Idle));
         }
 

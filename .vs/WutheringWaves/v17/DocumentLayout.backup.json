@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "D:\\Unity\\UnityProject\\WutheringWaves\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\1.playershared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.playershared\\5.movement\\characterrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\5.gameplay\\encounters\\bossbattle\\bossbattlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\5.gameplay\\encounters\\bossbattle\\bossbattlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\5.movement\\enemymovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\5.movement\\enemymovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,20 +11,32 @@
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\8.fsm\\enemystates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\1.data\\enemydataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\1.data\\enemydataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\8.fsm\\enemystatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\8.fsm\\enemystatemachine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\3.core\\enemycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\3.core\\enemycontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.playershared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.playershared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|d:\\unity\\unityproject\\wutheringwaves\\assets\\scripts\\3.characters\\2.enemyshared\\5.movement\\enemyrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\5.movement\\enemyrootmotion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\5.gameplay\\encounters\\bossbattle\\bossbattlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\5.gameplay\\encounters\\bossbattle\\bossbattlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\1.globalservice\\1.bootstrap\\gamebootstrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\1.data\\enemydataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\2.enemyshared\\1.data\\enemydataso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\2.enemyshared\\2.runtime\\enemyattributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -57,10 +61,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\4.ui\\1.root\\uiroot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\3.characters\\1.playershared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\3.characters\\1.playershared\\3.core\\charactercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8F24EA2A-F467-F2A8-7065-256B359E480B}|Assembly-CSharp.csproj|D:\\Unity\\UnityProject\\WutheringWaves\\assets\\scripts\\2.player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -142,11 +142,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 28,
+          "SelectedChildIndex": 33,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "GameBootstrap.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\1.Bootstrap\\GameBootstrap.cs",
@@ -155,12 +155,11 @@
               "ViewState": "AgIAAFMAAAAAAAAAAAAwwDwAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-18T06:08:52.322Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "UIRoot.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\4.UI\\1.Root\\UIRoot.cs",
@@ -238,7 +237,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "SaveData.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\4.SaveService\\SaveData.cs",
@@ -277,7 +276,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "CharacterSpawnService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\6.CharacterSpawnService\\CharacterSpawnService.cs",
@@ -290,7 +289,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "GameSessionService.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\1.GlobalService\\2.Systems\\7.GameSessionService\\GameSessionService.cs",
@@ -329,16 +328,17 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 4,
               "Title": "CharacterContext.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.PlayerShared\\3.Core\\CharacterContext.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.PlayerShared\\3.Core\\CharacterContext.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.PlayerShared\\3.Core\\CharacterContext.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.PlayerShared\\3.Core\\CharacterContext.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAcwOwAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAQwOwAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-07T12:34:45.336Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -368,7 +368,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "JinxiStates.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\Jinxi\\States\\JinxiStates.cs",
@@ -433,21 +433,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "EnemyContext.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABgAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-07T12:33:51.413Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "EnemyDataSO.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\1.Data\\EnemyDataSO.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\1.Data\\EnemyDataSO.cs",
@@ -456,12 +442,11 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-07T12:30:49.129Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "EnemyAttributes.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\2.Runtime\\EnemyAttributes.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\2.Runtime\\EnemyAttributes.cs",
@@ -513,20 +498,50 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CharacterRootMotion.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.PlayerShared\\5.Movement\\CharacterRootMotion.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\1.PlayerShared\\5.Movement\\CharacterRootMotion.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\1.PlayerShared\\5.Movement\\CharacterRootMotion.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\1.PlayerShared\\5.Movement\\CharacterRootMotion.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAkAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "EnemyContext.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\3.Core\\EnemyContext.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowCQAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-13T09:31:18.444Z",
+              "WhenOpened": "2026-07-07T12:33:51.413Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "EnemyStateMachine.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAywCwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T06:50:56.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EnemyRootMotion.cs",
+              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyRootMotion.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyRootMotion.cs",
+              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyRootMotion.cs",
+              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyRootMotion.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-13T09:40:05.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "BossBattleController.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\5.Gameplay\\Encounters\\BossBattle\\BossBattleController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\5.Gameplay\\Encounters\\BossBattle\\BossBattleController.cs",
@@ -534,51 +549,33 @@
               "RelativeToolTip": "Assets\\Scripts\\5.Gameplay\\Encounters\\BossBattle\\BossBattleController.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAxwFcBAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-10T08:51:34.651Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-10T08:51:34.651Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "EnemyStateMachine.cs",
-              "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
-              "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
-              "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStateMachine.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAcwMEAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-08T06:50:56.484Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "EnemyStates.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStates.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStates.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStates.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\8.FSM\\EnemyStates.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-08T06:52:47.383Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "EnemyMovement.cs",
               "DocumentMoniker": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyMovement.cs",
               "ToolTip": "D:\\Unity\\UnityProject\\WutheringWaves\\Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyMovement.cs",
               "RelativeToolTip": "Assets\\Scripts\\3.Characters\\2.EnemyShared\\5.Movement\\EnemyMovement.cs",
-              "ViewState": "AgIAAKQAAAAAAAAAAIA6wLcAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAgwKUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-08T12:37:31.171Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             }
           ]
         }
