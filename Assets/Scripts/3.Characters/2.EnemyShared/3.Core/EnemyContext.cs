@@ -5,6 +5,7 @@ namespace WutheringWaves
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemyAttributes))]
     [RequireComponent(typeof(EnemyStateMachine))]
+    [RequireComponent(typeof(EnemyTargeting))]
     [RequireComponent(typeof(EnemyMovement))]
     public class EnemyContext : MonoBehaviour
     {
@@ -16,8 +17,10 @@ namespace WutheringWaves
         [Header("=== 敌人核心组件（自动获取） ===")]
         [SerializeField] private EnemyAttributes enemyAttributes; // 敌人属性组件
         [SerializeField] private EnemyStateMachine stateMachine; // 敌人状态机
+        [SerializeField] private EnemyTargeting targeting; // 敌人目标搜寻逻辑
         [SerializeField] private EnemyMovement movementLogic; // 敌人移动逻辑
         [SerializeField] private EnemyRootMotion rootMotion; // 敌人根移动逻辑
+        
 
         [SerializeField] private Animator animator; // 敌人动画控制器
         [SerializeField] private Collider[] enemyColliders; // 敌人碰撞体列表
@@ -40,6 +43,7 @@ namespace WutheringWaves
         public EnemyStateMachine StateMachine => stateMachine; // 敌人状态机
         public EnemyMovement MovementLogic => movementLogic; // 敌人移动逻辑
         public EnemyRootMotion RootMotion => rootMotion; // 敌人根运动组件
+        public EnemyTargeting Targeting => targeting; // 敌人目标搜寻逻辑
         public Animator Animator => animator; // 敌人动画控制器
         public Collider[] EnemyColliders => enemyColliders; // 敌人碰撞体列表
 
@@ -58,59 +62,68 @@ namespace WutheringWaves
         // 敌人初始化入口：统一初始化组件、属性、移动、根运动和状态机
         public void Initialize()
         {
-            // 1.重置死亡流程标记，避免对象池复用时状态残留
+            //重置死亡流程标记，避免对象池复用时状态残留
             hasEnteredDead = false;
 
-            // 2.自动获取敌人核心组件
+            //自动获取敌人核心组件
             AutoGetCoreComponents();
 
-            // 3.初始化敌人属性组件
+            // 初始化敌人属性组件
             InitializeEnemyAttributes();
 
-            // 4.初始化敌人移动组件
+            //初始化敌人目标组件
+            InitializeEnemyTargeting();
+
+            // 初始化敌人移动组件
             InitializeEnemyMovement();
 
-            // 5.初始化敌人根运动组件
+            // 初始化敌人根运动组件
             InitializeEnemyRootMotion();
 
-            // 6.初始化敌人状态机
+            //初始化敌人状态机
             InitializeStateMachine();
         }
 
         // 自动获取敌人核心组件
         private void AutoGetCoreComponents()
         {
-            // 1.获取敌人属性组件
+            // 获取敌人属性组件
             if (enemyAttributes == null)
             {
                 enemyAttributes = GetComponent<EnemyAttributes>();
             }
 
-            // 2.获取敌人状态机
+            // 获取敌人状态机
             if (stateMachine == null)
             {
                 stateMachine = GetComponent<EnemyStateMachine>();
             }
 
-            // 3.获取敌人移动逻辑
+            // 获取敌人移动逻辑
             if (movementLogic == null)
             {
                 movementLogic = GetComponent<EnemyMovement>();
             }
 
-            // 4.获取敌人动画控制器
+            // 获取敌人目标逻辑
+            if (targeting == null)
+            {
+                targeting = GetComponent<EnemyTargeting>();
+            }
+
+            // 获取敌人动画控制器
             if (animator == null)
             {
                 animator = GetComponentInChildren<Animator>(true);
             }
 
-            // 5.从Animator子物体中获取敌人根运动组件
+            // 从Animator子物体中获取敌人根运动组件
             if (rootMotion == null)
             {
                 rootMotion = GetComponentInChildren<EnemyRootMotion>(true);
             }
 
-            // 6.获取敌人所有碰撞体，死亡时统一关闭
+            // 获取敌人所有碰撞体，死亡时统一关闭
             if (enemyColliders == null || enemyColliders.Length == 0)
             {
                 enemyColliders = GetComponentsInChildren<Collider>(true);
@@ -129,6 +142,20 @@ namespace WutheringWaves
 
             // 2.由EnemyAttributes接管生命值、受伤、恢复和死亡判定
             enemyAttributes.Initialize(this);
+        }
+
+        // 初始化敌人目标组件
+        private void InitializeEnemyTargeting()
+        {
+            // 1.根运动组件为空时提示，受击等动作无法推动敌人根物体
+            if (targeting == null)
+            {
+                Debug.LogError($"敌人 {name} 缺少 EnemyTargeting 组件。", this);
+                return;
+            }
+
+            // 2.由EnemyTargeting接管目标逻辑
+            targeting.Initialize(this);
         }
 
         // 初始化敌人移动组件

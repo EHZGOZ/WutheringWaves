@@ -20,7 +20,7 @@ namespace WutheringWaves
         [Header("=== Boss战运行时数据 ===")]
         [SerializeField] private GameObject bossInstance; // 当前生成出来的Boss实例，仅用于运行时观察
         [SerializeField] private EnemyContext bossContext; // 当前Boss上下文，仅用于运行时观察
-        [SerializeField] private CharacterContext currentTarget; // 当前Boss战目标，仅用于运行时观察
+        [SerializeField] private CharacterContext currentParticipant; // 当前进入Boss战的玩家参与者，仅用于退出判断
 
         private bool isBattleStarted; // Boss战是否已经开始
         private bool isBattleCompleted; // Boss战是否已经胜利完成
@@ -48,59 +48,14 @@ namespace WutheringWaves
 
         private void OnTriggerEnter(Collider other)
         {
-            // 1.配置关闭时，不自动开启Boss战
-            if (!startBattleOnEnter)
-            {
-                return;
-            }
-
-            // 2.只处理Player层碰撞体，忽略Boss、特效和其他场景物体
-            int playerLayer = LayerMask.NameToLayer("Player");
-            if (playerLayer < 0 || other.gameObject.layer != playerLayer)
-            {
-                return;
-            }
-
-            // 3.尝试解析当前进入触发器的玩家角色上下文
-            CharacterContext characterContext = ResolveCharacterContext(other);
-
-            // 4.Player层物体仍然没有CharacterContext时，才属于真实配置问题
-            if (characterContext == null)
-            {
-                Debug.LogWarning($"Boss触发器没有从玩家物体 {other.name} 获取到 CharacterContext。", other);
-                return;
-            }
-
-            // 5.启动Boss战，并把玩家设置为Boss追击目标
-            StartBossBattle(characterContext);
+            // 1.触发器入口只转发碰撞体，具体启动判断由StartBossBattle统一处理
+            StartBossBattle(other);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            // 1.正式Boss战一般不建议玩家离开后清空目标，这里只作为测试开关
-            if (!clearTargetOnExit)
-            {
-                return;
-            }
-
-            // 2.只处理Player层碰撞体，避免其他物体离开时参与Boss战判断
-            int playerLayer = LayerMask.NameToLayer("Player");
-            if (playerLayer < 0 || other.gameObject.layer != playerLayer)
-            {
-                return;
-            }
-
-            // 3.尝试获取离开触发器的玩家上下文
-            CharacterContext characterContext = ResolveCharacterContext(other);
-
-            // 4.离开的不是当前目标时不处理
-            if (characterContext == null || characterContext != currentTarget)
-            {
-                return;
-            }
-
-            // 5.结束Boss战测试流程
-            EndBossBattle();
+            // 结束Boss战测试流程
+            EndBossBattle(other);
         }
 
         private void OnDisable()
@@ -152,27 +107,34 @@ namespace WutheringWaves
         // 解析进入或离开Boss触发器的玩家角色上下文
         private CharacterContext ResolveCharacterContext(Collider other)
         {
-            // 1.碰撞体为空时不能解析
+            //碰撞体为空时不能解析
             if (other == null)
             {
                 return null;
             }
 
-            // 2.优先从碰撞体自身或父物体查找CharacterContext
+            //只处理Player层碰撞体，忽略Boss、特效和其他场景物体
+            int playerLayer = LayerMask.NameToLayer("Player");
+            if (playerLayer < 0 || other.gameObject.layer != playerLayer)
+            {
+                return null;
+            }
+
+            //优先从碰撞体自身或父物体查找CharacterContext
             CharacterContext characterContext = other.GetComponentInParent<CharacterContext>();
             if (characterContext != null)
             {
                 return characterContext;
             }
 
-            // 3.如果碰撞体属于PlayerController，则获取当前受控角色
+            //如果碰撞体属于PlayerController，则获取当前受控角色
             PlayerController playerController = other.GetComponentInParent<PlayerController>();
             if (playerController != null)
             {
                 return playerController.CurrentCharacterContext;
             }
 
-            // 4.碰撞体不属于玩家时返回空，不能使用玩家单例强行兜底
+            //碰撞体不属于玩家时返回空，不能使用玩家单例强行兜底
             return null;
         }
         #endregion
@@ -180,45 +142,46 @@ namespace WutheringWaves
         #region Boss战流程
 
         #region 开始Boss战
-        public void StartBossBattle(CharacterContext characterContext)
+        // 开始Boss战：由触发器入口调用，并统一验证进入者和战斗状态
+        private void StartBossBattle(Collider other)
         {
-            // 1.Boss战已经开始或已经完成时不重复处理
+            // 1.未开启自动开始时，不响应触发器进入事件
+            if (!startBattleOnEnter)
+            {
+                return;
+            }
+
+            // 2.Boss战已经开始或已经完成时不重复处理
             if (isBattleStarted || isBattleCompleted)
             {
                 return;
             }
 
-            // 2.玩家目标为空时不启动Boss战
+            // 3.解析进入场地的玩家参与者
+            CharacterContext characterContext =
+                ResolveCharacterContext(other);
+
+            // 4.非玩家碰撞体进入时静默忽略
             if (characterContext == null)
             {
-                Debug.LogWarning($"Boss战控制器 {name} 没有获取到有效的玩家目标。", this);
                 return;
             }
 
-            // 3.生成Boss，生成失败时终止启动流程
+            // 5.生成Boss，生成失败时终止启动流程
             if (!SpawnBoss())
             {
                 return;
             }
 
-            // 4.Boss移动组件为空时不能锁定玩家
-            if (bossContext.MovementLogic == null)
-            {
-                Debug.LogError($"Boss {bossContext.name} 缺少 EnemyMovement 组件。", bossContext);
-                return;
-            }
-
-            // 5.订阅当前Boss死亡事件
+            // 6.订阅当前Boss死亡事件
             if (!SubscribeBossEvents())
             {
                 return;
             }
 
-            // 6.记录当前Boss战目标
-            currentTarget = characterContext;
-
-            // 7.把当前玩家指定为Boss追击目标
-            bossContext.MovementLogic.SetTarget(currentTarget);
+            // 7.记录当前Boss战参与者
+            // 这里只用于场地退出判断，不再作为EnemyMovement追击目标
+            currentParticipant = characterContext;
 
             // 8.全部启动流程成功后，再标记Boss战已经开始
             isBattleStarted = true;
@@ -226,28 +189,50 @@ namespace WutheringWaves
             // 9.通知游戏会话服务进入战斗状态
             GameSessionService.Instance?.EnterBattleSession();
 
-            // 10.输出日志，确认Boss生成和目标绑定成功
-            Debug.Log($"Boss战开始：{bossContext.name} 锁定目标 {currentTarget.name}");
+            // 10.输出日志，确认Boss战启动成功
+            Debug.Log(
+                $"Boss战开始：{bossContext.name}"
+                + $"，场地参与者：{currentParticipant.name}"
+            );
         }
         #endregion
 
-        #region 结束Boss战
+        #region 失败结束Boss战
         // 结束Boss战：当前用于玩家离开场地后的中断和重置
-        public void EndBossBattle()
+        public void EndBossBattle(Collider other)
         {
-            // 1.Boss战未开始且没有Boss实例时，不重复处理
+            // 正式Boss战一般不建议玩家离开后结束战斗
+            // 当前开关只用于测试Boss战中断和重置流程
+            if (!clearTargetOnExit)
+            {
+                return;
+            }
+
+            // Boss战未开始且没有Boss实例时，不重复处理
             if (!isBattleStarted && bossInstance == null)
             {
                 return;
             }
 
-            // 2.先标记Boss战已经结束，防止结束过程中重复触发
+            // 解析离开场地的玩家参与者
+            CharacterContext characterContext =
+                ResolveCharacterContext(other);
+
+            // 离开的不是当前战斗参与者时不处理
+            if (characterContext == null
+                || characterContext != currentParticipant)
+            {
+                return;
+            }
+            
+
+            // 先标记Boss战已经结束，防止结束过程中重复触发
             isBattleStarted = false;
 
-            // 3.中断Boss战时取消死亡事件订阅
+            // 中断Boss战时取消死亡事件订阅
             UnsubscribeBossEvents();
 
-            // 4.根据配置决定销毁Boss还是保留实例并复位
+            // 根据配置决定销毁Boss还是保留实例并复位
             if (destroyBossOnExit)
             {
                 DespawnBoss();
@@ -257,16 +242,44 @@ namespace WutheringWaves
                 ResetBoss();
             }
 
-            // 5.清空当前玩家目标
-            currentTarget = null;
+            // 清空当前Boss战参与者
+            currentParticipant = null;
 
-            // 6.通知游戏会话服务退出战斗状态
+            //通知游戏会话服务退出战斗状态
             GameSessionService.Instance?.ExitBattleSession();
 
-            // 7.输出日志，确认Boss战中断流程已经完成
-            Debug.Log(destroyBossOnExit
-                ? "Boss战结束：Boss实例已销毁"
-                : "Boss战结束：Boss实例已重置");
+            // 输出日志，确认Boss战中断流程已经完成
+            Debug.Log(
+                destroyBossOnExit
+                    ? "Boss战结束：Boss实例已销毁"
+                    : "Boss战结束：Boss实例已重置"
+            );
+        }
+        #endregion
+
+        #region 成功结束Boss战
+        // 完成Boss战：只结束战斗流程，不立即销毁死亡Boss
+        private void CompleteBossBattle()
+        {
+            // 1.标记Boss战已经结束并完成
+            isBattleStarted = false;
+            isBattleCompleted = true;
+
+            // 2.清空Boss目标并重置导航运行状态
+            ClearBossTargetAndNavigation();
+
+            // 3.清空当前Boss战参与者
+            currentParticipant = null;
+
+            // 4.取消死亡事件订阅，避免重复响应
+            UnsubscribeBossEvents();
+
+            // 5.退出游戏战斗状态，切回普通游戏背景音乐
+            GameSessionService.Instance?.ExitBattleSession();
+
+            // 6.不在这里销毁Boss
+            // EnemyAttributes后续还会通知状态机进入Dead
+            Debug.Log($"Boss战胜利：{bossContext.name} 已被击败");
         }
         #endregion
 
@@ -332,17 +345,29 @@ namespace WutheringWaves
             // 9.Boss生成成功
             return true;
         }
+        // 清理当前Boss的目标和导航运行状态
+        private void ClearBossTargetAndNavigation()
+        {
+            // 1.当前没有有效Boss上下文时不执行清理
+            if (bossContext == null)
+            {
+                return;
+            }
+
+            // 2.由EnemyTargeting清空当前玩家目标
+            bossContext.Targeting.ClearTarget();
+
+            // 3.由EnemyMovement停止移动并清除旧导航路径
+            bossContext.MovementLogic.ResetNavigation();
+        }
         // 销毁Boss：结束并清理当前Boss实例
         private void DespawnBoss()
         {
             // 1.销毁前先取消Boss事件订阅
             UnsubscribeBossEvents();
 
-            // 2.销毁前清空Boss目标，恢复相关碰撞设置
-            if (bossContext != null && bossContext.MovementLogic != null)
-            {
-                bossContext.MovementLogic.ClearTarget();
-            }
+            // 2.销毁前清空Boss目标并重置导航
+            ClearBossTargetAndNavigation();
 
             // 3.销毁当前Boss实例
             if (bossInstance != null)
@@ -368,7 +393,11 @@ namespace WutheringWaves
             // 2.Boss上下文丢失时无法安全重置，改为销毁无效实例
             if (bossContext == null)
             {
-                Debug.LogError($"Boss实例 {bossInstance.name} 缺少 EnemyContext，无法执行重置。", bossInstance);
+                Debug.LogError(
+                    $"Boss实例 {bossInstance.name} 缺少 EnemyContext，无法执行重置。",
+                    bossInstance
+                );
+
                 DespawnBoss();
                 return;
             }
@@ -380,11 +409,8 @@ namespace WutheringWaves
                 return;
             }
 
-            // 4.清空当前追击目标
-            if (bossContext.MovementLogic != null)
-            {
-                bossContext.MovementLogic.ClearTarget();
-            }
+            // 4.清空上一场战斗的目标和导航运行状态
+            ClearBossTargetAndNavigation();
 
             // 5.恢复Boss出生位置和旋转
             bossInstance.transform.SetPositionAndRotation(
@@ -392,8 +418,8 @@ namespace WutheringWaves
                 bossSpawnPoint.rotation
             );
 
-            // 6.重新初始化属性、移动和状态机
-            // 当前只允许对仍然存活的Boss执行，避免死亡状态锁阻止状态重置
+            // 6.重新初始化属性、目标、移动、根运动和状态机
+            // 当前只允许对仍然存活的Boss执行
             bossContext.Initialize();
         }
         #endregion
@@ -453,32 +479,6 @@ namespace WutheringWaves
 
             // 3.进入Boss战胜利完成流程
             CompleteBossBattle();
-        }
-
-        // 完成Boss战：只结束战斗流程，不立即销毁死亡Boss
-        private void CompleteBossBattle()
-        {
-            // 1.标记Boss战已经结束并完成
-            isBattleStarted = false;
-            isBattleCompleted = true;
-
-            // 2.清空Boss追击目标，让死亡状态不再保留玩家碰撞关系
-            if (bossContext != null && bossContext.MovementLogic != null)
-            {
-                bossContext.MovementLogic.ClearTarget();
-            }
-
-            // 3.清空当前玩家目标
-            currentTarget = null;
-
-            // 4.取消死亡事件订阅，避免重复响应
-            UnsubscribeBossEvents();
-
-            // 5.退出游戏战斗状态，切回普通游戏背景音乐
-            GameSessionService.Instance?.ExitBattleSession();
-
-            // 6.不在这里销毁Boss，EnemyAttributes后续还会通知状态机进入Dead
-            Debug.Log($"Boss战胜利：{bossContext.name} 已被击败");
         }
         #endregion
 

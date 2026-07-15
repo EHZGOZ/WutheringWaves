@@ -17,36 +17,84 @@ MonoBehaviour:
   - attackId: 1
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 3
-      attackAngle: 180
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 1
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 1
+      sectorAngle: 90
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 1, y: 1, z: 1}
+      boxOffset: {x: 0, y: 1, z: 2.09}
     timingConfig:
       executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
   - attackId: 2
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
   - attackId: 3
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.8
       comboWindowDuration: 1.5
   - attackId: 4
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.5
       comboWindowDuration: 1.5
@@ -54,27 +102,63 @@ MonoBehaviour:
   - attackId: 5
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
   - attackId: 6
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
   - attackId: 7
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
@@ -82,9 +166,21 @@ MonoBehaviour:
   - attackId: 21
     hitConfig:
       damageMultiplier: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.8
       comboWindowDuration: 0
@@ -92,36 +188,84 @@ MonoBehaviour:
   - attackId: 12
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 13
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 14
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 15
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
@@ -129,36 +273,84 @@ MonoBehaviour:
   - attackId: 8
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 9
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 10
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.6
       comboWindowDuration: 1.5
   - attackId: 11
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 1.5
       comboWindowDuration: 1.5
@@ -166,36 +358,84 @@ MonoBehaviour:
   - attackId: 16
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 1
       comboWindowDuration: 1.5
   - attackId: 17
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 1.5
       comboWindowDuration: 1.5
   - attackId: 18
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0.75
       comboWindowDuration: 1.5
   - attackId: 19
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 1.5
       comboWindowDuration: 1.5
@@ -203,9 +443,21 @@ MonoBehaviour:
   - attackId: 20
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 3
       comboWindowDuration: 1.5
@@ -213,9 +465,21 @@ MonoBehaviour:
   - attackId: 23
     hitConfig:
       damageMultiplier: 0
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 0, z: 0}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 2.5
       comboWindowDuration: 0

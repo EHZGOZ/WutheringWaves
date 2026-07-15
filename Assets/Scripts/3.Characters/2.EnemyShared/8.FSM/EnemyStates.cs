@@ -192,7 +192,8 @@ namespace WutheringWaves
             }
 
             // 2.目标无效时停止移动并回到待机
-            if (!stateMachine.MovementLogic.HasTarget)
+            // 目标是否存在由EnemyTargeting统一判断
+            if (!stateMachine.Targeting.HasTarget)
             {
                 stateMachine.MovementLogic.StopMove();
                 SwitchState(EnemyState.Idle);
@@ -283,14 +284,15 @@ namespace WutheringWaves
                 return;
             }
 
-            // 2.受击结束后，如果玩家仍在发现范围内，继续追击
-            if (stateMachine.MovementLogic.HasTarget)
+            // 2.受击结束后，如果当前仍然存在玩家目标，则继续追击
+            // 目标是否存在由EnemyTargeting统一判断
+            if (stateMachine.Targeting.HasTarget)
             {
                 SwitchState(EnemyState.Chase);
                 return;
             }
 
-            // 3.否则回到待机
+            // 3.没有有效目标时回到待机
             SwitchState(EnemyState.Idle);
         }
         #endregion

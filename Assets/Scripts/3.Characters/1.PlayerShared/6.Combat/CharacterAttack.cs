@@ -42,8 +42,12 @@ namespace WutheringWaves
             System.Collections.Generic.HashSet<IDamageable> hitTargets =
                 CollectAttackTargets(rangeConfig);
 
-            // 4.根据角色基础攻击力和当前攻击段倍率计算最终伤害
-            float actualDamage = characterData.baseAttack * hitConfig.damageMultiplier;
+            // 4.根据角色基础数值和当前攻击段倍率计算最终伤害与削韧值
+            float actualDamage =
+                characterData.baseAttack * hitConfig.damageMultiplier;
+
+            float actualPoiseDamage =
+                characterData.basePoiseDamage * hitConfig.poiseDamageMultiplier;
 
             foreach (IDamageable damageable in hitTargets)
             {
@@ -64,10 +68,12 @@ namespace WutheringWaves
                     continue;
                 }
 
-                // 7.创建伤害信息
-                // 削韧值和受击反应将在下一步接入DamageInfo
+                // 7.创建完整伤害信息
+                // 普通受击等级与削韧相互独立，None仍然可以造成削韧
                 DamageInfo damageInfo = new DamageInfo(
                     actualDamage,
+                    actualPoiseDamage,
+                    hitConfig.hitReaction,
                     gameObject,
                     damageableComponent.transform.position,
                     hitDirection.normalized,
@@ -77,9 +83,12 @@ namespace WutheringWaves
                 // 8.调用目标自己的受伤逻辑
                 damageable.TakeDamage(damageInfo);
 
-                // 9.保留调试输出，方便确认范围伤害链路
+                // 9.保留调试输出，方便确认完整伤害链路
                 Debug.Log(
-                    $"命中{damageableComponent.name} | 伤害:{actualDamage}"
+                    $"命中{damageableComponent.name}"
+                    + $" | 伤害:{actualDamage}"
+                    + $" | 削韧:{actualPoiseDamage}"
+                    + $" | 受击反应:{hitConfig.hitReaction}"
                 );
             }
         }

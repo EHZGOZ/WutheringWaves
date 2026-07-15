@@ -4,14 +4,6 @@ using UnityEngine;
 namespace WutheringWaves
 {
     #region AttackStep
-    // 受击反应等级：底层仍使用0、1、2，Inspector中显示明确名称
-    public enum HitReactionLevel
-    {
-        None = 0, // 只造成数值伤害，不触发受击动作
-        Light = 1, // 轻受击反应
-        Heavy = 2 // 重受击反应
-    }
-
     // 攻击范围类型：未启用范围叠加时选择单一范围
     public enum AttackRangeType
     {

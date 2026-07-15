@@ -18303,7 +18303,7 @@ MonoBehaviour:
   bossSpawnPoint: {fileID: 1849812225}
   bossInstance: {fileID: 0}
   bossContext: {fileID: 0}
-  currentTarget: {fileID: 0}
+  currentParticipant: {fileID: 0}
   startBattleOnEnter: 1
   clearTargetOnExit: 1
   destroyBossOnExit: 1
@@ -22013,7 +22013,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
-      value: 2.5
+      value: 1.003319
       objectReference: {fileID: 0}
     - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: heavyAttackCost

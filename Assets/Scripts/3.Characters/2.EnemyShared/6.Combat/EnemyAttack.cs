@@ -54,23 +54,31 @@ namespace WutheringWaves
                 return false;
             }
 
-            // 3.移动组件或目标为空时不能攻击
-            if (context.MovementLogic == null || context.MovementLogic.Target == null)
+            // 3.从EnemyTargeting读取当前玩家目标
+            Transform currentTarget =
+                context.Targeting.TargetTransform;
+
+            // 4.当前没有有效目标时不能攻击
+            if (currentTarget == null)
             {
                 return false;
             }
 
-            // 4.攻击冷却未结束时不能攻击
+            // 5.攻击冷却未结束时不能攻击
             if (Time.time < nextAttackTime)
             {
                 return false;
             }
 
-            // 5.只计算水平距离，避免高度差影响攻击距离判断
-            Vector3 direction = context.MovementLogic.Target.position - transform.position;
+            // 6.只计算水平距离，避免高度差影响攻击距离判断
+            Vector3 direction =
+                currentTarget.position - transform.position;
+
             direction.y = 0f;
 
-            return direction.sqrMagnitude <= attackRange * attackRange;
+            // 7.目标进入攻击距离后允许攻击
+            return direction.sqrMagnitude
+                <= attackRange * attackRange;
         }
         #endregion
 

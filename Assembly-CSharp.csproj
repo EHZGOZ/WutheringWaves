@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scripts\4.UI\1.Root\UIRoot.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\States\JinxiStates.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\7.Visual\EffectController.cs" />
+    <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\4.Input\EnemyTargeting.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\5.Movement\CharacterRootMotion.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\8.FSM\EnemyStateFactory.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\8.FSM\ICharacterStateMachineDriver.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.AccountManager\JsonAccountRepository.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\1.Bootstrap\GameBootstrap.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\2.Runtime\EnemyAttributes.cs" />
-    <Compile Include="Assets\Scripts\5.Gameplay\Encounters\BossBattle\BossBattleState.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\2.Player\PlayerInputReader.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\CharacterDataSO.cs" />

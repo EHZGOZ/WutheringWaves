@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -2996547059088281830}
   - component: {fileID: -4499825123611929438}
   - component: {fileID: 5448765839719725189}
+  - component: {fileID: 3293327479691059624}
   - component: {fileID: 6650128897115264932}
   - component: {fileID: 4140055066385889134}
   m_Layer: 7
@@ -55,6 +56,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   movementLogic: {fileID: 0}
   rootMotion: {fileID: 0}
+  targeting: {fileID: 0}
   animator: {fileID: 0}
   enemyColliders: []
   disableObjectOnDead: 0
@@ -73,13 +75,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   context: {fileID: 0}
   animator: {fileID: 0}
+  movementLogic: {fileID: 0}
+  targeting: {fileID: 0}
   currentStep:
     attackId: 0
     hitConfig:
       damageMultiplier: 1
-      attackRadius: 0
-      attackAngle: 0
-      attackOffset: {x: 0, y: 1, z: 0.5}
+      poiseDamageMultiplier: 1
+      hitReaction: 0
+    rangeConfig:
+      enableRangeCombination: 1
+      singleRangeType: 1
+      useSphereRange: 0
+      sphereRadius: 0
+      sphereOffset: {x: 0, y: 1, z: 0.5}
+      useSectorRange: 1
+      sectorRadius: 0
+      sectorAngle: 0
+      sectorOffset: {x: 0, y: 1, z: 0.5}
+      useBoxRange: 0
+      boxSize: {x: 0, y: 0, z: 0}
+      boxOffset: {x: 0, y: 1, z: 0.5}
     timingConfig:
       executionAttackCostTime: 0
       comboWindowDuration: 1.5
@@ -144,6 +160,20 @@ MonoBehaviour:
   rotateSpeed: 360
   pathUpdateInterval: 0.025
   navMeshSampleDistance: 2
+--- !u!114 &3293327479691059624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7911075310875473520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90da4beb8168dd14d96c3c746733c6d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  context: {fileID: 0}
+  targetContext: {fileID: 0}
 --- !u!143 &6650128897115264932
 CharacterController:
   m_ObjectHideFlags: 0

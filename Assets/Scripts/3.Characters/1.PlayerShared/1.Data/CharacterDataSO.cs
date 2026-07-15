@@ -8,8 +8,13 @@ namespace WutheringWaves
         #region 角色信息
         [Header("===角色信息===")]
         [SerializeField] public CharacterName characterName;
+
         [Header("基础攻击力")]
         [SerializeField] public float baseAttack = 100f;
+
+        [Header("基础削韧值")]
+        [SerializeField] public float basePoiseDamage = 10f; // 每个攻击段计算削韧值时使用的基础数值
+
         [Header("最大生命值")]
         [SerializeField] public float maxHealth = 1000f;
         #endregion

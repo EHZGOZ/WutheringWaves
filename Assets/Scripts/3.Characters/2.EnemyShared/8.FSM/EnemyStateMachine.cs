@@ -20,6 +20,7 @@ namespace WutheringWaves
         [SerializeField] private EnemyContext context; // 敌人共享上下文
         [SerializeField] private Animator animator; // 敌人动画控制器
         [SerializeField] private EnemyMovement movementLogic; // 敌人移动逻辑
+        [SerializeField] private EnemyTargeting targeting; // 敌人目标
         #endregion
 
         #region 2. FSM核心组件
@@ -34,41 +35,45 @@ namespace WutheringWaves
         #endregion
 
         #region 3. 状态共享数据
-        public AttackStep currentStep;
+        public AttackStep currentStep; // 当前正在执行的攻击步骤
 
-        //是否状态锁定
+        // 是否状态锁定
         public bool IsStateLocked { get; set; } = false;
 
         public EnemyContext Context => context; // 敌人共享上下文
         public Animator Animator => animator; // 敌人动画控制器
         public EnemyMovement MovementLogic => movementLogic; // 敌人移动逻辑
+        public EnemyTargeting Targeting => targeting; // 敌人目标管理逻辑
         public bool IsDead => context.IsDead; // 是否已经死亡，由EnemyContext统一查询
         #endregion
 
-        #region 4.初始化
+        #region 4. 初始化
         // 敌人状态机初始化：由EnemyContext统一调用
         public void Initialize(EnemyContext context)
         {
-            // 1.缓存敌人共享上下文
+            // 缓存敌人共享上下文
             this.context = context;
 
-            // 2.通过上下文注入敌人动画控制器
+            // 通过上下文注入敌人动画控制器
             animator = context.Animator;
 
-            // 3.通过上下文注入敌人移动逻辑
+            // 通过上下文注入敌人移动逻辑
             movementLogic = context.MovementLogic;
 
-            // 4.创建状态工厂
+            // 通过上下文注入敌人目标逻辑
+            targeting = context.Targeting;
+
+            // 创建状态工厂
             StateFactory = new EnemyStateFactory();
 
-            // 5.注册敌人基础状态
+            // 注册敌人基础状态
             RegisterBaseStates();
 
-            // 6.初始化上一状态和上上状态记录
+            // 初始化上一状态和上上状态记录
             PreviousStateType = EnemyState.Idle;
             PreviousPreviousStateType = EnemyState.Idle;
 
-            // 7.进入默认待机状态
+            //进入默认待机状态
             SwitchState(StateFactory.GetState(EnemyState.Idle));
         }
 

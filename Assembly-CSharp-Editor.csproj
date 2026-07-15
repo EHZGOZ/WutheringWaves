@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\GameAssets\5.Effect\codex制作的特效\01_卡提希娅_风刃测试\特效\Editor\CodexSkill01VfxGraphGenerator.cs" />
     <Compile Include="Assets\Editor\BatchSetMaterialCreationMode.cs" />
+    <Compile Include="Assets\Editor\AttackStepRangePreviewDrawer.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\codex制作的特效\01_卡提希娅_风刃测试\特效\Editor\CodexSkill01VfxGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
