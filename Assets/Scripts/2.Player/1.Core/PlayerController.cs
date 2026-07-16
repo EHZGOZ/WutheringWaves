@@ -6,6 +6,7 @@ namespace WutheringWaves
     public class PlayerController : MonoBehaviour
     {
         public static PlayerController Instance { get; private set; }
+        [Header(" ===核心组件===")]
 
         [Header(" 玩家数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家数据
@@ -43,7 +44,6 @@ namespace WutheringWaves
         #endregion
 
         #region 生命周期
-
         private void Awake()
         {
             // 单例模式核心：如果已存在玩家控制器，销毁当前重复对象
@@ -766,7 +766,7 @@ namespace WutheringWaves
             }
 
             //6.目标角色死亡时先不允许切换
-            if (targetContext.CharacterRuntimeData != null && targetContext.CharacterRuntimeData.IsDead)
+            if (targetContext.RuntimeData != null && targetContext.RuntimeData.IsDead)
             {
                 return false;
             }
@@ -798,12 +798,12 @@ namespace WutheringWaves
             for (int i = 0; i < teamCharacters.Length; i++)
             {
                 CharacterContext context = teamCharacters[i];
-                if (context == null || context.CharacterRuntimeData == null)
+                if (context == null || context.RuntimeData == null)
                 {
                     continue;
                 }
 
-                context.CharacterRuntimeData.UpdateRuntime(Time.deltaTime);
+                context.RuntimeData.UpdateRuntime(Time.deltaTime);
             }
         }
         #endregion

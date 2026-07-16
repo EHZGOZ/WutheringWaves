@@ -24,16 +24,13 @@ namespace WutheringWaves
         [SerializeField] private InventoryService inventoryService; // 背包服务：管理当前账号存档中的背包数据
         [Header(" 角色生成服务")]
         [SerializeField] private CharacterSpawnService characterSpawnService; // 角色生成服务：管理角色预制体映射、角色实例化与生成入口
-        [Header(" 游戏会话服务")]
-        [SerializeField] private GameSessionService gameSessionService; // 游戏会话服务：管理当前账号开始游戏、进入游戏和退出自动保存
         [Header(" 音频服务")]
         [SerializeField] private AudioService audioService; // 音频服务：管理游戏音效、背景音乐播放与音量设置
         [Header(" 特效服务")]
         [SerializeField] private EffectService effectService; // 特效服务：管理粒子特效、技能效果与视觉表现
-        #endregion
-
-        #region UI
-        [Header(" UI根节点")]
+        [Header(" 游戏会话服务")]
+        [SerializeField] private GameSessionService gameSessionService; // 游戏会话服务：管理当前账号开始游戏、进入游戏和退出自动保存
+        [Header(" UI总节点")]
         [SerializeField] private UIRoot uiRoot; // 游戏UI总节点：管理主菜单、存档菜单、HUD和小地图
         #endregion
 
@@ -45,6 +42,11 @@ namespace WutheringWaves
         [SerializeField] private PlayerRuntimeData playerRuntimeData; // 玩家运行时数据：负责玩家位置、队伍与角色运行数据同步
         #endregion
 
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;  // 是否输出详细日志
+
+        private bool _bootstrapped; // 标记：是否已完成游戏初始化引导，防止重复执行
+
         #region 外部访问
         public GameTimeService TimeService => gameTimeService;  // 外部只读属性：获取时间服务
         public InputService InputService => inputService;  // 外部只读属性：获取输入服务
@@ -52,18 +54,14 @@ namespace WutheringWaves
         public SaveService SaveService => saveService;  // 外部只读属性：获取存档服务
         public InventoryService InventoryService => inventoryService;  // 外部只读属性：获取背包服务
         public CharacterSpawnService CharacterSpawnService => characterSpawnService;  // 外部只读属性：获取角色生成服务
-        public GameSessionService GameSessionService => gameSessionService;  // 外部只读属性：获取游戏会话服务
         public AudioService AudioService => audioService;  // 外部只读属性：获取音频服务
         public EffectService EffectService => effectService;  // 外部只读属性：获取特效服务
+        public GameSessionService GameSessionService => gameSessionService;  // 外部只读属性：获取游戏会话服务
         public UIRoot UIRoot => uiRoot;  // 外部只读属性：获取UI根节点
+
         public PlayerController PlayerController => playerController;  // 外部只读属性：获取玩家控制器
         public PlayerRuntimeData PlayerRuntimeData => playerRuntimeData;  // 外部只读属性：获取玩家运行时数据
         #endregion
-
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;  // 是否输出详细日志
-
-        private bool _bootstrapped; // 标记：是否已完成游戏初始化引导，防止重复执行
 
         #region 生命周期
         private void Awake()
@@ -77,11 +75,8 @@ namespace WutheringWaves
 
             Instance = this; // 赋值单例实例
             DontDestroyOnLoad(gameObject); // 场景切换时，不销毁该引导对象
-        }
 
-        private void Start()
-        {
-            // 等其他全局服务完成Awake后，再统一执行初始化流程
+            // 统一执行初始化流程
             Bootstrap();
         }
         private void OnDestroy()
@@ -180,23 +175,23 @@ namespace WutheringWaves
                 ok = false;
             }
 
-            // 7.检查游戏会话服务：开始游戏、进入游戏和退出自动保存都交给它处理
-            if (gameSessionService == null)
-            {
-                Debug.LogError("[GameBootstrap] 缺少游戏会话服务(GameSessionService)引用。", this);
-                ok = false;
-            }
-
-            // 8.检查音频服务：音频缺失时项目仍可运行，因此只输出警告
+            // 7.检查音频服务：音频缺失时项目仍可运行，因此只输出警告
             if (audioService == null)
             {
                 Debug.LogWarning("[GameBootstrap] 当前未配置音频服务(AudioService)，项目将以音频空壳模式运行。", this);
             }
 
-            // 9.检查特效服务：特效服务是角色技能和战斗表现的必要依赖
+            // 8.检查特效服务：特效服务是角色技能和战斗表现的必要依赖
             if (effectService == null)
             {
                 Debug.LogError("[GameBootstrap] 缺少特效服务(EffectService)引用。", this);
+                ok = false;
+            }
+
+            // 9.检查游戏会话服务：开始游戏、进入游戏和退出自动保存都交给它处理
+            if (gameSessionService == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少游戏会话服务(GameSessionService)引用。", this);
                 ok = false;
             }
 
@@ -204,6 +199,20 @@ namespace WutheringWaves
             if (uiRoot == null)
             {
                 Debug.LogError("[GameBootstrap] 缺少游戏UI根节点(UIRoot)引用。", this);
+                ok = false;
+            }
+
+            // 11.检查玩家控制器：玩家控制器依赖前置服务完成初始化后再启动
+            if (playerController == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少玩家控制器(PlayerController)引用。", this);
+                ok = false;
+            }
+
+            // 12检查玩家运行时数据：玩家运行时数据依赖前置服务完成初始化后再启动
+            if (playerRuntimeData == null)
+            {
+                Debug.LogError("[GameBootstrap] 缺少游戏UI根节点(PlayerRuntimeData)引用。", this);
                 ok = false;
             }
 
@@ -233,14 +242,14 @@ namespace WutheringWaves
             // 6.初始化角色生成服务：为后续玩家队伍生成提供统一角色生成入口
             characterSpawnService?.Initialize();
 
-            // 7.初始化游戏会话服务：负责当前账号开始游戏、进入游戏和退出自动保存
-            gameSessionService?.Initialize();
-
-            // 8.初始化音频服务：音量设置依赖SaveService中的设置仓储
+            // 7.初始化音频服务：音量设置依赖SaveService中的设置仓储
             audioService?.Initialize();
 
-            // 9.初始化特效服务：为角色与战斗表现提供特效播放能力
+            // 8.初始化特效服务：为角色与战斗表现提供特效播放能力
             effectService?.Initialize();
+
+            // 9.初始化游戏会话服务：负责当前账号游戏流程
+            gameSessionService?.Initialize();
 
             // 10.初始化UI根节点：UI初始化会访问时间、输入、音频、存档等前置服务，因此最后启动
             uiRoot?.Initialize();

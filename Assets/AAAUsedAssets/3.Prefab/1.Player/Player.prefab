@@ -359,12 +359,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5311199842627346400}
-  - component: {fileID: 4303778103674625370}
   - component: {fileID: 7170165881780540615}
+  - component: {fileID: 4837152021237762821}
   - component: {fileID: 5613296329199882604}
-  - component: {fileID: 4328678984413106215}
-  - component: {fileID: 8292550580018359768}
+  - component: {fileID: 4303778103674625370}
   - component: {fileID: 6780653820506657871}
+  - component: {fileID: 8292550580018359768}
+  - component: {fileID: 4328678984413106215}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -388,6 +389,60 @@ Transform:
   - {fileID: 1968271337833208019}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7170165881780540615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361222149857307356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90779e26199c9ff4fb56dfa483237405, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRuntimeData: {fileID: 0}
+  playerInputReader: {fileID: 6780653820506657871}
+  playerStamina: {fileID: 4328678984413106215}
+  playerCamera: {fileID: 8292550580018359768}
+  teamCharacters:
+  - {fileID: 0}
+  - {fileID: 0}
+  defaultCharacterIndex: 0
+  _currentCharacterContext: {fileID: 0}
+  switchCharacterInterval: 0.3
+--- !u!114 &4837152021237762821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361222149857307356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 427f66957936f324992feb8e14379ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamCharacters: []
+--- !u!114 &5613296329199882604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361222149857307356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb1906cbf7c260478324a6606b61c0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
+  sceneName: 
+  teamCharacters: []
+  teamSlots: []
+  currentCharacterIndex: 0
+  playerPosition: {x: 0, y: 0, z: 0}
+  playerEulerAngles: {x: 0, y: 0, z: 0}
 --- !u!114 &4303778103674625370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,7 +473,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7170165881780540615
+--- !u!114 &6780653820506657871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -427,59 +482,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361222149857307356}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90779e26199c9ff4fb56dfa483237405, type: 3}
+  m_Script: {fileID: 11500000, guid: eb3ca1fe9effc2341a4a9ad4a1149537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRuntimeData: {fileID: 0}
-  playerCamera: {fileID: 8292550580018359768}
-  cameraTarget: {fileID: 0}
-  playerInputReader: {fileID: 6780653820506657871}
-  playerStamina: {fileID: 4328678984413106215}
-  teamCharacters:
-  - {fileID: 0}
-  - {fileID: 0}
-  defaultCharacterIndex: 0
-  _currentCharacterFacade: {fileID: 0}
-  _currentCharacterContext: {fileID: 0}
---- !u!114 &5613296329199882604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4361222149857307356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcb1906cbf7c260478324a6606b61c0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  sceneName: 
-  teamCharacters: []
-  teamCharacterIds: 
-  teamCharacterRuntimeData: []
-  currentCharacterIndex: 0
-  playerPosition: {x: 0, y: 0, z: 0}
-  playerEulerAngles: {x: 0, y: 0, z: 0}
---- !u!114 &4328678984413106215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4361222149857307356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed19e83318610fb4aa6cdf165664295e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxStamina: 100
-  runDrainPerSecond: 2.5
-  sprintCost: 15
-  floatDashCost: 15
-  regenPerSecond: 10
-  regenDelay: 1
-  fullStaminaFadeDelay: 1
+  playerInput: {fileID: 4303778103674625370}
+  inputBuffer: {fileID: 0}
 --- !u!114 &8292550580018359768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,7 +510,7 @@ MonoBehaviour:
   MaxZoomDistance: 5
   ZoomSpeed: 2
   DefaultZoomDistance: 5
---- !u!114 &6780653820506657871
+--- !u!114 &4328678984413106215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -512,11 +519,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361222149857307356}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb3ca1fe9effc2341a4a9ad4a1149537, type: 3}
+  m_Script: {fileID: 11500000, guid: ed19e83318610fb4aa6cdf165664295e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 4303778103674625370}
-  inputBuffer: {fileID: 0}
+  maxStamina: 100
+  runDrainPerSecond: 2.5
+  heavyAttackCost: 25
+  dashCost: 15
+  airDashCost: 15
+  floatDashCost: 15
+  regenPerSecond: 10
+  regenDelay: 1
+  fullStaminaFadeDelay: 1
 --- !u!1 &5900609468532106395
 GameObject:
   m_ObjectHideFlags: 0

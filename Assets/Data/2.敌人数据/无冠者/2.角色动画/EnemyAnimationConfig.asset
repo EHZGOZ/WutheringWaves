@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 88aec935e50017e4588487fb84884696, type: 3}
   m_Name: EnemyAnimationConfig
-  m_EditorClassIdentifier: Assembly-CSharp:WutheringWaves:EnemyAnimationConfigSO
+  m_EditorClassIdentifier: 
   enemyAnimations:
   - animationId: 1
     clip: {fileID: -623603649343465320, guid: a0def514ede574e44813be4ee91073ee, type: 3}
   - animationId: 2
     clip: {fileID: -623603649343465320, guid: 1aa3f3a2bba96834792f073eeb4539af, type: 3}
   - animationId: 3
-    clip: {fileID: -623603649343465320, guid: c2829cf95db41d84284ca999dea16282, type: 3}
+    clip: {fileID: -623603649343465320, guid: 0750a2e6c0e56f6409e931ac0838cf0e, type: 3}
   - animationId: 4
     clip: {fileID: -623603649343465320, guid: c1637268bb9260c498903269fc283d1a, type: 3}
   - animationId: 5

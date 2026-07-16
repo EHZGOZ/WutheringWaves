@@ -141,7 +141,7 @@ namespace WutheringWaves
             // 注入依赖
             this.context = context;
             characterData = context != null ? context.CharacterDataSO : null;
-            runtimeData = context != null ? context.CharacterRuntimeData : null;
+            runtimeData = context != null ? context.RuntimeData : null;
             Animator = context != null ? context.Animator : null;
             characterController = context != null ? context.CharacterController : null;
             movementLogic = context != null ? context.MovementLogic : null;

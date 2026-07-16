@@ -10,10 +10,15 @@ namespace WutheringWaves
         [Header(" 是否输出详细日志")]
         [SerializeField] private bool verboseLog = true;
 
+        #region 核心引用
+        private InventoryData currentInventory; // 当前账号存档中的背包数据引用
+        #endregion
+
+        #region 外部访问
         public bool IsInitialized { get; private set; }
 
-        private InventoryData currentInventory; // 当前账号存档中的背包数据引用
         public InventoryData CurrentInventory => currentInventory; // 外部只读访问当前背包数据
+        #endregion
 
         #region 生命周期
         private void Awake()
@@ -50,20 +55,38 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 绑定与清理
+        #region 背包绑定与清理
         // 绑定当前存档中的背包数据：登录/读档成功后由外部调用
-        public void Bind(InventoryData inventoryData)
+        public void Bind(SaveData saveData)
         {
-            // 1.如果传入的背包数据为空，则创建一份空背包，避免后续访问空引用
-            if (inventoryData == null)
+            // 1.存档数据为空时停止绑定，并清理旧账号背包引用
+            // 避免绑定失败后继续操作上一个账号的背包数据
+            if (saveData == null)
             {
-                inventoryData = new InventoryData();
+                currentInventory = null;
+                Debug.LogWarning("[背包服务] 背包绑定失败：存档数据为空。", this);
+                return;
             }
 
-            // 2.缓存当前背包数据引用，后续所有背包操作都基于这份数据
-            currentInventory = inventoryData;
+            // 2.存档中的背包数据为空时创建空背包
+            // 创建后写回SaveData，保证后续背包变化能够跟随存档一起保存
+            if (saveData.inventory == null)
+            {
+                saveData.inventory = new InventoryData();
+            }
 
-            // 3.输出绑定日志，方便确认账号存档是否已经接入背包服务
+            // 3.背包物品列表为空时创建空列表
+            // 兼容旧存档或字段不完整的异常存档，避免后续增删物品时发生空引用
+            if (saveData.inventory.items == null)
+            {
+                saveData.inventory.items = new();
+            }
+
+            // 4.缓存当前背包数据引用
+            // currentInventory与saveData.inventory指向同一个对象，不需要额外复制数据
+            currentInventory = saveData.inventory;
+
+            // 5.输出绑定日志，方便确认账号存档是否已经接入背包服务
             if (verboseLog)
             {
                 Debug.Log("[背包服务] 当前存档背包数据绑定完成。");
@@ -83,9 +106,6 @@ namespace WutheringWaves
             }
         }
         #endregion
-
-
-
 
     }
 }

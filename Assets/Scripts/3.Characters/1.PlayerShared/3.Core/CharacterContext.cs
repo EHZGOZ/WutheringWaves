@@ -25,17 +25,13 @@ namespace WutheringWaves
         [Header("玩家共享体力：位于 Player 层")]
         [SerializeField] private PlayerStamina playerStamina;
 
-        [Header("=== 基础组件（自动获取）===")]
-        [Header("动画控制器")]
-        [SerializeField] private Animator animator; // 角色动画控制器
-        [Header("角色控制器")]
-        [SerializeField] private CharacterController characterController; // 角色控制器
-
         [Header("=== 内层核心组件（自动获取） ===")]
         [Header("角色状态机")]
         [SerializeField] private CharacterStateMachine stateMachine; // 角色状态机
         [Header("角色输入缓冲器")]
         [SerializeField] private InputBuffer inputBuffer; // 角色输入缓冲器
+        [Header("角色属性")]
+        [SerializeField] private CharacterAttributes attributes; // 角色属性
         [Header("移动逻辑")]
         [SerializeField] private CharacterMovement movementLogic; // 移动逻辑
         [Header("战斗逻辑")]
@@ -51,6 +47,11 @@ namespace WutheringWaves
         [Header("音效控制器")]
         [SerializeField] private AudioController audioController; // 音效控制器
 
+        [Header("=== 基础组件（自动获取）===")]
+        [Header("动画控制器")]
+        [SerializeField] private Animator animator; // 角色动画控制器
+        [Header("角色控制器")]
+        [SerializeField] private CharacterController characterController; // 角色控制器
 
         [Header("=== 角色独属（自动获取） ===")]
         [SerializeField] private JinxiFeatureRoot jinxiFeatureRoot;
@@ -60,7 +61,7 @@ namespace WutheringWaves
         #region 对外只读属性
         public CharacterDataSO CharacterDataSO => characterDataSO; // 角色基础数据
         public Transform CameraTarget => cameraTarget != null ? cameraTarget : transform; // 当前角色相机观察点
-        public CharacterRuntimeData CharacterRuntimeData => runtimeData; // 角色运行时数据
+        public CharacterRuntimeData RuntimeData => runtimeData; // 角色运行时数据
 
         public PlayerController PlayerController => playerController; // 玩家控制器
         public PlayerInputReader PlayerInputReader => playerInputReader; // 玩家输入读取器
@@ -71,6 +72,7 @@ namespace WutheringWaves
 
         public CharacterStateMachine StateMachine => stateMachine; // 角色状态机
         public InputBuffer InputBuffer => inputBuffer; // 角色输入缓冲器
+        public CharacterAttributes Attributes => attributes; // 角色输入缓冲器
         public CharacterMovement MovementLogic => movementLogic; // 移动逻辑
         public CharacterAttack AttackLogic => attackLogic; // 战斗逻辑
         public CharacterRootMotion RootMotion => rootMotion; // 角色根运动逻辑
@@ -85,10 +87,7 @@ namespace WutheringWaves
         #endregion
 
         #region 生命周期
-        private void Update()
-        {
-            UpdateHealthTest();
-        }
+
         #endregion
 
         #region 初始化

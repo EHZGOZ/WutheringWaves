@@ -6,20 +6,32 @@ namespace WutheringWaves
 
     public class GameTimeService : MonoBehaviour
     {
-        public static GameTimeService Instance { get; private set; }
+        public static GameTimeService Instance { get; private set; } // 时间服务单例，外部只能读取
 
-        [SerializeField] private float defaultTimeScale = 1f; // 默认时间缩放系数，1为正常游戏速度   
+        [Header("=== 基础时间配置 ===")]
+        [SerializeField] private float defaultTimeScale = 1f; // 默认时间缩放系数，1表示正常游戏速度
+
         [Header("=== 时间流速测试 ===")]
         [SerializeField] private bool enableTimeScaleTest = true; // 是否启用Tab切换时间流速测试
-        [SerializeField] private float testTimeScaleA = 1f; // 正常速度
-        [SerializeField] private float testTimeScaleB = 0.3f; // 慢动作速度
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;
+        [SerializeField] private float testTimeScaleA = 1f; // 第一档测试时间流速
+        [SerializeField] private float testTimeScaleB = 0.3f; // 第二档测试时间流速
 
-        private float _resumeTimeScale = 1f; // 存储暂停前的时间缩放，用于恢复游戏
-        public bool IsPaused => Time.timeScale <= 0f; // 判断游戏是否暂停（时间缩放小于等于0即为暂停）
-        public float CurrentTimeScale => Time.timeScale; // 获取当前的时间缩放值
-        public bool IsInitialized { get; private set; } // 是否已初始化
+        [Header("=== 日志配置 ===")]
+        [SerializeField] private bool verboseLog = true; // 是否输出时间服务详细日志
+
+        #region 运行数据
+        private float _resumeTimeScale = 1f; // 暂停前的时间缩放，用于恢复游戏
+        #endregion
+
+        #region 外部访问
+        public bool IsPaused =>
+            Time.timeScale <= 0f; // 当前游戏是否处于暂停状态
+
+        public float CurrentTimeScale =>
+            Time.timeScale; // 当前实际时间缩放值
+
+        public bool IsInitialized { get; private set; } // 是否完成初始化，外部只读
+        #endregion
 
         #region 生命周期
         private void Awake()
@@ -77,6 +89,7 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 时间缩放设置
         // 暂停游戏，将时间缩放设为0
         public void Pause()
         {
@@ -110,7 +123,9 @@ namespace WutheringWaves
                 _resumeTimeScale = clampedScale;
             }
         }
+        #endregion
 
+        #region 测试方法
         // 在两个指定的时间缩放值之间切换
         public void ToggleBetweenScales(float firstScale, float secondScale)
         {
@@ -136,6 +151,9 @@ namespace WutheringWaves
                 //Debug.Log($"当前时间流速：{CurrentTimeScale}");
             }
         }
+        #endregion
+
+
 
     }
 }

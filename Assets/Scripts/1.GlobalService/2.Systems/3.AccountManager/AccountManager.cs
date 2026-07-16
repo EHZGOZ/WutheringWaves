@@ -10,18 +10,21 @@ namespace WutheringWaves
     {
         public static AccountManager Instance { get; private set; }
 
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;
-
         [Header(" 账号索引文件名")]
         [SerializeField] private string indexFileName = "index.json";
 
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;
+
+        #region 核心引用
+        private IAccountRepository _repository; // 抽象仓储接口，不关心底层是 JSON 还是 SQLite
+        #endregion
+
+        #region 外部访问
         public bool IsInitialized { get; private set; }
         public bool IsLoggedIn { get; private set; }
         public AccountInfo CurrentAccount { get; private set; }
-
-        // 抽象仓储接口，不关心底层是 JSON 还是 SQLite
-        private IAccountRepository _repository;
+        #endregion
 
         #region 生命周期
 
@@ -48,7 +51,6 @@ namespace WutheringWaves
         #endregion
 
         #region 初始化
-
         // 初始化账号管理器
         public void Initialize()
         {

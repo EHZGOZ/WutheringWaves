@@ -15,12 +15,16 @@ namespace WutheringWaves
         [Header(" 是否输出详细日志")]
         [SerializeField] private bool verboseLog = true;  // 是否输出详细日志
 
+        #region 核心引用
+        private JsonSaveRepository _jsonRepository; // 当前槽位对应的JSON存档仓储对象
+        public PlayerPrefsSettingsRepository SettingsRepository { get; private set; } // 轻量级设置仓储
+        #endregion
+
+        #region 外部访问
         public bool IsInitialized { get; private set; } // 是否已初始化
         public SaveData CurrentData { get; private set; } // 当前内存中的存档数据
         public string CurrentUsername { get; private set; } = string.Empty; // 当前存档属于哪个账号
-
-        private JsonSaveRepository _jsonRepository; // 当前槽位对应的JSON存档仓储对象
-        public PlayerPrefsSettingsRepository SettingsRepository { get; private set; } // 轻量级设置仓储
+        #endregion
 
         #region 生命周期
         private void Awake()

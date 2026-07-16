@@ -220,7 +220,7 @@ namespace WutheringWaves
     public class EnemyHitState : EnemyStateBase
     {
         private float stateTimer; // 受击状态计时器
-        private float HitStateDuration = 2.5f;
+        private float HitStateDuration = 4f;
 
         public EnemyHitState(EnemyStateMachine stateMachine, EnemyStateFactory factory) : base(stateMachine, factory) { }
 
@@ -247,7 +247,7 @@ namespace WutheringWaves
             }
 
             // 3.播放受击动画
-            stateMachine.Animator.CrossFadeInFixedTime(animationName, 0.05f, 0, 0);
+            stateMachine.Animator.CrossFadeInFixedTime(animationName, 0.3f, 0, 0);
         }
 
         // 2.初始化受击状态

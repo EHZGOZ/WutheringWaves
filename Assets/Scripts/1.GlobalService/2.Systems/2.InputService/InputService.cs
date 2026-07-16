@@ -7,17 +7,18 @@ namespace WutheringWaves
     {
         public static InputService Instance { get; private set; }
 
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;
-
         [Header(" 当前玩家输入读取器")]
         [SerializeField] private PlayerInputReader playerInputReader;
 
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;
+
+        #region 外部访问
         public bool IsInitialized { get; private set; }
         public bool IsUIInputEnabled { get; private set; }
         public bool IsPlayerInputEnabled { get; private set; }
         public bool IsTextInputActive { get; private set; }
-
+        #endregion
 
         #region 生命周期
         private void Awake()
@@ -110,6 +111,8 @@ namespace WutheringWaves
             }
         }
         #endregion
+
+        #region 输入开关
 
         #region UI输入开关
         // 启用UI输入：登录、注册、菜单界面使用
@@ -207,6 +210,8 @@ namespace WutheringWaves
                 SetCursorVisible(true);
             }
         }
+        #endregion
+
         #endregion
 
         #region 光标控制

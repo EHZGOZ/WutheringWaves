@@ -870,7 +870,7 @@ namespace WutheringWaves
         private void HandleSkillIconUIRuntimeChanged(CharacterRuntimeData source, SkillUIType skillType, int iconIndex, float cooldownRemaining)
         {
             // 1.只刷新当前HUD绑定角色的运行时数据
-            if (source == null || context == null || source != context.CharacterRuntimeData)
+            if (source == null || context == null || source != context.RuntimeData)
             {
                 return;
             }

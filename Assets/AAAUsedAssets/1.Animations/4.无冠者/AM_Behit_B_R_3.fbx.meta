@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8d87773c83e0049459a25bbbbcf62e4d
+guid: 0750a2e6c0e56f6409e931ac0838cf0e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: AM_Behit_B_L_2
+      name: AM_Behit_B_R_3
       takeName: Scene
       internalID: -623603649343465320
       firstFrame: 0
-      lastFrame: 73
+      lastFrame: 59
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -46,9 +46,9 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 1

@@ -23,7 +23,7 @@ namespace WutheringWaves
         private JinxiDragonController jinxiDragonController; // 今汐龙表现控制器
         private JinxiSpecialSwordController jinxiSpecialSwordController; // 今汐专用御剑控制器
 
-        private CharacterRuntimeData RuntimeData => context != null ? context.CharacterRuntimeData : null; // 今汐运行时数据快捷入口
+        private CharacterRuntimeData RuntimeData => context != null ? context.RuntimeData : null; // 今汐运行时数据快捷入口
 
 
         [Header("=== 今汐特殊机制配置 ===")]

@@ -54,9 +54,9 @@ MonoBehaviour:
   enemyDataSO: {fileID: 11400000, guid: 96c39f4c1fcc15d46bdebd97276de33b, type: 2}
   enemyAttributes: {fileID: 0}
   stateMachine: {fileID: 0}
+  targeting: {fileID: 0}
   movementLogic: {fileID: 0}
   rootMotion: {fileID: 0}
-  targeting: {fileID: 0}
   animator: {fileID: 0}
   enemyColliders: []
   disableObjectOnDead: 0
@@ -151,9 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   context: {fileID: 0}
+  targetingLogic: {fileID: 0}
   characterController: {fileID: 0}
   navMeshAgent: {fileID: 0}
-  target: {fileID: 0}
   stopDistance: 3
   resumeMovePadding: 0.5
   moveSpeed: 2
@@ -194,7 +194,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -209,7 +209,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 7911075310875473520}
   m_Enabled: 1
   m_AgentTypeID: -1372625422
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 30

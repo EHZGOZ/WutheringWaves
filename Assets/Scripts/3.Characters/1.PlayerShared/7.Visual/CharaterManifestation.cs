@@ -237,7 +237,7 @@ namespace WutheringWaves
             // 当前角色被切回来时，重新同步今汐当前状态，再刷新龙角表现
             if (currentContext == context)
             {
-                isFloating = context.CharacterRuntimeData != null && context.CharacterRuntimeData.jinxiIsFloating;
+                isFloating = context.RuntimeData != null && context.RuntimeData.jinxiIsFloating;
 
                 // 如果爆发状态没有存在RuntimeData里，这里先保持false，避免切回来误显示
                 isBrust = false;

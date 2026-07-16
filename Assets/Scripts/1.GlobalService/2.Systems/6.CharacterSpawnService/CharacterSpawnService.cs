@@ -17,18 +17,19 @@ namespace WutheringWaves
     {
         public static CharacterSpawnService Instance { get; private set; }
 
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;
-
         [Header(" 角色预制体映射")]
         [SerializeField] private List<CharacterPrefabMapping> characterPrefabMappings = new(); // Inspector配置的角色预制体映射表
 
-        public bool IsInitialized { get; private set; }
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;
 
+        #region 运行数据
         // 运行时缓存：通过角色名快速获取对应预制体
         private readonly Dictionary<CharacterName, GameObject> characterPrefabMap = new();
+        #endregion
 
         #region 外部访问
+        public bool IsInitialized { get; private set; }
         public Dictionary<CharacterName, GameObject> CharacterPrefabMap => characterPrefabMap;  // 外部只读属性：获取角色预制体字典
         #endregion
 

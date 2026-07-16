@@ -5,10 +5,8 @@ namespace WutheringWaves
     // 敌人攻击组件：负责攻击距离、攻击冷却和攻击开始逻辑
     public class EnemyAttack : MonoBehaviour
     {
-        #region 核心引用
         [Header("=== 敌人攻击核心引用 ===")]
         [SerializeField] private EnemyContext context; // 敌人上下文
-        #endregion
 
         #region 攻击配置
         [Header("=== 敌人攻击配置 ===")]

@@ -15,5 +15,5 @@ MonoBehaviour:
   enemyName: "\u65E0\u51A0\u8005"
   maxHealth: 100
   baseAttack: 10
-  animationConfigSO: {fileID: 11400000, guid: 3e8017814e094f545a5b513f810eea32, type: 2}
+  animationConfigSO: {fileID: 11400000, guid: 2dac5a9693a3ca94f83e065391a29da9, type: 2}
   canDropItem: 1

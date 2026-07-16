@@ -57,7 +57,7 @@ namespace WutheringWaves
          Vector3 playerPosition,
          Vector3 playerEulerAngles)
         {
-            // 1.创建默认存档基础数据
+            // 创建默认存档基础数据
             SaveData saveData = new SaveData
             {
                 sceneName = sceneName,
@@ -68,17 +68,17 @@ namespace WutheringWaves
                 teamSlots = new List<TeamCharacterSlotData>()
             };
 
-            // 2.按默认角色配置写入队伍槽位
+            //默认背包 暂无后续写
+
+            //按默认角色配置写入队伍槽位
             for (int i = 0; i < defaultTeamCharacterIds.Length; i++)
             {
                 CharacterName characterName = defaultTeamCharacterIds[i];
 
                 saveData.teamSlots.Add(new TeamCharacterSlotData
                 {
+                    // 默认存档先写入角色名，生命值等基础属性由角色初始化时从CharacterDataSO补齐这样可以避免新账号角色出现0血、角色名默认值等异常数据
                     characterName = characterName,
-
-                    // 默认存档先写入角色名，生命值等基础属性由角色初始化时从CharacterDataSO补齐
-                    // 这样可以避免新账号角色出现0血、角色名默认值等异常数据
                     runtimeData = new CharacterRuntimeData
                     {
                         characterName = characterName

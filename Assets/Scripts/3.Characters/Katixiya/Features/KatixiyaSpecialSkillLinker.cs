@@ -19,7 +19,7 @@ namespace WutheringWaves
         private CharacterContext context;     // 角色共享上下文
         private CharacterAttack attackLogic;  // 共享攻击基础层
         private CombatConfigSO combatConfig;  // 卡提希娅战斗配置
-        private CharacterRuntimeData RuntimeData => context != null ? context.CharacterRuntimeData : null; // 卡提希娅运行时数据快捷入口
+        private CharacterRuntimeData RuntimeData => context != null ? context.RuntimeData : null; // 卡提希娅运行时数据快捷入口
 
 
         [Header("=== 卡提希娅特殊机制配置 ===")]

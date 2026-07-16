@@ -13113,9 +13113,9 @@ Transform:
   - {fileID: 92720615}
   - {fileID: 2089442762}
   - {fileID: 1892868491}
-  - {fileID: 1250074664}
-  - {fileID: 1738787541}
   - {fileID: 1205737286}
+  - {fileID: 1738787541}
+  - {fileID: 1250074664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1107106151
@@ -14599,7 +14599,7 @@ GameObject:
   - component: {fileID: 1205737286}
   - component: {fileID: 1205737287}
   m_Layer: 0
-  m_Name: 9.EffectService
+  m_Name: 7.EffectService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14773,9 +14773,9 @@ MonoBehaviour:
   saveService: {fileID: 92720616}
   inventoryService: {fileID: 2089442763}
   characterSpawnService: {fileID: 1892868492}
-  gameSessionService: {fileID: 1250074665}
   audioService: {fileID: 1738787543}
   effectService: {fileID: 1205737287}
+  gameSessionService: {fileID: 1250074665}
   uiRoot: {fileID: 1962735625}
   playerController: {fileID: 1796824563}
   playerRuntimeData: {fileID: 1796824562}
@@ -14791,7 +14791,7 @@ GameObject:
   - component: {fileID: 1250074664}
   - component: {fileID: 1250074665}
   m_Layer: 0
-  m_Name: 7.GameSessionService
+  m_Name: 9.GameSessionService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14824,9 +14824,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd88606d91fa62143b86b3f269d72f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 0
   playerController: {fileID: 0}
   playerRuntimeData: {fileID: 0}
+  verboseLog: 0
 --- !u!1 &1252659413
 GameObject:
   m_ObjectHideFlags: 0
@@ -20465,8 +20465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb613873f13cf3d4697973ae9d0aa0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 0
   indexFileName: index.json
+  verboseLog: 0
 --- !u!1 &1678232560
 GameObject:
   m_ObjectHideFlags: 0
@@ -22013,7 +22013,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2662561232274501165, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: CameraDistance
-      value: 1.003319
+      value: 7.994397
       objectReference: {fileID: 0}
     - target: {fileID: 4328678984413106215, guid: e4d993e1f60aa8744b469b48cbe4f61e, type: 3}
       propertyPath: heavyAttackCost
@@ -22359,8 +22359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5aa4a3c3ad801444bafce7f918bd0cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 0
   playerInputReader: {fileID: 0}
+  verboseLog: 0
 --- !u!1 &1818895087
 GameObject:
   m_ObjectHideFlags: 0
@@ -23152,12 +23152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacbef4f95e1b724aa3770d2fc727938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verboseLog: 0
   characterPrefabMappings:
   - characterName: 0
     character: {fileID: 2358975735509947904, guid: c4833b76efd16044babbcb77ad69bb4a, type: 3}
   - characterName: 1
     character: {fileID: 7690567687467272026, guid: c536f3bba4b935e48a67ee3485b45fd1, type: 3}
+  verboseLog: 0
 --- !u!1 &1895981035
 GameObject:
   m_ObjectHideFlags: 0

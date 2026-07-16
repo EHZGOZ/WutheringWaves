@@ -23,6 +23,14 @@ namespace WutheringWaves
         public Vector3 playerPosition = Vector3.zero; // 玩家位置
         public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转
 
+        #region 生命周期
+
+
+        #endregion
+
+        #region 初始化
+
+        #endregion
 
         #region 角色绑定
         public void Bind(PlayerController playerController)
@@ -181,12 +189,12 @@ namespace WutheringWaves
         // 判断角色运行时数据是否可以被收集：未初始化角色不参与覆盖，避免存档数据被0血空数据污染
         private bool CanCollectCharacterRuntimeData(CharacterContext context)
         {
-            if (context == null || context.CharacterDataSO == null || context.CharacterRuntimeData == null)
+            if (context == null || context.CharacterDataSO == null || context.RuntimeData == null)
             {
                 return false;
             }
 
-            return context.CharacterRuntimeData.maxHealth > 0f;
+            return context.RuntimeData.maxHealth > 0f;
         }
 
         // 按队伍槽位写入角色运行时数据，保证teamSlots顺序和PlayerController.TeamCharacters顺序一致
@@ -210,14 +218,13 @@ namespace WutheringWaves
             }
 
             // 3.用场景中的角色真实数据覆盖对应槽位
-            CharacterRuntimeData runtimeData = context.CharacterRuntimeData.Clone();
+            CharacterRuntimeData runtimeData = context.RuntimeData.Clone();
             runtimeData.characterName = context.CharacterDataSO.characterName;
 
             teamSlots[slotIndex].characterName = context.CharacterDataSO.characterName;
             teamSlots[slotIndex].runtimeData = runtimeData;
         }
         #endregion
-
 
         #region 从 运行数据 中应用 存档数据
         // 从 运行数据 中应用 存档数据
@@ -261,9 +268,6 @@ namespace WutheringWaves
             saveData.playerEulerAngles = playerEulerAngles;
         }
         #endregion
-
-
-
 
     }
 }

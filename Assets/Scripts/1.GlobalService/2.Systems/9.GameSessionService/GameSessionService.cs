@@ -15,20 +15,21 @@ namespace WutheringWaves
     {
         public static GameSessionService Instance { get; private set; }
 
-        [Header(" 是否输出详细日志")]
-        [SerializeField] private bool verboseLog = true;
-
         [Header(" 玩家控制器")]
         [SerializeField] private PlayerController playerController;
 
         [Header(" 玩家运行时数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData;
 
+        [Header(" 是否输出详细日志")]
+        [SerializeField] private bool verboseLog = true;
+
+        #region 外部访问
         public bool IsInitialized { get; private set; }
         public GameSessionState CurrentState { get; private set; } = GameSessionState.OutGame; // 当前游戏会话状态
         public bool IsInGame => CurrentState == GameSessionState.InGame || CurrentState == GameSessionState.InGameBattle; // 是否处于游戏内
         public bool IsInBattle => CurrentState == GameSessionState.InGameBattle; // 是否处于战斗中
-
+        #endregion
 
         #region 生命周期
         private void Awake()
@@ -71,14 +72,14 @@ namespace WutheringWaves
             // 3.标记初始化完成
             IsInitialized = true;
 
+            //注入组件
+            ResolvePlayer();
+
             if (verboseLog)
             {
                 Debug.Log("[游戏会话服务] 初始化完成。");
             }
         }
-        #endregion
-
-        #region 数据注入
         // 解析玩家控制器和玩家运行时数据，并保持两边引用一致
         private void ResolvePlayer()
         {
@@ -178,26 +179,19 @@ namespace WutheringWaves
         // 为当前账号创建默认存档
         private SaveData CreateDefaultSaveForCurrentAccount(string username)
         {
-            // 1.解析玩家引用，用于读取默认出生点
-            ResolvePlayer();
 
-            // 2.玩家节点缺失时使用兜底出生点
-            Vector3 defaultPlayerPosition = playerController != null
-                ? playerController.transform.position
-                : new Vector3(0f, 0f, -5f);
+            //玩家节点缺失时使用兜底出生点
+            Vector3 defaultPlayerPosition = playerController != null  ? playerController.transform.position    : new Vector3(0f, 0f, -5f);
+            Vector3 defaultPlayerEulerAngles = playerController != null ? playerController.transform.eulerAngles : Vector3.zero;         
 
-            Vector3 defaultPlayerEulerAngles = playerController != null
-                ? playerController.transform.eulerAngles
-                : Vector3.zero;
-
-            // 3.创建默认存档数据：默认队伍、背包等由SaveData内部统一生成
+            //创建默认存档数据：默认队伍、背包等由SaveData内部统一生成
             SaveData defaultSaveData = SaveData.CreateDefault(
                 SceneManager.GetActiveScene().name,
                 defaultPlayerPosition,
                 defaultPlayerEulerAngles
             );
 
-            // 4.交给存档服务保存当前账号默认存档
+            //交给存档服务保存当前账号默认存档
             return SaveService.Instance.CreateSave(username, defaultSaveData);
         }
         #endregion
@@ -206,32 +200,25 @@ namespace WutheringWaves
         // 使用存档数据进入游戏：同步运行时数据、初始化玩家、绑定背包和UI
         private void EnterGameWithSaveData(SaveData saveData)
         {
-            // 1.空值检查
+            //空值检查
             if (saveData == null)
             {
                 Debug.LogError("[游戏会话服务] 进入游戏失败：存档数据为空。", this);
                 return;
             }
-
-            // 2.解析玩家控制器和运行时数据
-            ResolvePlayer();
-
-            // 3.玩家运行时数据为空时无法注入存档
             if (playerRuntimeData == null)
             {
                 Debug.LogError("[游戏会话服务] 进入游戏失败：PlayerRuntimeData为空。", this);
                 return;
             }
-
-            // 4.玩家控制器为空时无法生成和绑定角色
             if (playerController == null)
             {
                 Debug.LogError("[游戏会话服务] 进入游戏失败：PlayerController为空。", this);
                 return;
             }
 
-            // 5.绑定当前存档中的背包数据
-            InventoryService.Instance?.Bind(saveData.inventory);
+            //绑定当前存档中的背包数据
+            InventoryService.Instance?.Bind(saveData);
 
             // 6.把存档数据同步到玩家运行时数据
             playerRuntimeData.SyncRuntimeDataFromSaveData(saveData);
@@ -248,9 +235,6 @@ namespace WutheringWaves
 
             // 10.切换当前游戏会话状态为普通游戏中
             ChangeGameSessionState(GameSessionState.InGame);
-
-            // 11.通知外部系统：当前已经进入游戏中
-            GameEvents.RaiseGameSessionStateChanged(GameSessionState.InGame);
 
             if (verboseLog)
             {
