@@ -8,57 +8,52 @@ namespace WutheringWaves
     // 小地图控制器：负责小地图相机跟随、朝向箭头和世界标记刷新
     public class MiniMapController : MonoBehaviour
     {
+        [Header("核心组件")]
+        private PlayerController playerController; // 绑定的玩家   
+        private CharacterContext boundContext; // 当前绑定的角色上下文
+        private Camera miniMapCamera; // 小地图相机缓存
+
+        #region 小地图UI组件（Inspect中拖入）
         [Header("小地图根面板")]
         [SerializeField] private GameObject miniMapPanel; // 小地图整体根节点
-
         [Header("小地图相机")]
         [SerializeField] private Transform miniMapCameraTransform; // 小地图相机Transform
-
         [Header("小地图底板")]
         [SerializeField] private RectTransform backplate; // 小地图底板，暂时只保留接口，后续可用于换皮肤或动画
-
         [Header("圆形遮罩")]
         [SerializeField] private RectTransform circleMask; // 圆形遮罩
-
         [Header("地图底图")]
         [SerializeField] private RawImage mapRawImage; // 地图底图
-
         [Header("标记点根节点")]
         [SerializeField] private RectTransform markerRoot; // 标记点根节点
-
         [Header("视角箭头")]
         [SerializeField] private RectTransform viewArrow; // 视角箭头
-
         [Header("角色朝向箭头")]
         [SerializeField] private RectTransform facingArrow; // 角色朝向箭头
+        #endregion
 
         [Header("=== 相机跟随设置 ===")]
         [SerializeField] private Vector3 cameraOffset = new Vector3(0f, 30f, 0f); // 小地图相机相对跟随偏移
         [SerializeField][Min(1f)] private float miniMapOrthographicSize = 25f; // 小地图正交相机尺寸，控制小地图能看到多少范围
         [SerializeField][Min(0f)] private float followSmoothTime = 0.1f; // 相机跟随平滑时间
-
         [Header("=== 标记点设置 ===")]
         [SerializeField] private Sprite defaultMarkerSprite; // 默认标记图标
         [SerializeField][Min(1f)] private float fallbackWorldRadius = 25f; // 非正交相机时的世界半径兜底值
-        [SerializeField][Range(0.1f, 1f)] private float markerClampPadding = 0.92f; // 标记点贴边内缩比例
-
-        private readonly Dictionary<MiniMapMarker, MarkerWidget> markerWidgets = new Dictionary<MiniMapMarker, MarkerWidget>(); // 标记对象到UI节点的映射
-
-        private Camera miniMapCamera; // 小地图相机缓存
-        private bool initialized; // 是否已完成初始化
+        [SerializeField][Range(0.1f, 1f)] private float markerClampPadding = 0.92f; // 标记点贴边内缩比
+        
         private bool isVisible = true; // 当前是否显示
-        private Vector3 cameraVelocity; // SmoothDamp速度缓存
 
-        private CharacterContext boundContext; // 当前绑定的角色上下文
+        #region 运行数据
+        private readonly Dictionary<MiniMapMarker, MarkerWidget> markerWidgets = new Dictionary<MiniMapMarker, MarkerWidget>(); // 标记对象到UI节点的映射
         private Transform followTarget; // 小地图相机跟随目标
         private Transform viewTarget; // 视角朝向目标
         private Transform facingTarget; // 角色朝向目标
+        private Vector3 cameraVelocity; // SmoothDamp速度缓存
+        private bool initialized; // 是否已完成初始化
+        #endregion
 
-        #region 对外只读属性
+        #region 外部访问
         public CharacterContext BoundContext => boundContext;
-        public Transform FollowTarget => followTarget;
-        public Transform ViewTarget => viewTarget;
-        public Transform FacingTarget => facingTarget;
         #endregion
 
         #region 生命周期
@@ -103,6 +98,7 @@ namespace WutheringWaves
 
             // 2.缓存当前角色上下文
             boundContext = context;
+            playerController = context.PlayerController;
 
             // 3.绑定小地图相机跟随目标：跟随当前角色本体
             followTarget = boundContext.transform;
@@ -131,12 +127,12 @@ namespace WutheringWaves
         {
             viewTarget = null;
 
-            if (PlayerController.Instance == null)
+            if (playerController == null)
             {
                 return;
             }
 
-            PlayerCamera playerCamera = PlayerController.Instance.CurrentPlayerCamera;
+            PlayerCamera playerCamera = playerController.CurrentPlayerCamera;
             if (playerCamera == null)
             {
                 return;

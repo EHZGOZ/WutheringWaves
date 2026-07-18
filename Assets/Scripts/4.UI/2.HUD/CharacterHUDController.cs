@@ -231,31 +231,37 @@ namespace WutheringWaves
             ResolveQBurstIcons();
         }
 
-        // 1.解析并应用队伍头像图标配置
+        // 解析并应用队伍头像图标配置
         private void ResolveTeamAvatarIcons()
         {
-            // 1.空值检查：没有当前角色或玩家控制器时无法读取队伍数据
-            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            // 1.没有当前角色或玩家控制器时无法读取队伍数据
+            if (context == null
+                || context.PlayerController == null
+                || context.PlayerController.PlayerRuntimeData == null)
             {
                 return;
             }
 
-            // 2.空值检查：没有头像图片数组时无法刷新头像
+            // 2.没有头像图片数组时无法刷新头像
             if (teamAvatarIconImages == null || teamAvatarIconImages.Length == 0)
             {
                 return;
             }
 
-            PlayerRuntimeData playerRuntimeData = context.PlayerController.PlayerRuntimeData;
-            if (playerRuntimeData.teamSlots == null)
+            // 3.获取当前玩家运行时数据
+            PlayerRuntimeData playerRuntimeData =
+                context.PlayerController.PlayerRuntimeData;
+
+            // 4.通过只读属性获取队伍槽位，避免HUD直接修改核心数据
+            if (playerRuntimeData.TeamSlots == null)
             {
                 return;
             }
 
-            // 3.获取当前受控角色索引，用于刷新头像颜色
+            // 5.获取当前受控角色索引，用于刷新头像选中颜色
             int currentAvatarIndex = ResolveCurrentTeamAvatarIndex();
 
-            // 4.逐个槽位解析角色头像配置，并直接应用到真实头像图片
+            // 6.逐个头像槽位解析角色头像配置
             for (int i = 0; i < teamAvatarIconImages.Length; i++)
             {
                 Image avatarIconImage = teamAvatarIconImages[i];
@@ -264,27 +270,37 @@ namespace WutheringWaves
                     continue;
                 }
 
-                if (i >= playerRuntimeData.teamSlots.Count)
+                // 7.UI头像数量大于实际队伍数量时，清空多余头像
+                if (i >= playerRuntimeData.TeamSlots.Count)
                 {
                     ApplyAvatarIconLayout(i, avatarIconImage, null);
                     continue;
                 }
 
-                TeamCharacterSlotData slotData = playerRuntimeData.teamSlots[i];
+                // 8.读取对应队伍槽位
+                TeamCharacterSlotData slotData = playerRuntimeData.TeamSlots[i];
                 if (slotData == null)
                 {
                     ApplyAvatarIconLayout(i, avatarIconImage, null);
                     continue;
                 }
 
-                CharacterUIConfigSO slotUIConfig = ResolveCharacterUIConfig(slotData.characterName);
-                UIIconLayoutData avatarLayout = slotUIConfig != null ? slotUIConfig.avatarIcon : null;
+                // 9.根据槽位角色名称解析对应的头像配置
+                CharacterUIConfigSO slotUIConfig =
+                    ResolveCharacterUIConfig(slotData.characterName);
 
-                // 5.把队伍头像配置直接应用到真实头像图片
+                UIIconLayoutData avatarLayout = slotUIConfig != null
+                    ? slotUIConfig.avatarIcon
+                    : null;
+
+                // 10.把头像配置应用到真实图片组件
                 ApplyAvatarIconLayout(i, avatarIconImage, avatarLayout);
 
-                // 6.根据当前受控角色索引刷新头像颜色
-                RefreshTeamAvatarState(avatarIconImage, i == currentAvatarIndex);
+                // 11.根据当前受控角色索引刷新头像颜色
+                RefreshTeamAvatarState(
+                    avatarIconImage,
+                    i == currentAvatarIndex
+                );
             }
         }
 
@@ -527,14 +543,36 @@ namespace WutheringWaves
         // 解析当前受控角色头像槽位索引
         private int ResolveCurrentTeamAvatarIndex()
         {
-            // 1.空值检查：没有玩家运行时数据时无法解析当前角色槽位
-            if (context == null || context.PlayerController == null || context.PlayerController.PlayerRuntimeData == null)
+            // 1.没有当前角色或玩家运行时数据时无法解析索引
+            if (context == null
+                || context.PlayerController == null
+                || context.PlayerController.PlayerRuntimeData == null)
             {
                 return -1;
             }
 
-            // 2.直接读取玩家运行时数据中的当前受控角色索引
-            return context.PlayerController.PlayerRuntimeData.currentCharacterIndex;
+            // 2.获取玩家运行时数据
+            PlayerRuntimeData playerRuntimeData =
+                context.PlayerController.PlayerRuntimeData;
+
+            // 3.队伍槽位为空时没有可以高亮的头像
+            if (playerRuntimeData.TeamSlots == null
+                || playerRuntimeData.TeamSlots.Count == 0)
+            {
+                return -1;
+            }
+
+            // 4.通过只读属性读取当前受控角色索引
+            int currentCharacterIndex = playerRuntimeData.CurrentCharacterIndex;
+
+            // 5.索引非法时不高亮任何头像
+            if (currentCharacterIndex < 0
+                || currentCharacterIndex >= playerRuntimeData.TeamSlots.Count)
+            {
+                return -1;
+            }
+
+            return currentCharacterIndex;
         }
         // 刷新头像状态
         private void RefreshTeamAvatarState(Image avatarIconImage, bool selected)

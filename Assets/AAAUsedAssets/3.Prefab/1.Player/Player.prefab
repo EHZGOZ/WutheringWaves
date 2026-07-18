@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 5311199842627346400}
   - component: {fileID: 7170165881780540615}
   - component: {fileID: 4837152021237762821}
+  - component: {fileID: -5223219607063823777}
   - component: {fileID: 5613296329199882604}
   - component: {fileID: 4303778103674625370}
   - component: {fileID: 6780653820506657871}
@@ -402,9 +403,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRuntimeData: {fileID: 0}
+  playerTeamController: {fileID: 0}
   playerInputReader: {fileID: 6780653820506657871}
-  playerStamina: {fileID: 4328678984413106215}
   playerCamera: {fileID: 8292550580018359768}
+  playerStamina: {fileID: 4328678984413106215}
   teamCharacters:
   - {fileID: 0}
   - {fileID: 0}
@@ -424,6 +426,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamCharacters: []
+--- !u!114 &-5223219607063823777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361222149857307356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8456afd37d094d49802485cda65215c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5613296329199882604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,9 +452,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
   sceneName: 
-  teamCharacters: []
   teamSlots: []
+  teamCharacters: []
   currentCharacterIndex: 0
+  defaultCharacterIndex: 0
   playerPosition: {x: 0, y: 0, z: 0}
   playerEulerAngles: {x: 0, y: 0, z: 0}
 --- !u!114 &4303778103674625370

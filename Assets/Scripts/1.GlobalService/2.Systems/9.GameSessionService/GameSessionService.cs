@@ -57,7 +57,7 @@ namespace WutheringWaves
 
         #region 初始化
         // 初始化游戏会话服务
-        public void Initialize()
+        public void Initialize(GameBootstrap bootstrap)
         {
             // 1.已经初始化过时直接返回，避免重复初始化会话状态
             if (IsInitialized)
@@ -73,45 +73,18 @@ namespace WutheringWaves
             IsInitialized = true;
 
             //注入组件
-            ResolvePlayer();
+            if (playerController == null)
+            {
+                playerController = bootstrap.PlayerController;
+            }
+            if (playerRuntimeData == null)
+            {
+                playerRuntimeData = bootstrap.PlayerRuntimeData;
+            }
 
             if (verboseLog)
             {
                 Debug.Log("[游戏会话服务] 初始化完成。");
-            }
-        }
-        // 解析玩家控制器和玩家运行时数据，并保持两边引用一致
-        private void ResolvePlayer()
-        {
-            // 1.优先使用PlayerController单例
-            if (playerController == null)
-            {
-                playerController = PlayerController.Instance;
-            }
-
-            // 2.兜底从场景中查找玩家控制器
-            if (playerController == null)
-            {
-                playerController = FindObjectOfType<PlayerController>();
-            }
-
-            // 3.优先从PlayerController身上获取PlayerRuntimeData
-            if (playerRuntimeData == null && playerController != null)
-            {
-                playerRuntimeData = playerController.PlayerRuntimeData;
-            }
-
-            // 4.兜底从场景中查找玩家运行时数据
-            if (playerRuntimeData == null)
-            {
-                playerRuntimeData = FindObjectOfType<PlayerRuntimeData>();
-            }
-
-            // 5.互相注入，保证玩家控制器和运行时数据引用一致
-            if (playerRuntimeData != null && playerController != null)
-            {
-                playerRuntimeData.Bind(playerController);
-                playerController.Bind(playerRuntimeData);
             }
         }
         #endregion

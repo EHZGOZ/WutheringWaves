@@ -249,7 +249,7 @@ namespace WutheringWaves
             effectService?.Initialize();
 
             // 9.初始化游戏会话服务：负责当前账号游戏流程
-            gameSessionService?.Initialize();
+            gameSessionService?.Initialize(this);
 
             // 10.初始化UI根节点：UI初始化会访问时间、输入、音频、存档等前置服务，因此最后启动
             uiRoot?.Initialize();

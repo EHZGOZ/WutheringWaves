@@ -134,6 +134,7 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.AccountManager\JsonAccountRepository.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\1.Bootstrap\GameBootstrap.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\2.Runtime\EnemyAttributes.cs" />
+    <Compile Include="Assets\Scripts\2.Player\2.Team\PlayerCharacterSwitcher.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Katixiya\Features\KatixiyaSpecialSkillLinker.cs" />
     <Compile Include="Assets\Scripts\2.Player\1.Core\PlayerController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\CharacterDataSO.cs" />

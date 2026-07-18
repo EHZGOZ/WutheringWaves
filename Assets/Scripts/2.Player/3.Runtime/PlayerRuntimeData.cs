@@ -11,17 +11,25 @@ namespace WutheringWaves
 
         [Header("=== 玩家运行时数据 ===")]
         [Header("当前场景名")]
-        public string sceneName = string.Empty; // 当前场景名
-        [Header("队伍角色列表")]
-        public List<CharacterContext> teamCharacters = new(); // 运行时队伍角色列表
+        [SerializeField] private string sceneName = string.Empty; // 当前场景名
         [Header("队伍槽位数据")]
-        public List<TeamCharacterSlotData> teamSlots = new(); // 队伍槽位数据
+        [SerializeField] private List<TeamCharacterSlotData> teamSlots = new(); // 队伍槽位数据
         [Header("当前受控角色槽位")]
-        public int currentCharacterIndex = 0; // 当前受控角色索引
-
+        [SerializeField] private int currentCharacterIndex = 0; // 当前受控角色索引
+        [Header("默认受控角色槽位")]
+        [SerializeField] private int defaultCharacterIndex = 0; // 默认操控角色索引
         [Header("玩家位置")]
-        public Vector3 playerPosition = Vector3.zero; // 玩家位置
-        public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转
+        [SerializeField] public Vector3 playerPosition = Vector3.zero; // 玩家位置
+        [Header("玩家旋转")]
+        [SerializeField] public Vector3 playerEulerAngles = Vector3.zero; // 玩家旋转
+
+        #region 外部访问
+        public string SceneName => sceneName;
+        public IReadOnlyList<TeamCharacterSlotData> TeamSlots => teamSlots;  // 使用IReadOnlyList限制外部直接增加、删除或清空槽位
+        public int CurrentCharacterIndex => currentCharacterIndex;
+        public Vector3 PlayerPosition => playerPosition;
+        public Vector3 PlayerEulerAngles => playerEulerAngles;
+        #endregion
 
         #region 生命周期
 
@@ -29,21 +37,21 @@ namespace WutheringWaves
         #endregion
 
         #region 初始化
-
-        #endregion
-
-        #region 角色绑定
-        public void Bind(PlayerController playerController)
+        public void Initialize(PlayerController playerController)
         {
-            this.playerController = playerController;
             if (this.playerController == null)
             {
-                this.playerController = FindObjectOfType<PlayerController>();
+                this.playerController = playerController;
+            }
+
+            if (this.playerController == null)
+            {
+                Debug.LogError("[PlayerRuntimeData] 初始化失败：playerController为空。", this);
             }
         }
         #endregion
 
-        #region 从 存档数据  中获取 运行数据
+        #region 从 存档数据 中获取 运行数据(SaveData → PlayerRuntimeData)
         // 从 存档数据  中获取 运行数据
         public void SyncRuntimeDataFromSaveData(SaveData saveData)
         {
@@ -61,7 +69,6 @@ namespace WutheringWaves
             {
                 teamSlots = new List<TeamCharacterSlotData>();
             }
-
             teamSlots.Clear();
             if (saveData.teamSlots != null)
             {
@@ -79,57 +86,29 @@ namespace WutheringWaves
 
             // 4.同步当前受控角色索引
             currentCharacterIndex = saveData.currentCharacterIndex;
+
             // 5.同步玩家位置旋转
             playerPosition = saveData.playerPosition;
             playerEulerAngles = saveData.playerEulerAngles;
         }
         #endregion
 
-        #region  从 场景数据 中获取 运行数据
+        #region  从 场景数据 中获取 运行数据(当前场景 → PlayerRuntimeData)
         //  从 场景数据 中获取 运行数据
         public void SyncRuntimeDataFromScene()
         {
-            // 1.兜底获取玩家控制器，保证存档前能拿到当前玩家状态
-            if (playerController == null)
-            {
-                playerController = PlayerController.Instance;
-            }
-
-            if (playerController == null)
-            {
-                playerController = FindObjectOfType<PlayerController>();
-            }
-
-            // 2.刷新当前运行时队伍角色列表，保证后续收集的是最新队伍对象
-            RefreshRuntimeTeamCharacters();
-
-            // 3.同步当前场景名
+            // 同步当前场景名
             sceneName = SceneManager.GetActiveScene().name;
 
-            // 4.同步当前受控角色索引
-            if (playerController != null)
-            {
-                // 解析当前受控角色索引
-                currentCharacterIndex = ResolveCurrentCharacterIndex();
-            }
-
-            // 5.同步当前受控角色位置和旋转：玩家父节点不移动，所以以当前角色为准
-            if (playerController != null && playerController.CurrentCharacterContext != null)
-            {
-                playerPosition = playerController.CurrentCharacterContext.transform.position;
-                playerEulerAngles = playerController.CurrentCharacterContext.transform.eulerAngles;
-            }
-
-            // 6.确保队伍槽位列表存在，避免后续写入空引用
+            //确保队伍槽位列表存在，避免后续写入空引用
             if (teamSlots == null)
             {
                 teamSlots = new List<TeamCharacterSlotData>();
             }
-
-            // 7.按队伍顺序刷新角色运行时数据：只覆盖已经初始化过的角色，避免下场未初始化角色用空数据覆盖存档
-            for (int i = 0; i < teamCharacters.Count; i++)
+            // 按队伍顺序刷新角色运行时数据：只覆盖已经初始化过的角色，避免下场未初始化角色用空数据覆盖存档
+            for (int i = 0; i < playerController.TeamCharacters.Length; i++)
             {
-                CharacterContext context = teamCharacters[i];
+                CharacterContext context = playerController.TeamCharacters[i];
                 if (!CanCollectCharacterRuntimeData(context))
                 {
                     continue;
@@ -137,34 +116,13 @@ namespace WutheringWaves
 
                 UpdateTeamSlotFromCharacterContext(i, context);
             }
-        }
 
+            //同步当前受控角色索引
+            currentCharacterIndex = ResolveCurrentCharacterIndex();
 
-        // 刷新运行时玩家控制队伍角色列表
-        private void RefreshRuntimeTeamCharacters()
-        {
-            if (teamCharacters == null)
-            {
-                teamCharacters = new List<CharacterContext>();
-            }
-
-            teamCharacters.Clear();
-
-            if (playerController == null || playerController.TeamCharacters == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < playerController.TeamCharacters.Length; i++)
-            {
-                CharacterContext context = playerController.TeamCharacters[i];
-                if (context == null)
-                {
-                    continue;
-                }
-
-                teamCharacters.Add(context);
-            }
+            // 同步当前受控角色位置和旋转：玩家父节点不移动，所以以当前角色为准
+            playerPosition = playerController.CurrentCharacterContext.transform.position;
+            playerEulerAngles = playerController.CurrentCharacterContext.transform.eulerAngles; 
         }
 
         // 解析当前受控角色索引
@@ -226,7 +184,7 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 从 运行数据 中应用 存档数据
+        #region 从 运行数据 中应用 存档数据(PlayerRuntimeData → SaveData)
         // 从 运行数据 中应用 存档数据
         public void SyncSaveDataFromRuntimeData(SaveData saveData)
         {
@@ -244,7 +202,6 @@ namespace WutheringWaves
             {
                 saveData.teamSlots = new List<TeamCharacterSlotData>();
             }
-
             saveData.teamSlots.Clear();
             if (teamSlots != null)
             {
@@ -266,6 +223,17 @@ namespace WutheringWaves
             // 5.同步玩家位置旋转
             saveData.playerPosition = playerPosition;
             saveData.playerEulerAngles = playerEulerAngles;
+        }
+        #endregion
+
+        #region 辅助方法
+        public void UpdateCurrentCharacterIndex(int index)
+        {
+            if(index>3||index<0)
+            {
+                Debug.LogError("当前受控角色索引范围超出");
+            }
+            currentCharacterIndex = index;
         }
         #endregion
 

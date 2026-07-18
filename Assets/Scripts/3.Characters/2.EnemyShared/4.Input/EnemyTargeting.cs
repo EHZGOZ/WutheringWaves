@@ -87,7 +87,7 @@ namespace WutheringWaves
         public bool TryAcquireCurrentPlayerTarget()
         {
             // 1.玩家控制器尚未创建时不能获取当前角色
-            PlayerController playerController = PlayerController.Instance;
+            PlayerController playerController = FindFirstObjectByType< PlayerController>();
             if (playerController == null)
             {
                 return false;
