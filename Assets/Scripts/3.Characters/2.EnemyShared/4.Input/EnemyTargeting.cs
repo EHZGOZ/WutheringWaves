@@ -95,7 +95,7 @@ namespace WutheringWaves
 
             // 2.读取玩家控制器当前真正受控的角色
             CharacterContext currentCharacterContext =
-                playerController.CurrentCharacterContext;
+                playerController.PlayerCharacterSwitcher.CurrentCharacterContext;
 
             // 3.当前受控角色为空时不能设置目标
             if (currentCharacterContext == null)

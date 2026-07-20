@@ -37,6 +37,11 @@ namespace WutheringWaves
             //是否长按shift过
             HasPressedShift();
         }
+        private void LateUpdate()
+        {
+            // 1.角色本帧移动和根运动结束后，发布最终位置和旋转
+            PublishPlayerTransform();
+        }
         #endregion
 
         #region 初始化逻辑
@@ -154,6 +159,31 @@ namespace WutheringWaves
             controller.Move(movement);
         }
 
+        #endregion
+
+        #region 玩家位置旋转同步
+        // 发布当前激活角色的位置和旋转
+        private void PublishPlayerTransform()
+        {
+            // 1.角色上下文尚未完成绑定时不发布运行数据
+            if (context == null)
+            {
+                return;
+            }
+
+            // 2.非激活角色不允许覆盖当前玩家的位置数据
+            // 当前队伍只有受控角色保持激活，因此只会由当前角色发布
+            if (!context.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            // 3.读取CharacterContext根节点的最终世界位置和旋转
+            PlayerRuntimeEvents.RaisePlayerTransformChanged(
+                context.transform.position,
+                context.transform.eulerAngles
+            );
+        }
         #endregion
 
         #region 动画逻辑

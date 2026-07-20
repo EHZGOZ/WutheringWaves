@@ -14,9 +14,6 @@ namespace WutheringWaves
         [Header("角色Look Root：手动填入")]
         [SerializeField] private Transform cameraTarget;
 
-        [Header("===角色运行时数据===")]
-        [SerializeField] private CharacterRuntimeData runtimeData=new(); // 角色运行时数据
-
         [Header("=== 外层核心组件（自动获取） ===")]
         [Header("玩家控制器：位于 Player 层")]
         [SerializeField] private PlayerController playerController; // 玩家控制器
@@ -26,6 +23,8 @@ namespace WutheringWaves
         [SerializeField] private PlayerStamina playerStamina;
 
         [Header("=== 内层核心组件（自动获取） ===")]
+        [Header("===角色运行时数据===")]
+        [SerializeField] private CharacterRuntimeData runtimeData = new(); // 角色运行时数据
         [Header("角色状态机")]
         [SerializeField] private CharacterStateMachine stateMachine; // 角色状态机
         [Header("角色输入缓冲器")]
@@ -46,7 +45,6 @@ namespace WutheringWaves
         [SerializeField] private EffectController effectController; // 特效控制器
         [Header("音效控制器")]
         [SerializeField] private AudioController audioController; // 音效控制器
-
         [Header("=== 基础组件（自动获取）===")]
         [Header("动画控制器")]
         [SerializeField] private Animator animator; // 角色动画控制器
@@ -59,17 +57,17 @@ namespace WutheringWaves
         #endregion
 
         #region 对外只读属性
+        //核心组件
         public CharacterDataSO CharacterDataSO => characterDataSO; // 角色基础数据
         public Transform CameraTarget => cameraTarget != null ? cameraTarget : transform; // 当前角色相机观察点
-        public CharacterRuntimeData RuntimeData => runtimeData; // 角色运行时数据
 
+        // 外层核心组件
         public PlayerController PlayerController => playerController; // 玩家控制器
         public PlayerInputReader PlayerInputReader => playerInputReader; // 玩家输入读取器
         public PlayerStamina PlayerStamina => playerStamina; // 玩家共享体力
-
-        public Animator Animator => animator; // 角色动画控制器
-        public CharacterController CharacterController => characterController; // 角色控制器
-
+        
+        //内层核心组件
+        public CharacterRuntimeData RuntimeData => runtimeData; // 角色运行时数据
         public CharacterStateMachine StateMachine => stateMachine; // 角色状态机
         public InputBuffer InputBuffer => inputBuffer; // 角色输入缓冲器
         public CharacterAttributes Attributes => attributes; // 角色输入缓冲器
@@ -81,6 +79,10 @@ namespace WutheringWaves
         public EffectController EffectController => effectController; // 特效控制器
         public AudioController AudioController => audioController; // 音效控制器
 
+        //基础组件
+        public Animator Animator => animator; // 角色动画控制器
+        public CharacterController CharacterController => characterController; // 角色控制器
+        //角色独属
 
         public JinxiFeatureRoot JinxiFeatureRoot => jinxiFeatureRoot; // 今汐独属模块根节点
         public KatixiyaFeatureRoot KatixiyaFeatureRoot => katixiyaFeatureRoot; // 卡提希娅独属模块根节点
@@ -94,20 +96,31 @@ namespace WutheringWaves
         // 角色门面初始化总入口：统一接管上下文、输入、共享模块与角色专属模块的启动顺序
         public void Initialize(CharacterRuntimeData runtimeData)
         {
-            // 1.验证核心组件
+            // 1.验证Inspector中的核心组件
             ValidateInspectorReferences();
-            // 2.解析角色运行时数据
-            ResolveRuntimeData(runtimeData);
-            // 3. 自动补齐外层核心组件
+
+            // 2.绑定并初始化角色运行时数据
+            // 运行数据解析失败时停止后续初始化，避免错误数据进入角色组件
+            if (!ResolveRuntimeData(runtimeData))
+            {
+                return;
+            }
+
+            // 3.自动补齐外层核心组件
             AutoGetOuterComponents();
+
             // 4.自动补齐基础组件
             AutoGetBaseComponents();
+
             // 5.自动补齐内层核心组件
             AutoGetCoreComponents();
+
             // 6.初始化内层核心组件
             InitializeCoreComponentsWithoutStateMachine();
-            // 7. 初始化角色专属模块，并把专属驱动能力注入共享状态机
+
+            // 7.初始化角色专属模块，并把专属驱动能力注入共享状态机
             InitializeCharacterExclusiveModules();
+
             // 8.启动状态机
             InitializeStateMachine();
         }
@@ -128,25 +141,56 @@ namespace WutheringWaves
         #endregion
 
         #region 解析角色运行时数据
-        //解析角色运行时数据
-        private void ResolveRuntimeData(CharacterRuntimeData runtimeData)
+        // 解析并绑定PlayerRuntimeData队伍槽位中的角色运行时数据
+        private bool ResolveRuntimeData(CharacterRuntimeData runtimeData)
         {
-            // 1.确保当前角色运行时数据对象存在，避免后续CopyFrom空引用
-            if (this.runtimeData == null)
+            // 1.运行时数据必须由PlayerRuntimeData的队伍槽位提供
+            if (runtimeData == null)
             {
-                this.runtimeData = new CharacterRuntimeData();
+                // 主动清空旧引用，避免角色使用Inspector中残留的数据
+                this.runtimeData = null;
+
+                Debug.LogError(
+                    "[CharacterContext] 解析角色运行时数据失败：传入的CharacterRuntimeData为空。",
+                    this
+                );
+                return false;
             }
 
-            // 2.新账号默认存档可能只记录角色名，生命值还没有被正式初始化
-            // 如果maxHealth <= 0，说明这份运行时数据不可直接使用，需要从CharacterDataSO补齐基础生命值
-            if (runtimeData != null && runtimeData.maxHealth > 0f)
+            // 2.角色预制体必须配置对应的静态角色数据
+            if (characterDataSO == null)
             {
-                this.runtimeData.CopyFrom(runtimeData);
+                this.runtimeData = null;
+
+                Debug.LogError(
+                    $"[CharacterContext] 解析角色运行时数据失败：角色 {runtimeData.characterName} 缺少CharacterDataSO。",
+                    this
+                );
+                return false;
             }
-            else
+
+            // 3.直接保存PlayerRuntimeData槽位中的运行数据引用
+            // 不进行复制，保证两边始终指向同一个CharacterRuntimeData对象
+            this.runtimeData = runtimeData;
+
+            // 4.无条件交给CharacterRuntimeData检查首次初始化状态
+            // 是否需要写入基础属性完全由hasInitialized决定
+            this.runtimeData.EnsureInitialized(characterDataSO);
+
+            // 5.初始化完成后再次校验结果
+            // 配置异常时EnsureInitialized不会写入hasInitialized
+            if (!this.runtimeData.HasInitialized)
             {
-                this.runtimeData.Initialize(characterDataSO);
+                this.runtimeData = null;
+
+                Debug.LogError(
+                    $"[CharacterContext] 解析角色运行时数据失败：角色 {runtimeData.characterName} 未完成基础数据初始化。",
+                    this
+                );
+                return false;
             }
+
+            return true;
         }
         #endregion
 

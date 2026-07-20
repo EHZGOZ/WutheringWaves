@@ -7,6 +7,7 @@ namespace WutheringWaves
     public class PlayerTeamController : MonoBehaviour
     {
         #region 核心引用
+        private PlayerController playerController; // 玩家总控制器
         private PlayerRuntimeData playerRuntimeData; // 当前账号对应的玩家运行时数据
         private Transform characterParent; // 队伍角色生成后的父节点
         #endregion
@@ -24,42 +25,86 @@ namespace WutheringWaves
         public IReadOnlyList<CharacterContext> TeamCharacters => teamCharacters;
 
         // 对外只读访问当前队伍角色数量
-        public int TeamCharacterCount => teamCharacters != null
-            ? teamCharacters.Length
-            : 0;
+        public int TeamCharacterCount => teamCharacters != null ? teamCharacters.Length   : 0;
         #endregion
 
         #region 初始化
         // 初始化队伍控制器：注入玩家运行时数据和角色父节点
-        public void Initialize(
-            PlayerRuntimeData playerRuntimeData,
-            Transform characterParent
-        )
+        public void Initialize(PlayerController playerController)
         {
-            // 1.缓存队伍生成需要的运行时数据
-            this.playerRuntimeData = playerRuntimeData;
-
-            // 2.缓存角色生成后的父节点
-            this.characterParent = characterParent;
-
-            // 3.校验玩家运行时数据
-            if (this.playerRuntimeData == null)
+            //缓存数据
+            ResolveComponent(playerController);
+            //校验核心依赖
+            if (!ValidateDependencies())
             {
                 IsInitialized = false;
-                Debug.LogError("[PlayerTeamController] 初始化失败：PlayerRuntimeData为空。", this);
                 return;
             }
-
-            // 4.校验角色父节点
-            if (this.characterParent == null)
-            {
-                IsInitialized = false;
-                Debug.LogError("[PlayerTeamController] 初始化失败：characterParent为空。", this);
-                return;
-            }
-
-            // 5.标记队伍控制器初始化完成
+            //标记初始化完成
             IsInitialized = true;
+        }
+        //缓存数据
+        private void ResolveComponent(PlayerController playerController)
+        {
+            this.playerController = playerController;
+            // 1.缓存队伍生成需要的运行时数据
+            playerRuntimeData = playerController.PlayerRuntimeData;
+            // 2.缓存角色生成后的父节点
+            characterParent = playerController.transform;
+        }
+        //校验核心依赖
+        private bool ValidateDependencies()
+        {
+            bool isValid = true;
+
+            // 校验玩家运行数据
+            if (playerRuntimeData == null)
+            {
+                Debug.LogError("[PlayerTeamController] 初始化失败：playerRuntimeData为空。", this);
+                isValid = false;
+            }
+            // 校验玩家运行数据
+            if (characterParent == null)
+            {
+                Debug.LogError("[PlayerTeamController] 初始化失败：characterParent为空。", this);
+                isValid = false;
+            }
+
+
+            return isValid;
+        }
+        #endregion
+
+        #region 清理队伍
+        // 清理当前已经生成的队伍角色
+        public void ClearTeamCharacters()
+        {
+            // 1.队伍数组为空时只创建空数组
+            if (teamCharacters == null)
+            {
+                teamCharacters = new CharacterContext[0];
+                return;
+            }
+
+            // 2.逐个禁用并销毁已经生成的角色对象
+            for (int i = 0; i < teamCharacters.Length; i++)
+            {
+                CharacterContext context = teamCharacters[i];
+                if (context == null)
+                {
+                    continue;
+                }
+
+                // 先禁用角色，立即停止Update、LateUpdate和位置事件发布
+                context.gameObject.SetActive(false);
+
+                // 再安排角色对象在帧末销毁
+                Destroy(context.gameObject);
+                teamCharacters[i] = null;
+            }
+
+            // 3.重置为空数组，避免外部继续访问旧队伍
+            teamCharacters = new CharacterContext[0];
         }
         #endregion
 
@@ -73,16 +118,17 @@ namespace WutheringWaves
                 return false;
             }
 
-            // 2.清理上一次生成的队伍
+            // 2.清理当前队伍
             ClearTeamCharacters();
 
             // 3.按照队伍槽位数量创建运行时角色数组
-            // 数组索引必须与teamSlots保持一致，避免槽位数据错位
+            // 数组索引必须与teamSlots保持一致，避免角色对象和槽位数据错位
             teamCharacters = new CharacterContext[playerRuntimeData.TeamSlots.Count];
 
-            // 4.按照槽位顺序逐个生成并初始化角色
+            // 4.按照队伍槽位顺序逐个生成并初始化角色
             for (int i = 0; i < playerRuntimeData.TeamSlots.Count; i++)
             {
+                // 5.直接读取PlayerRuntimeData持有的队伍槽位
                 TeamCharacterSlotData slotData = playerRuntimeData.TeamSlots[i];
                 if (slotData == null)
                 {
@@ -95,7 +141,9 @@ namespace WutheringWaves
                     return false;
                 }
 
-                CharacterRuntimeData runtimeData = ResolveCharacterRuntimeData(i);
+                // 6.直接读取当前槽位持有的角色运行时数据
+                // 不在角色生成阶段创建新数据，确保PlayerRuntimeData是唯一数据来源
+                CharacterRuntimeData runtimeData = slotData.runtimeData;
                 if (runtimeData == null)
                 {
                     Debug.LogError(
@@ -107,6 +155,7 @@ namespace WutheringWaves
                     return false;
                 }
 
+                // 7.根据当前槽位数据生成角色对象
                 CharacterContext context = SpawnSingleCharacter(slotData);
                 if (context == null)
                 {
@@ -119,16 +168,15 @@ namespace WutheringWaves
                     return false;
                 }
 
-                // 5.先写入对应槽位，保证后续清理能够找到已经生成的角色
+                // 8.先记录生成结果，保证后续失败时能够清理已经生成的角色
                 teamCharacters[i] = context;
 
-                // 6.为角色注入对应槽位的运行时数据
+                // 9.将当前槽位中的同一份运行时数据绑定给角色上下文
                 context.Initialize(runtimeData);
             }
 
             return true;
         }
-
         // 判断当前是否可以生成队伍
         private bool CanSpawnTeam()
         {
@@ -193,7 +241,6 @@ namespace WutheringWaves
                 Quaternion.Euler(playerRuntimeData.PlayerEulerAngles),
                 characterParent
             );
-
             if (character == null)
             {
                 return null;
@@ -215,37 +262,9 @@ namespace WutheringWaves
             // 4.角色显隐交给PlayerCharacterSwitcher统一处理
             return context;
         }
-
-        // 根据槽位索引读取角色运行时数据
-        private CharacterRuntimeData ResolveCharacterRuntimeData(int characterIndex)
-        {
-            // 1.索引非法时返回空
-            if (characterIndex < 0
-                || characterIndex >= playerRuntimeData.TeamSlots.Count)
-            {
-                Debug.LogError(
-                    $"[PlayerTeamController] 解析角色运行时数据失败：索引非法。characterIndex = {characterIndex}",
-                    this
-                );
-                return null;
-            }
-
-            // 2.读取对应槽位
-            TeamCharacterSlotData slotData = playerRuntimeData.TeamSlots[characterIndex];
-            if (slotData == null)
-            {
-                Debug.LogError(
-                    $"[PlayerTeamController] 解析角色运行时数据失败：槽位 {characterIndex} 为空。",
-                    this
-                );
-                return null;
-            }
-
-            return slotData.runtimeData;
-        }
         #endregion
 
-        #region 获取队伍角色
+        #region 获取队伍角色（外部调用）
         // 根据队伍索引获取运行时角色
         public CharacterContext GetCharacter(int characterIndex)
         {
@@ -265,36 +284,6 @@ namespace WutheringWaves
         }
         #endregion
 
-        #region 清理队伍
-        // 清理当前已经生成的队伍角色
-        public void ClearTeamCharacters()
-        {
-            // 1.队伍数组为空时只创建空数组
-            if (teamCharacters == null)
-            {
-                teamCharacters = new CharacterContext[0];
-                return;
-            }
-
-            // 2.逐个销毁已经生成的角色对象
-            for (int i = 0; i < teamCharacters.Length; i++)
-            {
-                CharacterContext context = teamCharacters[i];
-                if (context == null)
-                {
-                    continue;
-                }
-
-                Destroy(context.gameObject);
-                teamCharacters[i] = null;
-            }
-
-            // 3.重置为空数组，避免外部继续访问旧队伍
-            teamCharacters = new CharacterContext[0];
-        }
-        #endregion
-
-        #region 角色运行数据更新
         // 统一推进队伍中所有角色的运行时数据
         public void UpdateTeamCharacterRuntimeData(float deltaTime)
         {
@@ -316,6 +305,6 @@ namespace WutheringWaves
                 context.RuntimeData.UpdateRuntime(deltaTime);
             }
         }
-        #endregion
+
     }
 }

@@ -45,25 +45,46 @@ namespace WutheringWaves
             }
         }
 
+        // 保存JSON存档数据
         public bool Save(SaveData data)
         {
-            // 空数据不落盘，避免覆盖掉已有有效存档。
+            // 1.空数据不落盘，避免覆盖已有的有效存档
             if (data == null)
             {
-                Debug.LogWarning("[JsonSaveRepository] Save skipped because data is null.");
+                Debug.LogWarning("[JsonSaveRepository] 保存失败：存档数据为空。");
                 return false;
             }
 
             try
             {
+                // 2.获取当前存档文件所在的账号目录
+                string directoryPath = Path.GetDirectoryName(_savePath);
+                if (string.IsNullOrWhiteSpace(directoryPath))
+                {
+                    Debug.LogError(
+                        $"[JsonSaveRepository] 保存失败：无法解析存档目录。savePath = {_savePath}"
+                    );
+                    return false;
+                }
+
+                // 3.确保账号存档目录存在
+                // 目录已经存在时不会重复创建，也不会抛出异常
+                Directory.CreateDirectory(directoryPath);
+
+                // 4.将当前存档数据转换为格式化JSON文本
                 string json = JsonUtility.ToJson(data, true);
+
+                // 5.将JSON文本写入当前账号的存档文件
                 File.WriteAllText(_savePath, json);
+
                 return true;
             }
             catch (Exception e)
             {
-                // 写盘失败时只返回false，由服务层决定后续处理策略。
-                Debug.LogError($"[JsonSaveRepository] Save failed: {e.Message}");
+                // 6.统一记录目录创建、序列化或文件写入异常
+                Debug.LogError(
+                    $"[JsonSaveRepository] 保存失败：{e.Message}，savePath = {_savePath}"
+                );
                 return false;
             }
         }

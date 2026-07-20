@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace WutheringWaves
 {
+
     [System.Serializable]
 
     [DisallowMultipleComponent]
@@ -422,10 +423,10 @@ namespace WutheringWaves
             }
 
             // 2.订阅体力数值变化事件
-            GameEvents.OnStaminaChanged += HandleStaminaChanged;
+            UIEvents.OnStaminaChanged += HandleStaminaChanged;
 
             // 3.订阅体力条显隐事件
-            GameEvents.OnStaminaVisibilityChanged += HandleStaminaVisibilityChanged;
+            UIEvents.OnStaminaVisibilityChanged += HandleStaminaVisibilityChanged;
 
             // 4.标记体力事件已订阅
             hasSubscribedStaminaEvent = true;
@@ -442,10 +443,10 @@ namespace WutheringWaves
             }
 
             // 2.解绑体力数值变化事件
-            GameEvents.OnStaminaChanged -= HandleStaminaChanged;
+            UIEvents.OnStaminaChanged -= HandleStaminaChanged;
 
             // 3.解绑体力条显隐事件
-            GameEvents.OnStaminaVisibilityChanged -= HandleStaminaVisibilityChanged;
+            UIEvents.OnStaminaVisibilityChanged -= HandleStaminaVisibilityChanged;
 
             // 4.标记体力事件已解绑
             hasSubscribedStaminaEvent = false;
@@ -464,10 +465,10 @@ namespace WutheringWaves
             }
 
             // 2.订阅技能图标UI刷新事件
-            GameEvents.OnSkillIconUIChanged += HandleSkillIconUIChanged;
+            UIEvents.OnSkillIconUIChanged += HandleSkillIconUIChanged;
 
             // 3.订阅技能图标UI运行时刷新事件
-            GameEvents.OnSkillIconUIRuntimeChanged += HandleSkillIconUIRuntimeChanged;
+            UIEvents.OnSkillIconUIRuntimeChanged += HandleSkillIconUIRuntimeChanged;
 
             // 4.标记技能UI事件已订阅
             hasSubscribedAttackEvent = true;
@@ -484,10 +485,10 @@ namespace WutheringWaves
             }
 
             // 2.解绑技能图标UI刷新事件
-            GameEvents.OnSkillIconUIChanged -= HandleSkillIconUIChanged;
+            UIEvents.OnSkillIconUIChanged -= HandleSkillIconUIChanged;
 
             // 3.解绑技能图标UI运行时刷新事件
-            GameEvents.OnSkillIconUIRuntimeChanged -= HandleSkillIconUIRuntimeChanged;
+            UIEvents.OnSkillIconUIRuntimeChanged -= HandleSkillIconUIRuntimeChanged;
 
             // 4.标记技能UI事件已解绑
             hasSubscribedAttackEvent = false;

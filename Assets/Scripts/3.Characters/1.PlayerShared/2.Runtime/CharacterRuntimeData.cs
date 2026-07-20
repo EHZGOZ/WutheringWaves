@@ -8,65 +8,78 @@ namespace WutheringWaves
         [Header("=== 角色运行时数据 ===")]
         [Header("角色名称")]
         [SerializeField] public CharacterName characterName; // 角色名称
+
         [Header("最大生命值")]
         [SerializeField] public float maxHealth; // 最大生命值
+
         [Header("当前生命值")]
         [SerializeField] public float currentHealth; // 当前生命值
 
+        [Header("当前攻击力")]
+        [SerializeField] public float currentAttack; // 当前攻击力
+
+        [Header("是否完成首次初始化")]
+        [SerializeField] private bool hasInitialized; // 是否已经从CharacterDataSO完成过首次初始化
+
+        #region 外部引用
+        public bool HasInitialized => hasInitialized; // 是否完成首次初始化
         public float NormalizedHealth => maxHealth <= 0f ? 0f : currentHealth / maxHealth; // 生命值百分比
-        public bool IsDead => currentHealth <= 0f; // 是否死亡
-
-
-        #region 初始化
-        // 运行时数据初始化：从角色静态模板中读取初始生命值
-        public void Initialize(CharacterDataSO characterDataSO)
-        {
-            //1.空值校验
-            if (characterDataSO == null)
-            {
-                Debug.Log("characterDataSO为空");
-                return;
-            }
-
-            //2.角色基础数据初始化当前
-            characterName = characterDataSO.characterName;
-            currentHealth = characterDataSO.maxHealth;
-            maxHealth = characterDataSO.maxHealth;
-
-            //3.生命值容错，保证初始化后的生命值始终处于合法范围
-            ClampHealth();
-        }
-
+        public bool IsDead => currentHealth <= 0f; // 当前生命值归零时视为死亡
         #endregion
 
-        #region 数据相关
-        // 将外部运行时数据复制到当前对象：读档时保留原对象引用，只回填字段
-        public void CopyFrom(CharacterRuntimeData source)
+        #region 初始化
+        // 确保每份角色运行时数据只完成一次基础初始化
+        public void EnsureInitialized(CharacterDataSO characterDataSO)
         {
-            //1.空值校验
-            if (source == null)
+            // 1.已经完成首次初始化时，只校准生命值并停止处理
+            // 不重新写入当前生命值，确保受伤或死亡状态得到保留
+            if (hasInitialized)
             {
+                ClampHealth();
                 return;
             }
 
-            //2.逐字段复制运行时数据
-            characterName = source.characterName;
-            currentHealth = source.currentHealth;
-            maxHealth = source.maxHealth;
+            // 2.首次初始化必须具有角色静态配置
+            if (characterDataSO == null)
+            {
+                Debug.LogError("[CharacterRuntimeData] 首次初始化失败：characterDataSO为空。");
+                return;
+            }
 
-            //3.生命值容错：防止旧存档或异常存档中的生命值越界
+            // 3.角色配置中的最大生命值必须有效
+            if (characterDataSO.maxHealth <= 0f)
+            {
+                Debug.LogError(
+                    $"[CharacterRuntimeData] 首次初始化失败：角色 {characterDataSO.characterName} 的最大生命值小于等于0。"
+                );
+                return;
+            }
+
+            // 4.只有首次创建这份运行时数据时，才从静态配置写入基础属性
+            characterName = characterDataSO.characterName;
+            maxHealth = characterDataSO.maxHealth;
+            currentHealth = characterDataSO.maxHealth;
+            currentAttack = characterDataSO.baseAttack;
+
+            // 5.全部基础属性写入成功后，记录初始化完成
+            hasInitialized = true;
+
+            // 6.最后校准生命值范围
             ClampHealth();
         }
+        #endregion
 
-
+        #region 数据克隆
         // 克隆一份独立运行时数据：用于存档快照和调试镜像，避免共享引用
         public CharacterRuntimeData Clone()
         {
             return new CharacterRuntimeData
             {
                 characterName = characterName,
-                currentHealth = currentHealth,
                 maxHealth = maxHealth,
+                currentHealth = currentHealth,
+                currentAttack = currentAttack,
+                hasInitialized = hasInitialized
             };
         }
         #endregion
@@ -209,12 +222,12 @@ namespace WutheringWaves
                     jinxiIsFloating = false;
 
                     // 御空自然结束时，通知表现层刷新龙角显隐
-                    GameEvents.RaiseFloatingChanged(false);
+                    JinxiEvents.RaiseFloatingChanged(false);
                 }
             }
             // 持续通知今汐技能UI刷新
-            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill,  ResolveJinxiESkillIconIndex(), ResolveJinxiESkillCooldown());
-            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, jinxiQBurstCDTimer > 0f ? -1 : 0, jinxiQBurstCDTimer);
+            UIEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill,  ResolveJinxiESkillIconIndex(), ResolveJinxiESkillCooldown());
+            UIEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, jinxiQBurstCDTimer > 0f ? -1 : 0, jinxiQBurstCDTimer);
 
         }
         // 解析今汐当前E技能图标索引
@@ -288,8 +301,8 @@ namespace WutheringWaves
                 katixiyaQBurstCDTimer = Mathf.Max(0f, katixiyaQBurstCDTimer - deltaTime);
             }
             // 持续通知卡提希娅技能UI刷新
-            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill, 0, katixiyaESkillCDTimer);
-            GameEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, katixiyaQBurstCDTimer > 0f ? -1 : 0, katixiyaQBurstCDTimer);
+            UIEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.ESkill, 0, katixiyaESkillCDTimer);
+            UIEvents.RaiseSkillIconUIRuntimeChanged(this, SkillUIType.QBurst, katixiyaQBurstCDTimer > 0f ? -1 : 0, katixiyaQBurstCDTimer);
 
         }
         #endregion

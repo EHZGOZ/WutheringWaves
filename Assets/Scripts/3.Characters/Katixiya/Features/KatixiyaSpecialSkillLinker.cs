@@ -450,13 +450,13 @@ namespace WutheringWaves
             }
 
             // 2.派发E技能图标刷新事件
-            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.ESkill, 0, ESkillCDTimer);
+            UIEvents.RaiseSkillIconUIChanged(context, SkillUIType.ESkill, 0, ESkillCDTimer);
 
             // 3.Q爆发冷却中显示未充能图标，冷却结束显示已充能图标
             int qBurstIconIndex = QBurstCDTimer > 0f ? -1 : 0;
 
             // 4.派发Q爆发图标刷新事件
-            GameEvents.RaiseSkillIconUIChanged(context, SkillUIType.QBurst, qBurstIconIndex, QBurstCDTimer);
+            UIEvents.RaiseSkillIconUIChanged(context, SkillUIType.QBurst, qBurstIconIndex, QBurstCDTimer);
         }
 
         #endregion

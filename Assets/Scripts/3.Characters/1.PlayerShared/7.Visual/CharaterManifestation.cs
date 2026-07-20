@@ -182,8 +182,8 @@ namespace WutheringWaves
                 return;
             }
 
-            GameEvents.OnFloatingChanged += HandleFloatingChanged;
-            GameEvents.OnBrustChanged += HandleBrustChanged;
+            JinxiEvents.OnFloatingChanged += HandleFloatingChanged;
+            JinxiEvents.OnBrustChanged += HandleBrustChanged;
             GameEvents.OnCharacterSwitched += HandleCharacterSwitched;
             _subscribedGameEvents = true;
         }
@@ -196,8 +196,8 @@ namespace WutheringWaves
             }
 
 
-            GameEvents.OnFloatingChanged -= HandleFloatingChanged;
-            GameEvents.OnBrustChanged -= HandleBrustChanged;
+            JinxiEvents.OnFloatingChanged -= HandleFloatingChanged;
+            JinxiEvents.OnBrustChanged -= HandleBrustChanged;
             GameEvents.OnCharacterSwitched -= HandleCharacterSwitched;
             _subscribedGameEvents = false;
         }

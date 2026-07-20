@@ -65,7 +65,6 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\1.GameTime\GameTimeService.cs" />
     <Compile Include="Assets\Scripts\3.Characters\0.Common\6.Combat\DamageInfo.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\8.FSM\EnemyStateMachine.cs" />
-    <Compile Include="Assets\Scripts\1.GlobalService\3.Common\GameEvents.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\2.Runtime\EnemyRuntimeData.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\9.Audio\AudioController.cs" />
     <Compile Include="Assets\Scripts\2.Player\6.Attributes\PlayerStamina.cs" />
@@ -93,6 +92,7 @@
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\8.AudioService\AudioConfigSO.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\4.Input\InputBuffer.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\7.Visual\CharaterManifestation.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\3.Events\2.Common\UIEvents.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.InputService\InputFieldInputModeBinder.cs" />
     <Compile Include="Assets\Scripts\5.Gameplay\Encounters\BossBattle\BossBattleController.cs" />
     <Compile Include="Assets\Scripts\3.Characters\0.Common\7.Visual\Afterimage3D.cs" />
@@ -127,7 +127,9 @@
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SaveSlotUI.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\2.InputService\InputService.cs" />
     <Compile Include="Assets\GameAssets\5.Effect\Hovl Studio\HSFiles\Scripts\For demo scenes\HS_CameraHolder.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\3.Events\1.Core\GameEvents.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\1.Data\WeaponConfigSO.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\3.Events\3.Characters\JinxiEvents.cs" />
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\5.Movement\EnemyMovement.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\5.Movement\CharacterMovement.cs" />
     <Compile Include="Assets\Scripts\3.Characters\1.PlayerShared\3.Core\CharacterContext.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Assets\Scripts\3.Characters\2.EnemyShared\8.FSM\EnemyStates.cs" />
     <Compile Include="Assets\Scripts\3.Characters\Jinxi\Features\JinxiSpecialSwordController.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.AccountManager\IAccountRepository.cs" />
+    <Compile Include="Assets\Scripts\1.GlobalService\3.Events\2.Common\PlayerRuntimeEvents.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\3.AccountManager\AccountManager.cs" />
     <Compile Include="Assets\Scripts\1.GlobalService\2.Systems\4.SaveService\JsonSaveRepository.cs" />
     <Compile Include="Assets\Scripts\4.UI\3.Menu\SettingsMenuController.cs" />

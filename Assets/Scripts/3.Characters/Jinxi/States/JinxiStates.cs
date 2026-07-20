@@ -3455,7 +3455,7 @@ using System.Collections;
             //4.锁定状态，执行阶段不能随意切走
             stateMachine.IsStateLocked = true;
 
-            GameEvents.RaiseBrustChanged(true);
+            JinxiEvents.RaiseBrustChanged(true);
         }
 
         //3.进入爆发状态动画
@@ -3525,7 +3525,7 @@ using System.Collections;
             //3.确保退出时重置垂直速度
             stateMachine.movementLogic.ResetVerticalVelocity();
 
-            GameEvents.RaiseBrustChanged(false);
+            JinxiEvents.RaiseBrustChanged(false);
         }
 
         #region ExitState子方法

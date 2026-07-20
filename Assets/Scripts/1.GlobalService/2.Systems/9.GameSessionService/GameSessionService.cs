@@ -89,6 +89,8 @@ namespace WutheringWaves
         }
         #endregion
 
+        #region 进入游戏流程与退出游戏流程
+
         #region 新号创建存档或者老号读取数据
         // 当前账号开始游戏：有存档则读取，没有存档则新建，然后进入游戏
         public void StartGameWithCurrentAccount()
@@ -154,8 +156,8 @@ namespace WutheringWaves
         {
 
             //玩家节点缺失时使用兜底出生点
-            Vector3 defaultPlayerPosition = playerController != null  ? playerController.transform.position    : new Vector3(0f, 0f, -5f);
-            Vector3 defaultPlayerEulerAngles = playerController != null ? playerController.transform.eulerAngles : Vector3.zero;         
+            Vector3 defaultPlayerPosition = playerController != null ? playerController.transform.position : new Vector3(0f, 0f, -5f);
+            Vector3 defaultPlayerEulerAngles = playerController != null ? playerController.transform.eulerAngles : Vector3.zero;
 
             //创建默认存档数据：默认队伍、背包等由SaveData内部统一生成
             SaveData defaultSaveData = SaveData.CreateDefault(
@@ -217,28 +219,45 @@ namespace WutheringWaves
         #endregion
 
         #region 退出游戏自动保存
+
+        // 结束当前游戏会话：保存后清理角色和会话状态
+        public void EndCurrentGameSession()
+        {
+            // 1.清理任何运行对象前，先尝试保存当前游戏数据
+            SaveCurrentGameOnExit();
+
+            // 2.停止玩家输入，避免清理过程中继续触发角色操作
+            InputService.Instance?.ClearPlayer();
+
+            // 3.解除当前角色绑定，并销毁全部运行时队伍角色
+            playerController?.ClearCurrentTeamCharacters();
+
+            // 4.清理背包绑定，避免下一个账号误用旧背包引用
+            InventoryService.Instance?.Clear();
+
+            // 5.切换当前游戏会话状态为游戏外
+            ChangeGameSessionState(GameSessionState.OutGame);
+        }
+
         // 退出游戏时自动保存：退出程序、登出账号、返回登录前都可以调用
         public bool SaveCurrentGameOnExit()
         {
-            // 1.没有进入游戏时，不需要保存
+            //没有进入游戏时，不需要保存
             if (!IsInGame)
             {
                 return false;
             }
 
-            // 2.基础数据不完整时，不执行自动保存
+            //基础数据不完整时，不执行自动保存
             if (!CanSaveCurrentGame())
             {
                 return false;
             }
 
-            // 3.先从当前场景收集最新玩家运行时数据
-            playerRuntimeData.SyncRuntimeDataFromScene();
-
-            // 4.把运行时数据写回当前账号存档
+            //把运行时数据写回当前账号存档
             playerRuntimeData.SyncSaveDataFromRuntimeData(SaveService.Instance.CurrentData);
 
-            // 5.交给存档服务保存当前账号存档
+            //交给存档服务保存当前账号存档
             bool ok = SaveService.Instance.SaveCurrentSave();
 
             if (verboseLog)
@@ -275,25 +294,8 @@ namespace WutheringWaves
 
             return true;
         }
+        #endregion
 
-        // 结束当前游戏会话：保存后清理会话状态
-        public void EndCurrentGameSession()
-        {
-            // 1.退出当前会话前先尝试保存
-            SaveCurrentGameOnExit();
-
-            // 2.清理玩家输入绑定，避免回到菜单后旧玩家对象继续响应输入
-            InputService.Instance?.ClearPlayer();
-
-            // 3.清理背包绑定，避免下一个账号误用旧背包引用
-            InventoryService.Instance?.Clear();
-
-            // 4.切换当前游戏会话状态为游戏外
-            ChangeGameSessionState(GameSessionState.OutGame);
-
-            // 5.通知外部系统：当前已经回到游戏外
-            GameEvents.RaiseGameSessionStateChanged(GameSessionState.OutGame);
-        }
         #endregion
 
         #region 游戏会话状态切换

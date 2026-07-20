@@ -101,7 +101,6 @@ namespace WutheringWaves
             {
                 return;
             }
-
             if (verboseLog)
             {
                 Debug.Log("[GameBootstrap] 开始初始化全局服务。", this);

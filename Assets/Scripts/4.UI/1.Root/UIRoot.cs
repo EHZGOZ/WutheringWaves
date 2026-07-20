@@ -90,7 +90,7 @@ namespace WutheringWaves
             playerController = controller;
 
             // 3.绑定当前角色上下文
-            BindCharacterContext(controller.CurrentCharacterContext);
+            BindCharacterContext(controller.PlayerCharacterSwitcher.CurrentCharacterContext);
         }
 
         // 绑定当前角色上下文：作为HUD和小地图的统一角色入口
@@ -473,40 +473,30 @@ namespace WutheringWaves
         // 切换账号：由主菜单“切换账号”按钮调用
         private void HandleSwitchAccountRequested()
         {
-            // 1.切换账号前，如果当前还在游戏中，则先尝试自动保存当前账号存档
-            if (GameSessionService.Instance != null
-                && GameSessionService.Instance.IsInGame
-                && SaveService.Instance != null
-                && SaveService.Instance.CurrentData != null
-                && !string.IsNullOrWhiteSpace(SaveService.Instance.CurrentUsername))
-            {
-                GameSessionService.Instance.SaveCurrentGameOnExit();
-            }
-
-            // 2.登出当前账号，清理当前账号和当前存档绑定
+            //登出当前账号，清理当前账号和当前存档绑定
             if (AccountManager.Instance != null)
             {
                 AccountManager.Instance.Logout();
             }
 
-            // 3.保持主界面显示，只刷新按钮状态
+            //保持主界面显示，只刷新按钮状态
             mainMenuController?.SetVisible(true);
             mainMenuController?.RefreshLoginState();
 
-            // 4.关闭其他覆盖层
+            //关闭其他覆盖层
             settingsMenuController?.SetVisible(false);
             volumeMenuController?.SetVisible(false);
             systemMenuController?.SetVisible(false);
             savedGameMenuController?.SetVisible(false);
 
-            // 5.在主界面上弹出登录面板，让玩家登录新账号
+            //在主界面上弹出登录面板，让玩家登录新账号
             loginMenuController?.SetVisible(true);
 
-            // 6.清空设置菜单状态
+            //清空设置菜单状态
             isSettingsMenuOpen = false;
             settingsMenuSource = SettingsMenuSource.None;
 
-            // 7.切换账号期间保持菜单输入状态
+            //切换账号期间保持菜单输入状态
             SetPlayerInputEnabled(false);
             SetPauseAndCursor(true);
         }

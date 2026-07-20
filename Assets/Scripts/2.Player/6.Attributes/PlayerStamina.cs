@@ -237,7 +237,7 @@ namespace WutheringWaves
             }
 
             isVisible = visible;
-            GameEvents.RaiseStaminaVisibilityChanged(this, isVisible);
+            UIEvents.RaiseStaminaVisibilityChanged(this, isVisible);
         }
         #endregion
 
@@ -249,7 +249,7 @@ namespace WutheringWaves
         }
         private void NotifyStaminaChanged()
         {
-            GameEvents.RaiseStaminaChanged(this, currentStamina, maxStamina, NormalizedStamina);
+            UIEvents.RaiseStaminaChanged(this, currentStamina, maxStamina, NormalizedStamina);
         }
         #endregion
     }

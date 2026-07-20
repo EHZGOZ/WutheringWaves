@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 namespace WutheringWaves
 {
@@ -131,7 +132,7 @@ namespace WutheringWaves
             PlayerController playerController = other.GetComponentInParent<PlayerController>();
             if (playerController != null)
             {
-                return playerController.CurrentCharacterContext;
+                return playerController.PlayerCharacterSwitcher.CurrentCharacterContext;
             }
 
             //碰撞体不属于玩家时返回空，不能使用玩家单例强行兜底

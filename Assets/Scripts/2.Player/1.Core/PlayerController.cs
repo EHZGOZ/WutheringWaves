@@ -9,19 +9,14 @@ namespace WutheringWaves
 
         [Header("玩家运行数据")]
         [SerializeField] private PlayerRuntimeData playerRuntimeData;
-
         [Header("玩家队伍控制器")]
         [SerializeField] private PlayerTeamController playerTeamController;
-
         [Header("玩家角色切换器")]
         [SerializeField] private PlayerCharacterSwitcher playerCharacterSwitcher;
-
         [Header("玩家输入读取器")]
         [SerializeField] private PlayerInputReader playerInputReader;
-
         [Header("玩家相机")]
         [SerializeField] private PlayerCamera playerCamera;
-
         [Header("玩家共享体力")]
         [SerializeField] private PlayerStamina playerStamina;
 
@@ -32,38 +27,6 @@ namespace WutheringWaves
         public PlayerInputReader CurrentPlayerInputReader => playerInputReader;
         public PlayerCamera CurrentPlayerCamera => playerCamera;
         public PlayerStamina PlayerStamina => playerStamina;
-
-        // 兼容现有PlayerRuntimeData的数组访问方式
-        // 返回的是数组快照，外部修改不会影响PlayerTeamController中的真实队伍
-        public CharacterContext[] TeamCharacters
-        {
-            get
-            {
-                // 1.队伍控制器为空时返回空数组
-                if (playerTeamController == null
-                    || playerTeamController.TeamCharacterCount == 0)
-                {
-                    return new CharacterContext[0];
-                }
-
-                // 2.复制当前队伍角色引用
-                CharacterContext[] teamCharacters =
-                    new CharacterContext[playerTeamController.TeamCharacterCount];
-
-                for (int i = 0; i < teamCharacters.Length; i++)
-                {
-                    teamCharacters[i] = playerTeamController.GetCharacter(i);
-                }
-
-                return teamCharacters;
-            }
-        }
-
-        // 当前受控角色由PlayerCharacterSwitcher唯一保存
-        public CharacterContext CurrentCharacterContext =>
-            playerCharacterSwitcher != null
-                ? playerCharacterSwitcher.CurrentCharacterContext
-                : null;
         #endregion
 
         #region 生命周期
@@ -90,24 +53,22 @@ namespace WutheringWaves
         // 初始化玩家对象：新建存档或者读取存档后调用
         public void Initialize()
         {
-            // 1.解析、校验并初始化全部玩家组件
-            if (!ResolveDependencies())
-            {
-                Debug.LogError("[PlayerController] 玩家初始化失败：核心组件不完整。", this);
-                return;
-            }
+            // 1.获取玩家控制的核心组件
+            ResolveComponent();
 
-            // 2.生成新队伍前清除当前角色绑定
+            // 2.校验组件是否完整
+            ValidateComponent();
+
+            // 3.按照依赖顺序初始化组件
+            InitializeComponent();
+
+            //生成新队伍前清除当前角色绑定
             playerCharacterSwitcher.ClearCurrentCharacterBinding();
 
-            // 3.由队伍控制器生成并初始化完整队伍
-            if (!playerTeamController.SpawnTeam())
-            {
-                Debug.LogError("[PlayerController] 玩家初始化失败：队伍生成失败。", this);
-                return;
-            }
-
-            // 4.由角色切换器绑定新建或读档后的初始角色
+            //由队伍控制器生成并初始化完整队伍
+            playerTeamController.SpawnTeam();
+           
+            //由角色切换器绑定新建或读档后的初始角色
             if (!playerCharacterSwitcher.BindInitialCharacter())
             {
                 Debug.LogError("[PlayerController] 玩家初始化失败：初始角色绑定失败。", this);
@@ -117,27 +78,10 @@ namespace WutheringWaves
                 return;
             }
 
-            // 5.把玩家控制器绑定到UIRoot，供菜单和输入流程访问
+            //把玩家控制器绑定到UIRoot，供菜单和输入流程访问
             UIRoot.Instance?.Bind(this);
         }
-
-        // 解析玩家核心依赖
-        private bool ResolveDependencies()
-        {
-            // 1.获取玩家根节点上的全部核心组件
-            ResolveComponent();
-
-            // 2.校验组件是否完整
-            if (!ValidateComponent())
-            {
-                return false;
-            }
-
-            // 3.按照依赖顺序初始化组件
-            return InitializeComponent();
-        }
-
-        // 获取玩家根节点上的核心组件
+        // 获取玩家控制的核心组件
         private void ResolveComponent()
         {
             if (playerRuntimeData == null)
@@ -172,60 +116,49 @@ namespace WutheringWaves
         }
 
         // 校验玩家控制器需要的全部核心组件
-        private bool ValidateComponent()
+        private void ValidateComponent()
         {
-            bool isValid = true;
-
             // 1.校验玩家运行时数据
             if (playerRuntimeData == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerRuntimeData组件。", this);
-                isValid = false;
             }
 
             // 2.校验玩家队伍控制器
             if (playerTeamController == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerTeamController组件。", this);
-                isValid = false;
             }
 
             // 3.校验玩家角色切换器
             if (playerCharacterSwitcher == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerCharacterSwitcher组件。", this);
-                isValid = false;
             }
 
             // 4.校验玩家输入读取器
             if (playerInputReader == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerInputReader组件。", this);
-                isValid = false;
             }
 
             // 5.校验玩家相机控制器
             if (playerCamera == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerCamera组件。", this);
-                isValid = false;
             }
-
             // 6.校验玩家共享体力
             if (playerStamina == null)
             {
                 Debug.LogError("[PlayerController] 缺少PlayerStamina组件。", this);
-                isValid = false;
             }
-
-            return isValid;
         }
 
         // 按照依赖顺序初始化玩家组件
-        private bool InitializeComponent()
+        private void InitializeComponent()
         {
             // 1.运行数据仍需要PlayerController作为场景数据收集入口
-            playerRuntimeData.Initialize(this);
+            playerRuntimeData.Initialize();
 
             // 2.初始化输入、相机和共享体力
             playerInputReader.Initialize();
@@ -233,45 +166,10 @@ namespace WutheringWaves
             playerStamina.Initialize();
 
             // 3.初始化队伍控制器
-            playerTeamController.Initialize(
-                playerRuntimeData,
-                transform
-            );
+            playerTeamController.Initialize(this);
 
-            if (!playerTeamController.IsInitialized)
-            {
-                Debug.LogError("[PlayerController] PlayerTeamController初始化失败。", this);
-                return false;
-            }
-
-            // 4.最后初始化角色切换器
-            // 此时它依赖的队伍、运行数据、输入和相机都已经准备完成
-            playerCharacterSwitcher.Initialize(
-                playerTeamController,
-                playerRuntimeData,
-                playerInputReader,
-                playerCamera
-            );
-
-            if (!playerCharacterSwitcher.IsInitialized)
-            {
-                Debug.LogError("[PlayerController] PlayerCharacterSwitcher初始化失败。", this);
-                return false;
-            }
-
-            return true;
-        }
-        #endregion
-
-        #region 清理玩家队伍
-        // 清理当前角色绑定和全部队伍角色
-        public void ClearCurrentTeamCharacters()
-        {
-            // 1.先解除输入、相机和当前角色绑定
-            playerCharacterSwitcher?.ClearCurrentCharacterBinding();
-
-            // 2.再销毁队伍角色，避免其他模块继续引用已销毁对象
-            playerTeamController?.ClearTeamCharacters();
+            // 4.初始化角色切换器
+            playerCharacterSwitcher.Initialize(this );
         }
         #endregion
 
@@ -290,6 +188,18 @@ namespace WutheringWaves
 
             // 3.更新相机缩放
             playerCamera.UpdateCameraZoom(playerInputReader.ZoomInput);
+        }
+        #endregion
+
+        #region 清理玩家队伍
+        // 清理当前角色绑定和全部队伍角色
+        public void ClearCurrentTeamCharacters()
+        {
+            // 1.先解除当前角色的输入、相机和角色缓存绑定
+            playerCharacterSwitcher?.ClearCurrentCharacterBinding();
+
+            // 2.再禁用并销毁全部队伍角色
+            playerTeamController?.ClearTeamCharacters();
         }
         #endregion
     }
